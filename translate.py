@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: translate.py,v 1.3 2003/03/25 20:21:28 bwarsaw Exp $
+$Id: translate.py,v 1.4 2003/04/03 19:55:20 fdrake Exp $
 """
 
 from zope.i18n.interfaces import ITranslator
@@ -38,11 +38,12 @@ class Translator:
         self._context = context
         self._translation_service = getService(context, 'Translation')
         
-    def translate(self, msgid, mapping=None):
+    def translate(self, msgid, mapping=None, default=None):
         """Translate the source msgid using the given mapping.
 
         See ITranslationService for details.
         """
         return self._translation_service.translate(
             self._domain, msgid, mapping, self._context,
-            self._locale.id.language)
+            self._locale.id.language,
+            default=default)
