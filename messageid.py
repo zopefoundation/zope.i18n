@@ -13,7 +13,7 @@
 ##############################################################################
 """Message IDs.
 
-$Id: messageid.py,v 1.3 2003/04/09 21:22:35 bwarsaw Exp $
+$Id: messageid.py,v 1.4 2003/04/15 21:17:48 bwarsaw Exp $
 """
 
 class MessageID(unicode):
@@ -24,14 +24,22 @@ class MessageID(unicode):
     display when there is no translation.  domain may be None meaning there is
     no translation domain.  default may also be None, in which case the
     message id itself implicitly serves as the default text.
+
+    MessageID objects also have a mapping attribute which must be set after
+    construction of the object.  This is used when translating and
+    substituting variables.
     """
 
-    __slots__ = ('domain', 'default')
+    __slots__ = ('domain', 'default', 'mapping')
 
     def __new__(cls, ustr, domain=None, default=None):
         self = unicode.__new__(cls, ustr)
         self.domain = domain
-        self.default = default
+        if default is None:
+            self.default = ustr
+        else:
+            self.default = default
+        self.mapping = {}
         return self
 
 
