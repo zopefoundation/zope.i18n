@@ -13,13 +13,13 @@
 ##############################################################################
 """Interfaces related to Locales
 
-$Id: locales.py,v 1.1 2004/02/05 22:52:22 srichter Exp $
+$Id: locales.py,v 1.2 2004/04/24 23:18:00 srichter Exp $
 """
 import re
 from zope.interface import Interface, Attribute
 from zope.schema import \
      Field, Text, TextLine, Int, Bool, Tuple, List, Dict, Date
-from zope.schema import Container, EnumeratedTextLine
+from zope.schema import Container, Choice
 
 class ILocaleProvider(Interface):
     """This interface is our connection to the Zope 3 service. From it
@@ -192,9 +192,9 @@ class ILocaleTimeZone(Interface):
     names = Dict(
         title = u"Time Zone Names",
         description = u"Various names of the timezone.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                    title = u"Time Zone Name Type",
-                   allowed_values = (u'generic', u'standard', u'daylight')),
+                   values = (u'generic', u'standard', u'daylight')),
         value_type = Tuple(title=u"Time Zone Name and Abbreviation",
                            min_length=2, max_length=2),
         required = True,
@@ -226,10 +226,10 @@ class ILocaleFormat(Interface):
 class ILocaleFormatLength(Interface):
     """The format length describes a class of formats."""
     
-    type = EnumeratedTextLine(
+    type = Choice(
         title = u"Format Length Type",
         description = u"Name of the format length",
-        allowed_values = (u'full', u'long', u'medium', u'short')
+        values = (u'full', u'long', u'medium', u'short')
         )
 
     default = TextLine(
@@ -265,16 +265,16 @@ class ILocaleCalendar(Interface):
     days = Dict(
         title=u"Weekdays Names",
         description = u"A mapping of all month names and abbreviations",
-        key_type = EnumeratedTextLine(title=u"Type",
-                            allowed_values=(u'sun', u'mon', u'tue', u'wed',
-                                            u'thu', u'fri', u'sat', u'sun')),
+        key_type = Choice(title=u"Type",
+                            values=(u'sun', u'mon', u'tue', u'wed',
+                                    u'thu', u'fri', u'sat')),
         value_type = Tuple(title=u"Weekdays Name and Abbreviation",
                            min_length=2, max_length=2))
 
     week = Dict(
         title=u"Week Information",
         description = u"Contains various week information",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
             title=u"Type",
             description=u"""
             Varies Week information:
@@ -286,7 +286,7 @@ class ILocaleCalendar(Interface):
               - The 'weekendStart' and 'weekendEnd' are tuples of the form
                 (weekDayNumber, datetime.time)
             """,
-            allowed_values=(u'minDays', u'firstDay',
+            values=(u'minDays', u'firstDay',
                             u'weekendStart', u'weekendEnd')))
 
     am = TextLine(title=u"AM String")
@@ -304,10 +304,10 @@ class ILocaleCalendar(Interface):
     dateFormats = Dict(
         title=u"Date Formats",
         description = u"Contains various Date Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     defaultTimeFormat = TextLine(title=u"Default Time Format Type")
@@ -315,10 +315,10 @@ class ILocaleCalendar(Interface):
     timeFormats = Dict(
         title=u"Time Formats",
         description = u"Contains various Time Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     defaultDateTimeFormat = TextLine(title=u"Default Date-Time Format Type")
@@ -326,10 +326,10 @@ class ILocaleCalendar(Interface):
     dateTimeFormats = Dict(
         title=u"Date-Time Formats",
         description = u"Contains various Date-Time Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     def getMonthNames():
@@ -372,9 +372,9 @@ class ILocaleDates(Interface):
 
     calendars = Dict(
         title = u"Calendar type to ILocaleCalendar",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
             title=u"Calendar Type",
-            allowed_values=(u'gregorian',
+            values=(u'gregorian',
                             u'arabic',
                             u'chinese',
                             u'civil-arabic',
@@ -409,9 +409,9 @@ class ILocaleNumbers(Interface):
 
     symbols = Dict(
         title = u"Number Symbols",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
             title = u"Format Name",
-            allowed_values = (u'decimal', u'group', u'list', u'percentSign',
+            values = (u'decimal', u'group', u'list', u'percentSign',
                               u'nativeZeroDigit', u'patternDigit', u'plusSign',
                               u'minusSign', u'exponential', u'perMille',
                               u'infinity', u'nan')),
@@ -422,10 +422,10 @@ class ILocaleNumbers(Interface):
     decimalFormats = Dict(
         title=u"Decimal Formats",
         description = u"Contains various Decimal Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     defaultScientificFormat = TextLine(title=u"Default Scientific Format Type")
@@ -433,10 +433,10 @@ class ILocaleNumbers(Interface):
     scientificFormats = Dict(
         title=u"Scientific Formats",
         description = u"Contains various Scientific Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     defaultPercentFormat = TextLine(title=u"Default Percent Format Type")
@@ -444,10 +444,10 @@ class ILocaleNumbers(Interface):
     percentFormats = Dict(
         title=u"Percent Formats",
         description = u"Contains various Percent Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     defaultCurrencyFormat = TextLine(title=u"Default Currency Format Type")
@@ -455,10 +455,10 @@ class ILocaleNumbers(Interface):
     currencyFormats = Dict(
         title=u"Currency Formats",
         description = u"Contains various Currency Formats.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
                       title=u"Type",
                       description = u"Name of the format length",
-                      allowed_values = (u'full', u'long', u'medium', u'short')),
+                      values = (u'full', u'long', u'medium', u'short')),
         value_type = Field(title=u"ILocaleFormatLength object"))
 
     currencies = Dict(
@@ -525,10 +525,10 @@ class ILocale(Interface):
     delimiters = Dict(
         title=u"Delimiters",
         description = u"Contains various Currency data.",
-        key_type = EnumeratedTextLine(
+        key_type = Choice(
             title=u"Delimiter Type",
             description = u"Delimiter name.",
-            allowed_values=(u'quotationStart', u'quotationEnd',
+            values=(u'quotationStart', u'quotationEnd',
                             u'alternateQuotationStart',
                             u'alternateQuotationEnd')),
         value_type = Field(title=u"Delimiter symbol"))

@@ -13,10 +13,10 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: __init__.py,v 1.5 2004/03/08 23:36:00 srichter Exp $
+$Id: __init__.py,v 1.6 2004/04/24 23:17:59 srichter Exp $
 """
 from zope.interface import Interface, Attribute
-from zope.schema import TextLine, Dict, EnumeratedTextLine
+from zope.schema import TextLine, Dict, Choice
 
 
 class II18nAware(Interface):
@@ -332,12 +332,12 @@ class INumberFormat(IFormat):
 
     symbols = Dict(
         title=u"Number Symbols",
-        key_type=EnumeratedTextLine(
+        key_type=Choice(
             title=u"Dictionary Class",
-            allowed_values=(u'decimal', u'group', u'list', u'percentSign',
-                            u'nativeZeroDigit', u'patternDigit', u'plusSign',
-                            u'minusSign', u'exponential', u'perMille',
-                            u'infinity', u'nan')),
+            values=(u'decimal', u'group', u'list', u'percentSign',
+                    u'nativeZeroDigit', u'patternDigit', u'plusSign',
+                    u'minusSign', u'exponential', u'perMille',
+                    u'infinity', u'nan')),
         value_type=TextLine(title=u"Symbol"))
 
 
