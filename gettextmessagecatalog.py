@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.5 2003/04/11 19:15:54 bwarsaw Exp $
+$Id: gettextmessagecatalog.py,v 1.6 2003/04/28 17:21:39 bwarsaw Exp $
 """
 
 from pythonlib.gettext import GNUTranslations
@@ -37,7 +37,7 @@ class GettextMessageCatalog:
         self._path_to_file = path_to_file
         fp = open(self._path_to_file, 'r')
         try:
-            self._catalog = GNUTranslations(fp, coerce=True)
+            self._catalog = GNUTranslations(fp)
         finally:
             fp.close()
         self._catalog.add_fallback(_KeyErrorRaisingFallback())
