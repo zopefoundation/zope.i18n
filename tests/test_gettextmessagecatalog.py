@@ -13,7 +13,7 @@
 ##############################################################################
 """Test a gettext implementation of a Message Catalog.
 
-$Id: test_gettextmessagecatalog.py,v 1.4 2003/03/26 00:19:58 srichter Exp $
+$Id: test_gettextmessagecatalog.py,v 1.5 2003/04/11 19:16:15 bwarsaw Exp $
 """
 import unittest, sys, os
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
@@ -39,6 +39,7 @@ def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(GettextMessageCatalog))
     return suite
+
 
 if __name__=='__main__':
     unittest.TextTestRunner().run(test_suite())
