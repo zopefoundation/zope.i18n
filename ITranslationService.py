@@ -13,7 +13,7 @@
 ##############################################################################
 """Translation Service related Interfaces.
 
-$Id: ITranslationService.py,v 1.4 2002/06/16 18:25:13 srichter Exp $
+$Id: ITranslationService.py,v 1.5 2002/08/23 18:07:21 sidnei Exp $
 """
 
 from Interface import Interface
@@ -162,7 +162,7 @@ class ISyncTranslationService(Interface):
 
     def getMessagesMapping(domains, languages, foreign_messages):
         """Creates a mapping of the passed foreign messages and the local ones.
-        Retruns a status report in a dictionary with keys of the form
+        Returns a status report in a dictionary with keys of the form
         (msgid, domain, language) and values being a tuple of:
 
         foreign_mod_date, local_mod_date
