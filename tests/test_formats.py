@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.9 2003/07/26 13:11:17 srichter Exp $
+$Id: test_formats.py,v 1.10 2003/09/24 02:57:12 garrett Exp $
 """
 import os
 import datetime
@@ -263,6 +263,19 @@ class TestDateTimeFormat(TestCase):
             self.format.format(datetime.datetime(2003, 01, 02, 02, 00),
                                'dd.MM.yy h:mm:ss a'),
             '02.01.03 2:00:00 vorm.')
+        self.assertEqual(
+            self.format.format(datetime.time(0, 15), 'h:mm a'), 
+            '12:15 vorm.')
+        self.assertEqual(
+            self.format.format(datetime.time(1, 15), 'h:mm a'), 
+            '1:15 vorm.')
+        self.assertEqual(
+            self.format.format(datetime.time(12, 15), 'h:mm a'), 
+            '12:15 nachm.')
+        self.assertEqual(
+            self.format.format(datetime.time(13, 15), 'h:mm a'), 
+            '1:15 nachm.')
+
 
 class TestNumberPatternParser(TestCase):
     """Extensive tests for the ICU-based-syntax number pattern parser."""

@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.11 2003/07/26 13:11:14 srichter Exp $
+$Id: format.py,v 1.12 2003/09/24 02:57:11 garrett Exp $
 """
 import re
 import math
@@ -495,6 +495,10 @@ def buildDateTimeInfo(dt, calendar):
     else:
         ampm = calendar.am
 
+    h = dt.hour%12
+    if h == 0:
+        h = 12
+
     weekday = (dt.weekday()+1) % 7 + 1
 
     return {
@@ -515,8 +519,8 @@ def buildDateTimeInfo(dt, calendar):
         ('D', 1): dt.strftime('%j'),
         ('w', 1): dt.strftime('%W'),
         ('w', 2): dt.strftime('%.2W'),
-        ('h', 1): str(dt.hour%12),
-        ('h', 2): "%.2i" %(dt.hour%12),
+        ('h', 1): str(h),
+        ('h', 2): "%.2i" %(h),
         ('H', 1): str(dt.hour),
         ('H', 2): "%.2i" %dt.hour,
         ('m', 1): str(dt.minute),
