@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.15 2003/07/12 02:47:20 richard Exp $
+$Id: interfaces.py,v 1.16 2003/08/12 15:55:10 gotcha Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -85,6 +85,8 @@ class IMessageCatalog(Interface):
         Also, there are no restrictions on the form of the identifier.
         """
 
+    def reload():
+        """Reload and parse .po file"""
 
 class ITranslationService(Interface):
     """The Translation Service

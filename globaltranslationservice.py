@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.11 2003/08/06 14:36:09 srichter Exp $
+$Id: globaltranslationservice.py,v 1.12 2003/08/12 15:55:10 gotcha Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -105,6 +105,13 @@ class GlobalTranslationService(SimpleTranslationService):
         if text is not None:
             text = self.interpolate(text, mapping)
         return text
+
+    def getCatalogsInfo(self):
+        return self._catalogs
+
+    def reloadCatalogs(self, catalogNames):
+        for catalogName in catalogNames:
+            self._data[catalogName].reload()
 
 translationService = GlobalTranslationService()
 
