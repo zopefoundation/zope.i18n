@@ -1,90 +1,63 @@
 <zopeConfigure
-   xmlns='http://namespaces.zope.org/zope'
-   xmlns:browser='http://namespaces.zope.org/browser'
-   xmlns:service='http://namespaces.zope.org/service'
-   xmlns:gts='http://namespaces.zope.org/gts'
->
+   xmlns="http://namespaces.zope.org/zope"
+   xmlns:browser="http://namespaces.zope.org/browser"
+   xmlns:service="http://namespaces.zope.org/service"
+   xmlns:gts="http://namespaces.zope.org/gts">
 
 <!-- Setup language negotiation -->
-<serviceType
-      id="LanguageNegotiation" 
-      interface=".INegotiator." />
-<service
-      serviceType="LanguageNegotiation" 
-      component=".Negotiator.negotiator" />
+<serviceType id="LanguageNegotiation" interface=".INegotiator." />
+
+<service serviceType="LanguageNegotiation" 
+    component=".Negotiator.negotiator" />
 
 <adapter factory="Zope.Publisher.Browser.BrowserLanguages."
-         for="Zope.Publisher.Browser.IBrowserRequest."
-         provides="Zope.I18n.IUserPreferredLanguages."
-         />
-
+    for="Zope.Publisher.Browser.IBrowserRequest."
+    provides="Zope.I18n.IUserPreferredLanguages." />
 
 <!-- Setup charset negotiation -->
 <adapter factory="Zope.Publisher.HTTP.HTTPCharsets."
-         for="Zope.Publisher.HTTP.IHTTPRequest."
-         provides="Zope.I18n.IUserPreferredCharsets."
-         />
-
+    for="Zope.Publisher.HTTP.IHTTPRequest."
+    provides="Zope.I18n.IUserPreferredCharsets." />
 
 <!-- Register the Translation Service as a content object -->
 <content class=".TranslationService.">
-
    <factory id="TranslationService" permission="Zope.ManageServices" />
-
    <require permission="Zope.Public"
-                     interface="Zope.I18n.ITranslationService." 
-                     />
-
+       interface="Zope.I18n.ITranslationService." />
    <require permission="Zope.ManageServices"
-                     interface="Zope.App.OFS.Container.IContainer." 
-                     />
+       interface="Zope.App.OFS.Container.IContainer." />
 </content>
 
-<browser:menuItem menu="add_service" for="Zope.App.OFS.Container.IAdding."
-     action="TranslationService"  title="Translation Service"
-     description="A Persistent Translation Service for TTW development" />
-
-<serviceType id="TranslationService"
-             interface=".ITranslationService." />
+<serviceType id="TranslationService" interface=".ITranslationService." />
 
 <service serviceType="TranslationService"
-           permission="Zope.Public"
-           component=".GlobalTranslationService.translationService" />
+    permission="Zope.Public"
+    component=".GlobalTranslationService.translationService" />
 
 <browser:icon name="zmi_icon" for=".ITranslationService."
-              file="./i18n_service.gif" />
+    file="./i18n_service.gif" />
 
 <!-- Setup Message Catalogs -->
 <content class=".MessageCatalog.">
-   <require permission="Zope.Security"
-                     interface=".IMessageCatalog." 
-                     />
-   <require permission="Zope.ManageServices"
-                     attributes="setMessage getMessageIds"
-                     />
+  <require permission="Zope.Security" interface=".IMessageCatalog." />
+  <require permission="Zope.ManageServices"
+      attributes="setMessage getMessageIds" />
 </content>
 
-
-<factory component=".MessageCatalog." 
-         id="Message Catalog"/>
-
+<factory component=".MessageCatalog." id="Message Catalog"/>
 
 <!-- Setup Export and Import Filters -->
 <adapter factory=".GettextExportFilter."
-         for=".ITranslationService.IWriteTranslationService."
-         provides=".IMessageExportFilter."
-         />
+    for=".ITranslationService.IWriteTranslationService."
+    provides=".IMessageExportFilter." />
 
 <adapter factory=".GettextImportFilter."
-         for=".ITranslationService.IWriteTranslationService."
-         provides=".IMessageImportFilter."
-         />
-
+    for=".ITranslationService.IWriteTranslationService."
+    provides=".IMessageImportFilter." />
 
 <gts:registerTranslations directory="./locale" />
 <gts:defaultLanguages languages="en" />
 
 <include package=".Views" />
-
 
 </zopeConfigure>
