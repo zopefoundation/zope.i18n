@@ -13,10 +13,10 @@
 ##############################################################################
 """i18n support.
 
-$Id: __init__.py,v 1.4 2004/03/08 23:35:59 srichter Exp $
+$Id: __init__.py,v 1.5 2004/03/19 12:00:06 jim Exp $
 """
 import re
-from zope.i18n.messageid import MessageIDFactory, MessageID
+from zope.i18nmessageid import MessageIDFactory, MessageID
 from zope.i18n.interfaces import ITranslationDomain
 
 # Set up regular expressions for finding interpolation variables in text.
