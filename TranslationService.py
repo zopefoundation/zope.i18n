@@ -11,9 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 # 
 ##############################################################################
-"""
+"""This is the standard, placeful Translation Service for TTW development.
 
-$Id: TranslationService.py,v 1.5 2002/06/12 20:59:09 bwarsaw Exp $
+$Id: TranslationService.py,v 1.6 2002/06/13 13:13:07 srichter Exp $
 """
 import re
 from types import StringTypes, TupleType
@@ -32,6 +32,7 @@ from Zope.I18n.Negotiator import negotiator
 from Zope.I18n.Domain import Domain
 from Zope.I18n.IMessageCatalog import IMessageCatalog
 from Zope.I18n.ITranslationService import ITranslationService
+from Zope.I18n.IEditableTranslationService import IEditableTranslationService
 from Zope.I18n.SimpleTranslationService import SimpleTranslationService
 
 
@@ -42,7 +43,7 @@ class ILocalTranslationService(ITranslationService,
 
 class TranslationService(BTreeContainer, SimpleTranslationService):
 
-    __implements__ =  ILocalTranslationService
+    __implements__ =  ILocalTranslationService, IEditableTranslationService
 
     def __init__(self, default_domain='global'):
         super(TranslationService, self).__init__()
@@ -131,8 +132,12 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
     ############################################################
 
 
+    ############################################################
+    # Implementation methods for interface
+    # Zope.I18n.IEditableTranslationService.
+    
     def getMessageIdsOfDomain(self, domain, filter='%'):
-        """Get all the message ids of a particular domain."""
+        'See IEditableTranslationService'
         filter = filter.replace('%', '.*')
         filter_re = re.compile(filter)
         
@@ -147,7 +152,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAllLanguages(self):
-        """Find all the languages that are available"""
+        'See IEditableTranslationService'
         languages = {}
         for key in self._catalogs.keys():
             languages[key[0]] = None
@@ -155,7 +160,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAllDomains(self):
-        """Find all available domains."""
+        'See IEditableTranslationService'
         domains = {}
         for key in self._catalogs.keys():
             domains[key[1]] = None
@@ -163,7 +168,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAvailableLanguages(self, domain):
-        """Find all the languages that are available for this domain"""
+        'See IEditableTranslationService'
         identifiers = self._catalogs.keys()
         identifiers = filter(lambda x, d=domain: x[1] == d, identifiers)
         languages = map(lambda x: x[0], identifiers)
@@ -171,7 +176,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAvailableDomains(self, language):
-        """Find all available domains."""
+        'See IEditableTranslationService'
         identifiers = self._catalogs.keys()
         identifiers = filter(lambda x, l=language: x[0] == l, identifiers)
         domains = map(lambda x: x[1], identifiers)
@@ -179,28 +184,34 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         
 
     def addMessage(self, domain, msg_id, msg, target_language):
-        """ """
+        'See IEditableTranslationService'
+        if not self._catalogs.has_key((target_language, domain)):
+            if target_language not in self.getAllLanguages():
+                self.addLanguage(target_language)
+            if domain not in self.getAllDomains():
+                self.addDomain(domain)
+            
         catalog_name = self._catalogs[(target_language, domain)][0]
         catalog = self[catalog_name]
         catalog.setMessage(msg_id, msg)
 
 
     def updateMessage(self, domain, msg_id, msg, target_language):
-        """ """
+        'See IEditableTranslationService'
         catalog_name = self._catalogs[(target_language, domain)][0]
         catalog = self[catalog_name]
         catalog.setMessage(msg_id, msg)
 
 
     def deleteMessage(self, domain, msg_id, target_language):
-        """ """
+        'See IEditableTranslationService'
         catalog_name = self._catalogs[(target_language, domain)][0]
         catalog = self[catalog_name]
         catalog.deleteMessage(msg_id)
 
 
     def addLanguage(self, language):
-        """Add Language to Translation Service"""
+        'See IEditableTranslationService'
         domains = self.getAllDomains()
         if not domains:
             domains = [self.default_domain]
@@ -211,7 +222,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def addDomain(self, domain):
-        """Add Domain to Translation Service"""
+        'See IEditableTranslationService'
         languages = self.getAllLanguages()
         if not languages:
             languages = ['en']
@@ -222,21 +233,26 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def deleteLanguage(self, language):
-        """Delete a Domain from the Translation Service."""
+        'See IEditableTranslationService'
         domains = self.getAvailableDomains(language)
         for domain in domains:
+            # Delete all catalogs from the data storage
             for name in self._catalogs[(language, domain)]:
                 if self.has_key(name):
                     del self[name]
+            # Now delete the specifc catalog registry for this lang/domain
             del self._catalogs[(language, domain)]
 
     def deleteDomain(self, domain):
-        """Delete a Domain from the Translation Service."""
+        'See IEditableTranslationService'
         languages = self.getAvailableLanguages(domain)
         for language in languages:
+            # Delete all catalogs from the data storage
             for name in self._catalogs[(language, domain)]:
                 if self.has_key(name):
                     del self[name]
+            # Now delete the specifc catalog registry for this lang/domain
             del self._catalogs[(language, domain)]
 
-
+    #
+    ############################################################

@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: MessageCatalog.py,v 1.4 2002/06/12 20:56:53 bwarsaw Exp $
+$Id: MessageCatalog.py,v 1.5 2002/06/13 13:13:07 srichter Exp $
 """
 
 from Persistence.BTrees.OOBTree import OOBTree
@@ -38,6 +38,10 @@ class MessageCatalog(RegisteredObject, Persistent):
     def setMessage(self, msgid, message):
         """Set a message to the catalog."""
         self._messages[msgid] = message
+
+    def deleteMessage(self, msgid):
+        """Set a message to the catalog."""
+        del self._messages[msgid]
 
     def getMessageIds(self):
         """Get a list of all the message ids."""
