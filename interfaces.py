@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.4 2003/03/13 18:49:13 alga Exp $
+$Id: interfaces.py,v 1.5 2003/03/25 14:27:04 bwarsaw Exp $
 """
 from zope.interface import Interface, Attribute
 
@@ -647,12 +647,12 @@ class ILocale(Interface):
     """This class contains all important information about the locale.
 
     Usually a Locale is identified using a specific language, country and
-    variant. However, the country and variant are optional, so that a lookup
-    hierarchy develops. It is easy to recognize that a locale that is missing
-    the variant is more general applicable than the one with the
-    variant. Therefore, if a specific Locale does not contain the required
-    information, it should look one level higher.
-    There will be a root locale that specifies none of the above identifiers.
+    variant.  However, the country and variant are optional, so that a lookup
+    hierarchy develops.  It is easy to recognize that a locale that is missing
+    the variant is more general applicable than the one with the variant.
+    Therefore, if a specific Locale does not contain the required information,
+    it should look one level higher.  There will be a root locale that
+    specifies none of the above identifiers.
     """
 
     def getLocaleLanguageId():
