@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.9 2003/03/25 23:25:14 bwarsaw Exp $
+$Id: interfaces.py,v 1.10 2003/03/29 00:06:25 jim Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -124,10 +124,11 @@ class ITranslationService(Interface):
     """
 
     def translate(domain, msgid, mapping=None,
-                  context=None, target_language=None):
+                  context=None, target_language=None,
+                  default=None):
         """Return the translation for the message referred to by msgid.
 
-        Return None if no translation is found.
+        Return the default if no translation is found.
 
         However, the method does a little more than a vanilla translation.
         The method also looks for a possible language to translate to.

@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.4 2003/03/25 23:25:14 bwarsaw Exp $
+$Id: simpletranslationservice.py,v 1.5 2003/03/29 00:06:25 jim Exp $
 """
 
 import re
@@ -55,7 +55,7 @@ class SimpleTranslationService:
 
 
     def translate(self, domain, msgid, mapping=None, context=None,
-                  target_language=None):
+                  target_language=None, default=None):
         '''See interface ITranslationService'''
         # Find out what the target language should be
         if target_language is None:
@@ -69,6 +69,8 @@ class SimpleTranslationService:
 
         # Make a raw translation without interpolation
         text = self.messages.get((domain, target_language, msgid))
+        if text is None:
+            return default
 
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)

@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.2 2003/03/26 00:19:58 srichter Exp $
+$Id: test_itranslationservice.py,v 1.3 2003/03/29 00:06:26 jim Exp $
 """
 
 import unittest
@@ -88,6 +88,17 @@ class TestITranslationService(PlacelessSetup):
         context = Environment(('de', 'en'))
         eq(translate('default', 'short_greeting', context=context),
            'Hallo!')
+
+
+    def testSimpleTranslate_bad_domain(self):
+        translate = self._service.translate
+        eq = self.assertEqual
+        eq(translate('defaultnot', 'short_greeting', target_language='de'),
+           None)
+        eq(translate('defaultnot', 'short_greeting', target_language='de',
+                     default=42),
+           42)
+
 
     def testDynamicTranslate(self):
         translate = self._service.translate

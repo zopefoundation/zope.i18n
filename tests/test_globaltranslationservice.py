@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.6 2003/03/26 00:19:58 srichter Exp $
+$Id: test_globaltranslationservice.py,v 1.7 2003/03/29 00:06:26 jim Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
@@ -54,13 +54,21 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
         self._service.setLanguageFallbacks([])
         # Test that we have at least the minimum required arguments
         raises(TypeError, translate, 'Hello')
+
         # Test that a translation in an unsupported language returns the
-        # original message id unchanged, if there is no fallback language
+        # default, if there is no fallback language
         eq(translate('default', 'short_greeting', target_language='es'),
+           None)
+        eq(translate('default', 'short_greeting',
+                     target_language='es', default='short_greeting'),
            'short_greeting')
+
         # Same test, but use the context argument instead of target_language
         context = Environment()
         eq(translate('default', 'short_greeting', context=context),
+           None)
+        eq(translate('default', 'short_greeting', context=context,
+                     default='short_greeting'),
            'short_greeting')
         # Test that at least one of context or target_language is given
         raises(TypeError, translate, 'short_greeting', context=None)
@@ -71,6 +79,16 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
         self.assertEqual(translate('default', u'short_greeting',
                                    target_language='en'),
                          u'Hello!')
+
+    def testStringTranslate_w_MultipleCatalogs(self):
+        path = testdir()
+        self._service.addCatalog(
+            GettextMessageCatalog('en', 'alt',
+                                  os.path.join(path, 'en-default.mo')))
+        translate = self._service.translate
+        self.assertEqual(translate('alt', u'special',
+                                   target_language='en'),
+                         u'Wow')
 
     def testMessageIDTranslate(self):
         translate = self._service.translate

@@ -10,3 +10,5 @@ msgstr ""
 msgid "short_greeting"
 msgstr "Hey!"
 
+msgid "special"
+msgstr "Wow"

@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.4 2003/03/25 20:43:35 jim Exp $
+$Id: globaltranslationservice.py,v 1.5 2003/03/29 00:06:25 jim Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -66,7 +66,7 @@ class GlobalTranslationService(SimpleTranslationService):
         self._fallbacks = fallbacks
 
     def translate(self, domain, msgid, mapping=None, context=None,
-                  target_language=None):
+                  target_language=None, default=None):
         '''See interface ITranslationService'''
         if target_language is None:
             if context is None:
@@ -86,14 +86,18 @@ class GlobalTranslationService(SimpleTranslationService):
                 catalog_names = self._catalogs.get((language, domain))
                 if catalog_names is not None:
                     break
-        # Did the fallback fail?  Sigh, use the msgid
+                
+        # Did the fallback fail?  Sigh, return None
         if catalog_names is None:
-            catalog_names = []
+            return default
 
-        text = msgid
         for name in catalog_names:
             catalog = self._data[name]
             text = catalog.queryMessage(msgid)
+            if text is not None:
+                break
+        else:
+            return default
 
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)
