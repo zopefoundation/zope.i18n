@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: __init__.py,v 1.6 2004/04/24 23:17:59 srichter Exp $
+$Id$
 """
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Dict, Choice

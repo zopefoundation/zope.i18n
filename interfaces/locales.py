@@ -13,7 +13,7 @@
 ##############################################################################
 """Interfaces related to Locales
 
-$Id: locales.py,v 1.2 2004/04/24 23:18:00 srichter Exp $
+$Id$
 """
 import re
 from zope.interface import Interface, Attribute

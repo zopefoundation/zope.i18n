@@ -18,7 +18,7 @@ This module provides support for locale inheritance.
 Note: In many respects this is similar to Zope 2's acquisition model, since
 locale inheritance is not inheritance in the programming sense. 
 
-$Id: inheritance.py,v 1.2 2004/03/05 22:09:26 jim Exp $
+$Id$
 """
 from zope.interface import implements
 from zope.i18n.interfaces.locales import \

@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a test for the II18nAware interface.
 
-$Id: testii18naware.py,v 1.4 2003/05/01 19:35:43 faassen Exp $
+$Id$
 """
 import unittest
 

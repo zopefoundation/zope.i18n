@@ -13,7 +13,7 @@
 ##############################################################################
 """Language Negotiator
 
-$Id: negotiator.py,v 1.10 2004/03/06 16:50:38 jim Exp $
+$Id$
 """
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages

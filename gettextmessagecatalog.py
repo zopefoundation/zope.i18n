@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.12 2004/03/08 23:35:59 srichter Exp $
+$Id$
 """
 from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog

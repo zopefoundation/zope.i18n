@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Domain.
 
-$Id: test_simpletranslationdomain.py,v 1.1 2004/03/08 23:36:00 srichter Exp $
+$Id$
 """
 import unittest
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain

@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: translationdomain.py,v 1.1 2004/03/08 23:35:59 srichter Exp $
+$Id$
 """
 from zope.i18n.negotiator import negotiator
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain

@@ -13,7 +13,7 @@
 ##############################################################################
 """i18n support.
 
-$Id: __init__.py,v 1.5 2004/03/19 12:00:06 jim Exp $
+$Id$
 """
 import re
 from zope.i18nmessageid import MessageIDFactory, MessageID

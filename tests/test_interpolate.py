@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationDomain interface.
 
-$Id: test_interpolate.py,v 1.1 2004/03/08 23:36:00 srichter Exp $
+$Id$
 """
 import unittest
 from zope.i18n import interpolate

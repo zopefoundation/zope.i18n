@@ -13,7 +13,7 @@
 ##############################################################################
 """Tests for the ZCML Documentation Module
 
-$Id: test_docstrings.py,v 1.1 2004/02/05 22:52:32 srichter Exp $
+$Id$
 """
 import unittest
 from zope.testing.doctestunit import DocTestSuite

@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: __init__.py,v 1.3 2004/03/27 02:31:48 garrett Exp $
+$Id$
 """
 import os
 from datetime import datetime, date

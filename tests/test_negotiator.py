@@ -13,7 +13,7 @@
 ##############################################################################
 """Language Negotiator tests.
 
-$Id: test_negotiator.py,v 1.10 2004/03/01 13:08:20 sidnei Exp $
+$Id$
 """
 import unittest
 

@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.3 2004/03/27 02:31:49 garrett Exp $
+$Id$
 """
 import os
 import datetime

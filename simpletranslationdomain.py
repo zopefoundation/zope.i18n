@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationDomain interface.
 
-$Id: simpletranslationdomain.py,v 1.1 2004/03/08 23:35:59 srichter Exp $
+$Id$
 """
 from zope.interface import implements
 from zope.component import getUtility

@@ -16,7 +16,7 @@
 The Locale Provider looks up locales and loads them from the XML data, if
 necessary.
 
-$Id: provider.py,v 1.1 2004/02/05 22:52:24 srichter Exp $
+$Id$
 """
 import os
 from zope.interface import implements

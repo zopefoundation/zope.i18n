@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.13 2004/03/27 02:31:49 garrett Exp $
+$Id$
 """
 import os
 import datetime

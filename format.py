@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.14 2004/03/27 02:31:48 garrett Exp $
+$Id$
 """
 import re
 import math

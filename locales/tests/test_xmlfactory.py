@@ -13,7 +13,7 @@
 ##############################################################################
 """Testing all XML Locale functionality.
 
-$Id: test_xmlfactory.py,v 1.1 2004/02/05 22:52:32 srichter Exp $
+$Id$
 """
 import os
 from unittest import TestCase, TestSuite, makeSuite

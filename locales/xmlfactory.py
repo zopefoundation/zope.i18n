@@ -13,7 +13,7 @@
 ##############################################################################
 """XML Locale-related objects and functions
 
-$Id: xmlfactory.py,v 1.1 2004/02/05 22:52:24 srichter Exp $
+$Id$
 """
 from datetime import datetime, date, time
 from xml.dom.minidom import parse as parseXML

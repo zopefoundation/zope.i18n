@@ -13,7 +13,7 @@
 ##############################################################################
 """Test a gettext implementation of a Message Catalog.
 
-$Id: test_gettextmessagecatalog.py,v 1.6 2003/05/01 19:35:43 faassen Exp $
+$Id$
 """
 import unittest, os
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog

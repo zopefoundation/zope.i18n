@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: test_imessagecatalog.py,v 1.3 2004/03/08 23:36:00 srichter Exp $
+$Id$
 """
 import unittest
 from zope.interface.verify import verifyObject
