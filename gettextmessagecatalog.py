@@ -20,12 +20,12 @@ from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implements
 
 
-class _KeyErrorRaisingFallback:
+class _KeyErrorRaisingFallback(object):
     def ugettext(self, message):
         raise KeyError, message
 
 
-class GettextMessageCatalog:
+class GettextMessageCatalog(object):
     """A message catalog based on GNU gettext and Python's gettext module."""
 
     implements(IGlobalMessageCatalog)

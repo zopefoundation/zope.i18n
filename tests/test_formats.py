@@ -28,10 +28,10 @@ from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat
 from zope.i18n.format import parseNumberPattern
 
-class LocaleStub:
+class LocaleStub(object):
     pass
 
-class LocaleCalendarStub:
+class LocaleCalendarStub(object):
 
     type = u'gregorian'
 

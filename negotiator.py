@@ -33,7 +33,7 @@ def normalize_langs(langs):
         n_langs[normalize_lang(l)] = l
     return n_langs
 
-class Negotiator:
+class Negotiator(object):
     implements(INegotiator)
 
     def getLanguage(self, langs, env):

@@ -22,7 +22,7 @@ from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component.tests.placelesssetup import PlacelessSetup
 from zope.interface import implements
 
-class Env:
+class Env(object):
     implements(IUserPreferredLanguages)
 
     def __init__(self, langs=()):

@@ -22,7 +22,7 @@ from zope.i18n.tests.testii18naware import TestII18nAware
 from zope.interface import implements
 
 
-class I18nAwareContentObject:
+class I18nAwareContentObject(object):
 
     implements(II18nAware)
 
