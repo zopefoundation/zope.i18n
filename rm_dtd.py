@@ -13,9 +13,9 @@
 ##############################################################################
 """Removes the DOCTYPE line from the Locale XML Files.
 
-$Id: rm_dtd.py,v 1.1 2003/01/09 19:19:39 srichter Exp $
+$Id: rm_dtd.py,v 1.2 2003/05/01 19:35:42 faassen Exp $
 """
-import os, re
+import os
 from zope import i18n
 
 locale_dir = os.path.join(os.path.dirname(i18n.__file__), 'locales')

@@ -13,9 +13,9 @@
 ##############################################################################
 """
 
-$Id: test_negotiator.py,v 1.3 2002/12/31 02:52:15 jim Exp $
+$Id: test_negotiator.py,v 1.4 2003/05/01 19:35:43 faassen Exp $
 """
-import unittest, sys
+import unittest
 
 from zope.i18n.negotiator import Negotiator
 from zope.i18n.interfaces import IUserPreferredLanguages

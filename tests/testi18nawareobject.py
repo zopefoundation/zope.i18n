@@ -13,10 +13,10 @@
 ##############################################################################
 """This is a test for the II18nAware interface.
 
-$Id: testi18nawareobject.py,v 1.3 2002/12/31 02:52:15 jim Exp $
+$Id: testi18nawareobject.py,v 1.4 2003/05/01 19:35:43 faassen Exp $
 """
 import unittest
-from zope.interface.verify import verifyObject
+
 from zope.i18n.interfaces import II18nAware
 from zope.i18n.tests.testii18naware import TestII18nAware
 

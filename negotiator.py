@@ -13,12 +13,11 @@
 ##############################################################################
 """
 
-$Id: negotiator.py,v 1.4 2003/04/11 12:47:42 mgedmin Exp $
+$Id: negotiator.py,v 1.5 2003/05/01 19:35:42 faassen Exp $
 """
 
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
-from zope.i18n.interfaces import ILanguageAvailability
 from zope.component import getAdapter
 
 class Negotiator:

@@ -13,9 +13,9 @@
 ##############################################################################
 """Test a gettext implementation of a Message Catalog.
 
-$Id: test_gettextmessagecatalog.py,v 1.5 2003/04/11 19:16:15 bwarsaw Exp $
+$Id: test_gettextmessagecatalog.py,v 1.6 2003/05/01 19:35:43 faassen Exp $
 """
-import unittest, sys, os
+import unittest, os
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_imessagecatalog import TestIMessageCatalog
 

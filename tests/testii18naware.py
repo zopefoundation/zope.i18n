@@ -13,17 +13,13 @@
 ##############################################################################
 """This is a test for the II18nAware interface.
 
-$Id: testii18naware.py,v 1.3 2002/12/31 02:52:15 jim Exp $
+$Id: testii18naware.py,v 1.4 2003/05/01 19:35:43 faassen Exp $
 """
 import unittest
-from zope.interface.verify import verifyObject
-from zope.i18n.interfaces import II18nAware
-
 
 def sorted(list):
     list.sort()
     return list
-
 
 class TestII18nAware(unittest.TestCase):
 

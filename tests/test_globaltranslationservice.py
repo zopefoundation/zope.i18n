@@ -13,9 +13,9 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.10 2003/04/17 20:05:13 bwarsaw Exp $
+$Id: test_globaltranslationservice.py,v 1.11 2003/05/01 19:35:43 faassen Exp $
 """
-import unittest, sys, os
+import unittest, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_itranslationservice import \
