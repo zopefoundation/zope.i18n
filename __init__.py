@@ -16,6 +16,7 @@
 $Id$
 """
 import re
+import warnings
 from zope.i18nmessageid import MessageIDFactory, MessageID
 from zope.i18n.interfaces import ITranslationDomain
 
@@ -28,25 +29,35 @@ _interp_regex = re.compile(r'(?<!\$)(\$(?:%(n)s|{%(n)s}))' %({'n': NAME_RE}))
 _get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
 
 
-# XXX: location not needed
-def translate(location, msgid, domain=None, mapping=None, context=None,
-              target_language=None, default=None):
+def _translate(msgid, domain=None, mapping=None, context=None,
+               target_language=None, default=None):
 
-    # XXX: For some reason, I get a recursive import when placing this import
-    #      outside the function. I have no clue how to fix this. SR
-    from zope.component import queryUtility
 
     if isinstance(msgid, MessageID):
         domain = msgid.domain
         default = msgid.default
         mapping = msgid.mapping
 
+    # XXX we shouldn't need this import here
+    from zope.component import queryUtility
     util = queryUtility(ITranslationDomain, domain)
 
     if util is None:
         return interpolate(default, mapping)
 
     return util.translate(msgid, mapping, context, target_language, default)
+
+# BBB Backward compat
+def translate(*args, **kw):
+    if args and not isinstance(args[0], basestring):
+        warnings.warn(
+            "translate no longer takes a location argument. "
+            "The argument was ignored.",
+            DeprecationWarning, 2)
+        args = args[1:]
+    return _translate(*args, **kw)
+
+    
 
 
 def interpolate(text, mapping):
