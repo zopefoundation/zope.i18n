@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: SimpleTranslationService.py,v 1.1 2002/06/12 18:38:56 srichter Exp $
+$Id: SimpleTranslationService.py,v 1.2 2002/06/12 20:58:13 bwarsaw Exp $
 """
 
 import re
@@ -59,19 +59,18 @@ class SimpleTranslationService:
     # Implementation methods for interface
     # Zope.I18n.ITranslationService.
 
-    def translate(self, domain, msgid, mapping=None, context=None,  
+    def translate(self, domain, msgid, mapping=None, context=None,
                   target_language=None):
         '''See interface ITranslationService'''
-
         # Find out what the target language should be
         if target_language is None:
             if context is None:
                 raise TypeError, 'No destination language'
             else:
-                avail_langs = map(lambda m: m[2], self.messages.keys())
+                langs = [m[1] for m in self.messages.keys()]
                 # Let's negotiate the language to translate to. :)
                 negotiator = getService(self, 'LanguageNegotiation')
-                target_language = negotiator.getLanguage(avail_langs, context)
+                target_language = negotiator.getLanguage(langs, context)
 
         # Make a raw translation without interpolation
         text = self.messages.get((domain, target_language, msgid), msgid)
@@ -82,7 +81,7 @@ class SimpleTranslationService:
 
     def getDomain(self, domain):
         '''See interface ITranslationService'''
-        return Domain(self, domain)
+        return Domain(domain, self)
 
     #
     ############################################################
