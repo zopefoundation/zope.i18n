@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.10 2003/03/25 14:48:01 srichter Exp $
+$Id: locales.py,v 1.11 2003/03/25 18:43:15 srichter Exp $
 """
 import os
 import datetime
@@ -416,7 +416,7 @@ class Locale:
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
             pattern = self.getDefaultCalendar().datePatterns[name]
-        except AttributeError, KeyError:
+        except (AttributeError, KeyError):
             return self._getNextLocale().getDateFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
 
@@ -424,7 +424,7 @@ class Locale:
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
             pattern = self.getDefaultCalendar().datetimePattern
-        except AttributeError, KeyError:
+        except (AttributeError, KeyError):
             return self._getNextLocale().getDateTimeFormatter(name)
         date_pat = self.getDateFormatter(name).getPattern()
         time_pat = self.getTimeFormatter(name).getPattern()
@@ -447,7 +447,7 @@ class Locale:
             try:
                 format = locales.getLocale(*id).getDefaultNumberFormat()
                 symbols.update(format.symbols)
-            except AttributeError, KeyError:
+            except (AttributeError, KeyError):
                 pass # Locale has no number format information
 
         return NumberFormat(pattern, symbols)
