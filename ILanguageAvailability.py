@@ -13,15 +13,13 @@
 ##############################################################################
 """
 
-$Id: ILanguageAvailability.py,v 1.2 2002/06/10 23:29:28 jim Exp $
+$Id: ILanguageAvailability.py,v 1.3 2002/06/12 15:53:07 bwarsaw Exp $
 """
 
 from Interface import Interface
 
 class ILanguageAvailability(Interface):
     
-    def availableLanguages():
+    def getAvailableLanguages():
         """Return a sequence of language tags for available languages
         """
-
-        
