@@ -13,7 +13,7 @@
 ##############################################################################
 """Language Negotiator tests.
 
-$Id: test_negotiator.py,v 1.9 2004/02/27 22:27:24 srichter Exp $
+$Id: test_negotiator.py,v 1.10 2004/03/01 13:08:20 sidnei Exp $
 """
 import unittest
 
@@ -44,7 +44,8 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
             (('en','de'), ('en','de','fr'),  'en'),
             (('en'),      ('it','de','fr'),  None),
             (('pt-br','de'), ('pt_BR','de','fr'),  'pt_BR'),
-            (('pt-br','en'), ('pt','en','fr'),  'en'),
+            (('pt-br','en'), ('pt', 'en', 'fr'),  'pt'),
+            (('pt-br','en-us', 'de'), ('de', 'en', 'fr'),  'en'),
             )
 
         for user_pref_langs, obj_langs, expected in _cases:

@@ -13,7 +13,7 @@
 ##############################################################################
 """Language Negotiator
 
-$Id: negotiator.py,v 1.8 2004/02/27 22:25:22 srichter Exp $
+$Id: negotiator.py,v 1.9 2004/03/01 13:08:19 sidnei Exp $
 """
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
@@ -47,6 +47,15 @@ class Negotiator:
         for lang in userlangs:
             if lang in langs:
                 return langs.get(lang)
+            # If the user asked for a specific
+            # variation, but we don't have it available
+            # we may serve the most generic one, according
+            # to the spec (eg: user asks for ('en-us', 'de'),
+            # but we don't have 'en-us', then 'en' is
+            # preffered to 'de').
+            parts = lang.split('-')
+            if len(parts) > 1 and parts[0] in langs:
+                return langs.get(parts[0])
         return None
 
 
