@@ -13,12 +13,12 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.12 2003/04/11 13:20:13 mgedmin Exp $
+$Id: interfaces.py,v 1.13 2003/04/14 16:21:46 fdrake Exp $
 """
 import re
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Text, Int, Dict, Tuple, List
-from zope.schema import Container, Datetime
+from zope.schema import Container, Datetime, EnumeratedTextLine
 
 
 class II18nAware(Interface):
@@ -341,9 +341,9 @@ class ILocaleTimeZone(Interface):
 
     names = Dict(
         title=u"Time Zone Names",
-        key_types=(TextLine(title=u"Time Zone Name Type",
-                            allowed_values=(u'generic', u'standard',
-                                            u'daylight')),),
+        key_types=(EnumeratedTextLine(title=u"Time Zone Name Type",
+                                      allowed_values=(u'generic', u'standard',
+                                                      u'daylight')),),
         value_types=(TextLine(title=u"Time Zone Name"),))
 
 
@@ -373,16 +373,16 @@ class ILocaleCalendar(Interface):
 
     timePatterns = Dict(
         title=u"Time Patterns",
-        key_types=(TextLine(title=u"Pattern Name",
-                            allowed_values=(u'full', u'long',
-                                            u'medium', u'short')),),
+        key_types=(EnumeratedTextLine(title=u"Pattern Name",
+                                      allowed_values=(u'full', u'long',
+                                                      u'medium', u'short')),),
         value_types=(TextLine(title=u"Time Pattern"),))
 
     datePatterns = Dict(
         title=u"Date Patterns",
-        key_types=(TextLine(title=u"Pattern Name",
-                            allowed_values=(u'full', u'long',
-                                            u'medium', u'short')),),
+        key_types=(EnumeratedTextLine(title=u"Pattern Name",
+                                      allowed_values=(u'full', u'long',
+                                                      u'medium', u'short')),),
         value_types=(TextLine(title=u"Date Pattern"),))
 
     dateTimePattern = Dict(title=u"Date-Time Pattern",
@@ -424,20 +424,23 @@ class ILocaleNumberFormat(Interface):
 
     patterns = Dict(
         title=u"Number Patterns",
-        key_types=(TextLine(title=u"Format Name",
-                            allowed_values=(u'decimal', u'percent',
-                                            u'scientific')),),
+        key_types=(EnumeratedTextLine(title=u"Format Name",
+                                      allowed_values=(u'decimal', u'percent',
+                                                      u'scientific')),),
         value_types=(TextLine(title=u"Pattern"),))
 
     symbols = Dict(
         title=u"Number Symbols",
-        key_types=(TextLine(title=u"Format Name",
-                           allowed_values=(u'decimal', u'group', u'list',
-                                           u'percentSign', u'nativeZeroDigit',
-                                           u'patternDigit', u'plusSign',
-                                           u'minusSign', u'exponential',
-                                           u'perMille', u'infinity',
-                                           u'nan')),),
+        key_types=(EnumeratedTextLine(title=u"Format Name",
+                                      allowed_values=(u'decimal', u'group',
+                                                      u'list', u'percentSign',
+                                                      u'nativeZeroDigit',
+                                                      u'patternDigit',
+                                                      u'plusSign',
+                                                      u'minusSign',
+                                                      u'exponential',
+                                                      u'perMille', u'infinity',
+                                                      u'nan')),),
         value_types=(TextLine(title=u"Symbol"),))
 
 
@@ -605,7 +608,7 @@ class INumberFormat(IFormat):
 
     symbols = Dict(
         title=u"Number Symbols",
-        key_types=(TextLine(
+        key_types=(EnumeratedTextLine(
             title=u"Dictionary Class",
             allowed_values=(u'decimal', u'group', u'list', u'percentSign',
                             u'nativeZeroDigit', u'patternDigit', u'plusSign',
