@@ -27,7 +27,6 @@ from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
 
-
 class Environment:
 
     implements(IUserPreferredLanguages)
@@ -38,11 +37,9 @@ class Environment:
     def getPreferredLanguages(self):
         return self.langs
 
-
-
 class TestITranslationDomain(PlacelessSetup):
 
-    # This should be overwritten by every clas that inherits this test
+    # This should be overwritten by every class that inherits this test
     def _getTranslationDomain(self):
         pass
 
@@ -72,6 +69,11 @@ class TestITranslationDomain(PlacelessSetup):
         eq(translate('greeting', mapping={'name': 'Stephan'},
                      target_language='de'),
            'Hallo Stephan, wie geht es Dir?')
+        # Testing default value interpolation
+        eq(translate('greeting', mapping={'name': 'Philipp'},
+                     target_language='fr',
+                     default="Hello $name, how are you?"),
+           'Hello Philipp, how are you?')
 
     def testNoTranslation(self):
         translate = self._domain.translate
@@ -79,6 +81,10 @@ class TestITranslationDomain(PlacelessSetup):
         # Test that an unknown message id returns None as a translation
         eq(translate('glorp_smurf_hmpf', target_language='en'),
            None)
+        # Test default value behaviour
+        eq(translate('glorp_smurf_hmpf', target_language='en',
+                     default='Glorp Smurf Hmpf'),
+           'Glorp Smurf Hmpf')
 
     def testNoTargetLanguage(self):
         translate = self._domain.translate

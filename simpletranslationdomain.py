@@ -57,10 +57,9 @@ class SimpleTranslationDomain:
             negotiator = getUtility(INegotiator)
             target_language = negotiator.getLanguage(langs, context)
 
-        # Make a raw translation without interpolation
+        # Find a translation; if nothing is found, use the default
+        # value
         text = self.messages.get((target_language, msgid))
         if text is None:
-            return default
-
-        # Now we need to do the interpolation
+	    text = default
         return interpolate(text, mapping)
