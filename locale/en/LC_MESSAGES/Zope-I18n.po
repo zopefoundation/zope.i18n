@@ -1,21 +1,35 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Free Software Foundation, Inc.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
-#, fuzzy
-msgid ""
-msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: 8bit\n"
-
 msgid "New Domain:"
 msgstr "New Domain:"
 
 msgid "New Language:"
 msgstr "New Language:"
 
+msgid "Select Languages:"
+msgstr "Select Languages:"
+
+msgid "Select Domains:"
+msgstr "Select Domains:"
+
+msgid "Edit"
+msgstr "Edit"
+
+msgid "Delete"
+msgstr "Delete"
+
+msgid "Filter (% - wildcard):"
+msgstr "Filter (% - wildcard):"
+
+msgid "Message Id"
+msgstr "Message Id"
+
+msgid "Domain"
+msgstr "Domain"
+
+msgid "Edit Messages"
+msgstr "Edit Messages"
+
+msgid "Delete Messages"
+msgstr "Delete Messages"
+
+msgid "Filter"
+msgstr "Filter"

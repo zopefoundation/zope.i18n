@@ -13,7 +13,7 @@
 ##############################################################################
 """This is the standard, placeful Translation Service for TTW development.
 
-$Id: TranslationService.py,v 1.6 2002/06/13 13:13:07 srichter Exp $
+$Id: TranslationService.py,v 1.7 2002/06/13 15:47:50 srichter Exp $
 """
 import re
 from types import StringTypes, TupleType
@@ -119,11 +119,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         text = msgid
         for name in catalog_names:
             catalog = super(TranslationService, self).__getitem__(name)
-            try:
-                text = catalog.getMessage(msgid)
-                break
-            except:
-                pass
+            text = catalog.queryMessage(msgid)
 
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)

@@ -6,11 +6,12 @@
 
 <div metal:fill-slot="body">
 
-<table cols="4" width="100%" border="0">
+<table cols="4" width="100%" border="0" 
+       i18n:domain="Zope-I18n">
   <tr>
     <td width="25%">
       <form action="./" method="post">
-        <div class="form-label">Select Languages:</div>
+        <div class="form-label" i18n:translate="">Select Languages:</div>
         <div>
           <select name="languages:list" size="3" style="width: 80%" multiple>
             <tal:block repeat="language view/getAllLanguages">
@@ -29,15 +30,17 @@
         </div>
         <div>
           <input class="form-element" type="submit" 
-                 name="@@changeEditLanguages.html:method" value="Edit">
+                 name="@@changeEditLanguages.html:method" value="Edit"
+		 i18n:attributes="value">
           <input class="form-element" type="submit" 
-                 name="@@deleteLanguages.html:method" value="Delete">
+                 name="@@deleteLanguages.html:method" value="Delete"
+		 i18n:attributes="value">
         </div>
       </form>
     </td>
     <td width="25%">
       <form action="./" method="post">
-        <div class="form-label">Select Domains:</div>
+        <div class="form-label" i18n:translate="">Select Domains:</div>
         <div>
           <select name="domains:list" size="3" style="width: 80%" multiple>
             <tal:block repeat="domain view/getAllDomains">
@@ -56,22 +59,22 @@
           </div>
           <div>
             <input class="form-element" type="submit" 
-                   name="@@changeEditDomains.html:method" value="Edit">
+                   name="@@changeEditDomains.html:method" value="Edit"
+                   i18n:attributes="value">
             <input class="form-element" type="submit" 
-                   name="@@deleteDomains.html:method" value="Delete">
+                   name="@@deleteDomains.html:method" value="Delete"
+                   i18n:attributes="value">
           </div>
         </form>
       </td>
       <td width="25%" align="right" valign="top">
         <form action="." method="post">
-          <div class="form-label"
-               i18n:translate="" i18n:domain="Zope-I18n">New Language:</div>
+          <div class="form-label" i18n:translate="">New Language:</div>
           <div>
             <input type="text" name="language" size="20" value="">
             <input type="submit" name="@@addLanguage.html:method" value="Add">
           </div>
-          <div class="form-label"
-               i18n:translate="" i18n:domain="Zope-I18n">New Domain:</div>
+          <div class="form-label" i18n:translate="">New Domain:</div>
           <div>
             <input type="text" name="domain" size="20" value="">
             <input type="submit" name="@@addDomain.html:method" value="Add">
@@ -80,14 +83,16 @@
       </td>
       <td width="25%" align="right" valign="top">
         <form action="./" method="post">
-          <div class="form-label">Filter (% - wildcard):</div>
+          <div class="form-label" 
+               i18n:translate="">Filter (% - wildcard):</div>
           <div>
             <input type="text" name="filter" size="25" value=""
                    tal:attributes="value request/filter|default" />
           </div>
           <div>
             <input type="submit" name="@@changeFilter.html:method" 
-                   value="Filter" />
+                   value="Filter" 
+                   i18n:attributes="value"/>
           </div>
         </form>
       </td>
@@ -98,8 +103,8 @@
   <table width="100%" cellspacing="0" cellpadding="3" border="0">
     <tr class="list-header" align="left">
         <th width="16">&nbsp;</th>
-        <th>Message Id</th>
-        <th>Domains</th>
+        <th i18n:translate="">Message Id</th>
+        <th i18n:translate="">Domain</th>
         <th tal:repeat="language python:view.getEditLanguages()"
             tal:content="language">de</th>
     </tr>    
@@ -157,9 +162,11 @@
     
   <div>
     <input class="form-element" type="submit" 
-           name="@@editMessages.html:method" value="Edit Labels">&nbsp;
+           name="@@editMessages.html:method" value="Edit Messages"
+           i18n:attributes="value">&nbsp;
     <input class="form-element" type="submit" 
-           name="@@deleteMessages.html:method" value="Delete Labels">
+           name="@@deleteMessages.html:method" value="Delete Messages"
+           i18n:attributes="value">
   </div>
   </form>
 </div>

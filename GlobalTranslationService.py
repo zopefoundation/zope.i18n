@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: GlobalTranslationService.py,v 1.2 2002/06/12 20:55:24 bwarsaw Exp $
+$Id: GlobalTranslationService.py,v 1.3 2002/06/13 15:47:50 srichter Exp $
 """
 
 from Negotiator import negotiator
@@ -65,12 +65,10 @@ class GlobalTranslationService(SimpleTranslationService):
         text = msgid
         for name in catalog_names:
             catalog = self._data[name]
-            try:
-                text = catalog.getMessage(msgid)
-                break
-            except:
-                pass
+            text = catalog.queryMessage(msgid)
 
+        # XXX That should be done by the gettext module
+        text = unicode(text, 'latin-1')
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)
 

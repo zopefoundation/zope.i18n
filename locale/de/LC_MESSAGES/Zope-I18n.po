@@ -4,3 +4,32 @@ msgstr "Neue Domain:"
 msgid "New Language:"
 msgstr "Neue Sprache:"
 
+msgid "Select Languages:"
+msgstr "Wähle Sprachen:"
+
+msgid "Select Domains:"
+msgstr "Wähle Domainen:"
+
+msgid "Edit"
+msgstr "Ändern"
+
+msgid "Delete"
+msgstr "Löschen"
+
+msgid "Filter (% - wildcard):"
+msgstr "Filter (% - Wildcard):"
+
+msgid "Message Id"
+msgstr "Meldungs-Id"
+
+msgid "Domain"
+msgstr "Domain"
+
+msgid "Edit Messages"
+msgstr "Ändere Meldungen"
+
+msgid "Delete Messages"
+msgstr "Lösche Meldungen"
+
+msgid "Filter"
+msgstr "Filter"
