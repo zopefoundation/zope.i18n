@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: testIMessageCatalog.py,v 1.1 2002/06/12 18:38:58 srichter Exp $
+$Id: testIMessageCatalog.py,v 1.2 2002/06/13 16:35:20 srichter Exp $
 """
 
 import unittest
@@ -40,7 +40,7 @@ class TestIMessageCatalog(unittest.TestCase):
     def testGetMessage(self):
         catalog = self._catalog    
         self.assertEqual(catalog.getMessage('short_greeting'), 'Hello!')
-        self.assertRaises(KeyError, catalog.getMessage, ('foo',))
+        self.assertRaises(KeyError, catalog.getMessage, 'foo')
         
 
     def testQueryMessage(self):

@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: GettextMessageCatalog.py,v 1.1 2002/06/12 18:38:56 srichter Exp $
+$Id: GettextMessageCatalog.py,v 1.2 2002/06/13 16:35:19 srichter Exp $
 """
 
 from gettext import GNUTranslations
@@ -50,7 +50,7 @@ class GettextMessageCatalog:
     def getMessage(self, id):
         'See Zope.I18n.IMessageCatalog.IMessageCatalog'
         self._prepareTranslations()
-        msg = self.__translation_object.gettext(id)
+        msg = self.__translation_object.ugettext(id)
         if msg == id:
             raise KeyError
         return msg
@@ -58,7 +58,7 @@ class GettextMessageCatalog:
     def queryMessage(self, id, default=None):
         'See Zope.I18n.IMessageCatalog.IMessageCatalog'
         self._prepareTranslations()
-        text = self.__translation_object.gettext(id)
+        text = self.__translation_object.ugettext(id)
         if text != id:
             return text
         if default is None:
