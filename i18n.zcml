@@ -16,7 +16,7 @@
 
 <adapter factory="Zope.Publisher.Browser.BrowserLanguages."
          for="Zope.Publisher.Browser.IBrowserRequest."
-         provides="Zope.I18n.IUserPreferedLanguages"
+         provides="Zope.I18n.IUserPreferredLanguages"
          />
 
 
