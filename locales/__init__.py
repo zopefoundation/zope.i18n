@@ -345,7 +345,7 @@ class LocaleCalendar(AttributeInheritance):
         """See zope.i18n.interfaces.ILocaleCalendar"""
         day = datetime.weekday()
         time = datetime.time()
-        # XXX: todo
+        # TODO: Implement this method
         return False
 
     def getFirstWeekDayName(self):
@@ -604,14 +604,14 @@ class Locale(AttributeInheritance):
         pieces = filter(None,
                         (id.language, id.script, id.territory, id.variant))
         id_string = '_'.join(pieces)
-        # XXX: What about keys??? Where do I get this info from?
+        # TODO: What about keys??? Where do I get this info from?
         pieces = [key+'='+type for key, type in ()]
         if pieces:
             id_string += '@' + ','.join(pieces)
         return id_string
 
     def getInheritedSelf(self):
-        """See XXX...
+        """See zope.i18n.interfaces.locales.ILocaleInheritance
 
         This is the really interesting method that looks up the next (more
         general) Locale object. This is used in case this locale object does
