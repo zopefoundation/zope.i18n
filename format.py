@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.9 2003/06/30 16:25:23 jeremy Exp $
+$Id: format.py,v 1.10 2003/06/30 16:29:15 jeremy Exp $
 """
 import re
 import math
@@ -69,10 +69,10 @@ class DateTimeFormat(object):
         try:
             results = re.match(regex, text).groups()
         except AttributeError:
-            raise DateTimeParseError, \
-                  'The datetime string did not match the pattern.'
+            raise DateTimeParseError(
+                  'The datetime string did not match the pattern.')
         # Sometimes you only want the parse results
-        if asObject == False:
+        if not asObject:
             return results
         # Map the parsing results to a datetime object
         ordered = [0, 0, 0, 0, 0, 0, 0]
