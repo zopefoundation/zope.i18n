@@ -197,6 +197,9 @@ class IUserPreferredLanguages(Interface):
 
     def getPreferredLanguages():
         """Return a sequence of user preferred languages.
+
+        The sequence is sorted in order of quality, with the most preferred
+        languages first.
         """
 
 
