@@ -279,7 +279,9 @@ class LocaleFactory:
                 elements[type] = self._getText(element.childNodes)
             setattr(displayNames, group_tag, elements)
 
-        displayNames.types = self._extractTypes(names_nodes[0])
+        types = self._extractTypes(names_nodes[0])
+        if types is not None:
+            displayNames.types = types
         return displayNames
 
 
@@ -845,8 +847,12 @@ class LocaleFactory:
             return
 
         dates = LocaleDates()
-        dates.calendars = self._extractCalendars(dates_nodes[0])
-        dates.timezones = self._extractTimeZones(dates_nodes[0])
+        calendars = self._extractCalendars(dates_nodes[0])
+        if calendars is not None:
+            dates.calendars = calendars
+        timezones = self._extractTimeZones(dates_nodes[0])
+        if timezones is not None:
+            dates.timezones = timezones
         return dates
 
 
@@ -1074,9 +1080,13 @@ class LocaleFactory:
             return
 
         numbers = LocaleNumbers()
-        numbers.symbols = self._extractSymbols(numbers_nodes[0])
+        symbols = self._extractSymbols(numbers_nodes[0])
+        if symbols is not None: 
+            numbers.symbols = symbols
         self._extractNumberFormats(numbers_nodes[0], numbers)
-        numbers.currencies = self._extractCurrencies(numbers_nodes[0])
+        currencies = self._extractCurrencies(numbers_nodes[0])
+        if currencies is not None:
+            numbers.currencies = currencies
         return numbers
     
 
@@ -1129,10 +1139,22 @@ class LocaleFactory:
     def __call__(self):
         """Create the Locale."""
         locale = Locale(self._extractIdentity())
-        locale.displayNames = self._extractDisplayNames()
-        locale.dates = self._extractDates()
-        locale.numbers = self._extractNumbers()
-        locale.delimiters = self._extractDelimiters
+
+        names = self._extractDisplayNames()
+        if names is not None:
+            locale.displayNames = names 
+
+        dates = self._extractDates()
+        if dates is not None:
+            locale.dates = dates
+
+        numbers = self._extractNumbers()
+        if numbers is not None:
+            locale.numbers = numbers
+
+        delimiters = self._extractDelimiters()
+        if delimiters is not None:
+            locale.delimiters = delimiters
         
         # Unmapped:
         #
