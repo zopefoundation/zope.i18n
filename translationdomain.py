@@ -78,7 +78,7 @@ class TranslationDomain(SimpleTranslationDomain):
         # MessageID attributes override arguments
         if isinstance(msgid, MessageID):
             if msgid.domain != self.domain:
-                util = getUtility(None, ITranslationDomain, msgid.domain)
+                util = getUtility(ITranslationDomain, msgid.domain)
                 return util.translate(msgid, mapping, context,
                                       target_language, default)
             else:

@@ -54,7 +54,7 @@ class SimpleTranslationDomain:
         if target_language is None and context is not None:
             langs = [m[0] for m in self.messages.keys()]
             # Let's negotiate the language to translate to. :)
-            negotiator = getUtility(self, INegotiator)
+            negotiator = getUtility(INegotiator)
             target_language = negotiator.getLanguage(langs, context)
 
         # Make a raw translation without interpolation

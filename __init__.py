@@ -28,6 +28,7 @@ _interp_regex = re.compile(r'(?<!\$)(\$(?:%(n)s|{%(n)s}))' %({'n': NAME_RE}))
 _get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
 
 
+# XXX: location not needed
 def translate(location, msgid, domain=None, mapping=None, context=None,
               target_language=None, default=None):
 
@@ -40,7 +41,7 @@ def translate(location, msgid, domain=None, mapping=None, context=None,
         default = msgid.default
         mapping = msgid.mapping
 
-    util = queryUtility(location, ITranslationDomain, name=domain)
+    util = queryUtility(ITranslationDomain, name=domain)
 
     if util is None:
         return interpolate(default, mapping)
