@@ -1,33 +1,35 @@
+=================
 Locales XML Files
+=================
 
-  The XML locale files were produced as part of the ICU I18n and L10n
-  framework. They are provided here under the original ICU License - ICU 1.8.1
-  and later license. 
-
-
-  ICU Web site
-
-    http://oss.software.ibm.com/icu/
+The XML locale files were produced as part of the ICU I18n and L10n
+framework. They are provided here under the original ICU License - ICU 1.8.1
+and later license. 
 
 
-  Locale Data Markup Language
+ICU Web site
+------------
 
-    The XML files follow the now public and completed LDML format. 
+  http://oss.software.ibm.com/icu/
 
-    The DTD can be found at
 
-      http://www.openi18n.org/spec/ldml/1.0/ldml-spec.htm
+Locale Data Markup Language
+---------------------------
 
-    The specification is at
+The XML files follow the now public and completed LDML format. 
 
-      http://www.openi18n.org/spec/ldml/1.0/ldml.dtd
+The DTD can be found at
 
-  
-  Download
+  http://www.openi18n.org/spec/ldml/1.0/ldml-spec.htm
 
-    ::
+The specification is at
 
-      $ cvs -d :pserver:anoncvs@oss.software.ibm.com:/usr/cvs/icu login
-      Password: anoncvs
-      $ cvs -d :pserver:anoncvs@oss.software.ibm.com:/usr/cvs/icu co \
-        -d new_locales locale/common/main -d data
+  http://www.openi18n.org/spec/ldml/1.0/ldml.dtd
+
+
+Download::
+
+  $ cvs -d :pserver:anoncvs@oss.software.ibm.com:/usr/cvs/icu login
+  Password: anoncvs
+  $ cvs -d :pserver:anoncvs@oss.software.ibm.com:/usr/cvs/icu co \
+    -d new_locales locale/common/main -d data
