@@ -13,13 +13,13 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.2 2002/12/25 14:13:39 jim Exp $
+$Id: simpletranslationservice.py,v 1.3 2002/12/31 02:52:13 jim Exp $
 """
 
 import re
 from types import DictType
 from zope.component import getService
-from zope.interfaces.i18n import ITranslationService
+from zope.i18n.interfaces import ITranslationService
 from zope.i18n.domain import Domain
 
 

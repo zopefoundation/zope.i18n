@@ -13,10 +13,10 @@
 ##############################################################################
 """
 
-$Id: domain.py,v 1.2 2002/12/25 14:13:39 jim Exp $
+$Id: domain.py,v 1.3 2002/12/31 02:52:13 jim Exp $
 """
 
-from zope.interfaces.i18n import IDomain
+from zope.i18n.interfaces import IDomain
 from zope.component import getServiceManager
 
 class Domain:

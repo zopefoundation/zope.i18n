@@ -13,12 +13,12 @@
 ##############################################################################
 """
 
-$Id: test_negotiator.py,v 1.2 2002/12/25 14:13:40 jim Exp $
+$Id: test_negotiator.py,v 1.3 2002/12/31 02:52:15 jim Exp $
 """
 import unittest, sys
 
 from zope.i18n.negotiator import Negotiator
-from zope.interfaces.i18n import IUserPreferredLanguages
+from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component.tests.placelesssetup import PlacelessSetup
 
 class Env:

@@ -13,11 +13,11 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.2 2002/12/25 14:13:39 jim Exp $
+$Id: gettextmessagecatalog.py,v 1.3 2002/12/31 02:52:13 jim Exp $
 """
 
 from gettext import GNUTranslations
-from zope.interfaces.i18n import IReadMessageCatalog
+from zope.i18n.interfaces import IReadMessageCatalog
 
 
 class GettextMessageCatalog:

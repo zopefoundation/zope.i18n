@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_ireadtranslationservice.py,v 1.2 2002/12/25 14:13:40 jim Exp $
+$Id: test_ireadtranslationservice.py,v 1.3 2002/12/31 02:52:15 jim Exp $
 """
 
 import unittest
@@ -23,10 +23,10 @@ from zope.component.tests.placelesssetup import PlacelessSetup
 # XXX Bad, can't depend on app!
 from zope.app.component.metaconfigure import provideService, managerHandler
 from zope.i18n.negotiator import negotiator
-from zope.interfaces.i18n import INegotiator
-from zope.interfaces.i18n import IUserPreferredLanguages
-from zope.interfaces.i18n import IReadTranslationService
-from zope.interfaces.i18n import IDomain
+from zope.i18n.interfaces import INegotiator
+from zope.i18n.interfaces import IUserPreferredLanguages
+from zope.i18n.interfaces import IReadTranslationService
+from zope.i18n.interfaces import IDomain
 
 
 class Environment:

@@ -13,11 +13,11 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: test_ireadmessagecatalog.py,v 1.2 2002/12/25 14:13:40 jim Exp $
+$Id: test_ireadmessagecatalog.py,v 1.3 2002/12/31 02:52:15 jim Exp $
 """
 import unittest
 from zope.interface.verify import verifyObject
-from zope.interfaces.i18n import IReadMessageCatalog
+from zope.i18n.interfaces import IReadMessageCatalog
 
 
 class TestIReadMessageCatalog(unittest.TestCase):
