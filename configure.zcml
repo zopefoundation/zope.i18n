@@ -84,6 +84,7 @@
 
 
 <gts:registerTranslations directory="./locale" />
+<gts:defaultLanguages languages="en" />
 
 <include package=".Views" />
 
