@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.10 2003/06/06 19:29:09 stevea Exp $
+$Id: globaltranslationservice.py,v 1.11 2003/08/06 14:36:09 srichter Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -66,6 +66,12 @@ class GlobalTranslationService(SimpleTranslationService):
     def translate(self, msgid, domain=None, mapping=None, context=None,
                   target_language=None, default=None):
         '''See interface ITranslationService'''
+
+        # if the msgid is empty, let's save a lot of calculations and return
+        # an empty string.
+        if msgid == u'':
+            return u''
+
         if target_language is None and context is not None:
             # Try to determine target language from context
             langs = [m[0] for m in self._catalogs.keys()]

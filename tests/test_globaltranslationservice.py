@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.11 2003/05/01 19:35:43 faassen Exp $
+$Id: test_globaltranslationservice.py,v 1.12 2003/08/06 14:36:12 srichter Exp $
 """
 import unittest, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
@@ -74,6 +74,10 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
                      default='short_greeting'),
            'short_greeting')
 
+    def testEmptyStringTranslate(self):
+        translate = self._service.translate
+        self.assertEqual(translate(u'', 'default', target_language='en'), u'')
+        self.assertEqual(translate(u'', 'blah', target_language='foo'), u'')
 
     def testStringTranslate(self):
         translate = self._service.translate
