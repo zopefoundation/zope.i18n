@@ -229,14 +229,14 @@ class TestDateTimeFormat(TestCase):
             datetime.datetime(2003, 01, 02, 21, 48, 01))
 
         # German long
-        # XXX The parser does not support timezones yet.
+        # TODO: The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             '2. Januar 2003 21:48:01 +100',
             'd. MMMM yyyy HH:mm:ss z'),
             datetime.datetime(2003, 01, 02, 21, 48, 01))
 
         # German full
-        # XXX The parser does not support timezones yet.
+        # TODO: The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
             "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
@@ -271,14 +271,14 @@ class TestDateTimeFormat(TestCase):
             '02.01.2003 21:48:01')
 
         # German long
-        # XXX The parser does not support timezones yet.
+        # TODO: The parser does not support timezones yet.
         self.assertEqual(self.format.format(
             datetime.datetime(2003, 01, 02, 21, 48, 01),
             'd. MMMM yyyy HH:mm:ss z'),
             '2. Januar 2003 21:48:01 +000')
 
         # German full
-        # XXX The parser does not support timezones yet.
+        # TODO: The parser does not support timezones yet.
         self.assertEqual(self.format.format(
             datetime.datetime(2003, 01, 02, 21, 48),
             "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),

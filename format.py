@@ -377,7 +377,7 @@ class NumberFormat(object):
         if bin_pattern[PADDING4] is not None and post_padding > 0:
             text += bin_pattern[PADDING4]*post_padding
 
-        # XXX: Need to make sure unicode is everywhere
+        # TODO: Need to make sure unicode is everywhere
         return unicode(text)
 
 
@@ -479,7 +479,7 @@ def buildDateTimeParseInfo(calendar):
     It also depends on the locale of course."""
     return {
         ('a', 1): r'(%s|%s)' %(calendar.am, calendar.pm),
-        # XXX: works for gregorian only right now
+        # TODO: works for gregorian only right now
         ('G', 1): r'(%s|%s)' %(calendar.eras[1][1], calendar.eras[2][1]),
         ('y', 2): r'([0-9]{2})',
         ('y', 4): r'([0-9]{4})',
@@ -570,7 +570,8 @@ def buildDateTimeInfo(dt, calendar):
         ('s', 2): "%.2i" %dt.second,
         ('S', 1): str(dt.microsecond),
         ('S', 2): "%.6i" %dt.microsecond,
-        # XXX not yet implemented
+        # TODO: Implement the following symbols. This requires the handling of
+        # timezones.
         ('F', 1): str(2),
         ('F', 2): "%.2i" %(2),
         ('W', 1): str(2),

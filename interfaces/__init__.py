@@ -239,7 +239,7 @@ class INegotiator(Interface):
                 of user prefered languages
         """
 
-        # XXX I'd like for there to be a symmetric interface method, one in
+        # TODO: I'd like for there to be a symmetric interface method, one in
         # which an adapter is gotten for both the first arg and the second
         # arg.  I.e. getLanguage(obj, env)
         # But this isn't a good match for the ITranslationService.translate()
