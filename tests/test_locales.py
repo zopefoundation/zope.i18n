@@ -13,9 +13,9 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.5 2003/03/25 14:48:02 srichter Exp $
+$Id: test_locales.py,v 1.6 2003/04/30 23:37:59 faassen Exp $
 """
-import os, sys
+import os
 import datetime
 from unittest import TestCase, TestSuite, makeSuite
 
@@ -24,8 +24,8 @@ from zope.i18n.interfaces import ILocaleVersion, ILocaleIdentity
 from zope.i18n.interfaces import ILocaleTimeZone, ILocaleCalendar
 from zope.i18n.interfaces import ILocaleNumberFormat, ILocaleCurrency
 
-from zope.i18n.locales import NoGeneralLocaleError, LoadLocaleError
-from zope.i18n.locales import LocaleProvider, Locale, XMLLocaleFactory
+from zope.i18n.locales import LoadLocaleError
+from zope.i18n.locales import LocaleProvider, XMLLocaleFactory
 from zope.i18n.locales import locales
 from zope.i18n.locales import LocaleVersion, LocaleIdentity
 from zope.i18n.locales import LocaleTimeZone, LocaleCalendar
