@@ -85,7 +85,7 @@
 
 <gts:registerTranslations directory="./locale" />
 
-<include package=".Views" file="views.zcml" />
+<include package=".Views" />
 
 
 </zopeConfigure>
