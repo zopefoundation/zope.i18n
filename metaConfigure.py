@@ -14,7 +14,7 @@
 """
 This module handles the :startup directives. 
 
-$Id: metaConfigure.py,v 1.2 2002/06/12 19:11:49 bwarsaw Exp $
+$Id: metaConfigure.py,v 1.3 2002/06/18 18:22:59 bwarsaw Exp $
 """
 
 import os
@@ -43,6 +43,11 @@ def registerTranslations(_context, directory):
                         discriminator = catalog.getIdentifier(),
                         callable = translationService.addCatalog,
                         args = (catalog,) ))
-
     return actions
 
+
+def defaultLanguages(_context, languages):
+    langs = [L.strip() for L in languages.split()]
+    return [Action(discriminator = ('gts', languages),
+                   callable = translationService.setLanguageFallbacks,
+                   args = (langs,))]
