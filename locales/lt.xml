@@ -6,6 +6,18 @@
 	Corporation and others.  All Rights Reserved.
  -->
 
+<!-- XXX There were a couple of mistakes in this file, so please take care
+	 when syncing with upstream:
+	  - <displayNames> said the language was 'Lietuviř' instead of 'Lietuvių'
+	  - Time format used '.' instead of ':'
+	  - Date format was 'yyyy.M.d' instead of 'yyyy-MM-dd'
+	  - Time zone should be Europe/Vilnius, not Africa/Casablanca, but
+	    I don't exactly follow the format, so I didn't fix it yet.
+
+	 See also bug #2833 in the ICU bug database, which can be found at
+	 http://www.jtcsv.com/cgibin/icu-bugs
+  -->
+
 <localeData>
 	<versioning  >
  		<version number="1.0" date="Tue Jun 11 15:06:26 2002">Various notes and changes in version 1.0</version>
@@ -16,7 +28,7 @@
 
 	<displayNames >
 		<languages >
-			<language id="lt" >Lietuviř</language>
+			<language id="lt" >Lietuvių</language>
 		</languages >
 		<countries  >
 			<country id="LT">Lietuva</country>
@@ -92,16 +104,16 @@
 			<patterns> 
 				<chars>GanjkHmsSEDFwWxhKzAe</chars>
 				<time>
-					<full>HH.mm.ss z</full>
-					<long>HH.mm.ss z</long>
-					<medium>HH.mm.ss</medium>
-					<short>HH.mm</short>
+					<full>HH:mm:ss z</full>
+					<long>HH:mm:ss z</long>
+					<medium>HH:mm:ss</medium>
+					<short>HH:mm</short>
 				</time>
 				<date>
 					<full>EEEE, yyyy, MMMM d</full>
 					<long>EEEE, yyyy, MMMM d</long>
-					<medium>yyyy.M.d</medium>
-					<short>yy.M.d</short>
+					<medium>yyyy-MM-dd</medium>
+					<short>yy-MM-dd</short>
 				</date>
  				<dateTime>{1} {0} </dateTime>
 			</patterns>
