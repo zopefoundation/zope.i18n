@@ -140,12 +140,31 @@ class TestGlobalLocaleProvider(TestCase):
         self.assertEqual(locale.id.territory, 'GB')
         self.assertEqual(locale.id.variant, None)
 
+class TestRootLocale(TestCase):
+    """There were some complaints that the root locale does not work
+    correctly, so make sure it does."""
+
+    locales.loadLocale(None, None, None)
+    locale = locales.getLocale(None, None, None)
+
+    def test_dateFormatter(self):
+        formatter = self.locale.dates.getFormatter('date')
+        self.assertEqual(
+            formatter.format(datetime.date(2004, 10, 31), 'E'), '1')
+        self.assertEqual(
+            formatter.format(datetime.date(2004, 10, 31), 'EE'), '01')
+        self.assertEqual(
+            formatter.format(datetime.date(2004, 10, 31), 'EEE'), '1')
+        self.assertEqual(
+            formatter.format(datetime.date(2004, 10, 31), 'EEEE'), '1')
+    
 
 def test_suite():
     return TestSuite((
         makeSuite(TestLocaleProvider),
         makeSuite(TestLocaleAndProvider),
         makeSuite(TestGlobalLocaleProvider),
+        makeSuite(TestRootLocale),
         ))
 
 if __name__ == "__main__":
