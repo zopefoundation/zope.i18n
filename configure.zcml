@@ -54,7 +54,8 @@
            permission="Zope.Public"
            component=".GlobalTranslationService.translationService" />
 
-<zmi:icon for=".ITranslationService." file="./i18n_service.gif" />
+<browser:icon name="zmi_icon" for=".ITranslationService."
+              file="./i18n_service.gif" />
 
 <!-- Setup Message Catalogs -->
 <content class=".MessageCatalog.">
