@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.4 2003/04/11 13:20:13 mgedmin Exp $
+$Id: test_itranslationservice.py,v 1.5 2003/04/17 20:05:13 bwarsaw Exp $
 """
 
 import unittest
@@ -82,19 +82,19 @@ class TestITranslationService(PlacelessSetup):
         eq = self.assertEqual
         # Test that a given message id is properly translated in a supported
         # language
-        eq(translate('default', 'short_greeting', target_language='de'),
+        eq(translate('short_greeting', 'default', target_language='de'),
            'Hallo!')
         # Same test, but use the context argument
         context = Environment(('de', 'en'))
-        eq(translate('default', 'short_greeting', context=context),
+        eq(translate('short_greeting', 'default', context=context),
            'Hallo!')
 
     def testSimpleTranslate_bad_domain(self):
         translate = self._service.translate
         eq = self.assertEqual
-        eq(translate('defaultnot', 'short_greeting', target_language='de'),
+        eq(translate('short_greeting', 'defaultnot', target_language='de'),
            None)
-        eq(translate('defaultnot', 'short_greeting', target_language='de',
+        eq(translate('short_greeting', 'defaultnot', target_language='de',
                      default=42),
            42)
 
@@ -102,7 +102,7 @@ class TestITranslationService(PlacelessSetup):
         translate = self._service.translate
         eq = self.assertEqual
         # Testing both translation and interpolation
-        eq(translate('default', 'greeting', mapping={'name': 'Stephan'},
+        eq(translate('greeting', 'default', mapping={'name': 'Stephan'},
                      target_language='de'),
            'Hallo Stephan, wie geht es Dir?')
 
@@ -110,7 +110,7 @@ class TestITranslationService(PlacelessSetup):
         translate = self._service.translate
         eq = self.assertEqual
         # Test that an unknown message id returns None as a translation
-        eq(translate('default', 'glorp_smurf_hmpf', target_language='en'),
+        eq(translate('glorp_smurf_hmpf', 'default', target_language='en'),
            None)
 
     def testNoTargetLanguage(self):
@@ -118,12 +118,12 @@ class TestITranslationService(PlacelessSetup):
         eq = self.assertEqual
         # Test that default is returned when no language can be negotiated
         context = Environment(('xx', ))
-        eq(translate('default', 'short_greeting', context=context,
+        eq(translate('short_greeting', 'default', context=context,
                      default=42),
            42)
 
         # Test that default is returned when there's no destination language
-        eq(translate('default', 'short_greeting', default=42),
+        eq(translate('short_greeting', 'default', default=42),
            42)
 
 

@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.8 2003/04/15 21:16:10 bwarsaw Exp $
+$Id: globaltranslationservice.py,v 1.9 2003/04/17 20:05:13 bwarsaw Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -65,7 +65,7 @@ class GlobalTranslationService(SimpleTranslationService):
             fallbacks = LANGUAGE_FALLBACKS
         self._fallbacks = fallbacks
 
-    def translate(self, domain, msgid, mapping=None, context=None,
+    def translate(self, msgid, domain=None, mapping=None, context=None,
                   target_language=None, default=None):
         '''See interface ITranslationService'''
         if target_language is None and context is not None:

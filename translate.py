@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: translate.py,v 1.6 2003/04/11 19:18:57 bwarsaw Exp $
+$Id: translate.py,v 1.7 2003/04/17 20:05:13 bwarsaw Exp $
 """
 
 from zope.i18n.interfaces import ITranslator
@@ -66,6 +66,6 @@ class Translator:
         #     specify context=self.request and just ignore
         #     self._locale.id.language.
         return self._translation_service.translate(
-            self._domain, msgid, mapping=mapping,
+            msgid, self._domain, mapping=mapping,
             target_language=self._locale.id.language,
             default=default)

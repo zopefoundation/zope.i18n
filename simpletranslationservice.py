@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.7 2003/04/11 13:20:13 mgedmin Exp $
+$Id: simpletranslationservice.py,v 1.8 2003/04/17 20:05:13 bwarsaw Exp $
 """
 
 import re
@@ -56,7 +56,7 @@ class SimpleTranslationService:
             self.messages = messages
 
 
-    def translate(self, domain, msgid, mapping=None, context=None,
+    def translate(self, msgid, domain=None, mapping=None, context=None,
                   target_language=None, default=None):
         '''See interface ITranslationService'''
         # Find out what the target language should be

@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.9 2003/04/11 13:20:13 mgedmin Exp $
+$Id: test_globaltranslationservice.py,v 1.10 2003/04/17 20:05:13 bwarsaw Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
@@ -57,31 +57,27 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
         eq = self.assertEqual
         # Unset fallback translation languages
         self._service.setLanguageFallbacks([])
-        # Test that we have at least the minimum required arguments
-        raises(TypeError, translate, 'Hello')
 
         # Test that a translation in an unsupported language returns the
         # default, if there is no fallback language
-        eq(translate('default', 'short_greeting', target_language='es'),
+        eq(translate('short_greeting', 'default', target_language='es'),
            None)
-        eq(translate('default', 'short_greeting',
+        eq(translate('short_greeting', 'default',
                      target_language='es', default='short_greeting'),
            'short_greeting')
 
         # Same test, but use the context argument instead of target_language
         context = Environment()
-        eq(translate('default', 'short_greeting', context=context),
+        eq(translate('short_greeting', 'default', context=context),
            None)
-        eq(translate('default', 'short_greeting', context=context,
+        eq(translate('short_greeting', 'default', context=context,
                      default='short_greeting'),
            'short_greeting')
-        # Test that at least one of context or target_language is given
-        raises(TypeError, translate, 'short_greeting', context=None)
 
 
     def testStringTranslate(self):
         translate = self._service.translate
-        self.assertEqual(translate('default', u'short_greeting',
+        self.assertEqual(translate(u'short_greeting', 'default',
                                    target_language='en'),
                          u'Hello!')
 
@@ -91,18 +87,17 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
             GettextMessageCatalog('en', 'alt',
                                   os.path.join(path, 'en-default.mo')))
         translate = self._service.translate
-        self.assertEqual(translate('alt', u'special',
+        self.assertEqual(translate(u'special', 'alt',
                                    target_language='en'),
                          u'Wow')
 
     def testMessageIDTranslate(self):
         translate = self._service.translate
-        self.assertEqual(translate('default', u'short_greeting',
+        self.assertEqual(translate(u'short_greeting', 'default',
                                    target_language='en'),
                          u'Hello!')
         msgid = MessageIDFactory('alt')('short_greeting')
-        self.assertEqual(translate('default', msgid,
-                                   target_language='en'),
+        self.assertEqual(translate(msgid, 'default', target_language='en'),
                          u'Hey!')
 
 
@@ -112,26 +107,26 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
         eq = self.assertEqual
         # Test that a translation in an unsupported language returns a
         # translation in the fallback language (by default, English)
-        eq(translate('default', 'short_greeting', target_language='es'),
+        eq(translate('short_greeting', 'default', target_language='es'),
            u'Hello!')
         # Same test, but use the context argument instead of target_language
         context = Environment()
-        eq(translate('default', 'short_greeting', context=context),
+        eq(translate('short_greeting', 'default', context=context),
            u'Hello!')
 
     def testInterpolationWithoutTranslation(self):
         translate = self._service.translate
-        self.assertEqual(translate("default", "42-not-there",
+        self.assertEqual(translate('42-not-there', 'default',
                                    target_language="en",
                                    default="this ${that} the other",
                                    mapping={"that": "THAT"}),
                          "this THAT the other")
-        self.assertEqual(translate("no-such-domain", "42-not-there",
+        self.assertEqual(translate("42-not-there", "no-such-domain",
                                    target_language="en",
                                    default="this ${that} the other",
                                    mapping={"that": "THAT"}),
                          "this THAT the other")
-        self.assertEqual(translate("no-such-domain", "42-not-there",
+        self.assertEqual(translate("42-not-there", "no-such-domain",
                                    target_language="en",
                                    mapping={"that": "THAT"}),
                          None)

@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.13 2003/04/14 16:21:46 fdrake Exp $
+$Id: interfaces.py,v 1.14 2003/04/17 20:05:13 bwarsaw Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -122,7 +122,7 @@ class ITranslationService(Interface):
         Also note that language tags are defined by RFC 1766.
     """
 
-    def translate(domain, msgid, mapping=None,
+    def translate(msgid, domain=None, mapping=None,
                   context=None, target_language=None,
                   default=None):
         """Return the translation for the message referred to by msgid.
