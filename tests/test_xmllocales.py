@@ -13,7 +13,7 @@
 ##############################################################################
 """Testing all XML Locale functionality.
 
-$Id: test_xmllocales.py,v 1.5 2003/03/25 14:48:02 srichter Exp $
+$Id: test_xmllocales.py,v 1.6 2003/11/03 21:27:09 jeremy Exp $
 """
 import os
 from unittest import TestCase, TestSuite, makeSuite
@@ -22,17 +22,12 @@ from zope.i18n.locales import XMLLocaleFactory
 from zope.i18n.format import parseDateTimePattern, parseNumberPattern
 
 class LocaleXMLFileTestCase(TestCase):
-    """This test verifies that every locale XML fiel can be loaded."""
+    """This test verifies that every locale XML file can be loaded."""
 
     def __init__(self, path):
         self.__path = path
         TestCase.__init__(self)
         
-    # For unittest.
-    def shortDescription(self):
-        filename = os.path.split(self.__path)[-1]
-        return '%s (Test  XML-Locale Files)' %filename
-
     def runTest(self):
         # Loading Locale object 
         locale = XMLLocaleFactory(self.__path)()
@@ -52,19 +47,19 @@ class LocaleXMLFileTestCase(TestCase):
                     self.assert_(parseDateTimePattern(pattern) is not None)
                     
 
-def test_suite():
-    suite = TestSuite()
-    from zope import i18n
-    locale_dir = os.path.join(os.path.dirname(i18n.__file__), 'locales')
-    for file in filter(lambda f: f.endswith('.xml'),
-                       os.listdir(locale_dir))[:]:
-        path = os.path.join(locale_dir, file)
-        case = LocaleXMLFileTestCase(path)
-        suite.addTest(case)
-    return suite
+##def test_suite():
+##    suite = TestSuite()
+##    locale_dir = os.path.join(os.path.dirname(zope.i18n.__file__), "locales")
+##    for path in os.listdir(locale_dir):
+##        if path.endswith(".xml"):
+##            continue
+##        path = os.path.join(locale_dir, path)
+##        case = LocaleXMLFileTestCase(path)
+##        suite.addTest(case)
+##    return suite
 
 # Note: These tests are disabled, just because they take a long time to run.
 #       You should run these tests if you update the parsing code and/or
 #       update the Locale XML Files.
 def test_suite():
-    return TestSuite((makeSuite(LocaleXMLFileTestCase),))
+    return None
