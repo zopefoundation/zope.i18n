@@ -4,47 +4,73 @@
    xmlns:zmi='http://namespaces.zope.org/zmi'
    xmlns:browser='http://namespaces.zope.org/browser'
    xmlns:service='http://namespaces.zope.org/service'
+   xmlns:gts='http://namespaces.zope.org/gts'
 >
 
-  <serviceType
+<serviceType
       id="LanguageNegotiation" 
       interface=".INegotiator." />
-  <service
+<service
       serviceType="LanguageNegotiation" 
       component=".Negotiator.negotiator" />
 
-<!-- Language negotiation adapter 
 <adapter factory="Zope.Publisher.Browser.BrowserLanguages."
-         for="Zope.Publisher.Browser.IHTTPRequest."
+         for="Zope.Publisher.Browser.IBrowserRequest."
          provides="Zope.I18n.IUserPreferedLanguages"
          />
--->
 
+
+<!-- Register the Translation Service as a content object -->
 <content class=".TranslationService.">
-   <security:require permission="Zope.I18n"
+   <security:require permission="Zope.Public"
                      interface="Zope.I18n.ITranslationService." 
+                     />
+   <security:require permission="Zope.ManageServices"
+                     attributes="getMessageIdsOfDomain
+		                 getAllDomains getAllLanguages 
+		                 getAvailableDomains getAvailableLanguages 
+				 addMessage updateMessage
+                                 addLanguage addDomain
+                                 deleteLanguage deleteDomain"
                      />
    <security:require permission="Zope.ManageServices"
                      interface="Zope.App.OFS.Container.IContainer." 
                      />
 </content>
 
+
+<service:factoryFromClass id="TranslationService"
+          class=".TranslationService."
+          permission="Zope.ManageServices"
+          title="Translation Service" 
+          description="A Persistent Translation Service for TTW development" />
+
+
+<serviceType id="GlobalTranslationService"
+             interface=".ITranslationService." />
+
+<service serviceType="GlobalTranslationService"
+           permission="Zope.Public"
+           component=".GlobalTranslationService.translationService" />
+
+
 <content class=".MessageCatalog.">
    <security:require permission="Zope.Security"
                      interface=".IMessageCatalog." 
                      />
-
+   <security:require permission="Zope.ManageServices"
+                     attributes="setMessage getMessageIds"
+                     />
 </content>
 
-    <service:factoryFromClass id="TranslationService"
-                     class=".MessageCatalog."
-                     permission="Zope.ManageServices"
-                     title="Translation Service" />
 
-<!--factory component=".MessageCatalog." /-->
+<factory component=".MessageCatalog." 
+         id="Message Catalog"/>
 
-<!--include package=".Views" file="views.zcml" /-->
 
+<gts:registerTranslations directory="./locale" />
+
+<include package=".Views" file="views.zcml" />
 
 
 </zopeConfigure>

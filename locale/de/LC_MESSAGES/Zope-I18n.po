@@ -1,0 +1,6 @@
+msgid "New Domain"
+msgstr "Neue Domain"
+
+msgid "New Language"
+msgstr "Neue Sprache"
+

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: TranslationService.py,v 1.3 2002/06/12 15:58:55 bwarsaw Exp $
+$Id: TranslationService.py,v 1.4 2002/06/12 18:38:56 srichter Exp $
 """
 import re
 from types import StringTypes, TupleType
@@ -21,20 +21,18 @@ from types import StringTypes, TupleType
 import Persistence
 from Persistence.BTrees.OOBTree import OOBTree
 
+from Zope.ComponentArchitecture import createObject
+from Zope.ComponentArchitecture import getService
+
 from Zope.App.OFS.Container.BTreeContainer import BTreeContainer
 from Zope.App.OFS.Container.IContainer import IContainer
 from Zope.App.OFS.Container.IContainer import IHomogenousContainer
 
-from Zope.I18n.Negotiator import negotiator
-from Zope.I18n.IMessageCatalog import IMessageCatalog
-from Zope.I18n.ITranslationService import ITranslationService
-
-
-# Setting up some regular expressions for finding interpolation variables in
-# the text.
-NAME_RE = r"[a-zA-Z][a-zA-Z0-9_]*"
-_interp_regex = re.compile(r'(?<!\$)(\$(?:%(n)s|{%(n)s}))' %({'n': NAME_RE}))
-_get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
+from Negotiator import negotiator
+from Domain import Domain
+from IMessageCatalog import IMessageCatalog
+from ITranslationService import ITranslationService
+from SimpleTranslationService import SimpleTranslationService
 
 
 class ILocalTranslationService(ITranslationService,
@@ -42,13 +40,16 @@ class ILocalTranslationService(ITranslationService,
     """TTW manageable translation service"""
 
 
-class TranslationService(BTreeContainer):
+class TranslationService(BTreeContainer, SimpleTranslationService):
+    ''' '''
 
     __implements__ =  ILocalTranslationService
 
     def __init__(self, default_domain='global'):
-        self.__data = OOBTree()
+        ''' '''
+        super(TranslationService, self).__init__()
         self._catalogs = OOBTree()
+        self.default_domain = default_domain
 
 
     def _registerMessageCatalog(self, language, domain, catalog_name):
@@ -60,8 +61,7 @@ class TranslationService(BTreeContainer):
 
 
     def _unregisterMessageCatalog(self, language, domain, catalog_name):
-        mc = self._catalogs.get((language, domain), [])
-        mc.append(catalog_name)
+        self._catalogs[(language, domain)].remove(catalog_name)
 
 
     ############################################################
@@ -69,21 +69,19 @@ class TranslationService(BTreeContainer):
     # Zope.App.OFS.Container.IContainer.IWriteContainer
 
     def setObject(self, name, object):
-        """See Zope.App.OFS.Container.IContainer.IWriteContainer"""
-        if type(name) in StringTypes and len(name)==0:
-            raise ValueError
-        if not self.isAddable(getattr(object,'__implements__', None)):
-            raise UnaddableError (self, object, name)
-        self.__data[name] = object
+        'See Zope.App.OFS.Container.IContainer.IWriteContainer'
+        super(TranslationService, self).setObject(name, object)
         self._registerMessageCatalog(object.getLanguage(), object.getDomain(),
                                      name)
         return name
 
     def __delitem__(self, name):
-        """See Zope.App.OFS.Container.IContainer.IWriteContainer"""
-        del self.__data[name]
-        self._unregisterMessageCatalog(object.language, object.domain, name)
-        
+        'See Zope.App.OFS.Container.IContainer.IWriteContainer'
+        object = self[name]
+        super(TranslationService, self).__delitem__(name)
+        self._unregisterMessageCatalog(object.getLanguage(),
+                                       object.getDomain(), name)
+
 
     def isAddable(self, interfaces):
         """See Zope.App.OFS.Container.IContainer.IWriteContainer"""
@@ -113,14 +111,16 @@ class TranslationService(BTreeContainer):
                 raise TypeError, 'No destination language'
             else:
                 avail_langs = self.getAvailableLanguages(domain)
+                # Let's negotiate the language to translate to. :)
+                negotiator = getService(self, 'LanguageNegotiation')
                 target_language = negotiator.getLanguage(avail_langs, context)
 
         # Get the translation. Default is the source text itself.
-        catalog_names = self._catalogs.get((target_language, domain), {})
+        catalog_names = self._catalogs.get((target_language, domain), [])
 
         text = msgid
         for name in catalog_names:
-            catalog = self.__data[name]
+            catalog = super(TranslationService, self).__getitem__(name)
             try:
                 text = catalog.getMessage(msgid)
                 break
@@ -134,19 +134,112 @@ class TranslationService(BTreeContainer):
     ############################################################
 
 
-    def interpolate(self, text, mapping):
-        """Insert the data passed from mapping into the text"""
+    def getMessageIdsOfDomain(self, domain, filter='%'):
+        """Get all the message ids of a particular domain."""
+        filter = filter.replace('%', '.*')
+        filter_re = re.compile(filter)
+        
+        msg_ids = {}
+        languages = self.getAvailableLanguages(domain)
+        for language in languages:
+            for name in self._catalogs[(language, domain)]:
+                for id in self[name].getMessageIds():
+                    if filter_re.match(id) >= 0:
+                        msg_ids[id] = None
+        return msg_ids.keys()
 
-        to_replace = _interp_regex.findall(text)
 
-        for string in to_replace:
-            var = _get_var_regex.findall(string)[0]
-            text = text.replace(string, mapping.get(var))
+    def getAllLanguages(self):
+        """Find all the languages that are available"""
+        languages = {}
+        for key in self._catalogs.keys():
+            languages[key[0]] = None
+        return languages.keys()
 
-        return text
+
+    def getAllDomains(self):
+        """Find all available domains."""
+        domains = {}
+        for key in self._catalogs.keys():
+            domains[key[1]] = None
+        return domains.keys()
 
 
     def getAvailableLanguages(self, domain):
         """Find all the languages that are available for this domain"""
+        identifiers = self._catalogs.keys()
+        identifiers = filter(lambda x, d=domain: x[1] == d, identifiers)
+        languages = map(lambda x: x[0], identifiers)
+        return languages
+
+
+    def getAvailableDomains(self, language):
+        """Find all available domains."""
+        identifiers = self._catalogs.keys()
+        identifiers = filter(lambda x, l=language: x[0] == l, identifiers)
+        domains = map(lambda x: x[1], identifiers)
+        return domains
         
-        return [x[0] for x in self._catalogs.keys() if x[1] == domain]
+
+    def addMessage(self, domain, msg_id, msg, target_language):
+        """ """
+        catalog_name = self._catalogs[(target_language, domain)][0]
+        catalog = self[catalog_name]
+        catalog.setMessage(msg_id, msg)
+
+
+    def updateMessage(self, domain, msg_id, msg, target_language):
+        """ """
+        catalog_name = self._catalogs[(target_language, domain)][0]
+        catalog = self[catalog_name]
+        catalog.setMessage(msg_id, msg)
+
+
+    def deleteMessage(self, domain, msg_id, target_language):
+        """ """
+        catalog_name = self._catalogs[(target_language, domain)][0]
+        catalog = self[catalog_name]
+        catalog.deleteMessage(msg_id)
+
+
+    def addLanguage(self, language):
+        """Add Language to Translation Service"""
+        domains = self.getAllDomains()
+        if not domains:
+            domains = [self.default_domain]
+
+        for domain in domains:
+            catalog = createObject(self, 'Message Catalog', language, domain)
+            self.setObject('%s-%s' %(domain, language), catalog)
+
+
+    def addDomain(self, domain):
+        """Add Domain to Translation Service"""
+        languages = self.getAllLanguages()
+        if not languages:
+            languages = ['en']
+
+        for language in languages:
+            catalog = createObject(self, 'Message Catalog', language, domain)
+            self.setObject('%s-%s' %(domain, language), catalog)
+
+
+    def deleteLanguage(self, language):
+        """Delete a Domain from the Translation Service."""
+        domains = self.getAvailableDomains(language)
+        for domain in domains:
+            for name in self._catalogs[(language, domain)]:
+                if self.has_key(name):
+                    del self[name]
+            del self._catalogs[(language, domain)]
+
+    def deleteDomain(self, domain):
+        """Delete a Domain from the Translation Service."""
+        languages = self.getAvailableLanguages(domain)
+        for language in languages:
+            for name in self._catalogs[(language, domain)]:
+                if self.has_key(name):
+                    del self[name]
+            del self._catalogs[(language, domain)]
+
+

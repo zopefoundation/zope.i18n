@@ -13,51 +13,35 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: MessageCatalog.py,v 1.3 2002/06/12 18:38:56 srichter Exp $
+$Id: GettextMessageCatalog.py,v 1.1 2002/06/12 18:38:56 srichter Exp $
 """
 
-from Persistence.BTrees.OOBTree import OOBTree
-from Persistence import Persistent
-from Zope.ComponentArchitecture.IFactory import IFactory
-from Zope.App.Security.RegisteredObject import RegisteredObject
+from gettext import GNUTranslations
 from Zope.I18n.IMessageCatalog import IMessageCatalog
 
 
-class MessageCatalog(RegisteredObject, Persistent):
+class GettextMessageCatalog:
+    """ """
 
     __implements__ =  IMessageCatalog
-    __class_implements__ = IFactory
 
 
-    def __init__(self, language, domain="default"):
+    def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
-        super(MessageCatalog, self).__init__('', '', '')
-
         self._language = language
         self._domain = domain
-        self._messages = OOBTree()
+        self._path_to_file = path_to_file
+        self.__translation_object = None
+        self._prepareTranslations()
     
 
-    def setMessage(self, id, message):
-        """Set a message to the catalog."""
-        self._messages[id] = message
-
-
-    def getMessageIds(self):
+    def _prepareTranslations(self):
         """ """
-        return list(self._messages.keys())
-        
-
-    ############################################################
-    # Implementation methods for interface
-    # Zope/ComponentArchitecture/IFactory.py
-
-    def getInterfaces(self):
-        'See Zope.ComponentArchitecture.IFactory.IFactory'
-        return self.__implements__
-        
-    #
-    ############################################################
+        if self.__translation_object is None:
+            file = open(self._path_to_file, 'r')
+            self.__translation_object = GNUTranslations(file)
+            file.close()
+            
 
     ############################################################
     # Implementation methods for interface
@@ -65,13 +49,21 @@ class MessageCatalog(RegisteredObject, Persistent):
 
     def getMessage(self, id):
         'See Zope.I18n.IMessageCatalog.IMessageCatalog'
-        return self._messages[id]
+        self._prepareTranslations()
+        msg = self.__translation_object.gettext(id)
+        if msg == id:
+            raise KeyError
+        return msg
 
     def queryMessage(self, id, default=None):
         'See Zope.I18n.IMessageCatalog.IMessageCatalog'
+        self._prepareTranslations()
+        text = self.__translation_object.gettext(id)
+        if text != id:
+            return text
         if default is None:
             default = id
-        return self._messages.get(id, default)
+        return default
 
     def getLanguage(self):
         'See Zope.I18n.IMessageCatalog.IMessageCatalog'
@@ -83,7 +75,7 @@ class MessageCatalog(RegisteredObject, Persistent):
 
     def getIdentifier(self):
         'See Zope.I18n.IMessageCatalog.IMessageCatalog'
-        return (self._language, self._domain)
+        return self._path_to_file
         
     #
     ############################################################

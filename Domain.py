@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: Domain.py,v 1.3 2002/06/12 15:51:26 bwarsaw Exp $
+$Id: Domain.py,v 1.4 2002/06/12 18:38:56 srichter Exp $
 """
 
 from Zope.I18n.IDomain import IDomain
@@ -36,7 +36,7 @@ class Domain:
     
     # IDomain interface methods
 
-    def translate(self, source, mapping=None, context=None,
+    def translate(self, msgid, mapping=None, context=None,
                   target_language=None):
         """See Zope.I18n.IDomain.IDomain"""
 

@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: IMessageCatalog.py,v 1.3 2002/06/12 15:54:01 bwarsaw Exp $
+$Id: IMessageCatalog.py,v 1.4 2002/06/12 18:38:56 srichter Exp $
 """
 
 from Interface import Interface
@@ -62,8 +62,9 @@ class IMessageCatalog(Interface):
         """
 
     def getIdentifier():
-        """Return an identifier for this message catalog.
+        """Return a identifier for this message catalog. Note that this
+           identifier does not have to be unique as several message catalog
+           could serve the same domain and language.
 
-        Note that this identifier does not have to be unique as several
-        message catalogs could be serving the same domain and language.
+           Also, there are no restrictions on the form of the identifier.
         """

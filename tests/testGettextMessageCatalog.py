@@ -11,45 +11,34 @@
 # FOR A PARTICULAR PURPOSE.
 # 
 ##############################################################################
-"""Test the generic persistent Message Catalog.
+"""Test a gettext implementation of a Message Catalog.
 
-$Id: testMessageCatalog.py,v 1.3 2002/06/12 18:38:58 srichter Exp $
+$Id: testGettextMessageCatalog.py,v 1.1 2002/06/12 18:38:58 srichter Exp $
 """
-import unittest
-
-from Zope.I18n.MessageCatalog import MessageCatalog
+import unittest, sys, os
+from Zope.I18n.GettextMessageCatalog import GettextMessageCatalog
 from testIMessageCatalog import TestIMessageCatalog
 
 
-class MessageCatalogTest(TestIMessageCatalog):
+class GettextMessageCatalogTest(TestIMessageCatalog):
 
 
     def _getMessageCatalog(self):
-        catalog = MessageCatalog('en', 'default')
-        catalog.setMessage('short_greeting', 'Hello!')
-        catalog.setMessage('greeting', 'Hello $name, how are you?')
+        from Zope.I18n import tests
+        path = os.path.split(tests.__file__)[0]
+        self._path = os.path.join(path, 'en-default.mo')
+        catalog = GettextMessageCatalog('en', 'default', self._path)
         return catalog
+
     
     def _getUniqueIndentifier(self):
-        return ('en', 'default')
+        return self._path
 
-
-    def testSetMessage(self):
-        catalog = self._catalog
-        catalog.setMessage('new', 'New Test')
-        self.assertEqual(catalog.getMessage('new'), 'New Test')
-
-
-    def testGetMessageIds(self):
-        catalog = self._catalog
-        ids = catalog.getMessageIds()
-        ids.sort()
-        self.assertEqual(ids, ['greeting', 'short_greeting'])
 
 
 def test_suite():
     loader=unittest.TestLoader()
-    return loader.loadTestsFromTestCase(MessageCatalogTest)
+    return loader.loadTestsFromTestCase(GettextMessageCatalogTest)
 
 if __name__=='__main__':
     unittest.TextTestRunner().run(test_suite())

@@ -1,0 +1,41 @@
+<zopeConfigure
+   xmlns='http://namespaces.zope.org/zope'
+   xmlns:security='http://namespaces.zope.org/security'
+   xmlns:zmi='http://namespaces.zope.org/zmi'
+   xmlns:browser='http://namespaces.zope.org/browser'
+>
+
+  <browser:defaultView 
+     for="Zope.I18n.ITranslationService."
+     name="index.html"
+     />
+
+  <browser:view 
+     permission="Zope.ManageServices" 
+     for="Zope.I18n.ITranslationService."
+     factory="Zope.I18n.Views.Browser.Translate.">
+
+     <browser:page name="index.html" attribute="index" />
+
+     <browser:page name="editMessages.html" attribute="editMessages" />
+
+     <browser:page name="addLanguage.html" attribute="addLanguage" />
+     <browser:page name="addDomain.html" attribute="addDomain" />
+
+     <browser:page name="changeEditLanguages.html" 
+                   attribute="changeEditLanguages" />
+     <browser:page name="changeEditDomains.html" 
+                   attribute="changeEditDomains" />
+     <browser:page name="changeFilter.html" 
+                   attribute="changeFilter" />
+
+     <browser:page name="deleteLanguages.html" attribute="deleteLanguages" />
+     <browser:page name="deleteDomains.html" attribute="deleteDomains" />
+
+  </browser:view>
+
+  <zmi:tabs for="Zope.I18n.ITranslationService.">
+    <zmi:tab label="Translate" action="@@index.html"/>
+  </zmi:tabs>
+
+</zopeConfigure>

@@ -1,0 +1,166 @@
+<html metal:use-macro="views/standard_macros/page">
+<head>
+  <title>Translation Service - Translate</title>
+</head>
+<body>
+
+<div metal:fill-slot="body">
+
+<table cols="4" width="100%" border="0">
+  <tr>
+    <td width="25%">
+      <form action="./" method="post">
+        <div class="form-label">Select Languages:</div>
+        <div>
+          <select name="languages:list" size="3" style="width: 80%" multiple>
+            <tal:block repeat="language view/getAllLanguages">
+              <option value="" 
+		      tal:attributes="value language"
+		      tal:content="language"
+                      tal:condition="python: language not in
+                                     view.getEditLanguages()" ></option>
+              <option value="" selected="1"
+		      tal:attributes="value language"
+		      tal:content="language"
+                      tal:condition="python: language in
+                                     view.getEditLanguages()" ></option>
+            </tal:block>
+          </select>
+        </div>
+        <div>
+          <input class="form-element" type="submit" 
+                 name="@@changeEditLanguages.html:method" value="Edit">
+          <input class="form-element" type="submit" 
+                 name="@@deleteLanguages.html:method" value="Delete">
+        </div>
+      </form>
+    </td>
+    <td width="25%">
+      <form action="./" method="post">
+        <div class="form-label">Select Domains:</div>
+        <div>
+          <select name="domains:list" size="3" style="width: 80%" multiple>
+            <tal:block repeat="domain view/getAllDomains">
+              <option value="" 
+		      tal:attributes="value domain"
+		      tal:content="domain"
+                      tal:condition="python: domain not in
+                                     view.getEditDomains()" ></option>
+              <option value="" selected="1"
+		      tal:attributes="value domain"
+		      tal:content="domain"
+                      tal:condition="python: domain in
+                                     view.getEditDomains()" ></option>
+            </tal:block>
+            </select>
+          </div>
+          <div>
+            <input class="form-element" type="submit" 
+                   name="@@changeEditDomains.html:method" value="Edit">
+            <input class="form-element" type="submit" 
+                   name="@@deleteDomains.html:method" value="Delete">
+          </div>
+        </form>
+      </td>
+      <td width="25%" align="right" valign="top">
+        <form action="." method="post">
+          <div class="form-label"
+               i18n:translate="" i18n:domain="Zope-I18n">New Language:</div>
+          <div>
+            <input type="text" name="language" size="20" value="">
+            <input type="submit" name="@@addLanguage.html:method" value="Add">
+          </div>
+          <div class="form-label">New Domain:</div>
+          <div>
+            <input type="text" name="domain" size="20" value="">
+            <input type="submit" name="@@addDomain.html:method" value="Add">
+          </div>
+        </form>
+      </td>
+      <td width="25%" align="right" valign="top">
+        <form action="./" method="post">
+          <div class="form-label">Filter (% - wildcard):</div>
+          <div>
+            <input type="text" name="filter" size="25" value=""
+                   tal:attributes="value request/filter|default" />
+          </div>
+          <div>
+            <input type="submit" name="@@changeFilter.html:method" 
+                   value="Filter" />
+          </div>
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  <form action="./" method="post">
+  <table width="100%" cellspacing="0" cellpadding="3" border="0">
+    <tr class="list-header" align="left">
+        <th width="16">&nbsp;</th>
+        <th>Message Id</th>
+        <th>Domains</th>
+        <th tal:repeat="language python:view.getEditLanguages()"
+            tal:content="language">de</th>
+    </tr>    
+    <tr tal:repeat="message python: view.getMessages()">
+      <td>
+        <input type="hidden"
+	       tal:attributes="name python: 'edit-msg_id-%i' %message[2];
+                               value python: message[0]">
+        <input type="hidden"
+	       tal:attributes="name python: 'edit-domain-%i' %message[2];
+                               value python: message[1]">
+        <input type="checkbox" names="message_ids:list"
+	       tal:attributes="name python: message[2]">
+      </td>
+      <td>
+        <a href="editMessage?messageId="
+           tal:content="python: message[0]">message_id</a>
+      </td>
+      <td tal:content="python: message[1]">
+        default
+      </td>
+      <td tal:repeat="language python:view.getEditLanguages()">
+        <textarea cols="20" rows="2"
+	  tal:attributes="name python: 'edit-%s-%i' %(language, message[2])"
+          tal:content="python: view.getTranslation(message[1], 
+                               message[0], language)"></textarea>
+      </td>
+    </tr>
+    <tr><td colspan="3"
+         tal:attributes="colspan python:len(view.getEditLanguages())+3">
+      <hr width="80%" align="center" size="2" noshade="1">
+    </td></tr>
+    
+    <tr tal:repeat="count python:range(5)">
+      <td width="16">&nbsp;</td>
+      <td>
+        <textarea cols="20" rows="2" name=""
+                  tal:attributes="name string:new-msg_id-${count}"></textarea> 
+      </td>
+      <td>
+        <select name=""
+                tal:attributes="name string:new-domain-${count}">
+          <option value=""
+    	          tal:repeat="domain python: view.getEditDomains()"
+                  tal:content="domain"
+		  tal:attributes="value domain">default</option>
+        </select>
+      </td>
+      <td tal:repeat="language python:view.getEditLanguages()">
+        <textarea cols="20" rows="2" name=""
+          tal:attributes="name string:new-${language}-${count}"></textarea> 
+      </td>
+    </tr>
+  </table>
+    
+  <div>
+    <input class="form-element" type="submit" 
+           name="@@editMessages.html:method" value="Edit Labels">&nbsp;
+    <input class="form-element" type="submit" 
+           name="@@deleteMessages.html:method" value="Delete Labels">
+  </div>
+  </form>
+</div>
+</body>
+</html>

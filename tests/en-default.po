@@ -1,0 +1,5 @@
+msgid "short_greeting"
+msgstr "Hello!"
+
+msgid "greeting"
+msgstr "Hello $name, how are you?"
