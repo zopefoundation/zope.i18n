@@ -44,10 +44,10 @@
      action="TranslationService"  title="Translation Service"
      description="A Persistent Translation Service for TTW development" />
 
-<serviceType id="GlobalTranslationService"
+<serviceType id="TranslationService"
              interface=".ITranslationService." />
 
-<service serviceType="GlobalTranslationService"
+<service serviceType="TranslationService"
            permission="Zope.Public"
            component=".GlobalTranslationService.translationService" />
 

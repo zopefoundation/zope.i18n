@@ -13,7 +13,7 @@
 ##############################################################################
 """This is the standard, placeful Translation Service for TTW development.
 
-$Id: TranslationService.py,v 1.8 2002/06/16 18:25:13 srichter Exp $
+$Id: TranslationService.py,v 1.9 2002/07/11 00:54:02 srichter Exp $
 """
 import re
 from types import StringTypes, TupleType
@@ -22,7 +22,7 @@ import Persistence
 from Persistence.BTrees.OOBTree import OOBTree
 
 from Zope.ComponentArchitecture import createObject
-from Zope.ComponentArchitecture import getService
+from Zope.ComponentArchitecture import getService, queryNextService
 
 from Zope.App.OFS.Container.BTreeContainer import BTreeContainer
 from Zope.App.OFS.Container.IContainer import IContainer
@@ -102,7 +102,6 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
     def translate(self, domain, msgid, mapping=None, context=None,  
                   target_language=None):
         """See interface ITranslationService"""
-
         if domain is None:
             domain = self.default_domain
 
@@ -122,6 +121,16 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         for name in catalog_names:
             catalog = super(TranslationService, self).__getitem__(name)
             text = catalog.queryMessage(msgid)
+
+        # If the message id equals the returned text, then we should look up
+        # a translation server higher up the tree.
+        if text == msgid:
+            ts = queryNextService(self, 'TranslationService')
+            if ts is not None:
+                return ts.translate(domain, msgid, mapping, context,
+                                    target_language)
+            else:
+                return text
 
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)
