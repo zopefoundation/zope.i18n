@@ -15,12 +15,12 @@
 
 $Id$
 """
-from zope.i18n.negotiator import negotiator
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.messageid import MessageID
 from zope.i18n import interpolate
 from zope.component import getUtility
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.interfaces import INegotiator
 
 # The configuration should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
@@ -72,10 +72,11 @@ class TranslationDomain(SimpleTranslationDomain):
             return u''
 
         if target_language is None and context is not None:
-            # Try to determine target language from context
             langs = self._catalogs.keys()
+            # invoke local or global unnamed 'INegotiator' utilities
+            negotiator = getUtility(INegotiator)
+            # try to determine target language from negotiator utility
             target_language = negotiator.getLanguage(langs, context)
-
 
         # MessageID attributes override arguments
         if isinstance(msgid, MessageID):
