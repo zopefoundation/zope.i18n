@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.6 2003/04/03 20:18:11 fdrake Exp $
+$Id: globaltranslationservice.py,v 1.7 2003/04/11 13:20:13 mgedmin Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -68,17 +68,15 @@ class GlobalTranslationService(SimpleTranslationService):
     def translate(self, domain, msgid, mapping=None, context=None,
                   target_language=None, default=None):
         '''See interface ITranslationService'''
-        if target_language is None:
-            if context is None:
-                raise TypeError, 'No destination language'
-            else:
-                langs = [m[0] for m in self._catalogs.keys()]
-                target_language = negotiator.getLanguage(langs, context)
+        if target_language is None and context is not None:
+            # Try to determine target language from context
+            langs = [m[0] for m in self._catalogs.keys()]
+            target_language = negotiator.getLanguage(langs, context)
 
         # Try to get domain from msgid.
         if isinstance(msgid, MessageID):
             domain = msgid.domain
-            
+
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get((target_language, domain))
         if catalog_names is None:
@@ -86,7 +84,7 @@ class GlobalTranslationService(SimpleTranslationService):
                 catalog_names = self._catalogs.get((language, domain))
                 if catalog_names is not None:
                     break
-                
+
         # Did the fallback fail?  Sigh, return None
         text = default
         if catalog_names:

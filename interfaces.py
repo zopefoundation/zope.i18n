@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.11 2003/04/11 12:47:42 mgedmin Exp $
+$Id: interfaces.py,v 1.12 2003/04/11 13:20:13 mgedmin Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -116,9 +116,8 @@ class ITranslationService(Interface):
         context -- An object that provides contextual information for
                    determining client language preferences.  It must implement
                    or have an adapter that implements IUserPreferredLanguages.
-
-        Note that one of target_language or context must be passed.  Otherwise
-        a TypeError will be raised.
+                   It will be to determine the language to translate to if
+                   target_language is not specified explicitly.
 
         Also note that language tags are defined by RFC 1766.
     """

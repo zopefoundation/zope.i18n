@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.8 2003/04/03 20:20:34 fdrake Exp $
+$Id: test_globaltranslationservice.py,v 1.9 2003/04/11 13:20:13 mgedmin Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
@@ -45,6 +45,11 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
         service.addCatalog(en_catalog)
         service.addCatalog(de_catalog)
         return service
+
+    def testNoTargetLanguage(self):
+        # Having a fallback would interfere with this test
+        self._service.setLanguageFallbacks([])
+        TestITranslationService.testNoTargetLanguage(self)
 
     def testSimpleNoTranslate(self):
         translate = self._service.translate

@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.3 2003/03/29 00:06:26 jim Exp $
+$Id: test_itranslationservice.py,v 1.4 2003/04/11 13:20:13 mgedmin Exp $
 """
 
 import unittest
@@ -89,7 +89,6 @@ class TestITranslationService(PlacelessSetup):
         eq(translate('default', 'short_greeting', context=context),
            'Hallo!')
 
-
     def testSimpleTranslate_bad_domain(self):
         translate = self._service.translate
         eq = self.assertEqual
@@ -98,7 +97,6 @@ class TestITranslationService(PlacelessSetup):
         eq(translate('defaultnot', 'short_greeting', target_language='de',
                      default=42),
            42)
-
 
     def testDynamicTranslate(self):
         translate = self._service.translate
@@ -115,5 +113,19 @@ class TestITranslationService(PlacelessSetup):
         eq(translate('default', 'glorp_smurf_hmpf', target_language='en'),
            None)
 
+    def testNoTargetLanguage(self):
+        translate = self._service.translate
+        eq = self.assertEqual
+        # Test that default is returned when no language can be negotiated
+        context = Environment(('xx', ))
+        eq(translate('default', 'short_greeting', context=context,
+                     default=42),
+           42)
+
+        # Test that default is returned when there's no destination language
+        eq(translate('default', 'short_greeting', default=42),
+           42)
+
+
 def test_suite():
-    return unittest.TestSuite() # Deliberatly empty
+    return unittest.TestSuite() # Deliberately empty
