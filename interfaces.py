@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.7 2003/03/25 17:01:52 slinkp Exp $
+$Id: interfaces.py,v 1.8 2003/03/25 20:21:28 bwarsaw Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -197,7 +197,21 @@ class IDomain(Interface):
     """
 
     def translate(msgid, mapping=None, context=None, target_language=None):
-        """Translate the the source to its appropriate language.
+        """Translate the source msgid to its appropriate language.
+
+        See ITranslationService for details.
+        """
+
+
+class ITranslator(Interface):
+    """A collaborative object which contains the domain, context, and locale.
+
+    It is expected that object be constructed with enough information to find
+    the domain, context, and target language.
+    """
+
+    def translate(msgid, mapping=None):
+        """Translate the source msgid using the given mapping.
 
         See ITranslationService for details.
         """
@@ -438,7 +452,7 @@ class ILocaleIdentity(Interface):
 
     This object is also used to uniquely identify a locale."""
 
-    language = TextLine(title=u"Lanaguage Id",
+    language = TextLine(title=u"Language Id",
                         constraint=re.compile(r'[a-z]{2}').match)
 
     country = TextLine(title=u"Country Id",
@@ -628,9 +642,9 @@ class ILocale(Interface):
 
     currencies = Container(title=u"Currencies")
 
-    languages = Dict(title=u"Lanaguage id to translated name",
-                     key_types=(TextLine(title=u"Lanaguege Id"),),
-                     value_types=(TextLine(title=u"Lanaguege Name"),),
+    languages = Dict(title=u"Language id to translated name",
+                     key_types=(TextLine(title=u"Language Id"),),
+                     value_types=(TextLine(title=u"Language Name"),),
                      )
 
     countries = Dict(title=u"Country id to translated name",

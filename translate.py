@@ -13,16 +13,36 @@
 ##############################################################################
 """
 
-$Id: translate.py,v 1.2 2002/12/25 14:13:39 jim Exp $
+$Id: translate.py,v 1.3 2003/03/25 20:21:28 bwarsaw Exp $
 """
 
+from zope.i18n.interfaces import ITranslator
+from zope.component import getService
 
-def translate(place, domain, source, mapping=None, context=None,
-              target_language=None):
-    """Translates a source text based on a location in the Zope architecture
-       and a domain."""
 
-    # Lookup service...
-    service = None
+class Translator:
+    """A collaborative object which contains the domain, context, and locale.
 
-    return service.translate(domain, source, mapping, context, target_language)
+    It is expected that object be constructed with enough information to find
+    the domain, context, and target language.
+    """
+
+    __implements__ = ITranslator
+
+    def __init__(self, locale, domain, context=None):
+        """locale comes from the request, domain specifies the application,
+        and context specifies the place (it may be none for global contexts).
+        """
+        self._locale = locale
+        self._domain = domain
+        self._context = context
+        self._translation_service = getService(context, 'Translation')
+        
+    def translate(self, msgid, mapping=None):
+        """Translate the source msgid using the given mapping.
+
+        See ITranslationService for details.
+        """
+        return self._translation_service.translate(
+            self._domain, msgid, mapping, self._context,
+            self._locale.id.language)
