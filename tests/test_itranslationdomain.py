@@ -19,8 +19,7 @@ import unittest
 from zope.interface.verify import verifyObject
 from zope.interface import implements
 
-from zope.component import getService
-from zope.component.servicenames import Utilities
+import zope.component as capi
 from zope.component.tests.placelesssetup import PlacelessSetup
 
 from zope.i18n.negotiator import negotiator
@@ -48,8 +47,7 @@ class TestITranslationDomain(PlacelessSetup):
         self._domain = self._getTranslationDomain()
 
         # Setup the negotiator utility
-        utilities = getService(Utilities)
-        utilities.provideUtility(INegotiator, negotiator)        
+        capi.provideUtility(negotiator, INegotiator)        
 
     def testInterface(self):
         verifyObject(ITranslationDomain, self._domain)

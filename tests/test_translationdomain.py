@@ -22,8 +22,7 @@ from zope.i18n.tests.test_itranslationdomain import \
      TestITranslationDomain, Environment
 from zope.i18n import MessageIDFactory
 from zope.i18n.interfaces import ITranslationDomain
-from zope.component.servicenames import Utilities
-from zope.component import getGlobalServices
+import zope.component as capi
 
 def testdir():
     from zope.i18n import tests
@@ -103,8 +102,7 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
                                            os.path.join(path, 'en-default.mo'))
         domain.addCatalog(en_catalog)
 
-        s = getGlobalServices().getService(Utilities)
-        s.provideUtility(ITranslationDomain, domain, 'other')
+        capi.provideUtility(domain, ITranslationDomain, 'other')
 
         factory = MessageIDFactory('other')
         msgid = factory(u'short_greeting', 'default')
