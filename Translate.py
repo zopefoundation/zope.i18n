@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: Translate.py,v 1.2 2002/06/10 23:29:28 jim Exp $
+$Id: Translate.py,v 1.3 2002/07/01 22:50:06 bwarsaw Exp $
 """
 
 
@@ -25,5 +25,4 @@ def translate(place, domain, source, mapping=None, context=None,
     # Lookup service...
     service = None
 
-    return service.translate(domain, source, mapping, context,
-                             target_language):
+    return service.translate(domain, source, mapping, context, target_language)
