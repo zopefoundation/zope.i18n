@@ -13,13 +13,14 @@
 ##############################################################################
 """This module tests the ITranslator / Translator
 
-$Id: test_translator.py,v 1.9 2004/02/27 22:25:23 srichter Exp $
+$Id: test_translator.py,v 1.10 2004/03/02 17:49:40 srichter Exp $
 """
 import os
 import unittest
 
+from zope.component import getServiceManager, getService
+from zope.component.servicenames import Utilities
 from zope.component.tests.placelesssetup import PlacelessSetup
-from zope.component import getServiceManager
 
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.interfaces import ITranslationService, INegotiator
@@ -39,8 +40,10 @@ class TranslatorTest(PlacelessSetup, unittest.TestCase):
         sm.defineService('Translation', ITranslationService)
         sm.provideService('Translation', SimpleTranslationService(data))
 
-        sm.defineService('LanguageNegotiation', INegotiator)
-        sm.provideService('LanguageNegotiation', negotiator)
+        # Setup the negotiator utility
+        utilities = getService(None, Utilities)
+        utilities.provideUtility(INegotiator, negotiator)
+
 
     def test_translator(self):
         translator = Translator('default', ContextStub(['de']))
@@ -60,6 +63,5 @@ def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(TranslatorTest),
                            ))
-
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')

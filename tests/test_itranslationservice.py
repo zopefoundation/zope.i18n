@@ -13,15 +13,14 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.8 2004/01/10 11:02:37 philikon Exp $
+$Id: test_itranslationservice.py,v 1.9 2004/03/02 17:49:40 srichter Exp $
 """
-
 import unittest
 from zope.interface.verify import verifyObject
+from zope.component import getService
+from zope.component.servicenames import Utilities
 from zope.component.tests.placelesssetup import PlacelessSetup
 
-# XXX Bad, can't depend on app!
-from zope.app.component.metaconfigure import provideService, managerHandler
 from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
@@ -51,9 +50,9 @@ class TestITranslationService(PlacelessSetup):
         super(TestITranslationService, self).setUp()
         self._service = self._getTranslationService()
         assert verifyObject(ITranslationService, self._service)
-        # Setup the negotiator service registry entry
-        managerHandler('defineService', 'LanguageNegotiation', INegotiator)
-        provideService('LanguageNegotiation', negotiator, 'zope.Public')
+        # Setup the negotiator utility
+        utilities = getService(None, Utilities)
+        utilities.provideUtility(INegotiator, negotiator)
 
     # I know, I know. This is not part of the interface, but it is implemented
     # in every Translation Service, so it fits well here.
