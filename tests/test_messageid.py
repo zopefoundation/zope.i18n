@@ -13,7 +13,7 @@
 ##############################################################################
 """Message ID tests.
 
-$Id: test_messageid.py,v 1.3 2003/04/15 21:18:12 bwarsaw Exp $
+$Id: test_messageid.py,v 1.4 2003/08/18 19:20:23 srichter Exp $
 """
 
 import unittest
@@ -31,6 +31,10 @@ class TestMessageID(unittest.TestCase):
         eq(id.default, u'this is a test')
         id.default = u'blah'
         eq(id.default, u'blah')
+        id = fact(u'test-id', 'default test')
+        eq(id, u'test-id')
+        eq(id.default, u'default test')
+        eq(id.domain, 'test')
 
 
 def test_suite():

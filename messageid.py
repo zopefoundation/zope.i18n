@@ -13,7 +13,7 @@
 ##############################################################################
 """Message IDs.
 
-$Id: messageid.py,v 1.6 2003/08/12 21:49:46 srichter Exp $
+$Id: messageid.py,v 1.7 2003/08/18 19:20:20 srichter Exp $
 """
 
 class MessageID(unicode):
@@ -61,5 +61,5 @@ class MessageIDFactory:
     def __init__(self, domain):
         self._domain = domain
 
-    def __call__(self, ustr):
-        return MessageID(ustr, domain=self._domain)
+    def __call__(self, ustr, default=None):
+        return MessageID(ustr, self._domain, default)
