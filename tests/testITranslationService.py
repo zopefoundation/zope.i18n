@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testITranslationService.py,v 1.2 2002/06/12 18:38:58 srichter Exp $
+$Id: testITranslationService.py,v 1.3 2002/06/12 21:01:27 bwarsaw Exp $
 """
 
 import unittest
@@ -42,85 +42,93 @@ class Environment:
 
 class TestITranslationService(PlacelessSetup, unittest.TestCase):
 
-
     # This should be overwritten by every clas that inherits this test
     def _getTranslationService(self):
         pass
     
-
     def setUp(self):
         PlacelessSetup.setUp(self)
         self._service = self._getTranslationService() 
         assert verifyObject(ITranslationService, self._service)
-
         # Setup the negotiator service registry entry
         managerHandler('defineService', 'LanguageNegotiation', INegotiator) 
         provideService('LanguageNegotiation', negotiator, 'Zope.Public')
-        
 
     # I know, I know. This is not part of the interface, but it is implemented
     # in every Translation Service, so it fits well here.
     def testInterpolation(self):
         service = self._service
+        interp = service.interpolate
+        eq = self.assertEqual
         mapping = {'name': 'Zope', 'version': '3x'}
-
-        self.assertEqual(service.interpolate(
-            'This is $name.', mapping),
-                         'This is Zope.')
-        self.assertEqual(service.interpolate(
-            'This is ${name}.', mapping),
-                         'This is Zope.')
-        self.assertEqual(service.interpolate(
-            'This is $name version $version.', mapping),
-                         'This is Zope version 3x.')
-        self.assertEqual(service.interpolate(
-            'This is ${name} version $version.', mapping),
-                         'This is Zope version 3x.')
-        self.assertEqual(service.interpolate(
-            'This is $name version ${version}.', mapping),
-                         'This is Zope version 3x.')
-        self.assertEqual(service.interpolate(
-            'This is ${name} version ${version}.', mapping),
-                         'This is Zope version 3x.')
+        # Test simple interpolations
+        eq(interp('This is $name.', mapping), 'This is Zope.')
+        eq(interp('This is ${name}.', mapping), 'This is Zope.')
+        # Test more than one interpolation variable
+        eq(interp('This is $name version $version.', mapping),
+           'This is Zope version 3x.')
+        eq(interp('This is ${name} version $version.', mapping),
+           'This is Zope version 3x.')
+        eq(interp('This is $name version ${version}.', mapping),
+           'This is Zope version 3x.')
+        eq(interp('This is ${name} version ${version}.', mapping),
+           'This is Zope version 3x.')
+        # Test escaping the $
+        eq(interp('This is $$name.', mapping), 'This is $$name.')
+        eq(interp('This is $${name}.', mapping), 'This is $${name}.')
         
-
     def testSimpleNoTranslate(self):
-        service = self._service
-        self.assertRaises(TypeError, service.translate, 'Hello')
-    
-        self.assertEqual(service.translate('default', 'short_greeting',
-                                           target_language='es'),
-                         'short_greeting')
-
+        translate = self._service.translate
+        raises = self.assertRaises
+        eq = self.assertEqual
+        # Test that we have at least the minimum required arguments
+        raises(TypeError, translate, 'Hello')
+        # Test that a translation in an unsupported language returns the
+        # original message id unchanged.
+        eq(translate('default', 'short_greeting', target_language='es'),
+           'short_greeting')
+        # Same test, but use the context argument instead of target_language
         context = Environment()
-        self.assertEqual(service.translate('default', 'short_greeting',
-                                           context=context),
-                         'short_greeting')
-    
-        self.assertRaises(TypeError, service.translate, 'short_greeting',
-                          context=None)
-    
+        eq(translate('default', 'short_greeting', context=context),
+           'short_greeting')
+        # Test that at least one of context or target_language is given
+        raises(TypeError, translate, 'short_greeting', context=None)
     
     def testSimpleTranslate(self):
-        service = self._service
-        self.assertEqual(service.translate('default', 'short_greeting',
-                                           target_language='de'),
-                         'Hallo!')
-
+        translate = self._service.translate
+        eq = self.assertEqual
+        # Test that a given message id is properly translated in a supported
+        # language
+        eq(translate('default', 'short_greeting', target_language='de'),
+           'Hallo!')
+        # Same test, but use the context argument
+        context = Environment(('de', 'en'))
+        eq(translate('default', 'short_greeting', context=context),
+           'Hallo!')
     
     def testDynamicTranslate(self):
-        service = self._service    
-        self.assertEqual(service.translate('default', 'greeting',
-                                           mapping={'name': 'Stephan'},
-                                           target_language='de'),
-                         'Hallo Stephan, wie geht es Dir?')
-        
+        translate = self._service.translate
+        eq = self.assertEqual
+        # Testing both translation and interpolation
+        eq(translate('default', 'greeting', mapping={'name': 'Stephan'},
+                     target_language='de'),
+           'Hallo Stephan, wie geht es Dir?')
 
     def testGetDomain(self):
         service = self._service    
         domain = service.getDomain('default')
         self.assertEqual(verifyObject(IDomain, domain), 1)
 
+    def testDomainTranslate(self):
+        service = self._service    
+        domain = service.getDomain('default')
+        translate = domain.translate
+        eq = self.assertEqual
+        # target language argument
+        eq(translate('short_greeting', target_language='de'), 'Hallo!')
+        # context argument
+        context = Environment(('de', 'en'))
+        eq(translate('short_greeting', context=context), 'Hallo!')
         
 def test_suite():
     pass
