@@ -13,28 +13,37 @@
 ##############################################################################
 """
 
-$Id: INegotiator.py,v 1.2 2002/06/10 23:29:28 jim Exp $
+$Id: INegotiator.py,v 1.3 2002/06/12 15:55:33 bwarsaw Exp $
 """
 
 from Interface import Interface
 
 class INegotiator(Interface):
 
-    """ The INegotiater defines an interface for a service for language 
-       negotiation
+    """A language negotiation service.
     """
   
-    def getLanguage(object_langs,  env):
-        """getLanguage implements a decision making algorithm to decide
-           what language should be used based on the available languages
-           for an object and a list of user prefered languages.
+    def getLanguage(langs, env):
+        """Return the matching language to use.
+
+        The decision of which language to use is based on the list of
+        available languages, and the given user environment.  An
+        IUserPreferredLanguages adapter for the environment is obtained and
+        the list of acceptable languages is retrieved from the environment.
+
+        If no match is found between the list of available languages and the
+        list of acceptable languages, None is returned.
 
         Arguments:
 
-        object_langs -- sequence of languages (not necessarily ordered)
+        langs -- sequence of languages (not necessarily ordered)
 
         env  -- environment passed to the service to determine a sequence
                 of user prefered languages
-
         """
 
+        # XXX I'd like for there to be a symmetric interface method, one in
+        # which an adaptor is gotten for both the first arg and the second
+        # arg.  I.e. getLanguage(obj, env)
+        # But this isn't a good match for the iTranslationService.translate()
+        # method. :(
