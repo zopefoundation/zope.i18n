@@ -13,51 +13,45 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.4 2003/03/25 23:25:14 bwarsaw Exp $
+$Id: gettextmessagecatalog.py,v 1.5 2003/04/11 19:15:54 bwarsaw Exp $
 """
 
-from gettext import GNUTranslations
+from pythonlib.gettext import GNUTranslations
 from zope.i18n.interfaces import IMessageCatalog
 
 
+class _KeyErrorRaisingFallback:
+    def ugettext(self, message):
+        raise KeyError, message
+
+
 class GettextMessageCatalog:
-    """ """
+    """A message catalog based on GNU gettext and Python's gettext module."""
 
     __implements__ =  IMessageCatalog
-
 
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
         self._language = language
         self._domain = domain
         self._path_to_file = path_to_file
-        self.__translation_object = None
-        self._prepareTranslations()
-
-
-    def _prepareTranslations(self):
-        """ """
-        if self.__translation_object is None:
-            file = open(self._path_to_file, 'r')
-            self.__translation_object = GNUTranslations(file)
-            file.close()
-
+        fp = open(self._path_to_file, 'r')
+        try:
+            self._catalog = GNUTranslations(fp, coerce=True)
+        finally:
+            fp.close()
+        self._catalog.add_fallback(_KeyErrorRaisingFallback())
 
     def getMessage(self, id):
         'See IMessageCatalog'
-        self._prepareTranslations()
-        msg = self.__translation_object.ugettext(id)
-        if msg == id:
-            raise KeyError
-        return msg
+        return self._catalog.ugettext(id)
 
     def queryMessage(self, id, default=None):
         'See IMessageCatalog'
-        self._prepareTranslations()
-        text = self.__translation_object.ugettext(id)
-        if text != id:
-            return text
-        return default
+        try:
+            return self._catalog.ugettext(id)
+        except KeyError:
+            return default
 
     def getLanguage(self):
         'See IMessageCatalog'
