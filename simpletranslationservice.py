@@ -13,12 +13,12 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.11 2004/02/24 14:07:18 srichter Exp $
+$Id: simpletranslationservice.py,v 1.12 2004/03/02 17:49:26 srichter Exp $
 """
 import re
 
-from zope.component import getService
-from zope.i18n.interfaces import ITranslationService
+from zope.component import getUtility
+from zope.i18n.interfaces import ITranslationService, INegotiator
 from zope.interface import implements
 
 
@@ -63,7 +63,7 @@ class SimpleTranslationService:
         if target_language is None and context is not None:
             langs = [m[1] for m in self.messages.keys()]
             # Let's negotiate the language to translate to. :)
-            negotiator = getService(self, 'LanguageNegotiation')
+            negotiator = getUtility(self, INegotiator)
             target_language = negotiator.getLanguage(langs, context)
 
         # Make a raw translation without interpolation
