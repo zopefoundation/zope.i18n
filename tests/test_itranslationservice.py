@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.5 2003/04/17 20:05:13 bwarsaw Exp $
+$Id: test_itranslationservice.py,v 1.6 2003/06/06 19:29:10 stevea Exp $
 """
 
 import unittest
@@ -26,11 +26,12 @@ from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationService
+from zope.interface import implements
 
 
 class Environment:
 
-    __implements__ = IUserPreferredLanguages
+    implements(IUserPreferredLanguages)
 
     def __init__(self, langs=()):
         self.langs = langs

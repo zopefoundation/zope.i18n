@@ -13,11 +13,12 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.13 2003/04/10 06:17:00 srichter Exp $
+$Id: locales.py,v 1.14 2003/06/06 19:29:09 stevea Exp $
 """
 import os
 import datetime
 from xml.dom.minidom import parse as parseXML
+from zope.interface import implements
 
 # time.strptime() isn't available on all platforms before Python 2.3.  When
 # it isn't available, use the implementation from 2.3's _strptime.py, checked
@@ -76,7 +77,7 @@ class LoadLocaleError(Exception):
 class LocaleProvider:
     __doc__ = ILocaleProvider.__doc__
 
-    __implements__ =  ILocaleProvider
+    implements(ILocaleProvider)
 
 
     def __init__(self, locale_dir):
@@ -130,7 +131,7 @@ locales = LocaleProvider(LOCALEDIR)
 class LocaleIdentity:
     __doc__ = ILocaleIdentity.__doc__
 
-    __implements__ =  ILocaleIdentity
+    implements(ILocaleIdentity)
 
     def __init__(self, language=None, country=None, variant=None):
         """Initialize object."""
@@ -148,7 +149,7 @@ class LocaleIdentity:
 class LocaleVersion:
     __doc__ = ILocaleVersion.__doc__
 
-    __implements__ = ILocaleVersion
+    implements(ILocaleVersion)
 
     # See zope.i18n.interfaces.ILocaleVersion
     id = None
@@ -172,7 +173,7 @@ class LocaleVersion:
 class LocaleTimeZone:
     __doc__ = ILocaleTimeZone.__doc__
 
-    __implements__ =  ILocaleTimeZone
+    implements(ILocaleTimeZone)
 
     def __init__(self, id):
         """Initialize the object."""
@@ -184,7 +185,7 @@ class LocaleTimeZone:
 class LocaleCalendar:
     __doc__ = ILocaleCalendar.__doc__
 
-    __implements__ =  ILocaleCalendar
+    implements(ILocaleCalendar)
 
     def __init__(self, klass):
         """Initialize the object."""
@@ -273,7 +274,7 @@ class LocaleCalendar:
 class LocaleNumberFormat:
     __doc__ = ILocaleNumberFormat.__doc__
 
-    __implements__ = ILocaleNumberFormat
+    implements(ILocaleNumberFormat)
 
     def __init__(self, klass):
         """Initialize object."""
@@ -285,7 +286,7 @@ class LocaleNumberFormat:
 class LocaleCurrency:
     __doc__ = ILocaleCurrency.__doc__
 
-    __implements__ = ILocaleCurrency
+    implements(ILocaleCurrency)
 
     def __init__(self, id):
         """Initialize object."""
@@ -299,7 +300,7 @@ class LocaleCurrency:
 class Locale:
     __doc__ = ILocale.__doc__
 
-    __implements__ = ILocale
+    implements(ILocale)
 
     def __init__(self, id):
         self.id = id

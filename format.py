@@ -16,13 +16,14 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.7 2003/04/15 15:24:03 stevea Exp $
+$Id: format.py,v 1.8 2003/06/06 19:29:09 stevea Exp $
 """
 import re
 import math
 import datetime
 import calendar
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
+from zope.interface import implements
 
 class DateTimeParseError(Exception):
     """Error is raised when parsing of datetime failed."""
@@ -30,7 +31,7 @@ class DateTimeParseError(Exception):
 class DateTimeFormat(object):
     __doc__ = IDateTimeFormat.__doc__
 
-    __implements__ =  IDateTimeFormat
+    implements(IDateTimeFormat)
 
     _DATETIMECHARS = "aGyMdEDFwWhHmsSkKz"
 
@@ -140,7 +141,7 @@ class NumberParseError(Exception):
 class NumberFormat(object):
     __doc__ = INumberFormat.__doc__
 
-    __implements__ =  INumberFormat
+    implements(INumberFormat)
 
     # See zope.i18n.interfaces.INumberFormat
     symbols = {u'decimal': u'.',

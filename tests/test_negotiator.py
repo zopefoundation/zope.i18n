@@ -13,16 +13,17 @@
 ##############################################################################
 """
 
-$Id: test_negotiator.py,v 1.4 2003/05/01 19:35:43 faassen Exp $
+$Id: test_negotiator.py,v 1.5 2003/06/06 19:29:10 stevea Exp $
 """
 import unittest
 
 from zope.i18n.negotiator import Negotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component.tests.placelesssetup import PlacelessSetup
+from zope.interface import implements
 
 class Env:
-    __implements__ = IUserPreferredLanguages
+    implements(IUserPreferredLanguages)
 
     def __init__(self, langs=()):
         self.langs = langs

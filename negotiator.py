@@ -13,16 +13,17 @@
 ##############################################################################
 """
 
-$Id: negotiator.py,v 1.5 2003/05/01 19:35:42 faassen Exp $
+$Id: negotiator.py,v 1.6 2003/06/06 19:29:09 stevea Exp $
 """
 
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component import getAdapter
+from zope.interface import implements
 
 class Negotiator:
 
-    __implements__ = INegotiator
+    implements(INegotiator)
 
     def getLanguage(self, langs, env):
         envadapter = getAdapter(env, IUserPreferredLanguages)

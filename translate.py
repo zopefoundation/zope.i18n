@@ -13,11 +13,12 @@
 ##############################################################################
 """
 
-$Id: translate.py,v 1.7 2003/04/17 20:05:13 bwarsaw Exp $
+$Id: translate.py,v 1.8 2003/06/06 19:29:09 stevea Exp $
 """
 
 from zope.i18n.interfaces import ITranslator
 from zope.component import getService
+from zope.interface import implements
 
 
 class Translator:
@@ -27,7 +28,7 @@ class Translator:
     the domain, context, and target language.
     """
 
-    __implements__ = ITranslator
+    implements(ITranslator)
 
     def __init__(self, locale, domain, context=None):
         """locale comes from the request, domain specifies the application,

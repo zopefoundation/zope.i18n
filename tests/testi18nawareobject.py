@@ -13,17 +13,18 @@
 ##############################################################################
 """This is a test for the II18nAware interface.
 
-$Id: testi18nawareobject.py,v 1.4 2003/05/01 19:35:43 faassen Exp $
+$Id: testi18nawareobject.py,v 1.5 2003/06/06 19:29:10 stevea Exp $
 """
 import unittest
 
 from zope.i18n.interfaces import II18nAware
 from zope.i18n.tests.testii18naware import TestII18nAware
+from zope.interface import implements
 
 
 class I18nAwareContentObject:
 
-    __implements__ = II18nAware
+    implements(II18nAware)
 
     def __init__(self):
         self.content = {}

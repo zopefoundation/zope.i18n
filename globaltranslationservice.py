@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.9 2003/04/17 20:05:13 bwarsaw Exp $
+$Id: globaltranslationservice.py,v 1.10 2003/06/06 19:29:09 stevea Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -32,8 +32,6 @@ LANGUAGE_FALLBACKS = ['en']
 
 
 class GlobalTranslationService(SimpleTranslationService):
-
-    __implements__ =  SimpleTranslationService.__implements__
 
     def __init__(self, default_domain='global', fallbacks=None):
         # XXX We haven't specified that ITranslationServices have a default

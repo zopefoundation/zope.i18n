@@ -13,13 +13,14 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.8 2003/04/17 20:05:13 bwarsaw Exp $
+$Id: simpletranslationservice.py,v 1.9 2003/06/06 19:29:09 stevea Exp $
 """
 
 import re
 
 from zope.component import getService
 from zope.i18n.interfaces import ITranslationService
+from zope.interface import implements
 
 
 # Set up regular expressions for finding interpolation variables in text.
@@ -44,7 +45,7 @@ class SimpleTranslationService:
        Note: This Translation Service does not implemen
     """
 
-    __implements__ =  ITranslationService
+    implements(ITranslationService)
 
 
     def __init__(self, messages=None):

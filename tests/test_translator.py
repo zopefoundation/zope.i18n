@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the ITranslator / Translator
 
-$Id: test_translator.py,v 1.5 2003/05/01 19:35:43 faassen Exp $
+$Id: test_translator.py,v 1.6 2003/06/06 19:29:10 stevea Exp $
 """
 
 import os
@@ -25,17 +25,18 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_globaltranslationservice import testdir
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component import getService
+from zope.interface import implements
 
 class LocaleIdentityStub:
     # Lie -- we're only going to implement part of the interface
-    __implements__ = ILocaleIdentity
+    implements(ILocaleIdentity)
 
     def __init__(self, language=None):
         self.language = language
 
 class LocaleStub:
     # Lie -- we're only going to implement part of the interface
-    __implements__ = ILocale
+    implements(ILocale)
 
     def __init__(self, language=None):
         self.id = LocaleIdentityStub(language)
