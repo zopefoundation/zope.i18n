@@ -13,24 +13,16 @@
 ##############################################################################
 """
 
-$Id: IUserPreferedLanguages.py,v 1.2 2002/06/10 23:29:28 jim Exp $
+$Id: IUserPreferredLanguages.py,v 1.1 2002/06/12 15:56:18 bwarsaw Exp $
 """
 
 from Interface import Interface
 
-class IUserPreferedLanguages(Interface):
+class IUserPreferredLanguages(Interface):
 
-    """ This interfaces allows to obtain language negotiation dependant 
-        informations about user prefered languages.
+    """This interface provides language negotiation based on user preferences.
     """
   
-    def getLanguages():
-
-        """getLanguages returns a sequence of user prefered languages
-
-        Arguments:
-        
-        None
-
+    def getPreferredLanguages():
+        """Return a sequence of user preferred languages.
         """
-
