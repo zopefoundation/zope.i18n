@@ -13,41 +13,34 @@
 ##############################################################################
 """
 
-$Id: testTranslate.py,v 1.2 2002/06/12 20:59:34 bwarsaw Exp $
+$Id: testTranslate.py,v 1.3 2002/06/14 16:50:20 srichter Exp $
 """
 
 import unittest
-from cStringIO import StringIO
+from StringIO import StringIO
+
+from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup 
+from Zope.ComponentArchitecture.GlobalAdapterService import provideAdapter 
+from Zope.ComponentArchitecture.GlobalFactoryService import provideFactory
 
 from Zope.I18n.Views.Browser.Translate import Translate
 from Zope.I18n.TranslationService import TranslationService
 from Zope.I18n.MessageCatalog import MessageCatalog
+from Zope.I18n.IUserPreferredCharsets import IUserPreferredCharsets
 
+from Zope.Publisher.HTTP.HTTPRequest import IHTTPRequest
+from Zope.Publisher.HTTP.HTTPCharsets import HTTPCharsets
 from Zope.Publisher.Browser.BrowserRequest import BrowserRequest
 
 
-# Setup the registries
-from Zope.ComponentArchitecture.IFactoryService import IFactoryService
-from Zope.ComponentArchitecture.GlobalFactoryService import \
-     factoryService
-from Zope.App.ComponentArchitecture.metaConfigure import \
-     provideService, managerHandler
-from Zope.App.ComponentArchitecture.metaConfigure import handler
-
-    
-class TranslateTest(unittest.TestCase):
+class TranslateTest(unittest.TestCase, PlacelessSetup):
 
     def setUp(self):
+        PlacelessSetup.setUp(self)
 
-        try:
-            # Setup the registries
-            managerHandler('defineService', 'Factories', IFactoryService) 
-            provideService('Factories', factoryService, 'Zope.Public')
-            
-            handler('Factories', 'provideFactory', 'Message Catalog',
-                    MessageCatalog)
-        except:
-            pass
+        # Setup the registries
+        provideAdapter(IHTTPRequest, IUserPreferredCharsets, HTTPCharsets)
+        provideFactory('Message Catalog', MessageCatalog)
         
         service = TranslationService('default') 
 
@@ -136,3 +129,4 @@ def test_suite():
 
 if __name__=='__main__':
     unittest.main()
+

@@ -6,8 +6,9 @@
 
 <div metal:fill-slot="body">
 
-<table cols="4" width="100%" border="0" 
-       i18n:domain="Zope-I18n">
+<span i18n:domain="Zope-I18n">
+
+<table cols="4" width="100%" border="0">
   <tr>
     <td width="25%">
       <form action="./" method="post">
@@ -169,6 +170,9 @@
            i18n:attributes="value">
   </div>
   </form>
+
+</span>
 </div>
+
 </body>
 </html>

@@ -22,8 +22,8 @@
 
 
 <!-- Setup charset negotiation -->
-<adapter factory="Zope.Publisher.Browser.BrowserCharsets."
-         for="Zope.Publisher.Browser.IBrowserRequest."
+<adapter factory="Zope.Publisher.HTTP.HTTPCharsets."
+         for="Zope.Publisher.HTTP.IHTTPRequest."
          provides="Zope.I18n.IUserPreferredCharsets."
          />
 
