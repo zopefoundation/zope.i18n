@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_negotiator.py,v 1.6 2004/01/10 11:02:37 philikon Exp $
+$Id: test_negotiator.py,v 1.7 2004/02/27 17:48:43 sidnei Exp $
 """
 import unittest
 
@@ -32,17 +32,19 @@ class Env:
         return self.langs
 
 
-class Test(PlacelessSetup, unittest.TestCase):
+class NegotiatorTest(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
-        super(Test, self).setUp()
+        super(NegotiatorTest, self).setUp()
         self.Negotiator = Negotiator()
 
     def test1(self):
 
         _cases = (
             (('en','de'), ('en','de','fr'),  'en'),
-            (('en'),      ('it','de','fr'),  None)
+            (('en'),      ('it','de','fr'),  None),
+            (('pt-br','de'), ('pt_BR','de','fr'),  'pt_BR'),
+            (('pt-br','en'), ('pt','en','fr'),  'en'),
             )
 
         for user_pref_langs, obj_langs, expected in _cases:
@@ -53,7 +55,7 @@ class Test(PlacelessSetup, unittest.TestCase):
 
 def test_suite():
     loader = unittest.TestLoader()
-    return loader.loadTestsFromTestCase(Test)
+    return loader.loadTestsFromTestCase(NegotiatorTest)
 
 
 if __name__ == '__main__':

@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: __init__.py,v 1.2 2004/02/24 14:07:21 srichter Exp $
+$Id: __init__.py,v 1.3 2004/02/27 17:48:42 sidnei Exp $
 """
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Dict, EnumeratedTextLine
@@ -183,8 +183,9 @@ class ILanguageAvailability(Interface):
 
 
 class IUserPreferredLanguages(Interface):
-
     """This interface provides language negotiation based on user preferences.
+
+    See: http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.4
     """
 
     def getPreferredLanguages():
