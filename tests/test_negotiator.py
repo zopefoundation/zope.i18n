@@ -13,7 +13,7 @@
 ##############################################################################
 """Language Negotiator tests.
 
-$Id: test_negotiator.py,v 1.8 2004/02/27 22:25:23 srichter Exp $
+$Id: test_negotiator.py,v 1.9 2004/02/27 22:27:24 srichter Exp $
 """
 import unittest
 
@@ -36,7 +36,7 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
         super(NegotiatorTest, self).setUp()
-        self.Negotiator = Negotiator()
+        self.negotiator = Negotiator()
 
     def test_findLanguages(self):
 
