@@ -21,9 +21,15 @@ $Id$
 import re
 import math
 import datetime
+import pytz
+import pytz.reference
 
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implements
+
+def _findFormattingCharacterInPattern(char, pattern):
+    return [entry for entry in pattern
+            if isinstance(entry, tuple) and entry[0] == char]
 
 class DateTimeParseError(Exception):
     """Error is raised when parsing of datetime failed."""
@@ -61,9 +67,10 @@ class DateTimeFormat(object):
             bin_pattern = parseDateTimePattern(pattern)
         else:
             bin_pattern = self._bin_pattern
+
         # Generate the correct regular expression to parse the date and parse.
         regex = ''
-        info = buildDateTimeParseInfo(self.calendar)
+        info = buildDateTimeParseInfo(self.calendar, bin_pattern)
         for elem in bin_pattern:
             regex += info.get(elem, elem)
         try:
@@ -74,10 +81,12 @@ class DateTimeFormat(object):
         # Sometimes you only want the parse results
         if not asObject:
             return results
+        
         # Map the parsing results to a datetime object
-        ordered = [0, 0, 0, 0, 0, 0, 0]
+        ordered = [None, None, None, None, None, None, None]
         bin_pattern = filter(lambda x: isinstance(x, tuple), bin_pattern)
-        # Handle years
+
+        # Handle years; note that only 'yy' and 'yyyy' are allowed
         if ('y', 2) in bin_pattern:
             year = int(results[bin_pattern.index(('y', 2))])
             if year > 30:
@@ -86,38 +95,72 @@ class DateTimeFormat(object):
                 ordered[0] = 2000 + year
         if ('y', 4) in bin_pattern:
             ordered[0] = int(results[bin_pattern.index(('y', 4))])
-        # Handle months
-        if ('M', 3) in bin_pattern:
-            abbr = results[bin_pattern.index(('M', 3))]
-            ordered[1] = self.calendar.getMonthTypeFromAbbreviation(abbr)
-        if ('M', 4) in bin_pattern:
-            name = results[bin_pattern.index(('M', 4))]
-            ordered[1] = self.calendar.getMonthTypeFromName(name)
-        # Handle AM/PM hours
-        for length in (1, 2):
-            id = ('h', length)
-            if id in bin_pattern:
-                hour = int(results[bin_pattern.index(id)])
-                ampm = self.calendar.pm == results[
-                    bin_pattern.index(('a', 1))]
-                if hour == 12:
-                    ampm = not ampm
-                ordered[3] = (hour + 12*ampm)%24
-        # Shortcut for the simple int functions
-        dt_fields_map = {'M': 1, 'd': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
-        for field in dt_fields_map.keys():
-            for length in (1, 2):
-                id = (field, length)
-                if id in bin_pattern:
-                    pos = dt_fields_map[field]
-                    ordered[pos] = int(results[bin_pattern.index(id)])
 
-        if ordered[3:] == [0, 0, 0, 0]:
-            return datetime.date(*ordered[:3])
-        elif ordered[:3] == [0, 0, 0]:
-            return datetime.time(*ordered[3:])
+        # Handle months (text)
+        month_entry = _findFormattingCharacterInPattern('M', bin_pattern)
+        if month_entry and month_entry[0][1] == 3:
+            abbr = results[bin_pattern.index(month_entry[0])]
+            ordered[1] = self.calendar.getMonthTypeFromAbbreviation(abbr)
+        elif month_entry and month_entry[0][1] >= 4:
+            name = results[bin_pattern.index(month_entry[0])]
+            ordered[1] = self.calendar.getMonthTypeFromName(name)
+        elif month_entry and month_entry[0][1] <= 2:
+            ordered[1] = int(results[bin_pattern.index(month_entry[0])])
+
+        # Handle hours with AM/PM
+        hour_entry = _findFormattingCharacterInPattern('h', bin_pattern)
+        if hour_entry:
+            hour = int(results[bin_pattern.index(hour_entry[0])])
+            ampm_entry = _findFormattingCharacterInPattern('a', bin_pattern)
+            if not ampm_entry:
+                raise DateTimeParseError, \
+                      'Cannot handle 12-hour format without am/pm marker.'
+            ampm = self.calendar.pm == results[bin_pattern.index(ampm_entry[0])]
+            if hour == 12:
+                ampm = not ampm
+            ordered[3] = (hour + 12*ampm)%24
+
+        # Shortcut for the simple int functions
+        dt_fields_map = {'d': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
+        for field in dt_fields_map.keys():
+            entry = _findFormattingCharacterInPattern(field, bin_pattern)
+            if not entry: continue
+            pos = dt_fields_map[field]
+            ordered[pos] = int(results[bin_pattern.index(entry[0])])
+
+        # Handle timezones
+        tzinfo = None
+        tz_entry = _findFormattingCharacterInPattern('z', bin_pattern)
+        if ordered[3:] != [None, None, None, None] and tz_entry:
+            length = tz_entry[0][1]
+            value = results[bin_pattern.index(tz_entry[0])]
+            if length == 1:
+                hours, mins = int(value[:-2]), int(value[-2:])
+                delta = datetime.timedelta(hours=hours, minutes=mins)
+                tzinfo = pytz.tzinfo.StaticTzInfo()
+                tzinfo._utcoffset = delta
+            elif length == 2:
+                hours, mins = int(value[:-3]), int(value[-2:])
+                delta = datetime.timedelta(hours=hours, minutes=mins)
+                tzinfo = pytz.tzinfo.StaticTzInfo()
+                tzinfo._utcoffset = delta
+            else:
+                if value in pytz.all_timezones:
+                    tzinfo = pytz.timezone(value)
+                else:
+                    # TODO: Find timezones using locale information
+                    pass
+                    
+
+        # Create a date/time object from the data
+        if ordered[3:] == [None, None, None, None]:
+            return datetime.date(*[e or 0 for e in ordered[:3]])
+        elif ordered[:3] == [None, None, None]:
+            return datetime.time(*[e or 0 for e in ordered[3:]],
+                                 **{'tzinfo' :tzinfo})
         else:
-            return datetime.datetime(*ordered)
+            return datetime.datetime(*[e or 0 for e in ordered],
+                                     **{'tzinfo' :tzinfo})
 
 
     def format(self, obj, pattern=None):
@@ -128,8 +171,8 @@ class DateTimeFormat(object):
         else:
             bin_pattern = self._bin_pattern
 
-        text = ''
-        info = buildDateTimeInfo(obj, self.calendar)
+        text = u''
+        info = buildDateTimeInfo(obj, self.calendar, bin_pattern)
         for elem in bin_pattern:
             text += info.get(elem, elem)
 
@@ -389,19 +432,10 @@ IN_DATETIMEFIELD = 2
 class DateTimePatternParseError(Exception):
     """DateTime Pattern Parse Error"""
 
-class BinaryDateTimePattern(list):
-
-    def append(self, item):
-        if isinstance(item, tuple) and item[1] > 4:
-            raise DateTimePatternParseError, \
-                  ('A datetime field character sequence can never be '
-                   'longer than 4 characters. You have: %i' %item[1])
-        super(BinaryDateTimePattern, self).append(item)
-
 
 def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
     """This method can handle everything: time, date and datetime strings."""
-    result = BinaryDateTimePattern()
+    result = []
     state = DEFAULT
     helper = ''
     char = ''
@@ -473,55 +507,72 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
     return result
 
 
-
-def buildDateTimeParseInfo(calendar):
+def buildDateTimeParseInfo(calendar, pattern):
     """This method returns a dictionary that helps us with the parsing.
     It also depends on the locale of course."""
-    return {
-        ('a', 1): r'(%s|%s)' %(calendar.am, calendar.pm),
-        # TODO: works for gregorian only right now
-        ('G', 1): r'(%s|%s)' %(calendar.eras[1][1], calendar.eras[2][1]),
-        ('y', 2): r'([0-9]{2})',
-        ('y', 4): r'([0-9]{4})',
-        ('M', 1): r'([0-9]{1,2})',
-        ('M', 2): r'([0-9]{2})',
-        ('M', 3): r'('+'|'.join(calendar.getMonthAbbreviations())+')',
-        ('M', 4): r'('+'|'.join(calendar.getMonthNames())+')',
-        ('d', 1): r'([0-9]{1,2})',
-        ('d', 2): r'([0-9]{2})',
-        ('E', 1): r'([0-9])',
-        ('E', 2): r'([0-9]{2})',
-        ('E', 3): r'('+'|'.join(calendar.getDayAbbreviations())+')',
-        ('E', 4): r'('+'|'.join(calendar.getDayNames())+')',
-        ('D', 1): r'([0-9]{1,3})',
-        ('w', 1): r'([0-9])',
-        ('w', 2): r'([0-9]{2})',
-        ('h', 1): r'([0-9]{1,2})',
-        ('h', 2): r'([0-9]{2})',
-        ('H', 1): r'([0-9]{1,2})',
-        ('H', 2): r'([0-9]{2})',
-        ('m', 1): r'([0-9]{1,2})',
-        ('m', 2): r'([0-9]{2})',
-        ('s', 1): r'([0-9]{1,2})',
-        ('s', 2): r'([0-9]{2})',
-        ('S', 1): r'([0-9]{0,6})',
-        ('S', 2): r'([0-9]{6})',
-        ('F', 1): r'([0-9])',
-        ('F', 2): r'([0-9]{1,2})',
-        ('W', 1): r'([0-9])',
-        ('W', 2): r'([0-9]{2})',
-        ('k', 1): r'([0-9]{1,2})',
-        ('k', 2): r'([0-9]{2})',
-        ('K', 1): r'([0-9]{1,2})',
-        ('K', 2): r'([0-9]{2})',
-        ('z', 1): r'([\+-][0-9]{3,4})',
-        ('z', 2): r'([\+-][0-9]{2}:[0-9]{2})',
-        ('z', 3): r'([a-zA-Z]{3})',
-        ('z', 4): r'([a-zA-Z /\.]*)',
-        }
+    info = {}
+    # Generic Numbers
+    for field in 'dDFkKhHmsSwW':
+        for entry in _findFormattingCharacterInPattern(field, pattern):
+            # The maximum amount of digits should be infinity, but 1000 is
+            # close enough here. 
+            info[entry] = r'([0-9]{%i,1000})' %entry[1]
+
+    # year (Number)
+    for entry in _findFormattingCharacterInPattern('y', pattern):
+        if entry[1] == 2:
+            info[entry] = r'([0-9]{2})'
+        elif entry[1] == 4:
+            info[entry] = r'([0-9]{4})'
+        else:
+            raise DateTimePatternParseError, "Only 'yy' and 'yyyy' allowed." 
+
+    # am/pm marker (Text)
+    for entry in _findFormattingCharacterInPattern('a', pattern):
+        info[entry] = r'(%s|%s)' %(calendar.am, calendar.pm)
+
+    # era designator (Text)
+    # TODO: works for gregorian only right now
+    for entry in _findFormattingCharacterInPattern('G', pattern):
+        info[entry] = r'(%s|%s)' %(calendar.eras[1][1], calendar.eras[2][1])
+
+    # time zone (Text)
+    for entry in _findFormattingCharacterInPattern('z', pattern):
+        if entry[1] == 1:
+            info[entry] = r'([\+-][0-9]{3,4})'
+        elif entry[1] == 2:
+            info[entry] = r'([\+-][0-9]{2}:[0-9]{2})'
+        elif entry[1] == 3:
+            info[entry] = r'([a-zA-Z]{3})'
+        else:
+            info[entry] = r'([a-zA-Z /\.]*)'
+
+    # month in year (Text and Number)
+    for entry in _findFormattingCharacterInPattern('M', pattern):
+        if entry[1] == 1:
+            info[entry] = r'([0-9]{1,2})'
+        elif entry[1] == 2:
+            info[entry] = r'([0-9]{2})'
+        elif entry[1] == 3:
+            info[entry] = r'('+'|'.join(calendar.getMonthAbbreviations())+')'
+        else:
+            info[entry] = r'('+'|'.join(calendar.getMonthNames())+')'
+
+    # day in week (Text and Number)
+    for entry in _findFormattingCharacterInPattern('E', pattern):
+        if entry[1] == 1:
+            info[entry] = r'([0-9])'
+        elif entry[1] == 2:
+            info[entry] = r'([0-9]{2})'
+        elif entry[1] == 3:
+            info[entry] = r'('+'|'.join(calendar.getDayAbbreviations())+')'
+        else:
+            info[entry] = r'('+'|'.join(calendar.getDayNames())+')'
+
+    return info
 
 
-def buildDateTimeInfo(dt, calendar):
+def buildDateTimeInfo(dt, calendar, pattern):
     """Create the bits and pieces of the datetime object that can be put
     together."""
     if isinstance(dt, datetime.time):
@@ -546,49 +597,74 @@ def buildDateTimeInfo(dt, calendar):
 
     week_in_month = (dt.day + 6 - dt.weekday()) / 7 + 1
 
-    return {
-        ('a', 1): ampm,
-        ('G', 1): 'AD',
-        ('y', 2): str(dt.year)[2:],
-        ('y', 4): str(dt.year),
-        ('M', 1): str(dt.month),
-        ('M', 2): "%.2i" %dt.month,
-        ('M', 3): calendar.months[dt.month][1],
-        ('M', 4): calendar.months[dt.month][0],
-        ('d', 1): str(dt.day),
-        ('d', 2): "%.2i" %dt.day,
-        ('E', 1): str(weekday),
-        ('E', 2): "%.2i" %weekday,
-        ('E', 3): calendar.days[dt.weekday() + 1][1],
-        ('E', 4): calendar.days[dt.weekday() + 1][0],
-        ('D', 1): dt.strftime('%j'),
-        ('w', 1): dt.strftime('%W'),
-        ('w', 2): dt.strftime('%.2W'),
-        ('W', 1): "%i" %week_in_month,
-        ('W', 2): "%.2i" %week_in_month,
-        ('F', 1): "%i" %day_of_week_in_month,
-        ('F', 2): "%.2i" %day_of_week_in_month,
-        ('h', 1): str(h),
-        ('h', 2): "%.2i" %(h),
-        ('K', 1): str(dt.hour%12),
-        ('K', 2): "%.2i" %(dt.hour%12),
-        ('H', 1): str(dt.hour),
-        ('H', 2): "%.2i" %dt.hour,
-        ('k', 1): str(dt.hour or 24),
-        ('k', 2): "%.2i" %(dt.hour or 24),
-        ('m', 1): str(dt.minute),
-        ('m', 2): "%.2i" %dt.minute,
-        ('s', 1): str(dt.second),
-        ('s', 2): "%.2i" %dt.second,
-        ('S', 1): str(dt.microsecond),
-        ('S', 2): "%.6i" %dt.microsecond,
-        # TODO: Implement the following symbols. This requires the handling of
-        # timezones.
-        ('z', 1): "+000",
-        ('z', 2): "+00:00",
-        ('z', 3): "UTC",
-        ('z', 4): "Greenwich Time",
+    # Getting the timezone right
+    tzinfo = dt.tzinfo or pytz.reference.utc
+    tz_secs = tzinfo.utcoffset(dt).seconds
+    tz_secs = (tz_secs > 12*3600) and tz_secs-24*3600 or tz_secs
+    tz_mins = int(math.fabs(tz_secs % 3600 / 60))
+    tz_hours = int(math.fabs(tz_secs / 3600))
+    tz_sign = (tz_secs < 0) and '-' or '+'
+    tz_defaultname = "%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
+    tz_name = tzinfo.tzname(dt) or tz_defaultname
+    tz_fullname = getattr(tzinfo, 'zone', None) or tz_name
+
+    info = {('y', 2): unicode(dt.year)[2:],
+            ('y', 4): unicode(dt.year),
             }
+
+    # Generic Numbers
+    for field, value in (('d', dt.day), ('D', int(dt.strftime('%j'))),
+                         ('F', day_of_week_in_month), ('k', dt.hour or 24),
+                         ('K', dt.hour%12), ('h', h), ('H', dt.hour),
+                         ('m', dt.minute), ('s', dt.second),
+                         ('S', dt.microsecond), ('w', int(dt.strftime('%W'))),
+                         ('W', week_in_month)):
+        for entry in _findFormattingCharacterInPattern(field, pattern):
+            info[entry] = (u'%%.%ii' %entry[1]) %value
+
+    # am/pm marker (Text)
+    for entry in _findFormattingCharacterInPattern('a', pattern):
+        info[entry] = ampm
+
+    # era designator (Text)
+    # TODO: works for gregorian only right now
+    for entry in _findFormattingCharacterInPattern('G', pattern):
+        info[entry] = calendar.eras[2][1]
+
+    # time zone (Text)
+    for entry in _findFormattingCharacterInPattern('z', pattern):
+        if entry[1] == 1:
+            info[entry] = u"%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
+        elif entry[1] == 2:
+            info[entry] = u"%s%.2i:%.2i" %(tz_sign, tz_hours, tz_mins)
+        elif entry[1] == 3:
+            info[entry] = tz_name
+        else:
+            info[entry] = tz_fullname
+
+    # month in year (Text and Number)
+    for entry in _findFormattingCharacterInPattern('M', pattern):
+        if entry[1] == 1:
+            info[entry] = u'%i' %dt.month
+        elif entry[1] == 2:
+            info[entry] = u'%.2i' %dt.month
+        elif entry[1] == 3:
+            info[entry] = calendar.months[dt.month][1]
+        else:
+            info[entry] = calendar.months[dt.month][0]
+
+    # day in week (Text and Number)
+    for entry in _findFormattingCharacterInPattern('E', pattern):
+        if entry[1] == 1:
+            info[entry] = u'%i' %weekday
+        elif entry[1] == 2:
+            info[entry] = u'%.2i' %weekday
+        elif entry[1] == 3:
+            info[entry] = calendar.days[dt.weekday() + 1][1]
+        else:
+            info[entry] = calendar.days[dt.weekday() + 1][0]
+
+    return info
 
 
 # Number Pattern Parser States

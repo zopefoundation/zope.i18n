@@ -359,7 +359,7 @@ class IDateTimeFormat(IFormat):
       m      minute in hour        (Number)          30
       s      second in minute      (Number)          55
       S      millisecond           (Number)          978
-      E      day in week           (Text)            Tuesday
+      E      day in week           (Text and Number) Tuesday
       D      day in year           (Number)          189
       F      day of week in month  (Number)          2 (2nd Wed in July)
       w      week in year          (Number)          27
