@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.4 2003/01/09 19:20:23 srichter Exp $
+$Id: test_formats.py,v 1.5 2003/01/27 21:51:56 jeremy Exp $
 """
 import os
 import datetime
@@ -28,7 +28,10 @@ from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat
 from zope.i18n.format import parseNumberPattern
 
-from test_locales import testdir, ICUXMLLocaleFactory
+from zope.i18n.locales import ICUXMLLocaleFactory
+
+from zope.i18n import tests
+testdir = os.path.dirname(tests.__file__)
 
 class LocaleStub:
     pass
@@ -130,10 +133,9 @@ class TestBuildDateTimeParseInfo(TestCase):
     method with the German locale.
     """
 
-    def setUp(self):
-        path = os.path.join(testdir(), 'xmllocales', 'de.xml')
-        self.locale = ICUXMLLocaleFactory(path)()
-        self.info = buildDateTimeParseInfo(self.locale.getDefaultCalendar())
+    path = os.path.join(testdir, 'xmllocales', 'de.xml')
+    locale = ICUXMLLocaleFactory(path)()
+    info = buildDateTimeParseInfo(locale.getDefaultCalendar())
 
     def testEra(self):
         self.assertEqual(self.info[('G', 1)], '(v. Chr.|n. Chr.)')
@@ -163,10 +165,9 @@ class TestDateTimeFormat(TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
     interface.""" 
 
-    def setUp(self):
-        path = os.path.join(testdir(), 'xmllocales', 'de.xml')
-        locale = ICUXMLLocaleFactory(path)()
-        self.format = DateTimeFormat(calendar=locale.getDefaultCalendar())
+    path = os.path.join(testdir, 'xmllocales', 'de.xml')
+    locale = ICUXMLLocaleFactory(path)()
+    format = DateTimeFormat(calendar=locale.getDefaultCalendar())
 
     def testInterfaceConformity(self):
         self.assert_(IDateTimeFormat.isImplementedBy(self.format))
@@ -458,10 +459,9 @@ class TestNumberPatternParser(TestCase):
 class TestNumberFormat(TestCase):
     """Test the functionality of an implmentation of the NumberFormat.""" 
 
-    def setUp(self):
-        path = os.path.join(testdir(), 'xmllocales', 'de_DE.xml')
-        locale = ICUXMLLocaleFactory(path)()
-        self.format = NumberFormat(
+    path = os.path.join(testdir, 'xmllocales', 'de_DE.xml')
+    locale = ICUXMLLocaleFactory(path)()
+    format = NumberFormat(
             symbols=locale.getDefaultNumberFormat().getSymbolMap())
 
     def testInterfaceConformity(self):

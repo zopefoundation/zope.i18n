@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.2 2003/01/09 19:20:23 srichter Exp $
+$Id: test_locales.py,v 1.3 2003/01/27 21:51:56 jeremy Exp $
 """
 import os, sys
 import datetime
@@ -31,10 +31,8 @@ from zope.i18n.locales import ICULocaleVersion, ICULocaleIdentity
 from zope.i18n.locales import ICULocaleTimeZone, ICULocaleCalendar 
 from zope.i18n.locales import ICULocaleNumberFormat, ICULocaleCurrency 
 
-def testdir():
-    from zope.i18n import tests
-    return os.path.dirname(tests.__file__)
-
+from zope.i18n import tests
+testdir = os.path.dirname(tests.__file__)
 
 class TestILocaleProvider(TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
@@ -74,7 +72,7 @@ class TestILocaleProvider(TestCase):
 class TestLocaleProvider(TestILocaleProvider):
 
     def _makeNewProvider(self):
-        return LocaleProvider(os.path.join(testdir(), 'xmllocales'))
+        return LocaleProvider(os.path.join(testdir, 'xmllocales'))
 
     def test_loadLocale(self):
         self.locales.loadLocale(None, None, None)
@@ -385,15 +383,14 @@ class TestICULocaleCurrency(TestCase):
 
 class TestICUXMLLocaleFactory(TestCase):
 
-    def setUp(self):
-        self.factory0 = ICUXMLLocaleFactory(
-            os.path.join(testdir(), 'xmllocales', 'root.xml'))
-        self.factory = ICUXMLLocaleFactory(
-            os.path.join(testdir(), 'xmllocales', 'de.xml'))
-        self.factory2 = ICUXMLLocaleFactory(
-            os.path.join(testdir(), 'xmllocales', 'de_DE.xml'))
-        self.factory3 = ICUXMLLocaleFactory(
-            os.path.join(testdir(), 'xmllocales', 'de_DE_PREEURO.xml'))
+    factory0 = ICUXMLLocaleFactory(
+        os.path.join(testdir, 'xmllocales', 'root.xml'))
+    factory = ICUXMLLocaleFactory(
+        os.path.join(testdir, 'xmllocales', 'de.xml'))
+    factory2 = ICUXMLLocaleFactory(
+        os.path.join(testdir, 'xmllocales', 'de_DE.xml'))
+    factory3 = ICUXMLLocaleFactory(
+        os.path.join(testdir, 'xmllocales', 'de_DE_PREEURO.xml'))
         
     def test_GermanySpecificGermanLocale(self):
         # Well, if the factory can create the Locale we are in good
@@ -488,21 +485,11 @@ class TestICUXMLLocaleFactory(TestCase):
         self.assertEqual(curr[2], True)
     
 
-class TestILocale(TestCase):
-
-    def _newLocale(self):
-        raise NotImplemented
-
-    def setUp(self):
-        self.locale = self._newLocale()
-
-
-class TestICULocale(TestILocale):
+class TestICULocale(TestCase):
     
-    def _newLocale(self):
-        path = os.path.join(testdir(), 'xmllocales', 'root.xml')
-        localeFactory = ICUXMLLocaleFactory(path)
-        return localeFactory()
+    path = os.path.join(testdir, 'xmllocales', 'root.xml')
+    localeFactory = ICUXMLLocaleFactory(path)
+    locale = localeFactory()
 
     def testId(self):
         id = self.locale.id
@@ -610,16 +597,18 @@ class TestICULocale(TestILocale):
 
 
 class TestICULocaleAndProvider(TestCase):
+
+    # Set the locale on the class so that test cases don't have
+    # to pay to construct a new one each time.
     
-    def setUp(self):
-        orig = locales._locale_dir
-        locales._locale_dir = os.path.join(testdir(), 'xmllocales')
-        locales.loadLocale(None, None, None)
-        locales.loadLocale('de', None, None)
-        locales.loadLocale('de', 'DE', None)
-        locales.loadLocale('de', 'DE', 'PREEURO')
-        self.locale = locales.getLocale('de', 'DE', 'PREEURO')
-        locales._locale_dir = orig
+    orig = locales._locale_dir
+    locales._locale_dir = os.path.join(testdir, 'xmllocales')
+    locales.loadLocale(None, None, None)
+    locales.loadLocale('de', None, None)
+    locales.loadLocale('de', 'DE', None)
+    locales.loadLocale('de', 'DE', 'PREEURO')
+    locale = locales.getLocale('de', 'DE', 'PREEURO')
+    locales._locale_dir = orig
         
     def test_getDisplayLanguage(self):
         self.assertEqual(self.locale.getDisplayLanguage('de'), 'Deutsch')
