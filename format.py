@@ -146,21 +146,21 @@ class NumberFormat(object):
 
     implements(INumberFormat)
 
-    # See zope.i18n.interfaces.INumberFormat
-    symbols = {u'decimal': u'.',
-               u'group': u',',
-               u'list':  u';',
-               u'percentSign': u'%',
-               u'nativeZeroDigit': u'0',
-               u'patternDigit': u'#',
-               u'plusSign': u'+',
-               u'minusSign': u'-',
-               u'exponential': u'E',
-               u'perMille': u'\xe2\x88\x9e',
-               u'infinity': u'\xef\xbf\xbd',
-               u'nan': ''}
-
     def __init__(self, pattern=None, symbols={}):
+        # setup default symbols
+        self.symbols = {
+            u'decimal': u'.',
+            u'group': u',',
+            u'list':  u';',
+            u'percentSign': u'%',
+            u'nativeZeroDigit': u'0',
+            u'patternDigit': u'#',
+            u'plusSign': u'+',
+            u'minusSign': u'-',
+            u'exponential': u'E',
+            u'perMille': u'\xe2\x88\x9e',
+            u'infinity': u'\xef\xbf\xbd',
+            u'nan': '' }
         self.symbols.update(symbols)
         self._pattern = pattern
         self._bin_pattern = None
