@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.7 2003/03/25 14:48:02 srichter Exp $
+$Id: test_formats.py,v 1.8 2003/04/13 00:21:42 srichter Exp $
 """
 import os
 import datetime
@@ -240,6 +240,15 @@ class TestDateTimeFormat(TestCase):
             datetime.datetime(2003, 01, 02, 21, 48),
             'dd.MM.yy hh:mm a'),
             '02.01.03 09:48 nachm.')
+
+    def test_formatAllWeekdays(self):
+        for day in range(1, 8):
+            self.assertEqual(self.format.format(
+                datetime.datetime(2003, 01, day+4, 21, 48),
+                "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
+                '%s, %i. Januar 2003 21:48 Uhr +000' %(
+                self.format.calendar.weekdays[day][0], day+4))
+        
 
 
 class TestNumberPatternParser(TestCase):
