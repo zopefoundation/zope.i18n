@@ -13,11 +13,10 @@
 ##############################################################################
 """Language Negotiator
 
-$Id: negotiator.py,v 1.9 2004/03/01 13:08:19 sidnei Exp $
+$Id: negotiator.py,v 1.10 2004/03/06 16:50:38 jim Exp $
 """
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
-from zope.component import getAdapter
 from zope.interface import implements
 
 def normalize_lang(lang):
@@ -39,7 +38,7 @@ class Negotiator:
     implements(INegotiator)
 
     def getLanguage(self, langs, env):
-        envadapter = getAdapter(env, IUserPreferredLanguages)
+        envadapter = IUserPreferredLanguages(env)
         userlangs = envadapter.getPreferredLanguages()
         # Prioritize on the user preferred languages.  Return the first user
         # preferred language that the object has available.
