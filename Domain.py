@@ -13,22 +13,19 @@
 ##############################################################################
 """
 
-$Id: Domain.py,v 1.4 2002/06/12 18:38:56 srichter Exp $
+$Id: Domain.py,v 1.5 2002/06/12 20:50:20 bwarsaw Exp $
 """
 
 from Zope.I18n.IDomain import IDomain
+from Zope.ComponentArchitecture import getServiceManager
 
 class Domain:
 
     __implements__ =  IDomain
 
-    def __init__(self, place, domain):
-        self._place = place
-        self.domain = domain
-
-    def getPlace(self):
-        """Return the place this domain was created for."""
-        return self._place
+    def __init__(self, domain, service):
+        self._domain = domain
+        self._translationService = service
 
     def getDomainName(self):
         """Return the domain name"""
@@ -39,10 +36,5 @@ class Domain:
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None):
         """See Zope.I18n.IDomain.IDomain"""
-
-        # lookup the correct translation service
-        service_manager = getServiceManager(self.place)
-        service = service_manager.getBoundService('Translation Service')
-
-        return service.translate(self.domain, source, mapping, context,
-                                 target_language)
+        return self._translationService.translate(
+            self._domain, msgid, mapping, context, target_language)
