@@ -394,6 +394,10 @@ class ILocaleDates(Interface):
         """Get a date/time formatter.
 
         `category` must be one of 'date', 'dateTime', 'time'.
+
+        The 'length' specifies the output length of the value. The allowed
+        values are: 'short', 'medium', 'long' and 'full'. If no length was
+        specified, the default length is chosen.
         """
 
 
