@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.10 2003/08/13 03:59:54 srichter Exp $
+$Id: gettextmessagecatalog.py,v 1.11 2003/11/26 00:25:26 srichter Exp $
 """
 
 from pythonlib.gettext import GNUTranslations
@@ -41,7 +41,7 @@ class GettextMessageCatalog:
 
     def reload(self):
         'See IMessageCatalog'
-        fp = open(self._path_to_file, 'r')
+        fp = open(self._path_to_file, 'rb')
         try:
             self._catalog = GNUTranslations(fp)
         finally:
