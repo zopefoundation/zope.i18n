@@ -390,7 +390,7 @@ class ILocaleDates(Interface):
         value_type=Field(title=u"Time Zone",
                          description=u"This is a ILocaleTimeZone object."))
 
-    def getFormatter(category, calendar='gregorian', length=None, name=None):
+    def getFormatter(category, length=None, name=None, calendar=u'gregorian'):
         """Get a date/time formatter."""
 
 
