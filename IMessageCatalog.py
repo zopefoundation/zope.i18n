@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: IMessageCatalog.py,v 1.5 2002/06/16 18:25:13 srichter Exp $
+$Id: IMessageCatalog.py,v 1.6 2002/10/06 17:44:39 efge Exp $
 """
 
 from Interface import Interface
@@ -51,9 +51,7 @@ class IReadMessageCatalog(Interface):
     def queryMessage(msgid, default=None):
         """Look for the appropriate text for the given message id.
 
-        If the message id is not found, no exception is raised.  Instead
-        default is returned, but if default is None, then msgid itself is
-        returned.
+        If the message id is not found, default is returned.
         """
 
     def getLanguage():

@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: testIReadMessageCatalog.py,v 1.2 2002/07/01 17:45:50 mj Exp $
+$Id: testIReadMessageCatalog.py,v 1.3 2002/10/06 17:44:39 efge Exp $
 """
 import unittest
 from Interface.Verify import verifyObject
@@ -45,7 +45,7 @@ class TestIReadMessageCatalog(unittest.TestCase):
     def testQueryMessage(self):
         catalog = self._catalog    
         self.assertEqual(catalog.queryMessage('short_greeting'), 'Hello!')
-        self.assertEqual(catalog.queryMessage('foo'), 'foo')
+        self.assertEqual(catalog.queryMessage('foo'), None)
         self.assertEqual(catalog.queryMessage('foo', 'bar'), 'bar')
 
         

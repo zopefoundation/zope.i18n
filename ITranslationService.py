@@ -13,7 +13,7 @@
 ##############################################################################
 """Translation Service related Interfaces.
 
-$Id: ITranslationService.py,v 1.5 2002/08/23 18:07:21 sidnei Exp $
+$Id: ITranslationService.py,v 1.6 2002/10/06 17:44:39 efge Exp $
 """
 
 from Interface import Interface
@@ -59,6 +59,8 @@ class IReadTranslationService(Interface):
     def translate(domain, msgid, mapping=None, 
                   context=None, target_language=None):
         """Return the translation for the message referred to by msgid.
+
+        Return None if no translation is found.
 
         However, the method does a little more than a vanilla translation.
         The method also looks for a possible language to translate to.

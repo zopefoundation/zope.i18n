@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: GettextMessageCatalog.py,v 1.3 2002/06/16 18:25:13 srichter Exp $
+$Id: GettextMessageCatalog.py,v 1.4 2002/10/06 17:44:39 efge Exp $
 """
 
 from gettext import GNUTranslations
@@ -61,8 +61,6 @@ class GettextMessageCatalog:
         text = self.__translation_object.ugettext(id)
         if text != id:
             return text
-        if default is None:
-            default = id
         return default
 
     def getLanguage(self):

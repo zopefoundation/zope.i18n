@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: SimpleTranslationService.py,v 1.2 2002/06/12 20:58:13 bwarsaw Exp $
+$Id: SimpleTranslationService.py,v 1.3 2002/10/06 17:44:39 efge Exp $
 """
 
 import re
@@ -73,7 +73,7 @@ class SimpleTranslationService:
                 target_language = negotiator.getLanguage(langs, context)
 
         # Make a raw translation without interpolation
-        text = self.messages.get((domain, target_language, msgid), msgid)
+        text = self.messages.get((domain, target_language, msgid))
 
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)
@@ -89,6 +89,10 @@ class SimpleTranslationService:
 
     def interpolate(self, text, mapping):
         """Insert the data passed from mapping into the text"""
+
+        # If no translation was found, there is nothing to do.
+        if text is None:
+            return None
 
         # If the mapping does not exist, make a "raw translation" without
         # interpolation. 
