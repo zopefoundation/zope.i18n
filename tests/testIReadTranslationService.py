@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testIReadTranslationService.py,v 1.2 2002/06/18 18:23:56 bwarsaw Exp $
+$Id: testIReadTranslationService.py,v 1.3 2002/07/01 17:45:50 mj Exp $
 """
 
 import unittest
@@ -114,4 +114,4 @@ class TestIReadTranslationService(PlacelessSetup, unittest.TestCase):
         eq(translate('short_greeting', context=context), 'Hallo!')
         
 def test_suite():
-    pass
+    return unittest.TestSuite() # Deliberatly empty

@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: testIWriteMessageCatalog.py,v 1.1 2002/06/16 18:25:14 srichter Exp $
+$Id: testIWriteMessageCatalog.py,v 1.2 2002/07/01 17:45:50 mj Exp $
 """
 
 import unittest
@@ -83,4 +83,4 @@ class TestIWriteMessageCatalog(unittest.TestCase):
 
 
 def test_suite():
-    pass
+    return unittest.TestSuite() # Deliberatly empty

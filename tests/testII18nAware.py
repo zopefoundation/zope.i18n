@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a test for the II18nAware interface.
 
-$Id: testII18nAware.py,v 1.1 2002/06/24 15:42:42 mgedmin Exp $
+$Id: testII18nAware.py,v 1.2 2002/07/01 17:45:50 mj Exp $
 """
 import unittest
 from Interface.Verify import verifyObject
@@ -48,5 +48,5 @@ class TestII18nAware(unittest.TestCase):
 
 
 def test_suite():
-    pass
+    return unittest.TestSuite() # Deliberatly empty
 
