@@ -13,9 +13,8 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.10 2003/08/07 20:26:37 srichter Exp $
+$Id: simpletranslationservice.py,v 1.11 2004/02/24 14:07:18 srichter Exp $
 """
-
 import re
 
 from zope.component import getService

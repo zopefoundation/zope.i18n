@@ -13,12 +13,10 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: __init__.py,v 1.1 2004/02/05 22:52:22 srichter Exp $
+$Id: __init__.py,v 1.2 2004/02/24 14:07:21 srichter Exp $
 """
-import re
 from zope.interface import Interface, Attribute
-from zope.schema import TextLine, Text, Int, Dict, Tuple, List
-from zope.schema import Container, Datetime, Date, EnumeratedTextLine
+from zope.schema import TextLine, Dict, EnumeratedTextLine
 
 
 class II18nAware(Interface):
@@ -333,13 +331,6 @@ class INumberFormat(IFormat):
                             u'minusSign', u'exponential', u'perMille',
                             u'infinity', u'nan')),
         value_type=TextLine(title=u"Symbol"))
-
-
-class ICurrencyFormat(INumberFormat):
-    """Special currency parsing class."""
-
-    currency = Attribute("""This object must implement ILocaleCurrency. See
-                            this interface's documentation for details.""")
 
 
 class IDateTimeFormat(IFormat):

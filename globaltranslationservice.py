@@ -13,14 +13,13 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.12 2003/08/12 15:55:10 gotcha Exp $
+$Id: globaltranslationservice.py,v 1.13 2004/02/24 14:07:18 srichter Exp $
 """
-
 from zope.i18n.negotiator import negotiator
 from zope.i18n.simpletranslationservice import SimpleTranslationService
 from zope.i18n.messageid import MessageID
 
-# The configure.zcml file should specify a list of fallback languages for the
+# The configuration should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
 # then the zcml specified order should be tried.  If that fails, then as a
 # last resort the languages in the following list are tried.  If these fail
