@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.2 2003/01/09 14:13:17 jim Exp $
+$Id: test_formats.py,v 1.3 2003/01/09 14:33:30 jim Exp $
 """
 import os
 import datetime
@@ -200,7 +200,108 @@ class TestDateTimeFormat(TestCase):
         # XXX The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
-            "E
+            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"), 
+            datetime.datetime(2003, 01, 02, 21, 48))
+
+    def testParseAMPMDateTime(self):
+        self.assertEqual(
+            self.format.parse('02.01.03 09:48 nachm.', 'dd.MM.yy hh:mm a'), 
+            datetime.datetime(2003, 01, 02, 21, 48))
+
+    def testDateTimeParseError(self):
+        self.assertRaises(DateTimeParseError, 
+            self.format.parse, '02.01.03 21:48', 'dd.MM.yyyy HH:mm')
+        
+    def testFormatSimpleDateTime(self):
+        # German short
+        self.assertEqual(
+            self.format.format(datetime.datetime(2003, 01, 02, 21, 48),
+                              'dd.MM.yy HH:mm'),  
+            '02.01.03 21:48')
+
+    def testFormatRealDateTime(self):
+        # German medium
+        self.assertEqual(
+            self.format.format(datetime.datetime(2003, 01, 02, 21, 48, 01),
+                              'dd.MM.yyyy HH:mm:ss'),  
+            '02.01.2003 21:48:01')
+
+        # German long
+        # XXX The parser does not support timezones yet.
+        self.assertEqual(self.format.format(
+            datetime.datetime(2003, 01, 02, 21, 48, 01),
+            'd. MMMM yyyy HH:mm:ss z'), 
+            '2. Januar 2003 21:48:01 +000')
+
+        # German full
+        # XXX The parser does not support timezones yet.
+        self.assertEqual(self.format.format(
+            datetime.datetime(2003, 01, 02, 21, 48),
+            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"), 
+            'Donnerstag, 2. Januar 2003 21:48 Uhr +000')
+
+    def testFormatAMPMDateTime(self):
+        self.assertEqual(self.format.format(
+            datetime.datetime(2003, 01, 02, 21, 48),
+            'dd.MM.yy hh:mm a'), 
+            '02.01.03 09:48 nachm.')
+            
+
+class TestNumberPatternParser(TestCase):
+    """Extensive tests for the ICU-based-syntax number pattern parser."""
+
+    def testParseSimpleIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('###0'),
+            ( (None, '', None, '###0', '', '', None, '', None, 0),
+              (None, '', None, '###0', '', '', None, '', None, 0)) )
+
+    def testParseScientificIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('###0E#0'),
+            ( (None, '', None, '###0', '', '#0', None, '', None, 0),
+              (None, '', None, '###0', '', '#0', None, '', None, 0)) )
+
+    def testParsePosNegAlternativeIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('###0;#0'),
+            ( (None, '', None, '###0', '', '', None, '', None, 0),
+              (None, '', None,   '#0', '', '', None, '', None, 0)) )
+
+    def testParsePrefixedIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('+###0'),
+            ( (None, '+', None, '###0', '', '', None, '', None, 0),
+              (None, '+', None, '###0', '', '', None, '', None, 0)) )
+
+    def testParsePosNegIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('+###0;-###0'),
+            ( (None, '+', None, '###0', '', '', None, '', None, 0),
+              (None, '-', None, '###0', '', '', None, '', None, 0)) )
+
+    def testParseScientificPosNegIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('+###0E0;-###0E#0'),
+            ( (None, '+', None, '###0', '', '0', None, '', None, 0),
+              (None, '-', None, '###0', '', '#0', None, '', None, 0)) )
+
+    def testParseThousandSeparatorIntegerPattern(self):
+        self.assertEqual(
+            parseNumberPattern('#,##0'),
+            ( (None, '', None, '###0', '', '', None, '', None, 1),
+              (None, '', None, '###0', '', '', None, '', None, 1)) )
+        
+    def testParseSimpleDecimalPattern(self):
+        self.assertEqual(
+            parseNumberPattern('###0.00#'),
+            ( (None, '', None, '###0', '00#', '', None, '', None, 0),
+              (None, '', None, '###0', '00#', '', None, '', None, 0)) )
+
+    def testParseScientificDecimalPattern(self):
+        self.assertEqual(
+            parseNumberPattern('###0.00#E#0'),
+            ( (None, '', None, '###0', '00#', '#0', None, '', None, 0),
               (None, '', None, '###0', '00#', '#0', None, '', None, 0)) )
 
     def testParsePosNegAlternativeFractionPattern(self):
@@ -564,7 +665,95 @@ class TestNumberFormat(TestCase):
                          '+23341')
         self.assertEqual(self.format.format(41, '+#000;-#000'),
                          '+041')
+        self.assertEqual(self.format.format(-23341, '+###0;-###0'),
+                         '-23341')
+        self.assertEqual(self.format.format(-41, '+#000;-#000'),
+                         '-041')
+
+    def testFormatPosNegScientificInteger(self):
+        self.assertEqual(self.format.format(23341, '+0.00###E00;-0.00###E00'),
+                         '+2.3341E04')
+        self.assertEqual(self.format.format(23341, '-0.00###E00;-0.00###E00'),
+                         '-2.3341E04')
+
+    def testFormatThousandSeparatorInteger(self):
+        self.assertEqual(self.format.format(23341, '+#,##0;-#,##0'),
+                         '+23,341')
+        self.assertEqual(self.format.format(-23341, '+#,##0;-#,##0'),
+                         '-23,341')
+        self.assertEqual(self.format.format(41, '+#0,000;-#0,000'),
+                         '+0,041')
+        self.assertEqual(self.format.format(-41, '+#0,000;-#0,000'),
+                         '-0,041')
+
+    def testFormatDecimal(self):
+        self.assertEqual(self.format.format(23341.02357, '###0.0#'),
+                         '23341.02')
+        self.assertEqual(self.format.format(23341.02357, '###0.000#'),
+                         '23341.0235')
+        self.assertEqual(self.format.format(23341.02, '###0.000#'),
+                         '23341.020')
+
+    def testFormatScientificDecimal(self):
+        self.assertEqual(self.format.format(23341.02357, '0.00####E00'),
+                         '2.334102E04')
+        self.assertEqual(self.format.format(23341.02, '0.0000000E000'),
+                         '2.3341020E004')
+
+    def testFormatScientificDecimalSmallerOne(self):
+        self.assertEqual(self.format.format(0.02357, '0.00####E00'),
+                         '2.357E-02')
+        self.assertEqual(self.format.format(0.02, '0.0000E00'),
+                         '2.0000E-02')
+
+    def testFormatPadding1WithoutPrefix(self):
+        self.assertEqual(self.format.format(41, '* ##0;*_##0'),
+                         ' 41')
+        self.assertEqual(self.format.format(-41, '* ##0;*_##0'),
+                         '_41')
+
+    def testFormatPadding1WithPrefix(self):
+        self.assertEqual(self.format.format(41, '* +##0;*_-##0'),
+                         ' +41')
+        self.assertEqual(self.format.format(-41, '* +##0;*_-##0'),
+                         '_-41')
+
+    def testFormatPadding1Scientific(self):
+        self.assertEqual(self.format.format(41.02, '* 0.0####E0;*_0.0####E0'),
+                         '  4.102E1')
+        self.assertEqual(self.format.format(-41.02, '* 0.0####E0;*_0.0####E0'),
+                         '__4.102E1')
+        self.assertEqual(self.format.format(41.02, '* +0.0###E0;*_-0.0###E0'),
+                         ' +4.102E1')
+        self.assertEqual(self.format.format(-41.02, '* +0.0###E0;*_-0.0###E0'),
+                         '_-4.102E1')
+
+    def testFormatPadding1Padding2WithPrefix(self):
+        self.assertEqual(self.format.format(41, '* +* ###0;*_-*_###0'),
+                         '  + 41')
+        self.assertEqual(self.format.format(-41, '* +* ###0;*_-*_###0'),
+                         '__-_41')
+
+    def testFormatPadding3WithoutSufffix(self):
+        self.assertEqual(self.format.format(41.02, '#0.0###* ;#0.0###*_'),
+                         '41.02  ')
+        self.assertEqual(self.format.format(-41.02, '#0.0###* ;#0.0###*_'),
+                         '41.02__')
         
+    def testFormatPadding3WithSufffix(self):
+        self.assertEqual(self.format.format(41.02, '[#0.0###* ];(#0.0###*_)'),
+                         '[41.02  ]')
+        self.assertEqual(self.format.format(-41.02, '[#0.0###* ];(#0.0###*_)'),
+                         '(41.02__)')
+
+    def testFormatPadding3Scientific(self):
+        self.assertEqual(self.format.format(41.02, '0.0##E0##* ;0.0##E0##*_'),
+                         '4.102E1  ')
+        self.assertEqual(self.format.format(-41.02, '0.0##E0##* ;0.0##E0##*_'),
+                         '4.102E1__')
+        self.assertEqual(self.format.format(41.02, '(0.0##E0##* );0.0E0'),
+                         '(4.102E1  )')
+        self.assertEqual(self.format.format(-41.02, '0.0E0;[0.0##E0##*_]'),
                          '[4.102E1__]')
 
     def testFormatPadding3Padding4WithSuffix(self):
