@@ -19,9 +19,9 @@
     provides="Zope.I18n.IUserPreferredCharsets." />
 
 <!-- Setup Translation Service -->
-<serviceType id="TranslationService" interface=".ITranslationService." />
+<serviceType id="Translation" interface=".ITranslationService." />
 
-<service serviceType="TranslationService"
+<service serviceType="Translation"
     permission="Zope.Public"
     component=".GlobalTranslationService.translationService" />
 

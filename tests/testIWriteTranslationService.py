@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testIWriteTranslationService.py,v 1.4 2002/07/11 07:12:47 srichter Exp $
+$Id: testIWriteTranslationService.py,v 1.5 2002/07/16 23:41:19 jim Exp $
 """
 
 import unittest
@@ -55,9 +55,9 @@ class TestIWriteTranslationService(PlacelessSetup, unittest.TestCase):
         PlacelessSetup.setUp(self)
         self._service = self._getTranslationService() 
         assert verifyObject(ITranslationService, self._service)
-        managerHandler('defineService', 'TranslationService',
+        managerHandler('defineService', 'Translation',
                        ITranslationService) 
-        provideService('TranslationService', self._service, 'Zope.Public')
+        provideService('Translation', self._service, 'Zope.Public')
 
         # Setup the negotiator service registry entry
         managerHandler('defineService', 'LanguageNegotiation', INegotiator) 
