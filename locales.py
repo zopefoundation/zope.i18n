@@ -13,21 +13,14 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.16 2003/09/16 22:06:42 srichter Exp $
+$Id: locales.py,v 1.17 2003/11/05 03:08:14 jeremy Exp $
 """
 import os
 import datetime
 from xml.dom.minidom import parse as parseXML
 from zope.interface import implements
 
-# time.strptime() isn't available on all platforms before Python 2.3.  When
-# it isn't available, use the implementation from 2.3's _strptime.py, checked
-# into this source tree for convenience.  This workaround can be removed
-# when Python 2.3 (or later) becomes required.
-try:
-    from time import strptime
-except ImportError:
-    from _strptime import strptime
+from time import strptime
 
 from zope.i18n.interfaces import ILocaleProvider, ILocale
 from zope.i18n.interfaces import ILocaleVersion, ILocaleIdentity
