@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.6 2003/03/13 18:49:14 alga Exp $
+$Id: test_formats.py,v 1.7 2003/03/25 14:48:02 srichter Exp $
 """
 import os
 import datetime
@@ -28,7 +28,7 @@ from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat
 from zope.i18n.format import parseNumberPattern
 
-from zope.i18n.locales import ICUXMLLocaleFactory
+from zope.i18n.locales import XMLLocaleFactory
 
 from zope.i18n import tests
 testdir = os.path.dirname(tests.__file__)
@@ -134,7 +134,7 @@ class TestBuildDateTimeParseInfo(TestCase):
     """
 
     path = os.path.join(testdir, 'xmllocales', 'de.xml')
-    locale = ICUXMLLocaleFactory(path)()
+    locale = XMLLocaleFactory(path)()
     info = buildDateTimeParseInfo(locale.getDefaultCalendar())
 
     def testEra(self):
@@ -166,7 +166,7 @@ class TestDateTimeFormat(TestCase):
     interface."""
 
     path = os.path.join(testdir, 'xmllocales', 'de.xml')
-    locale = ICUXMLLocaleFactory(path)()
+    locale = XMLLocaleFactory(path)()
     format = DateTimeFormat(calendar=locale.getDefaultCalendar())
 
     def testInterfaceConformity(self):
@@ -460,9 +460,9 @@ class TestNumberFormat(TestCase):
     """Test the functionality of an implmentation of the NumberFormat."""
 
     path = os.path.join(testdir, 'xmllocales', 'de_DE.xml')
-    locale = ICUXMLLocaleFactory(path)()
+    locale = XMLLocaleFactory(path)()
     format = NumberFormat(
-            symbols=locale.getDefaultNumberFormat().getSymbolMap())
+            symbols=locale.getDefaultNumberFormat().symbols)
 
     def testInterfaceConformity(self):
         self.assert_(INumberFormat.isImplementedBy(self.format))

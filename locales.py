@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.9 2003/03/25 14:30:06 bwarsaw Exp $
+$Id: locales.py,v 1.10 2003/03/25 14:48:01 srichter Exp $
 """
 import os
 import datetime
@@ -105,7 +105,7 @@ class LocaleProvider:
                   'The desired locale is not available.\nPath: %s' %path
 
         # Let's get it!
-        locale = ICUXMLLocaleFactory(path)()
+        locale = XMLLocaleFactory(path)()
         self._locales[(language, country, variant)] = locale
 
     def getLocale(self, language=None, country=None, variant=None):
@@ -127,45 +127,25 @@ class LocaleProvider:
 locales = LocaleProvider(LOCALEDIR)
 
 
-class ICULocaleIdentity:
+class LocaleIdentity:
     __doc__ = ILocaleIdentity.__doc__
 
     __implements__ =  ILocaleIdentity
 
     def __init__(self, language=None, country=None, variant=None):
         """Initialize object."""
-        self.__language = language
-        self.__country = country
-        self.__variant = variant
-        self._correspondsTos = []
-
-    def getLanguage(self):
-        "See zope.i18n.interfaces.ILocaleIdentity"
-        return self.__language
-
-    def getCountry(self):
-        "See zope.i18n.interfaces.ILocaleIdentity"
-        return self.__country
-
-    def getVariant(self):
-        "See zope.i18n.interfaces.ILocaleIdentity"
-        return self.__variant
-
-    def setCorrespondence(self, vendor, text):
-        "See zope.i18n.interfaces.ILocaleIdentity"
-        self._correspondsTos.append((vendor, text))
-
-    def getAllCorrespondences(self):
-        "See zope.i18n.interfaces.ILocaleIdentity"
-        return self._correspondsTos
+        self.language = language
+        self.country = country
+        self.variant = variant
+        self.correspondsTos = []
 
     def __repr__(self):
         "See zope.i18n.interfaces.ILocaleIdentity"
-        return "<ICULocaleIdentity (%s, %s, %s)>" %(
-            self.__language, self.__country, self.__variant)
+        return "<LocaleIdentity (%s, %s, %s)>" %(
+            self.language, self.country, self.variant)
 
 
-class ICULocaleVersion:
+class LocaleVersion:
     __doc__ = ILocaleVersion.__doc__
 
     __implements__ = ILocaleVersion
@@ -189,7 +169,7 @@ class ICULocaleVersion:
         return cmp(self.date, other.date)
 
 
-class ICULocaleTimeZone:
+class LocaleTimeZone:
     __doc__ = ILocaleTimeZone.__doc__
 
     __implements__ =  ILocaleTimeZone
@@ -197,27 +177,11 @@ class ICULocaleTimeZone:
     def __init__(self, id):
         """Initialize the object."""
         self.id = id
-        self._cities = []
-        self._names = {} # Possible ids: generic, standard, daylight
-
-    def addCity(self, city):
-        "See zope.i18n.interfaces.ILocaleTimeZone"
-        self._cities.append(city)
-
-    def getCities(self):
-        "See zope.i18n.interfaces.ILocaleTimeZone"
-        return self._cities
-
-    def setName(self, type, long, short):
-        "See zope.i18n.interfaces.ILocaleTimeZone"
-        self._names[type] = (long, short)
-
-    def getName(self, type):
-        "See zope.i18n.interfaces.ILocaleTimeZone"
-        return self._names[type]
+        self.cities = []
+        self.names = {}
 
 
-class ICULocaleCalendar:
+class LocaleCalendar:
     __doc__ = ILocaleCalendar.__doc__
 
     __implements__ =  ILocaleCalendar
@@ -225,51 +189,44 @@ class ICULocaleCalendar:
     def __init__(self, klass):
         """Initialize the object."""
         self.klass = klass
-        self._months = {}
-        self._weekdays = {}
-        self._eras = {}
-        self._am = u''
-        self._pm = u''
-        self._pattern_chars = ''
-        self._time_patterns = {}
-        self._date_patterns = {}
-        self._datetime_pattern = u''
+        self.months = {}
+        self.weekdays = {}
+        self.eras = {}
+        self.am = u''
+        self.pm = u''
+        self.patternCharacters = u''
+        self.timePatterns = {}
+        self.datePatterns = {}
+        self.datetimePattern = u''
 
     def update(self, other):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        self._months.update(other._months)
-        self._weekdays.update(other._weekdays)
-        self._eras.update(other._eras)
-        if other._am != u'':
-            self._am = other._am
-        if other._pm != u'':
-            self._pm = other._pm
-        if other._pattern_chars != u'':
-            self._pattern_chars = other._pattern_chars
-        self._time_patterns.update(other._time_patterns)
-        self._date_patterns.update(other._date_patterns)
-        if other._datetime_pattern != u'':
-            self._datetime_pattern = other._datetime_pattern
+        self.months.update(other.months)
+        self.weekdays.update(other.weekdays)
+        self.eras.update(other.eras)
+        if other.am != u'':
+            self.am = other.am
+        if other.pm != u'':
+            self.pm = other.pm
+        if other.patternCharacters != u'':
+            self.patternCharacters = other.patternCharacters
+        self.timePatterns.update(other.timePatterns)
+        self.datePatterns.update(other.datePatterns)
+        if other.datetimePattern != u'':
+            self.datetimePattern = other.datetimePattern
 
-    def setMonth(self, id, name, abbr):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        assert isinstance(id, int)
-        self._months[id] = (name, abbr)
-
-    def getMonth(self, id):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._months[id]
+        return self.months[id]
 
     def getMonthNames(self):
         "See zope.i18n.interfaces.ILocaleCalendar"
         names = []
         for id in range(1, 13):
-            names.append(self._months.get(id, (None, None))[0])
+            names.append(self.months.get(id, (None, None))[0])
         return names
 
     def getMonthIdFromName(self, name):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        for item in self._months.items():
+        for item in self.months.items():
             if item[1][0] == name:
                 return item[0]
 
@@ -277,33 +234,25 @@ class ICULocaleCalendar:
         "See zope.i18n.interfaces.ILocaleCalendar"
         abbrs = []
         for id in range(1, 13):
-            abbrs.append(self._months.get(id, (None, None))[1])
+            abbrs.append(self.months.get(id, (None, None))[1])
         return abbrs
 
     def getMonthIdFromAbbr(self, abbr):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        for item in self._months.items():
+        for item in self.months.items():
             if item[1][1] == abbr:
                 return item[0]
-
-    def setWeekday(self, id, name, abbr):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._weekdays[id] = (name, abbr)
-
-    def getWeekday(self, id):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._weekdays[id]
 
     def getWeekdayNames(self):
         "See zope.i18n.interfaces.ILocaleCalendar"
         names = []
         for id in range(1, 8):
-            names.append(self._weekdays.get(id, (None, None))[0])
+            names.append(self.weekdays.get(id, (None, None))[0])
         return names
 
     def getWeekdayIdFromName(self, name):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        for item in self._weekdays.items():
+        for item in self.weekdays.items():
             if item[1][0] == name:
                 return item[0]
 
@@ -311,73 +260,17 @@ class ICULocaleCalendar:
         "See zope.i18n.interfaces.ILocaleCalendar"
         abbrs = []
         for id in range(1, 8):
-            abbrs.append(self._weekdays.get(id, (None, None))[1])
+            abbrs.append(self.weekdays.get(id, (None, None))[1])
         return abbrs
 
     def getWeekdayIdFromAbbr(self, abbr):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        for item in self._weekdays.items():
+        for item in self.weekdays.items():
             if item[1][1] == abbr:
                 return item[0]
 
-    def setEra(self, id, name):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._eras[id] = name
 
-    def getEra(self, id):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._eras[id]
-
-    def setAM(self, text):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._am = text
-
-    def getAM(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._am
-
-    def setPM(self, text):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._pm = text
-
-    def getPM(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._pm
-
-    def setPatternCharacters(self, chars):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._pattern_chars = chars
-
-    def getPatternCharacters(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._pattern_chars
-
-    def setTimePattern(self, type, pattern):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._time_patterns[type] = pattern
-
-    def getTimePattern(self, type):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._time_patterns[type]
-
-    def setDatePattern(self, name, pattern):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._date_patterns[name] = pattern
-
-    def getDatePattern(self, name):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._date_patterns[name]
-
-    def setDateTimePattern(self, pattern):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._datetime_pattern = pattern
-
-    def getDateTimePattern(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._datetime_pattern
-
-
-class ICULocaleNumberFormat:
+class LocaleNumberFormat:
     __doc__ = ILocaleNumberFormat.__doc__
 
     __implements__ = ILocaleNumberFormat
@@ -385,39 +278,11 @@ class ICULocaleNumberFormat:
     def __init__(self, klass):
         """Initialize object."""
         self.klass = klass
-        self._patterns = {}
-        self._symbols = {}
-
-    def setPattern(self, name, pattern):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        self._patterns[name] = pattern
-
-    def getPattern(self, name):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._patterns[name]
-
-    def getAllPatternIds(self):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._patterns.keys()
-
-    def setSymbol(self, name, symbol):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        self._symbols[name] = symbol
-
-    def getSymbol(self, name):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._symbols[name]
-
-    def getAllSymbolIds(self):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._symbols.keys()
-
-    def getSymbolMap(self):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._symbols
+        self.patterns = {}
+        self.symbols = {}
 
 
-class ICULocaleCurrency:
+class LocaleCurrency:
     __doc__ = ILocaleCurrency.__doc__
 
     __implements__ = ILocaleCurrency
@@ -425,208 +290,63 @@ class ICULocaleCurrency:
     def __init__(self, id):
         """Initialize object."""
         self.id = id
-        self._symbol = None
-        self._name = None
-        self._decimal = None
-        self._pattern = None
-
-    def setSymbol(self, symbol):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        self._symbol = symbol
-
-    def getSymbol(self):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        return self._symbol
-
-    def setName(self, name):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        self._name = name
-
-    def getName(self):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        return self._name
-
-    def setDecimal(self, decimal):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        self._decimal = decimal
-
-    def getDecimal(self):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        return self._decimal
-
-    def setPattern(self, pattern):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        self._pattern = pattern
-
-    def getPattern(self):
-        "See zope.i18n.interfaces.ILocaleCurrency"
-        return self._pattern
+        self.symbol = None
+        self.name = None
+        self.decimal = None
+        self.pattern = None
 
 
-class ICULocale:
+class Locale:
     __doc__ = ILocale.__doc__
 
     __implements__ = ILocale
 
     def __init__(self, id):
         self.id = id
-        self._versions = []
-        self._languages = {}
-        self._countries = {}
-        self._timezones = {}
-        self._calendars = {}
-        self._number_formats = {}
-        self._currencies = {}
+        self.versions = []
+        self.languages = {}
+        self.countries = {}
+        self.timezones = {}
+        self.calendars = {}
+        self.numberFormats = {}
+        self.currencies = {}
         self._default_tzid = None
         self._default_cal_class = None
         self._default_numformat_class = None
         self._default_currency_id = None
 
-    # ICU-specific methods
-
-    def setVersion(self, version):
-        """Add a particular version."""
-        self._versions.append(version)
-
-    def getAllVersions(self):
-        """Return a list of versions of the form (id, date, comment)."""
-        return self._versions
-
     def getLatestVersion(self):
         """Return latest version (by date)."""
-        if len(self._versions) == 0: return None
+        if len(self.versions) == 0: return None
         def greater(v1, v2):
             """Return version with greater datetime."""
             if v1 > v2: return v1
             else: return v2
-        return reduce(greater, self._versions)
-
-    def setIdentity(self, id):
-        """Define the unique identification object for this locale."""
-
-    def setLanguageName(self, id, name):
-        """Add a language in the locale's native language defined by its
-        two-letter id."""
-        self._languages[id] = name
-
-    def updateLanguageNames(self, dict):
-        """Add a dictionary of languages.
-
-        The dict should map a two-letter id to the language in the locale's
-        native language.
-        """
-        self._languages.update(dict)
-
-    def getLanguageName(self, id):
-        """Get the localized language name for the given id."""
-        return self._languages[id]
-
-    def getAllLanguageIds(self):
-        """Return all available language ids."""
-        return self._languages.keys()
-
-    def setCountryName(self, id, name):
-        """Add a country in the locale's native language defined by its
-        two-letter id."""
-        self._countries[id] = name
-
-    def updateCountryNames(self, dict):
-        """Add a dictionary of countries.
-
-        The dict should map the country's two-letter id to the country's
-        name in its native language.
-        """
-        self._countries.update(dict)
-
-
-    def getCountryName(self, id):
-        """Get the localized country name for the given id."""
-        return self._countries[id]
-
-    def getAllCountryIds(self):
-        """Return all available country ids."""
-        return self._countries.keys()
-
-    def setTimeZone(self, id, timezone, default=False):
-        """Add a new timezone for this locale. Note that all defined
-        timezones are timezones the language of this locale is spoken."""
-        self._timezones[id] = timezone
-        if default:
-            self._default_tzid = id
-
-    def getTimeZone(self, id):
-        """Get timezone by id."""
-        return self._timezones[id]
+        return reduce(greater, self.versions)
 
     def getDefaultTimeZone(self):
         """Return the default time zone."""
         if not self._default_tzid:
             return None
-        return self._timezones[self._default_tzid]
-
-    def getTimeZoneIds(self):
-        """Return all defined timezone ids."""
-        return self._timezones.keys()
-
-    def setCalendar(self, klass, calendar, default=False):
-        """Add a new calendar for this locale."""
-        self._calendars[klass] = calendar
-        if default:
-            self._default_cal_class = klass
-
-    def getCalendar(self, id):
-        """Get calendar by id."""
-        return self._calendars[id]
+        return self.timezones[self._default_tzid]
 
     def getDefaultCalendar(self):
         """Return the default calendar."""
         if not self._default_cal_class:
             return None
-        return self._calendars[self._default_cal_class]
-
-    def getCalendarClasses(self):
-        """Return all defined calendar ids."""
-        return self._calendars.keys()
-
-    def setNumberFormat(self, klass, format, default=False):
-        """Add a new number format for this locale."""
-        self._number_formats[klass] = format
-        if default:
-            self._default_numformat_class = klass
-
-    def getNumberFormat(self, klass):
-        """Get number format by id."""
-        return self._number_formats[klass]
+        return self.calendars[self._default_cal_class]
 
     def getDefaultNumberFormat(self):
         """Return the default number format."""
         if not self._default_numformat_class:
             return None
-        return self._number_formats[self._default_numformat_class]
-
-    def getNumberFormatClasses(self):
-        """Return all defined number format ids."""
-        return self._number_formats.keys()
-
-    def setCurrency(self, id, currency, default=False):
-        """Add a new currency for this locale."""
-        self._currencies[id] = currency
-        if default:
-            self._default_currency_id = id
-
-    def getCurrency(self, id):
-        """Get currency by id."""
-        return self._currencies[id]
+        return self.numberFormats[self._default_numformat_class]
 
     def getDefaultCurrency(self):
         """Return the currency format."""
         if not self._default_currency_id:
             return None
-        return self._currencies[self._default_currency_id]
-
-    def getCurrencyIds(self):
-        """Return all defined currency ids."""
-        return self._currencies.keys()
+        return self.currencies[self._default_currency_id]
 
     def _getNextLocale(self):
         """This is the really interesting method that looks up the next (more
@@ -635,9 +355,9 @@ class ICULocale:
 
         This method works closely with with LocaleProvider.
         """
-        language = self.id.getLanguage()
-        country = self.id.getCountry()
-        variant = self.id.getVariant()
+        language = self.id.language
+        country = self.id.country
+        variant = self.id.variant
         if variant is not None:
             return locales.getLocale(language, country, None)
         elif country is not None:
@@ -652,35 +372,22 @@ class ICULocale:
         '''For the date/time formatters we need a full-blown calendar object
         that has no missing information. This methos will build this
         object.'''
-        calendar = ICULocaleCalendar('gregorian')
+        calendar = LocaleCalendar('gregorian')
         for id in ((None, None, None),
-                   (self.id.getLanguage(), None, None),
-                   (self.id.getLanguage(), self.id.getCountry(), None),
-                   (self.id.getLanguage(), self.id.getCountry(),
-                    self.id.getVariant())):
+                   (self.id.language, None, None),
+                   (self.id.language, self.id.country, None),
+                   (self.id.language, self.id.country,
+                    self.id.variant)):
             try:
-                calendar.update(locales.getLocale(*id).getCalendar(
-                    'gregorian'))
+                calendar.update(locales.getLocale(*id).calendars['gregorian'])
             except KeyError:
                 pass # Locale has no calendar information
         return calendar
 
-    def getLocaleLanguageId(self):
-        "See ZopeProducts.LocaleProvider.interfaces.ILocale"
-        return self.id.getLanguage()
-
-    def getLocaleCountryId(self):
-        "See ZopeProducts.LocaleProvider.interfaces.ILocale"
-        return self.id.getCountry()
-
-    def getLocaleVariantId(self):
-        "See ZopeProducts.LocaleProvider.interfaces.ILocale"
-        return self.id.getVariant()
-
     def getDisplayLanguage(self, id):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
-            return self.getLanguageName(id)
+            return self.languages[id]
         except KeyError:
             try:
                 return self._getNextLocale().getDisplayLanguage(id)
@@ -690,7 +397,7 @@ class ICULocale:
     def getDisplayCountry(self, id):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
-            return self.getCountryName(id)
+            return self.countries[id]
         except KeyError:
             try:
                 return self._getNextLocale().getDisplayCountry(id)
@@ -700,7 +407,7 @@ class ICULocale:
     def getTimeFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
-            pattern = self.getDefaultCalendar().getTimePattern(name)
+            pattern = self.getDefaultCalendar().timePatterns[name]
         except AttributeError, KeyError:
             return self._getNextLocale().getTimeFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
@@ -708,7 +415,7 @@ class ICULocale:
     def getDateFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
-            pattern = self.getDefaultCalendar().getDatePattern(name)
+            pattern = self.getDefaultCalendar().datePatterns[name]
         except AttributeError, KeyError:
             return self._getNextLocale().getDateFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
@@ -716,7 +423,7 @@ class ICULocale:
     def getDateTimeFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
-            pattern = self.getDefaultCalendar().getDateTimePattern()
+            pattern = self.getDefaultCalendar().datetimePattern
         except AttributeError, KeyError:
             return self._getNextLocale().getDateTimeFormatter(name)
         date_pat = self.getDateFormatter(name).getPattern()
@@ -728,18 +435,18 @@ class ICULocale:
     def getNumberFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
-            pattern = self.getDefaultNumberFormat().getPattern(name)
+            pattern = self.getDefaultNumberFormat().patterns[name]
         except AttributeError, KeyError:
             return self._getNextLocale().getNumberFormatter(name)
         symbols = {}
         for id in ((None, None, None),
-                   (self.id.getLanguage(), None, None),
-                   (self.id.getLanguage(), self.id.getCountry(), None),
-                   (self.id.getLanguage(), self.id.getCountry(),
-                    self.id.getVariant())):
+                   (self.id.language, None, None),
+                   (self.id.language, self.id.country, None),
+                   (self.id.language, self.id.country,
+                    self.id.variant)):
             try:
                 format = locales.getLocale(*id).getDefaultNumberFormat()
-                symbols.update(format.getSymbolMap())
+                symbols.update(format.symbols)
             except AttributeError, KeyError:
                 pass # Locale has no number format information
 
@@ -751,7 +458,7 @@ class ICULocale:
         raise NotImplementedError
 
 
-class ICUXMLLocaleFactory:
+class XMLLocaleFactory:
     """This class creates a Locale object from an ICU XML file."""
 
     def __init__(self, path):
@@ -781,11 +488,11 @@ class ICUXMLLocaleFactory:
         nodes = identity.getElementsByTagName('variant')
         if nodes != []:
             args['variant'] = nodes[0].getAttribute('id')
-        id = ICULocaleIdentity(**args)
+        id = LocaleIdentity(**args)
         nodes = identity.getElementsByTagName('correspondsTo')
         for node in nodes:
             vendor = node.getAttribute('vendor')
-            id.setCorrespondence(vendor, self._getText(node.childNodes))
+            id.correspondsTos.append((vendor, self._getText(node.childNodes)))
         return id
 
 
@@ -799,7 +506,7 @@ class ICUXMLLocaleFactory:
             date = strptime(date, '%a %b %d %H:%M:%S %Y')
             date = datetime.datetime(*date[:6])
             comment = self._getText(version.childNodes)
-            versions.append(ICULocaleVersion(id, date, comment))
+            versions.append(LocaleVersion(id, date, comment))
         return versions
 
 
@@ -842,7 +549,7 @@ class ICUXMLLocaleFactory:
         zones = []
         for node in nodes:
             id = node.getAttribute('id')
-            zone = ICULocaleTimeZone(id)
+            zone = LocaleTimeZone(id)
             default = node.getAttribute('default')
             if default == u'true':
                 default = True
@@ -862,9 +569,9 @@ class ICUXMLLocaleFactory:
                 except IndexError:
                     short_desc = None # no short description
                 if long_desc is not None or short_desc is not None:
-                    zone.setName(type, long_desc, short_desc)
+                    zone.names[type] = (long_desc, short_desc)
             for city in node.getElementsByTagName('city'):
-                zone.addCity(self._getText(city.childNodes))
+                zone.cities.append(self._getText(city.childNodes))
             zones.append((id, zone, default))
 
         return zones
@@ -885,7 +592,8 @@ class ICUXMLLocaleFactory:
             id = int(abbr_node.getAttribute('id'))
             abbr[id] = self._getText(abbr_node.childNodes)
         for id in range(1, 13):
-            calendar.setMonth(id, names.get(id, None), abbr.get(id, None))
+            calendar.months[id] = (names.get(id, None), abbr.get(id, None))
+
 
     def _extractWeekdays(self, cal_node, calendar):
         names_node = cal_node.getElementsByTagName('dayNames')
@@ -911,7 +619,8 @@ class ICUXMLLocaleFactory:
             abb = abbr.get(id, None)
             if isinstance(abb, unicode):
                 abb = abb.strip()
-            calendar.setWeekday(id, name, abb)
+            calendar.weekdays[id] = (name, abb)
+
 
     def _extractEras(self, cal_node, calendar):
         eras_node = cal_node.getElementsByTagName('eras')
@@ -919,7 +628,8 @@ class ICUXMLLocaleFactory:
             eras_node = eras_node[0]
             for era_node in eras_node.getElementsByTagName('era'):
                 id = int(era_node.getAttribute('id'))
-                calendar.setEra(id, self._getText(era_node.childNodes))
+                calendar.eras[id] = self._getText(era_node.childNodes)
+
 
     def _extractCalendarPatterns(self, cal_node, calendar):
         try:
@@ -929,8 +639,7 @@ class ICUXMLLocaleFactory:
         chars_node = pat_node.getElementsByTagName('chars')
         if chars_node:
             chars_node = chars_node[0]
-            calendar.setPatternCharacters(
-                self._getText(chars_node.childNodes))
+            calendar.patternCharacters = self._getText(chars_node.childNodes)
         try:
             time_node = cal_node.getElementsByTagName('time')[0]
             date_node = cal_node.getElementsByTagName('date')[0]
@@ -938,11 +647,11 @@ class ICUXMLLocaleFactory:
             return
         for type in ('full', 'long', 'medium', 'short'):
             node = time_node.getElementsByTagName(type)[0]
-            calendar.setTimePattern(type, self._getText(node.childNodes))
+            calendar.timePatterns[type] = self._getText(node.childNodes)
             node = date_node.getElementsByTagName(type)[0]
-            calendar.setDatePattern(type, self._getText(node.childNodes))
+            calendar.datePatterns[type] = self._getText(node.childNodes)
         datetime_node = cal_node.getElementsByTagName('dateTime')[0]
-        calendar.setDateTimePattern(self._getText(datetime_node.childNodes))
+        calendar.datetimePattern = self._getText(datetime_node.childNodes)
 
     def _extractCalendars(self):
         """Extract all calendars and their specific information from the
@@ -955,7 +664,7 @@ class ICUXMLLocaleFactory:
             return []
         for cal_node in cals_node.getElementsByTagName('calendar'):
             klass = cal_node.getAttribute('class')
-            calendar = ICULocaleCalendar(klass)
+            calendar = LocaleCalendar(klass)
             default = cal_node.getAttribute('default')
             if default == u'true':
                 default = True
@@ -963,10 +672,10 @@ class ICUXMLLocaleFactory:
                 default = False
             nodes = cal_node.getElementsByTagName('am')
             if nodes:
-                calendar.setAM(self._getText(nodes[0].childNodes))
+                calendar.am = self._getText(nodes[0].childNodes)
             nodes = cal_node.getElementsByTagName('pm')
             if nodes:
-                calendar.setPM(self._getText(nodes[0].childNodes))
+                calendar.pm = self._getText(nodes[0].childNodes)
             self._extractMonths(cal_node, calendar)
             self._extractWeekdays(cal_node, calendar)
             self._extractEras(cal_node, calendar)
@@ -981,7 +690,7 @@ class ICUXMLLocaleFactory:
         formats = []
         for format_node in self._data.getElementsByTagName('numberFormat'):
             klass = format_node.getAttribute('class')
-            format = ICULocaleNumberFormat(klass)
+            format = LocaleNumberFormat(klass)
             default = format_node.getAttribute('default')
             if default == u'true':
                 default = True
@@ -993,8 +702,8 @@ class ICUXMLLocaleFactory:
                 node = pattern_nodes[0]
                 for field in ('decimal', 'percent', 'scientific'):
                     field_node = node.getElementsByTagName(field)[0]
-                    format.setPattern(field,
-                                      self._getText(field_node.childNodes))
+                    format.patterns[field] = self._getText(
+                        field_node.childNodes)
 
             symbols_nodes = format_node.getElementsByTagName('symbols')
             if len(symbols_nodes) == 1:
@@ -1005,14 +714,15 @@ class ICUXMLLocaleFactory:
                               'infinity', 'nan'):
                     try:
                         field_node = node.getElementsByTagName(field)[0]
-                        format.setSymbol(field,
-                                         self._getText(field_node.childNodes))
+                        format.symbols[field] = self._getText(
+                            field_node.childNodes)
                     except IndexError:
                         pass # node does not exist
 
             formats.append((klass, format, default))
 
         return formats
+
 
     def _extractCurrencies(self):
         """Extract all currency definitions and their information from the
@@ -1025,24 +735,24 @@ class ICUXMLLocaleFactory:
             return []
         for curr_node in currs_node.getElementsByTagName('currency'):
             id = curr_node.getAttribute('id')
-            currency = ICULocaleCurrency(id)
+            currency = LocaleCurrency(id)
             default = curr_node.getAttribute('default')
             if default == u'true':
                 default = True
             else:
                 default = False
             node = curr_node.getElementsByTagName('symbol')[0]
-            currency.setSymbol(self._getText(node.childNodes))
+            currency.symbol = self._getText(node.childNodes)
             node = curr_node.getElementsByTagName('name')[0]
-            currency.setName(self._getText(node.childNodes))
+            currency.name = self._getText(node.childNodes)
             try:
                 node = curr_node.getElementsByTagName('decimal')[0]
-                currency.setDecimal(self._getText(node.childNodes))
+                currency.decimal = self._getText(node.childNodes)
             except IndexError:
                 pass # No decimal node
             try:
                 node = curr_node.getElementsByTagName('pattern')[0]
-                currency.setPattern(self._getText(node.childNodes))
+                currency.pattern = self._getText(node.childNodes)
             except IndexError:
                 pass # No pattern node
 
@@ -1053,24 +763,33 @@ class ICUXMLLocaleFactory:
 
     def __call__(self):
         """Create the Locale."""
-        locale = ICULocale(self._extractIdentity())
-        # Set Versioning
-        for version in self._extractVersions():
-            locale.setVersion(version)
-        locale.updateLanguageNames(self._extractLanguages())
-        locale.updateCountryNames(self._extractCountries())
+        locale = Locale(self._extractIdentity())
+        locale.versions = self._extractVersions()
+        locale.languages = self._extractLanguages()
+        locale.countries = self._extractCountries()
         # Set TimeZones
-        for tz in self._extractTimeZones():
-            locale.setTimeZone(*tz)
+        for id, tz, default in self._extractTimeZones():
+            locale.timezones[id] = tz
+            if default:
+                locale._default_tzid = id
+
         # Set Calendars
-        for cal in self._extractCalendars():
-            locale.setCalendar(*cal)
+        for klass, calendar, default in self._extractCalendars():
+            locale.calendars[klass] = calendar
+            if default:
+                locale._default_cal_class = klass
+
         # Set Number Formats
-        for format in self._extractNumberFormats():
-            locale.setNumberFormat(*format)
+        for klass, format, default in self._extractNumberFormats():
+            locale.numberFormats[klass] = format
+            if default:
+                locale._default_numformat_class = klass
+
         # Set Currencies
-        for currency in self._extractCurrencies():
-            locale.setCurrency(*currency)
+        for id, currency, default in self._extractCurrencies():
+            locale.currencies[id] = currency
+            if default:
+                locale._default_currency_id = id
 
         return locale
 

@@ -13,9 +13,12 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.5 2003/03/25 14:27:04 bwarsaw Exp $
+$Id: interfaces.py,v 1.6 2003/03/25 14:48:01 srichter Exp $
 """
+import re
 from zope.interface import Interface, Attribute
+from zope.schema import TextLine, Text, Int, Dict, Tuple, List
+from zope.schema import Container, Datetime
 
 
 class II18nAware(Interface):
@@ -434,22 +437,23 @@ class ILocaleIdentity(Interface):
 
     This object is also used to uniquely identify a locale."""
 
-    def getLanguage():
-        """Return the language of the id."""
+    language = TextLine(title=u"Lanaguage Id",
+                        constraint=re.compile(r'[a-z]{2}').match)
 
-    def getCountry():
-        """Return the country of the id."""
+    country = TextLine(title=u"Country Id",
+                        constraint=re.compile(r'[A-Z]{2}').match)
 
-    def getVariant():
-        """Return the variant of the id."""
+    variant = TextLine(title=u"Variant",
+                        constraint=re.compile(r'[a-zA-Z]*').match)
 
-    def setCorrespondence(vendor, text):
-        """Correspondences can be used to map our Locales to other system's
-        locales. A common use in ICU is to define a correspondence to the
-        Windows Locale System. This method sets a correspondence."""
 
-    def getAllCorrespondences():
-        """Return all defined correspondences."""
+    correspondsTo = List(title=u"Corresponds to",
+                         description=u"""'Corresponds to' can be used to map
+                         our Locales to other system's locales. A common use
+                         in ICU is to define a correspondence to the Windows
+                         Locale System.""",
+                         value_types=(Tuple(title=u"Vendor-Signature Pair",
+                                            min_length=2, max_length=2),))
 
     def __repr__(self):
         """Defines the representation of the id, which should be a compact
@@ -459,11 +463,13 @@ class ILocaleIdentity(Interface):
 class ILocaleVersion(Interface):
     """Allows one to specify a version of a locale."""
 
-    id = Attribute("Version identifier; usually something like 1.0.1")
+    id = TextLine(title=u"Version identifier; usually something like 1.0.1",
+                  constraint=re.compile(r'[0-9\.]*').match)
 
-    date = Attribute("A datetime object specifying the version creation date.")
+    date = Datetime(
+        title=u"A datetime object specifying the version creation date.")
 
-    comment = Attribute("A text comment about the version.")
+    comment = Text(title=u"A text comment about the version.")
 
     def __cmp__(other):
         """Compares versions, so the order can be determined."""
@@ -478,35 +484,66 @@ class ILocaleTimeZone(Interface):
     are merily used for Locale support.
     """
 
-    id = Attribute("Standard name of the timezone for unique referencing.")
+    id = TextLine(
+        title=u"Time Zone Id",
+        description=u"Standard name of the timezone for unique referencing.")
 
-    def addCity(city):
-        """Add a city to the timezone."""
+    cities = List(title=u"Cities", description=u"Cities in Timezone",
+                  value_types=(TextLine(title=u"City Name"),))
 
-    def getCities():
-        """Return all cities that are in this timezone."""
-
-    def setName(type, long, short):
-        """Add a new long and short name for the timezone."""
-
-    def getName(type):
-        """Get the long and names by type."""
+    names = Dict(
+        title=u"Time Zone Names",
+        key_types=(TextLine(title=u"Time Zone Name Type",
+                            allowed_values=(u'generic', u'standard',
+                                            u'daylight')),),
+        value_types=(TextLine(title=u"Time Zone Name"),))
 
 
 class ILocaleCalendar(Interface):
     """There is a massive amount of information contained in the calendar,
     which made it attractive to be added """
 
+    months = Dict(title=u"Month Names",
+                  key_types=(Int(title=u"Id", min=1, max=12),),
+                  value_types=(Tuple(title=u"Month Name and Abbreviation",
+                  min_length=2, max_length=2),))
+
+    weekdays = Dict(title=u"Weekdays Names",
+                  key_types=(Int(title=u"Id", min=1, max=7),),
+                  value_types=(Tuple(title=u"Weekdays Name and Abbreviation",
+                  min_length=2, max_length=2),))
+
+    eras = Dict(title=u"Era Names",
+                  key_types=(Int(title=u"Id", min=1, max=2),),
+                  value_types=(TextLine(title=u"Era Name"),))
+
+    am = TextLine(title=u"AM String")
+
+    pm = TextLine(title=u"PM String")
+
+    patternCharacters = TextLine(title=u"Pattern Characters")
+
+    timePatterns = Dict(
+        title=u"Time Patterns",
+        key_types=(TextLine(title=u"Pattern Name",
+                            allowed_values=(u'full', u'long',
+                                            u'medium', u'short')),),
+        value_types=(TextLine(title=u"Time Pattern"),))
+
+    datePatterns = Dict(
+        title=u"Date Patterns",
+        key_types=(TextLine(title=u"Pattern Name",
+                            allowed_values=(u'full', u'long',
+                                            u'medium', u'short')),),
+        value_types=(TextLine(title=u"Date Pattern"),))
+
+    dateTimePattern = Dict(title=u"Date-Time Pattern",
+                           value_types=(TextLine(title=u"Pattern"),))
+ 
     def update(other):
         """Update this calendar using data from other. Assume that unless
         other's data is not present, other has always more specific
         information."""
-
-    def setMonth(id, name, abbr):
-        """Add a month's locale data."""
-
-    def getMonth(id):
-        """Get a month (name, abbr) by its id."""
 
     def getMonthNames():
         """Return a list of month names."""
@@ -520,12 +557,6 @@ class ILocaleCalendar(Interface):
     def getMonthIdFromAbbr(abbr):
         """Return the id of the month with the right abbreviation."""
 
-    def setWeekday(id, name, abbr):
-        """Add a weekday's locale data."""
-
-    def getWeekday(id):
-        """Get a weekday by its id."""
-
     def getWeekdayNames():
         """Return a list of weekday names."""
 
@@ -538,109 +569,46 @@ class ILocaleCalendar(Interface):
     def getWeekdayIdFromAbbr(abbr):
         """Return the id of the weekday with the right abbr."""
 
-    def setEra(id, name):
-        """Add a era's locale data."""
-
-    def getEra(id):
-        """Get a era by its id."""
-
-    def setAM(text):
-        """Set AM text representation."""
-
-    def getAM():
-        """Get AM text representation."""
-
-    def setPM(text):
-        """Set PM text representation."""
-
-    def getPM():
-        """Get PM text representation."""
-
-    def setPatternCharacters(chars):
-        """Set allowed pattern characters for calendar patterns."""
-
-    def getPatternCharacters():
-        """Get allowed pattern characters for a particular type (id), which
-        can be claendar, number, and currency for example."""
-
-    def setTimePattern(type, pattern):
-        """Set the time pattern for a particular time format type. Possible
-        types are full, long, medium, and short."""
-
-    def getTimePattern(type):
-        """Get the time pattern for a particular time format type. Possible
-        types are full, long, medium, and short."""
-
-    def setDatePattern(name, pattern):
-        """Set the date pattern for a particular date format type. Possible
-        types are full, long, medium, and short."""
-
-    def getDatePattern(name):
-        """Get the date pattern for a particular date format type. Possible
-        types are full, long, medium, and short."""
-
-    def setDateTimePattern(pattern):
-        """Set the date pattern for the datetime."""
-
-    def getDateTimePattern():
-        """Get the date pattern for the datetime."""
-
 
 class ILocaleNumberFormat(Interface):
     """This interface defines all the formatting information for one class of
     numbers."""
 
-    def setPattern(name, pattern):
-        """Define a new pattern by name."""
+    patterns = Dict(
+        title=u"Number Patterns",
+        key_types=(TextLine(title=u"Format Name",
+                            allowed_values=(u'decimal', u'percent',
+                                            u'scientific')),),
+        value_types=(TextLine(title=u"Pattern"),))
 
-    def getPattern(name):
-        """Get a pattern by its name."""
-
-    def getAllPatternIds():
-        """Return a list of all pattern names."""
-
-    def setSymbol(name, symbol):
-        """Define a new symbol by name."""
-
-    def getSymbol(name):
-        """Get a symbol by its name."""
-
-    def getAllSymbolIds():
-        """Return a list of all symbol names."""
-
-    def getSymbolMap():
-        """Return a map of all symbols. Thisis useful for the INumberFormat."""
+    symbols = Dict(
+        title=u"Number Symbols",
+        key_types=(TextLine(title=u"Format Name",
+                           allowed_values=(u'decimal', u'group', u'list',
+                                           u'percentSign', u'nativeZeroDigit',
+                                           u'patternDigit', u'plusSign',
+                                           u'minusSign', u'exponential',
+                                           u'perMille', u'infinity',
+                                           u'nan')),),
+        value_types=(TextLine(title=u"Symbol"),))
 
 
 class ILocaleCurrency(Interface):
     """Defines a particular currency."""
 
-    def setSymbol(symbol):
-        """Set currency symbol; i.e. $ for USD."""
+    symbol = TextLine(title=u'Symbol')
 
-    def getSymbol():
-        """Get currency symbol."""
+    name = TextLine(title=u'Name')
 
-    def setName(name):
-        """Set currency name; i.e. USD for US Dollars."""
+    decimal = TextLine(title=u'Decimal Symbol')
 
-    def getName():
-        """Get currency name."""
+    pattern = TextLine(title=u'Pattern',
+                    description=u"""Set currency pattern. Often we want
+                    different formatting rules for monetary amounts; for
+                    example a precision more than 1/100 of the main currency
+                    unit is often not desired.""")
 
-    def setDecimal(decimal):
-        """Set currency decimal separator. In the US this is usually the
-        period '.', while Germany uses the comma ','."""
-
-    def getDecimal():
-        """Get currency decimal separator."""
-
-    def setPattern(pattern):
-        """Set currency pattern. Often we want different formatting rules for
-        monetary amounts; for example a precision more than 1/100 of the main
-        currency unit is often not desired."""
-
-    def getPattern():
-        """Get currency pattern."""
+    formatter = Attribute("Currency Formatter object")
 
 
 class ILocale(Interface):
@@ -655,17 +623,39 @@ class ILocale(Interface):
     specifies none of the above identifiers.
     """
 
-    def getLocaleLanguageId():
-        """Return the id of the language that this locale represents. 'None'
-        can be returned."""
+    id = Attribute("""ILocaleIdentity object identifying the locale.""")
 
-    def getLocaleCountryId():
-        """Return the id of the country that this locale represents. 'None'
-        can be returned."""
+    currencies = Container(title=u"Currencies")
 
-    def getLocaleVariantId():
-        """Return the id of the variant that this locale represents. 'None'
-        can be returned."""
+    languages = Dict(title=u"Lanaguage id to translated name",
+                     key_types=(TextLine(title=u"Lanaguege Id"),),
+                     value_types=(TextLine(title=u"Lanaguege Name"),),
+                     )
+
+    countries = Dict(title=u"Country id to translated name",
+                     key_types=(TextLine(title=u"Country Id"),),
+                     value_types=(TextLine(title=u"Country Name"),),
+                     )
+
+    timezones = Dict(title=u"Time zone id to ITimezone",
+                     key_types=(TextLine(title=u"Time Zone Id"),),
+                     )
+
+    calendars = Dict(title=u"Calendar id to ICalendar",
+                     key_types=(TextLine(title=u"Calendar Id"),),
+                     )
+
+    def getDefaultTimeZone():
+        """Return the default time zone."""
+
+    def getDefaultCalendar():
+        """Return the default calendar."""
+
+    def getDefaultNumberFormat():
+        """Return the default number format."""
+
+    def getDefaultCurrency():
+        """Get the default currency."""
 
     def getDisplayLanguage(id):
         """Return the full name of the language whose id was passed in the
@@ -678,7 +668,7 @@ class ILocale(Interface):
         """Get the TimeFormat object called 'name'. The following names are
         recognized: full, long, medium, short."""
 
-    def getDateFormat(name):
+    def getDateFormatter(name):
         """Get the DateFormat object called 'name'. The following names are
         recognized: full, long, medium, short."""
 
@@ -765,16 +755,15 @@ class INumberFormat(IFormat):
       '    Used to quote special characters in a prefix or suffix
     """
 
-    symbols = Attribute(
-        """The symbols attribute maps various formatting symbol names to the
-        symbol itself.
-
-        Here are the required names:
-
-          decimal, group, list, percentSign, nativeZeroDigit, patternDigit,
-          plusSign, minusSign, exponential, perMille, infinity, nan
-
-        """)
+    symbols = Dict(
+        title=u"Number Symbols",
+        key_types=(TextLine(
+            title=u"Dictionary Class",
+            allowed_values=(u'decimal', u'group', u'list', u'percentSign',
+                            u'nativeZeroDigit', u'patternDigit', u'plusSign',
+                            u'minusSign', u'exponential', u'perMille',
+                            u'infinity', u'nan')),),
+        value_types=(TextLine(title=u"Symbol"),))
 
 
 class ICurrencyFormat(INumberFormat):

@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.4 2003/03/13 18:49:14 alga Exp $
+$Id: test_locales.py,v 1.5 2003/03/25 14:48:02 srichter Exp $
 """
 import os, sys
 import datetime
@@ -25,11 +25,11 @@ from zope.i18n.interfaces import ILocaleTimeZone, ILocaleCalendar
 from zope.i18n.interfaces import ILocaleNumberFormat, ILocaleCurrency
 
 from zope.i18n.locales import NoGeneralLocaleError, LoadLocaleError
-from zope.i18n.locales import LocaleProvider, ICULocale, ICUXMLLocaleFactory
+from zope.i18n.locales import LocaleProvider, Locale, XMLLocaleFactory
 from zope.i18n.locales import locales
-from zope.i18n.locales import ICULocaleVersion, ICULocaleIdentity
-from zope.i18n.locales import ICULocaleTimeZone, ICULocaleCalendar
-from zope.i18n.locales import ICULocaleNumberFormat, ICULocaleCurrency
+from zope.i18n.locales import LocaleVersion, LocaleIdentity
+from zope.i18n.locales import LocaleTimeZone, LocaleCalendar
+from zope.i18n.locales import LocaleNumberFormat, LocaleCurrency
 
 from zope.i18n import tests
 testdir = os.path.dirname(tests.__file__)
@@ -49,24 +49,24 @@ class TestILocaleProvider(TestCase):
 
     def test_getLocale(self):
         locale = self.locales.getLocale(None, None, None)
-        self.assertEqual(locale.id.getLanguage(), None)
-        self.assertEqual(locale.id.getCountry(), None)
-        self.assertEqual(locale.id.getVariant(), None)
+        self.assertEqual(locale.id.language, None)
+        self.assertEqual(locale.id.country, None)
+        self.assertEqual(locale.id.variant, None)
 
         locale = self.locales.getLocale('de', None, None)
-        self.assertEqual(locale.id.getLanguage(), 'de')
-        self.assertEqual(locale.id.getCountry(), None)
-        self.assertEqual(locale.id.getVariant(), None)
+        self.assertEqual(locale.id.language, 'de')
+        self.assertEqual(locale.id.country, None)
+        self.assertEqual(locale.id.variant, None)
 
         locale = self.locales.getLocale('de', 'DE', None)
-        self.assertEqual(locale.id.getLanguage(), 'de')
-        self.assertEqual(locale.id.getCountry(), 'DE')
-        self.assertEqual(locale.id.getVariant(), None)
+        self.assertEqual(locale.id.language, 'de')
+        self.assertEqual(locale.id.country, 'DE')
+        self.assertEqual(locale.id.variant, None)
 
         locale = self.locales.getLocale('de', 'DE', 'PREEURO')
-        self.assertEqual(locale.id.getLanguage(), 'de')
-        self.assertEqual(locale.id.getCountry(), 'DE')
-        self.assertEqual(locale.id.getVariant(), 'PREEURO')
+        self.assertEqual(locale.id.language, 'de')
+        self.assertEqual(locale.id.country, 'DE')
+        self.assertEqual(locale.id.variant, 'PREEURO')
 
 
 class TestLocaleProvider(TestILocaleProvider):
@@ -85,50 +85,40 @@ class TestLocaleProvider(TestILocaleProvider):
         self.assertRaises(LoadLocaleError, self.locales.loadLocale, 'xxx')
 
 
-class TestICULocaleIdentity(TestCase):
+class TestLocaleIdentity(TestCase):
 
     def setUp(self):
-        self.id = ICULocaleIdentity('de', 'DE', 'PREEURO')
-        self.id2 = ICULocaleIdentity()
+        self.id = LocaleIdentity('de', 'DE', 'PREEURO')
+        self.id2 = LocaleIdentity()
 
     def testInterfaceConformity(self):
         self.assert_(ILocaleIdentity.isImplementedBy(self.id))
 
-    def test_getLanguage(self):
-        self.assertEqual(self.id.getLanguage(), 'de')
-        self.assertEqual(self.id2.getLanguage(), None)
+    def test_language(self):
+        self.assertEqual(self.id.language, 'de')
+        self.assertEqual(self.id2.language, None)
 
-    def test_getCountry(self):
-        self.assertEqual(self.id.getCountry(), 'DE')
-        self.assertEqual(self.id2.getCountry(), None)
+    def test_country(self):
+        self.assertEqual(self.id.country, 'DE')
+        self.assertEqual(self.id2.country, None)
 
-    def test_getVariant(self):
-        self.assertEqual(self.id.getVariant(), 'PREEURO')
-        self.assertEqual(self.id2.getVariant(), None)
-
-    def test_setCorrespondence(self):
-        self.id.setCorrespondence('0007', 'Windows')
-        self.assertEqual(self.id._correspondsTos, [('0007', 'Windows')])
-
-    def test_getAllCorrespondences(self):
-        self.id.setCorrespondence('0007', 'Windows')
-        self.id.setCorrespondence('de_plain', 'Fantasy')
-        self.assertEqual(self.id.getAllCorrespondences(),
-                         [('0007', 'Windows'), ('de_plain', 'Fantasy')])
+    def test_variant(self):
+        self.assertEqual(self.id.variant, 'PREEURO')
+        self.assertEqual(self.id2.variant, None)
 
     def test___repr__(self):
         self.assertEqual(self.id.__repr__(),
-                         "<ICULocaleIdentity (de, DE, PREEURO)>")
+                         "<LocaleIdentity (de, DE, PREEURO)>")
         self.assertEqual(self.id2.__repr__(),
-                         "<ICULocaleIdentity (None, None, None)>")
+                         "<LocaleIdentity (None, None, None)>")
 
-class TestICULocaleVersion(TestCase):
+class TestLocaleVersion(TestCase):
 
     def setUp(self):
-        self.ver = ICULocaleVersion('1.0',
+        self.ver = LocaleVersion('1.0',
                                     datetime.datetime(2003, 01, 01, 12, 00),
                                     'Initial data set.')
-        self.ver2 = ICULocaleVersion('2.0',
+        self.ver2 = LocaleVersion('2.0',
                                      datetime.datetime(2003, 01, 02, 12, 00),
                                      'Made some changes.')
 
@@ -156,10 +146,10 @@ class TestICULocaleVersion(TestCase):
         self.assert_(self.ver2 != self.ver)
 
 
-class TestICULocaleTimeZone(TestCase):
+class TestLocaleTimeZone(TestCase):
 
     def setUp(self):
-        self.tz = ICULocaleTimeZone('Europe/Berlin')
+        self.tz = LocaleTimeZone('Europe/Berlin')
 
     def testInterfaceConformity(self):
         self.assert_(ILocaleTimeZone.isImplementedBy(self.tz))
@@ -167,46 +157,26 @@ class TestICULocaleTimeZone(TestCase):
     def testId(self):
         self.assertEqual(self.tz.id, 'Europe/Berlin')
 
-    def test_addCity_getCities(self):
-        tz = self.tz
-        tz.addCity('a')
-        tz.addCity('b')
-        self.assertEqual(list(tz.getCities()), ['a', 'b'])
 
-    def test_setName_getName(self):
-        tz = self.tz
-        tz.setName(u'generic', u'Mitteleurop\xe4ische Zeit', u'Europe/Berlin')
-        self.assertEqual(tz.getName(u'generic'),
-                         (u'Mitteleurop\xe4ische Zeit', u'Europe/Berlin'))
-
-
-class TestICULocaleCalendar(TestCase):
+class TestLocaleCalendar(TestCase):
 
     def setUp(self):
-        self.cal = ICULocaleCalendar('gregorian')
-        self.cal._months = {1: ('January', 'Jan')}
-        self.cal._weekdays = {1: ('Sunday', 'Su')}
-        self.cal._eras = {0: 'B.C.'}
-        self.cal._am = 'AM'
-        self.cal._pm = 'PM'
-        self.cal._pattern_chars = 'GjMtkHmsSEDFwWahKzJe'
-        self.cal._time_patterns = {'medium': 'HH:mm:ss'}
-        self.cal._date_patterns = {'medium': 'dd.MM.yyyy'}
-        self.cal._datetime_pattern = '{1} {0}'
+        self.cal = LocaleCalendar('gregorian')
+        self.cal.months = {1: ('January', 'Jan')}
+        self.cal.weekdays = {1: ('Sunday', 'Su')}
+        self.cal.eras = {0: 'B.C.'}
+        self.cal.am = 'AM'
+        self.cal.pm = 'PM'
+        self.cal.patternCharacters = 'GjMtkHmsSEDFwWahKzJe'
+        self.cal.timePatterns = {'medium': 'HH:mm:ss'}
+        self.cal.datePatterns = {'medium': 'dd.MM.yyyy'}
+        self.cal.datetimePattern = '{1} {0}'
 
     def testInterfaceConformity(self):
         self.assert_(ILocaleCalendar.isImplementedBy(self.cal))
 
-    def test_setMonth(self):
-        self.cal.setMonth(2, 'February', 'Feb')
-        self.assertEqual(self.cal._months,
-                         {1: ('January', 'Jan'), 2: ('February', 'Feb')})
-
-    def test_getMonth(self):
-        self.assertEqual(self.cal.getMonth(1), ('January', 'Jan'))
-
     def test_getMonthNames(self):
-        self.cal._months[2] = ('February', 'Feb')
+        self.cal.months[2] = ('February', 'Feb')
         self.assertEqual(self.cal.getMonthNames(),
                          ['January', 'February'] + [None]*10)
 
@@ -214,22 +184,14 @@ class TestICULocaleCalendar(TestCase):
         self.assertEqual(self.cal.getMonthIdFromName('January'), 1)
 
     def test_getMonthAbbr(self):
-        self.cal._months[2] = ('February', 'Feb')
+        self.cal.months[2] = ('February', 'Feb')
         self.assertEqual(self.cal.getMonthAbbr(), ['Jan', 'Feb'] + [None]*10)
 
     def test_getMonthIdFromAbbr(self):
         self.assertEqual(self.cal.getMonthIdFromAbbr('Jan'), 1)
 
-    def test_setWeekday(self):
-        self.cal.setWeekday(2, 'Monday', 'Mo')
-        self.assertEqual(self.cal._weekdays,
-                         {1: ('Sunday', 'Su'), 2: ('Monday', 'Mo')})
-
-    def test_getWeekday(self):
-        self.assertEqual(self.cal.getWeekday(1), ('Sunday', 'Su'))
-
     def test_getWeekdayNames(self):
-        self.cal._weekdays[2] = ('Monday', 'Mo')
+        self.cal.weekdays[2] = ('Monday', 'Mo')
         self.assertEqual(self.cal.getWeekdayNames(),
                          ['Sunday', 'Monday'] + [None]*5)
 
@@ -237,159 +199,46 @@ class TestICULocaleCalendar(TestCase):
         self.assertEqual(self.cal.getWeekdayIdFromName('Sunday'), 1)
 
     def test_getWeekdayAbbr(self):
-        self.cal._weekdays[2] = ('Monday', 'Mo')
+        self.cal.weekdays[2] = ('Monday', 'Mo')
         self.assertEqual(self.cal.getWeekdayAbbr(), ['Su', 'Mo'] + [None]*5)
 
     def test_getWeekdayIdFromAbbr(self):
         self.assertEqual(self.cal.getWeekdayIdFromAbbr('Su'), 1)
 
-    def test_setEra(self):
-        self.cal.setEra(1, 'A.C.')
-        self.assertEqual(self.cal._eras, {0: 'B.C.', 1: 'A.C.'})
 
-    def test_getEra(self):
-        self.assertEqual(self.cal.getEra(0), 'B.C.')
-
-    def test_setAM(self):
-        self.cal.setAM('vorm.')
-        self.assertEqual(self.cal._am, 'vorm.')
-
-    def test_getAM(self):
-        self.assertEqual(self.cal.getAM(), 'AM')
-
-    def test_setPM(self):
-        self.cal.setPM('nachm.')
-        self.assertEqual(self.cal._pm, 'nachm.')
-
-    def test_getPM(self):
-        self.assertEqual(self.cal.getPM(), 'PM')
-
-    def test_setPatternCharacters(self):
-        self.cal.setPatternCharacters('abc')
-        self.assertEqual(self.cal._pattern_chars, 'abc')
-
-    def test_getPatternCharacters(self):
-        self.assertEqual(self.cal.getPatternCharacters(),
-                         'GjMtkHmsSEDFwWahKzJe')
-
-    def test_setTimePattern(self):
-        self.cal.setTimePattern('long', 'HH:mm:ss z')
-        self.assertEqual(self.cal._time_patterns,
-                         {'medium': 'HH:mm:ss', 'long': 'HH:mm:ss z'})
-
-    def test_getTimePattern(self):
-        self.assertEqual(self.cal.getTimePattern('medium'), 'HH:mm:ss')
-
-    def test_setDatePattern(self):
-        self.cal.setDatePattern('long', 'd. MMMM yyyy')
-        self.assertEqual(self.cal._date_patterns,
-                         {'medium': 'dd.MM.yyyy', 'long': 'd. MMMM yyyy'})
-
-    def test_getDatePattern(self):
-        self.assertEqual(self.cal.getDatePattern('medium'), 'dd.MM.yyyy')
-
-    def test_setDateTimePattern(self):
-        self.cal.setDateTimePattern('{0} {1}')
-        self.assertEqual(self.cal._datetime_pattern, '{0} {1}')
-
-    def test_getDateTimePattern(self):
-        self.assertEqual(self.cal.getDateTimePattern(), '{1} {0}')
-
-
-class TestICULocaleNumberFormat(TestCase):
+class TestLocaleNumberFormat(TestCase):
 
     def setUp(self):
-        self.format = ICULocaleNumberFormat('decimal')
-        self.format._patterns = {'decimal': '#,##0.###;-#,##0.###'}
-        self.format._symbols = {'decimal': '.'}
+        self.format = LocaleNumberFormat('decimal')
+        self.format.patterns = {'decimal': '#,##0.###;-#,##0.###'}
+        self.format.symbols = {'decimal': '.'}
 
     def testInterfaceConformity(self):
         self.assert_(ILocaleNumberFormat.isImplementedBy(self.format))
 
-    def test_setPattern(self):
-        self.format.setPattern('percent', '#,##0%')
-        self.assertEqual(self.format._patterns,
-                         {'decimal': '#,##0.###;-#,##0.###',
-                          'percent': '#,##0%'})
 
-    def test_getPattern(self):
-        self.assertEqual(self.format.getPattern('decimal'),
-                         '#,##0.###;-#,##0.###')
-
-    def test_getAllPatternIds(self):
-        self.format._patterns['percent'] = '#,##0%'
-        ids = self.format.getAllPatternIds()
-        ids.sort()
-        self.assertEqual(ids, ['decimal', 'percent'])
-
-    def test_setSymbol(self):
-        self.format.setSymbol('percentSign', '%')
-        self.assertEqual(self.format._symbols,
-                         {'decimal': '.', 'percentSign': '%'})
-
-    def test_getSymbol(self):
-        self.assertEqual(self.format.getSymbol('decimal'), '.')
-
-    def test_getAllSymbolIds(self):
-        self.format._symbols['percentSign'] = '%'
-        ids = self.format.getAllSymbolIds()
-        ids.sort()
-        self.assertEqual(ids, ['decimal', 'percentSign'])
-
-    def test_getSymbolMap(self):
-        self.assertEqual(self.format.getSymbolMap(), {'decimal': '.'})
-
-
-class TestICULocaleCurrency(TestCase):
+class TestLocaleCurrency(TestCase):
 
     def setUp(self):
-        self.curr = ICULocaleCurrency('USD')
-        self.curr._symbol = '$'
-        self.curr._name = 'USD'
-        self.curr._decimal = '.'
-        self.curr._pattern = '$ #,##0.00;-$ #,##0.00'
+        self.curr = LocaleCurrency('USD')
+        self.curr.symbol = '$'
+        self.curr.name = 'USD'
+        self.curr.decimal = '.'
+        self.curr.pattern = '$ #,##0.00;-$ #,##0.00'
 
     def testInterfaceConformity(self):
         self.assert_(ILocaleCurrency.isImplementedBy(self.curr))
 
-    def test_setSymbol(self):
-        self.curr.setSymbol(u'\u20ac')
-        self.assertEqual(self.curr._symbol, u'\u20ac')
 
-    def test_getSymbol(self):
-        self.assertEqual(self.curr.getSymbol(), '$')
+class TestXMLLocaleFactory(TestCase):
 
-    def test_setName(self):
-        self.curr.setName('EUR')
-        self.assertEqual(self.curr._name, 'EUR')
-
-    def test_getName(self):
-        self.assertEqual(self.curr.getName(), 'USD')
-
-    def test_setDecimal(self):
-        self.curr.setDecimal(',')
-        self.assertEqual(self.curr._decimal, ',')
-
-    def test_getDecimal(self):
-        self.assertEqual(self.curr.getDecimal(), '.')
-
-    def test_setPattern(self):
-        self.curr.setPattern('EUR #,##0.00;-EUR #,##0.00')
-        self.assertEqual(self.curr._pattern, 'EUR #,##0.00;-EUR #,##0.00')
-
-    def test_getPattern(self):
-        self.assertEqual(self.curr.getPattern(), '$ #,##0.00;-$ #,##0.00')
-
-
-class TestICUXMLLocaleFactory(TestCase):
-
-    factory0 = ICUXMLLocaleFactory(
+    factory0 = XMLLocaleFactory(
         os.path.join(testdir, 'xmllocales', 'root.xml'))
-    factory = ICUXMLLocaleFactory(
+    factory = XMLLocaleFactory(
         os.path.join(testdir, 'xmllocales', 'de.xml'))
-    factory2 = ICUXMLLocaleFactory(
+    factory2 = XMLLocaleFactory(
         os.path.join(testdir, 'xmllocales', 'de_DE.xml'))
-    factory3 = ICUXMLLocaleFactory(
+    factory3 = XMLLocaleFactory(
         os.path.join(testdir, 'xmllocales', 'de_DE_PREEURO.xml'))
 
     def test_GermanySpecificGermanLocale(self):
@@ -406,11 +255,11 @@ class TestICUXMLLocaleFactory(TestCase):
 
     def test_extractIdentity(self):
         id = self.factory._extractIdentity()
-        self.assertEqual(id.getLanguage(), 'de')
-        self.assertEqual(id.getVariant(), None)
-        self.assertEqual(id.getCountry(), None)
-        self.assertEqual(id.getAllCorrespondences(), [(u'0007', u'Windows')])
-        self.assertEqual(id.__repr__(), '<ICULocaleIdentity (de, None, None)>')
+        self.assertEqual(id.language, 'de')
+        self.assertEqual(id.variant, None)
+        self.assertEqual(id.country, None)
+        self.assertEqual(id.correspondsTos, [(u'0007', u'Windows')])
+        self.assertEqual(id.__repr__(), '<LocaleIdentity (de, None, None)>')
 
     def test_extractVersions(self):
         versions = self.factory._extractVersions()
@@ -441,8 +290,8 @@ class TestICUXMLLocaleFactory(TestCase):
         zone = zones[0]
         self.assertEqual(zone[0], u'Europe/Berlin')
         self.assertEqual(zone[0], zone[1].id)
-        self.assertEqual(zone[1].getCities(), [u'Berlin'])
-        self.assertEqual(zone[1].getName('generic'),
+        self.assertEqual(zone[1].cities, [u'Berlin'])
+        self.assertEqual(zone[1].names['generic'],
                          (u'Mitteleurop\xe4ische Zeit', u'Europe/Berlin'))
         self.assertEqual(zone[2], True)
 
@@ -452,8 +301,8 @@ class TestICUXMLLocaleFactory(TestCase):
         cal = cals[0]
         self.assertEqual(cal[0], u'gregorian')
         self.assertEqual(cal[0], cal[1].klass)
-        self.assertEqual(cal[1].getMonth(1), (u'Januar', u'Jan'))
-        self.assertEqual(cal[1].getWeekday(1), (u'Sonntag', u'So'))
+        self.assertEqual(cal[1].months[1], (u'Januar', u'Jan'))
+        self.assertEqual(cal[1].weekdays[1], (u'Sonntag', u'So'))
         self.assertEqual(cal[2], True)
 
     def test_extractNumberFormats(self):
@@ -462,14 +311,14 @@ class TestICUXMLLocaleFactory(TestCase):
         format = formats[0]
         self.assertEqual(format[0], u'decimal')
         self.assertEqual(format[0], format[1].klass)
-        self.assertEqual(format[1].getPattern('decimal'),
+        self.assertEqual(format[1].patterns['decimal'],
                          '#,##0.###;-#,##0.###')
-        self.assertEqual(format[1].getPattern('percent'), '#,##0%')
-        self.assertEqual(format[1].getPattern('scientific'), '#E0')
-        self.assertEqual(format[1].getSymbol('percentSign'), u'%')
-        self.assertEqual(format[1].getSymbol('nativeZeroDigit'), u'0')
-        self.assertEqual(format[1].getSymbol('exponential'), u'E')
-        self.assertEqual(format[1].getSymbol('perMille'), u'\u2030')
+        self.assertEqual(format[1].patterns['percent'], '#,##0%')
+        self.assertEqual(format[1].patterns['scientific'], '#E0')
+        self.assertEqual(format[1].symbols['percentSign'], u'%')
+        self.assertEqual(format[1].symbols['nativeZeroDigit'], u'0')
+        self.assertEqual(format[1].symbols['exponential'], u'E')
+        self.assertEqual(format[1].symbols['perMille'], u'\u2030')
         self.assertEqual(format[2], True)
 
     def test_extractCurrencies(self):
@@ -478,125 +327,47 @@ class TestICUXMLLocaleFactory(TestCase):
         curr = currs[0]
         self.assertEqual(curr[0], u'DEM')
         self.assertEqual(curr[0], curr[1].id)
-        self.assertEqual(curr[1].getSymbol(), u'DM')
-        self.assertEqual(curr[1].getName(), u'DEM')
-        self.assertEqual(curr[1].getDecimal(), u',')
-        self.assertEqual(curr[1].getPattern(), None)
+        self.assertEqual(curr[1].symbol, u'DM')
+        self.assertEqual(curr[1].name, u'DEM')
+        self.assertEqual(curr[1].decimal, u',')
+        self.assertEqual(curr[1].pattern, None)
         self.assertEqual(curr[2], True)
 
 
-class TestICULocale(TestCase):
+class TestLocale(TestCase):
 
     path = os.path.join(testdir, 'xmllocales', 'root.xml')
-    localeFactory = ICUXMLLocaleFactory(path)
+    localeFactory = XMLLocaleFactory(path)
     locale = localeFactory()
 
     def testId(self):
         id = self.locale.id
-        self.assertEqual(id.getLanguage(), None)
-        self.assertEqual(id.getVariant(), None)
-        self.assertEqual(id.getCountry(), None)
-        self.assertEqual(id.getAllCorrespondences(), [(u'0000', u'Windows')])
-
-    def test_getAllVersions(self):
-        versions = self.locale.getAllVersions()
-        self.assertEqual(len(versions), 1)
-        self.assertEqual(versions, self.locale._versions)
-        self.assertEqual(versions[0].id, u'1.0')
+        self.assertEqual(id.language, None)
+        self.assertEqual(id.variant, None)
+        self.assertEqual(id.country, None)
+        self.assertEqual(id.correspondsTos, [(u'0000', u'Windows')])
 
     def test_getLatestVersion(self):
         self.assertEqual(self.locale.getLatestVersion().id, u'1.0')
-
-    def test_getLanguageName(self):
-        self.assertEqual(self.locale.getLanguageName('de'), 'German')
-        self.assertEqual(self.locale.getLanguageName('ab'), 'Abkhazian')
-        self.assertEqual(self.locale.getLanguageName('zh'), 'Chinese')
-
-    def test_getAllLanguageIds(self):
-        ids = self.locale.getAllLanguageIds()
-        self.assertEqual(len(ids), 436)
-        self.assert_('de' in ids)
-        self.assert_('ab' in ids)
-        self.assert_('zh' in ids)
-        self.assert_('xx' not in ids)
-
-    def test_getCountryName(self):
-        self.assertEqual(self.locale.getCountryName('DE'), 'Germany')
-        self.assertEqual(self.locale.getCountryName('AE'),
-                         'United Arab Emirates')
-        self.assertEqual(self.locale.getCountryName('ZW'), 'Zimbabwe')
-
-    def test_getAllCountryIds(self):
-        ids = self.locale.getAllCountryIds()
-        self.assertEqual(len(ids), 240)
-        self.assert_('DE' in ids)
-        self.assert_('AE' in ids)
-        self.assert_('ZW' in ids)
-        self.assert_('XX' not in ids)
-
-    def test_getTimeZone(self):
-        zone = self.locale.getTimeZone(u'EST')
-        self.assertEqual(zone.id, u'EST')
-        self.assertEqual(zone.getCities(), [u'New York'])
-        self.assertEqual(zone.getName('generic'),
-                         (u'Eastern Standard Time',
-                          u'EST'))
 
     def test_getDefaultTimeZone(self):
         zone = self.locale.getDefaultTimeZone()
         self.assertEqual(zone.id, u'PST')
 
-    def test_getTimeZoneIds(self):
-        ids = self.locale.getTimeZoneIds()
-        self.assertEqual(len(ids), 9)
-        self.assert_(u'EST' in ids)
-
-    def test_getCalendar(self):
-        cal = self.locale.getCalendar(u'gregorian')
-        self.assertEqual(cal.klass, u'gregorian')
-        self.assertEqual(cal.getMonth(1), (u'January', u'Jan'))
-        self.assertEqual(cal.getWeekday(1), (u'Sunday', u'Sun'))
-        self.assertEqual(cal.getDatePattern('full'), 'EEEE, MMMM d, yyyy')
-
     def test_getDefaultCalendar(self):
         cal = self.locale.getDefaultCalendar()
         self.assertEqual(cal.klass, u'gregorian')
-
-    def test_getCalendarClasses(self):
-        ids = self.locale.getCalendarClasses()
-        self.assertEqual(ids, [u'gregorian'])
-
-    def test_getNumberFormat(self):
-        format = self.locale.getNumberFormat(u'decimal')
-        self.assertEqual(format.klass, u'decimal')
-        self.assertEqual(format.getPattern('decimal'), u'#,##0.###;-#,##0.###')
-        self.assertEqual(format.getSymbol('exponential'), u'E')
 
     def test_getDefaultNumberFormat(self):
         format = self.locale.getDefaultNumberFormat()
         self.assertEqual(format.klass, u'decimal')
 
-    def test_getNumberFormatClasses(self):
-        klasses = self.locale.getNumberFormatClasses()
-        self.assertEqual(klasses, [u'decimal'])
-
-    def test_getCurrency(self):
-        curr = self.locale.getCurrency(u'XXX')
-        self.assertEqual(curr.id, u'XXX')
-        self.assertEqual(curr.getName(), u'XXX')
-        self.assertEqual(curr.getSymbol(), u'\xa4')
-        self.assertEqual(curr.getDecimal(), u'.')
-
     def test_getDefaultCurrency(self):
         curr = self.locale.getDefaultCurrency()
         self.assertEqual(curr.id, u'XXX')
 
-    def test_getCurrencyIds(self):
-        ids = self.locale.getCurrencyIds()
-        self.assertEqual(ids, [u'XXX'])
 
-
-class TestICULocaleAndProvider(TestCase):
+class TestLocaleAndProvider(TestCase):
 
     # Set the locale on the class so that test cases don't have
     # to pay to construct a new one each time.
@@ -668,22 +439,22 @@ class TestGlobalLocaleProvider(TestCase):
 
     def test_getLocale(self):
         locale = locales.getLocale('de', 'AT')
-        self.assertEqual(locale.id.getLanguage(), 'de')
-        self.assertEqual(locale.id.getCountry(), 'AT')
-        self.assertEqual(locale.id.getVariant(), None)
+        self.assertEqual(locale.id.language, 'de')
+        self.assertEqual(locale.id.country, 'AT')
+        self.assertEqual(locale.id.variant, None)
 
 
 def test_suite():
     return TestSuite((
         makeSuite(TestLocaleProvider),
-        makeSuite(TestICULocaleIdentity),
-        makeSuite(TestICULocaleVersion),
-        makeSuite(TestICULocaleTimeZone),
-        makeSuite(TestICULocaleCalendar),
-        makeSuite(TestICULocaleNumberFormat),
-        makeSuite(TestICULocaleCurrency),
-        makeSuite(TestICUXMLLocaleFactory),
-        makeSuite(TestICULocale),
-        makeSuite(TestICULocaleAndProvider),
+        makeSuite(TestLocaleIdentity),
+        makeSuite(TestLocaleVersion),
+        makeSuite(TestLocaleTimeZone),
+        makeSuite(TestLocaleCalendar),
+        makeSuite(TestLocaleNumberFormat),
+        makeSuite(TestLocaleCurrency),
+        makeSuite(TestXMLLocaleFactory),
+        makeSuite(TestLocale),
+        makeSuite(TestLocaleAndProvider),
         makeSuite(TestGlobalLocaleProvider),
         ))

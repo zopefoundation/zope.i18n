@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.3 2003/03/13 18:49:13 alga Exp $
+$Id: format.py,v 1.4 2003/03/25 14:48:01 srichter Exp $
 """
 import re
 import math
@@ -96,7 +96,7 @@ class DateTimeFormat(object):
         for length in (1, 2):
             id = ('h', length)
             if id in bin_pattern:
-                ampm = self.calendar.getPM() == results[
+                ampm = self.calendar.pm == results[
                     bin_pattern.index(('a', 1))]
                 ordered[3] = int(results[bin_pattern.index(id)]) + 12*ampm
         # Shortcut for the simple int functions
@@ -437,8 +437,8 @@ def buildDateTimeParseInfo(calendar):
     """This method returns a dictionary that helps us with the parsing.
     It also depends on the locale of course."""
     return {
-        ('a', 1): r'(%s|%s)' %(calendar.getAM(), calendar.getPM()),
-        ('G', 1): r'(%s|%s)' %(calendar.getEra(0), calendar.getEra(1)),
+        ('a', 1): r'(%s|%s)' %(calendar.am, calendar.pm),
+        ('G', 1): r'(%s|%s)' %(calendar.eras[0], calendar.eras[1]),
         ('y', 2): r'([0-9]{2})',
         ('y', 4): r'([0-9]{4})',
         ('M', 1): r'([0-9]{1, 2})',
@@ -490,9 +490,9 @@ def buildDateTimeInfo(dt, calendar):
         dt = datetime.datetime(dt.year, dt.month, dt.day)
 
     if dt.hour >= 12:
-        ampm = calendar.getPM()
+        ampm = calendar.pm
     else:
-        ampm = calendar.getAM()
+        ampm = calendar.am
     return {
         ('a', 1): ampm,
         ('G', 1): 'AD',
@@ -500,14 +500,14 @@ def buildDateTimeInfo(dt, calendar):
         ('y', 4): str(dt.year),
         ('M', 1): str(dt.month),
         ('M', 2): "%.2i" %dt.month,
-        ('M', 3): calendar.getMonth(dt.month)[1],
-        ('M', 4): calendar.getMonth(dt.month)[0],
+        ('M', 3): calendar.months[dt.month][1],
+        ('M', 4): calendar.months[dt.month][0],
         ('d', 1): str(dt.day),
         ('d', 2): "%.2i" %dt.day,
         ('E', 1): str(dt.weekday),
         ('E', 2): "%.2i" %dt.weekday(),
-        ('E', 3): calendar.getWeekday((dt.weekday()+2)%7)[1],
-        ('E', 4): calendar.getWeekday((dt.weekday()+2)%7)[0],
+        ('E', 3): calendar.weekdays[(dt.weekday()+2)%7][1],
+        ('E', 4): calendar.weekdays[(dt.weekday()+2)%7][0],
         ('D', 1): dt.strftime('%j'),
         ('w', 1): dt.strftime('%W'),
         ('w', 2): dt.strftime('%.2W'),
