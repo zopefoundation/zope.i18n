@@ -36,7 +36,7 @@ class LocaleProvider(object):
         self._locale_dir = locale_dir
 
     def loadLocale(self, language=None, country=None, variant=None):
-        "See ZopeProducts.LocaleProvider.interfaces.ILocaleProvider"
+        """See zope.i18n.interfaces.locales.ILocaleProvider"""
         # Creating the filename
         if language == None and country == None and variant == None:
             filename = 'root.xml'
@@ -64,7 +64,7 @@ class LocaleProvider(object):
         self._locales[(language, country, variant)] = locale
 
     def getLocale(self, language=None, country=None, variant=None):
-        "See ZopeProducts.LocaleProvider.interfaces.ILocaleProvider"
+        """See zope.i18n.interfaces.locales.ILocaleProvider"""
         # We want to be liberal in what we accept, but the standard is lower
         # case language codes, upper case country codes, and upper case
         # variants, so coerce case here.
