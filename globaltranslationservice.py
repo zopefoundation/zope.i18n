@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.7 2003/04/11 13:20:13 mgedmin Exp $
+$Id: globaltranslationservice.py,v 1.8 2003/04/15 21:16:10 bwarsaw Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -73,9 +73,11 @@ class GlobalTranslationService(SimpleTranslationService):
             langs = [m[0] for m in self._catalogs.keys()]
             target_language = negotiator.getLanguage(langs, context)
 
-        # Try to get domain from msgid.
+        # MessageID attributes override arguments
         if isinstance(msgid, MessageID):
             domain = msgid.domain
+            mapping = msgid.mapping
+            default = msgid.default
 
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get((target_language, domain))
