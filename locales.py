@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProdiver Implmentation.
 
-$Id: locales.py,v 1.2 2003/01/06 16:35:11 fdrake Exp $
+$Id: locales.py,v 1.3 2003/01/09 14:13:15 jim Exp $
 """
 import time, os
 import datetime
@@ -273,146 +273,7 @@ class ICULocaleCalendar:
                 return item[0]
 
     def setWeekday(self, id, name, abbr):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._weekdays[id] = (name, abbr)
-
-    def getWeekday(self, id):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._weekdays[id]
-
-    def getWeekdayNames(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        names = []
-        for id in range(1, 8):
-            names.append(self._weekdays.get(id, (None, None))[0])
-        return names
-
-    def getWeekdayIdFromName(self, name):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        for item in self._weekdays.items():
-            if item[1][0] == name:
-                return item[0]
-
-    def getWeekdayAbbr(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        abbrs = []
-        for id in range(1, 8):
-            abbrs.append(self._weekdays.get(id, (None, None))[1])
-        return abbrs
-
-    def getWeekdayIdFromAbbr(self, abbr):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        for item in self._weekdays.items():
-            if item[1][1] == abbr:
-                return item[0]
-
-    def setEra(self, id, name):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._eras[id] = name
-
-    def getEra(self, id):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._eras[id]
-
-    def setAM(self, text):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._am = text
-
-    def getAM(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._am
-
-    def setPM(self, text):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._pm = text
-
-    def getPM(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._pm
-
-    def setPatternCharacters(self, chars):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._pattern_chars = chars
-
-    def getPatternCharacters(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._pattern_chars
-
-    def setTimePattern(self, type, pattern):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._time_patterns[type] = pattern
-
-    def getTimePattern(self, type):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._time_patterns[type]        
-
-    def setDatePattern(self, name, pattern):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._date_patterns[name] = pattern
-
-    def getDatePattern(self, name):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._date_patterns[name]        
-
-    def setDateTimePattern(self, pattern):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        self._datetime_pattern = pattern
-
-    def getDateTimePattern(self):
-        "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._datetime_pattern
-    
-
-class ICULocaleNumberFormat:
-    __doc__ = ILocaleNumberFormat.__doc__
-
-    __implements__ = ILocaleNumberFormat
-
-    def __init__(self, klass):
-        """Initialize object."""
-        self.klass = klass
-        self._patterns = {}
-        self._symbols = {}
-
-    def setPattern(self, name, pattern):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        self._patterns[name] = pattern
-
-    def getPattern(self, name):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._patterns[name]
-
-    def getAllPatternIds(self):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._patterns.keys()
-
-    def setSymbol(self, name, symbol):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        self._symbols[name] = symbol
-
-    def getSymbol(self, name):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._symbols[name]
-
-    def getAllSymbolIds(self):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._symbols.keys()
-
-    def getSymbolMap(self):
-        "See zope.i18n.interfaces.ILocaleNumberFormat"
-        return self._symbols
-
-
-class ICULocaleCurrency:
-    __doc__ = ILocaleCurrency.__doc__
-
-    __implements__ = ILocaleCurrency
-
-    def __init__(self, id):
-        """Initialize object."""
-        self.id = id
-        self._symbol = None
-        self._name = None
+        "See zope.i18n.i
         self._decimal = None
         self._pattern = None
 
