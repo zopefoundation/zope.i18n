@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.17 2003/08/12 19:11:11 srichter Exp $
+$Id: interfaces.py,v 1.18 2003/09/16 22:06:42 srichter Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -535,8 +535,11 @@ class ILocale(Interface):
 
     def getNumberFormatter(name):
         """Get the NumberFormat object called 'name'. The following names are
-        recognized: decimal, percent, scientific, currency."""
+        recognized: decimal, percent, scientific."""
 
+    def getCurrencyFormatter(name=None):
+        """Get a specific currecny formatter object. If name is None, choose
+        the default currency formatter."""
 
 
 class IFormat(Interface):

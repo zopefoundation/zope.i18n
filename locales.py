@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.15 2003/07/26 13:11:14 srichter Exp $
+$Id: locales.py,v 1.16 2003/09/16 22:06:42 srichter Exp $
 """
 import os
 import datetime
@@ -461,10 +461,35 @@ class Locale:
 
         return NumberFormat(pattern, symbols)
 
-    def getDateFormat(self, name):
-        """Get the DateFormat object called 'name'. The following names are
-        recognized: full, long, medium, short."""
-        raise NotImplementedError
+
+    def getCurrencyFormatter(self, name=None):
+        "See ZopeProducts.LocaleProvider.interfaces.ILocale"
+        if name is not None:
+            try:
+                currency = self.currencies[name]
+            except (AttributeError, KeyError):
+                currency = None
+        else:
+            currency = self.getDefaultCurrency()
+
+        if currency is None:
+            return self._getNextLocale().getCurrencyFormatter(name)
+
+        symbols = {}
+        for id in ((None, None, None),
+                   (self.id.language, None, None),
+                   (self.id.language, self.id.country, None),
+                   (self.id.language, self.id.country,
+                    self.id.variant)):
+            try:
+                format = locales.getLocale(*id).getDefaultNumberFormat()
+                symbols.update(format.symbols)
+            except (AttributeError, KeyError):
+                pass # Locale has no number format information
+        if currency.decimal:
+            symbols['decimal'] = currency.decimal
+
+        return NumberFormat(currency.pattern, symbols)
 
 
 class XMLLocaleFactory:
