@@ -61,5 +61,5 @@ class SimpleTranslationDomain:
         # value
         text = self.messages.get((target_language, msgid))
         if text is None:
-	    text = default
+            text = default
         return interpolate(text, mapping)
