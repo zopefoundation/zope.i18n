@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.7 2003/03/29 00:06:26 jim Exp $
+$Id: test_globaltranslationservice.py,v 1.8 2003/04/03 20:20:34 fdrake Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
@@ -113,6 +113,23 @@ class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
         context = Environment()
         eq(translate('default', 'short_greeting', context=context),
            u'Hello!')
+
+    def testInterpolationWithoutTranslation(self):
+        translate = self._service.translate
+        self.assertEqual(translate("default", "42-not-there",
+                                   target_language="en",
+                                   default="this ${that} the other",
+                                   mapping={"that": "THAT"}),
+                         "this THAT the other")
+        self.assertEqual(translate("no-such-domain", "42-not-there",
+                                   target_language="en",
+                                   default="this ${that} the other",
+                                   mapping={"that": "THAT"}),
+                         "this THAT the other")
+        self.assertEqual(translate("no-such-domain", "42-not-there",
+                                   target_language="en",
+                                   mapping={"that": "THAT"}),
+                         None)
 
 
 def test_suite():
