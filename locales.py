@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.12 2003/03/25 19:00:35 jim Exp $
+$Id: locales.py,v 1.13 2003/04/10 06:17:00 srichter Exp $
 """
 import os
 import datetime
@@ -410,6 +410,8 @@ class Locale:
             pattern = self.getDefaultCalendar().timePatterns[name]
         except (AttributeError, KeyError):
             return self._getNextLocale().getTimeFormatter(name)
+        if not pattern:
+            return self._getNextLocale().getTimeFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
 
     def getDateFormatter(self, name):
@@ -418,6 +420,8 @@ class Locale:
             pattern = self.getDefaultCalendar().datePatterns[name]
         except (AttributeError, KeyError):
             return self._getNextLocale().getDateFormatter(name)
+        if not pattern:
+            return self._getNextLocale().getDateFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
 
     def getDateTimeFormatter(self, name):
@@ -425,6 +429,8 @@ class Locale:
         try:
             pattern = self.getDefaultCalendar().datetimePattern
         except (AttributeError, KeyError):
+            return self._getNextLocale().getDateTimeFormatter(name)
+        if not pattern:
             return self._getNextLocale().getDateTimeFormatter(name)
         date_pat = self.getDateFormatter(name).getPattern()
         time_pat = self.getTimeFormatter(name).getPattern()
@@ -437,6 +443,8 @@ class Locale:
         try:
             pattern = self.getDefaultNumberFormat().patterns[name]
         except (AttributeError, KeyError):
+            return self._getNextLocale().getNumberFormatter(name)
+        if not pattern:
             return self._getNextLocale().getNumberFormatter(name)
         symbols = {}
         for id in ((None, None, None),
