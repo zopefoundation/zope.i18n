@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.8 2003/03/25 20:21:28 bwarsaw Exp $
+$Id: interfaces.py,v 1.9 2003/03/25 23:25:14 bwarsaw Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -36,7 +36,7 @@ class II18nAware(Interface):
         """Find all the languages that are available."""
 
 
-class IReadMessageCatalog(Interface):
+class IMessageCatalog(Interface):
     """A catalog (mapping) of message ids to message text strings.
 
     This interface provides a method for translating a message or message id,
@@ -86,43 +86,7 @@ class IReadMessageCatalog(Interface):
         """
 
 
-class IWriteMessageCatalog(Interface):
-    """If this interfaces is implemented by a message catalog, then we will be
-    able to update our messages.
-
-    Note that not all methods here require write access, but they should
-    not be required for an IReadMEssageCatalog and are used for editing
-    only. Therefore this is the more suitable interface to put them.
-    """
-
-    def getFullMessage(msgid):
-        """Get the message data and meta data as a nice dictionary. More
-        advanced implementation might choose to return an object with
-        the data, but the object should then implement IEnumerableMapping.
-
-        An exception is raised if the message id is not found.
-        """
-
-    def setMessage(msgid, message, mod_time=None):
-        """Set a message to the catalog. If mod_time is None use the current
-           time instead as modification time."""
-
-    def deleteMessage(msgid):
-        """Delete a message from the catalog."""
-
-    def getMessageIds():
-        """Get a list of all the message ids."""
-
-    def getMessages():
-        """Get a list of all the messages."""
-
-
-class IMessageCatalog(IReadMessageCatalog, IWriteMessageCatalog):
-    """Most message catalogs should support this interface.
-    """
-
-
-class IReadTranslationService(Interface):
+class ITranslationService(Interface):
     """The Translation Service
 
     This interface provides methods for translating text, including text with
@@ -176,32 +140,6 @@ class IReadTranslationService(Interface):
         the simplifications.
         """
 
-    def getDomain(domain):
-        """Get the domain for the passed domain name.
-
-        The domain supports the IDomain interface
-        """
-
-
-class IDomain(Interface):
-    """A translation domain.
-
-    Since it is often tedious to always specify a domain and a place for a
-    particular translation, the idea of a Domain object was created, which
-    allows to save the place and domain for a set of translations.
-
-    Usage:
-
-        domain = translationService.getDomain('domain')
-        domain.translate('MyProductTitle', context)
-    """
-
-    def translate(msgid, mapping=None, context=None, target_language=None):
-        """Translate the source msgid to its appropriate language.
-
-        See ITranslationService for details.
-        """
-
 
 class ITranslator(Interface):
     """A collaborative object which contains the domain, context, and locale.
@@ -215,111 +153,6 @@ class ITranslator(Interface):
 
         See ITranslationService for details.
         """
-
-
-class IWriteTranslationService(Interface):
-    """This interface describes the methods that are necessary for an editable
-    Translation Service to work.
-
-    For a translation service to be editable its 'messages' have to support
-    the following information: id, string, domain, language, date
-
-    Most of the information will be natural, since they are required by the
-    translation service, but especially the date is not a necessary info
-    (in fact, it is meta data)
-    """
-
-    def getMessageIdsOfDomain(domain, filter='%'):
-        """Get all the message ids of a particular domain."""
-
-    def getMessagesOfDomain(domain):
-        """Get all the messages of a particular domain."""
-
-    def getMessage(msgid, domain, langauge):
-        """Get the full message of a particular domain and language."""
-
-    def getAllLanguages():
-        """Find all the languages that are available"""
-
-    def getAllDomains():
-        """Find all available domains."""
-
-    def getAvailableLanguages(domain):
-        """Find all the languages that are available for this domain"""
-
-    def getAvailableDomains(language):
-        """Find all available domains."""
-
-    def addMessage(domain, msgid, msg, language, mod_time=None):
-        """Add a message to the translation service.
-
-        If mod_time is None, then the current time should be inserted.
-        """
-
-    def updateMessage(domain, msgid, msg, language, mod_time=None):
-        """Update a message in the translation service.
-
-        If mod_time is None, then the current time should be inserted.
-        """
-
-    def deleteMessage(domain, msgid, language):
-        """Delete a messahe in the translation service."""
-
-    def addLanguage(language):
-        """Add Language to Translation Service"""
-
-    def addDomain(domain):
-        """Add Domain to Translation Service"""
-
-    def deleteLanguage(language):
-        """Delete a Domain from the Translation Service."""
-
-    def deleteDomain(domain):
-        """Delete a Domain from the Translation Service."""
-
-
-class ISyncTranslationService(Interface):
-    """This interface allows translation services to be synchronized. The
-       following four synchronization states can exist:
-
-       0 - uptodate: The two messages are in sync.
-                Default Action: Do nothing.
-
-       1 - new: The message exists on the foreign TS, but is locally unknown.
-                Default Action: Add the message to the local catalog.
-
-       2 - older: The local version of the message is older than the one on
-                the server.
-                Default Action: Update the local message.
-
-       3 - newer: The local version is newer than the foreign version.
-                Default Action: Do nothing.
-
-       4 - deleted: The message does not exist in the foreign TS.
-                Default Action: Delete local version of message/
-    """
-
-    def getMessagesMapping(domains, languages, foreign_messages):
-        """Creates a mapping of the passed foreign messages and the local ones.
-        Returns a status report in a dictionary with keys of the form
-        (msgid, domain, language) and values being a tuple of:
-
-        foreign_mod_date, local_mod_date
-        """
-
-    def synchronize(messages_mapping):
-        """Update the local message catalogs based on the foreign data.
-        """
-
-
-class ITranslationService(IReadTranslationService,
-                          IWriteTranslationService,
-                          ISyncTranslationService):
-    """This is the common and full-features translation service. Almost all
-    translation service implementations will use this interface.
-
-    An exception to this is the GlobalMessageCatalog as it will be read-only.
-    """
 
 
 class IMessageImportFilter(Interface):

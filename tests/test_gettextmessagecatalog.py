@@ -13,15 +13,14 @@
 ##############################################################################
 """Test a gettext implementation of a Message Catalog.
 
-$Id: test_gettextmessagecatalog.py,v 1.2 2002/12/25 14:13:40 jim Exp $
+$Id: test_gettextmessagecatalog.py,v 1.3 2003/03/25 23:25:15 bwarsaw Exp $
 """
 import unittest, sys, os
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
-from zope.i18n.tests.test_ireadmessagecatalog import TestIReadMessageCatalog
+from zope.i18n.tests.test_imessagecatalog import TestIMessageCatalog
 
 
-class GettextMessageCatalogTest(TestIReadMessageCatalog):
-
+class GettextMessageCatalogTest(TestIMessageCatalog):
 
     def _getMessageCatalog(self):
         from zope.i18n import tests

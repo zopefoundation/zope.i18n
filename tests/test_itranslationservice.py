@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_ireadtranslationservice.py,v 1.3 2002/12/31 02:52:15 jim Exp $
+$Id: test_itranslationservice.py,v 1.1 2003/03/25 23:25:15 bwarsaw Exp $
 """
 
 import unittest
@@ -25,8 +25,7 @@ from zope.app.component.metaconfigure import provideService, managerHandler
 from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
-from zope.i18n.interfaces import IReadTranslationService
-from zope.i18n.interfaces import IDomain
+from zope.i18n.interfaces import ITranslationService
 
 
 class Environment:
@@ -41,7 +40,7 @@ class Environment:
 
 
 
-class TestIReadTranslationService(PlacelessSetup, unittest.TestCase):
+class TestITranslationService(PlacelessSetup, unittest.TestCase):
 
     # This should be overwritten by every clas that inherits this test
     def _getTranslationService(self):
@@ -50,7 +49,7 @@ class TestIReadTranslationService(PlacelessSetup, unittest.TestCase):
     def setUp(self):
         PlacelessSetup.setUp(self)
         self._service = self._getTranslationService()
-        assert verifyObject(IReadTranslationService, self._service)
+        assert verifyObject(ITranslationService, self._service)
         # Setup the negotiator service registry entry
         managerHandler('defineService', 'LanguageNegotiation', INegotiator)
         provideService('LanguageNegotiation', negotiator, 'zope.Public')
@@ -97,22 +96,6 @@ class TestIReadTranslationService(PlacelessSetup, unittest.TestCase):
         eq(translate('default', 'greeting', mapping={'name': 'Stephan'},
                      target_language='de'),
            'Hallo Stephan, wie geht es Dir?')
-
-    def testGetDomain(self):
-        service = self._service
-        domain = service.getDomain('default')
-        self.assertEqual(verifyObject(IDomain, domain), 1)
-
-    def testDomainTranslate(self):
-        service = self._service
-        domain = service.getDomain('default')
-        translate = domain.translate
-        eq = self.assertEqual
-        # target language argument
-        eq(translate('short_greeting', target_language='de'), 'Hallo!')
-        # context argument
-        context = Environment(('de', 'en'))
-        eq(translate('short_greeting', context=context), 'Hallo!')
 
     def testNoTranslation(self):
         translate = self._service.translate

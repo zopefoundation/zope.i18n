@@ -13,20 +13,20 @@
 ##############################################################################
 """This module tests the ITranslator / Translator
 
-$Id: test_translator.py,v 1.2 2003/03/25 21:05:43 jim Exp $
+$Id: test_translator.py,v 1.3 2003/03/25 23:25:15 bwarsaw Exp $
 """
 
 import os
 import unittest
 
-from zope.i18n.globaltranslationservice import translationService
-from zope.i18n.interfaces import IReadTranslationService
+from zope.i18n.globaltranslationservice import GlobalTranslationService
+from zope.i18n.interfaces import ITranslationService
 from zope.i18n.interfaces import ILocaleIdentity, ILocale
 from zope.i18n.translate import Translator
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_globaltranslationservice import testdir
 from zope.app.tests.placelesssetup import PlacelessSetup
-from zope.component import getServiceManager
+from zope.component import getService
 
 
 class TranslatorTests(unittest.TestCase, PlacelessSetup):
@@ -36,9 +36,9 @@ class TranslatorTests(unittest.TestCase, PlacelessSetup):
         # Create a global translation service, initialized with a bunch of
         # catalogs (stolen from test_globaltranslationservice.py).
         path = testdir()
-        service = translationService
         de_catalog = GettextMessageCatalog('de', 'default',
                                            os.path.join(path, 'de-default.mo'))
+        service = getService(None, 'Translation')
         service.addCatalog(de_catalog)
 
         # Create a stub ILocaleIdentity

@@ -13,13 +13,13 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.4 2003/03/25 20:21:28 bwarsaw Exp $
+$Id: test_globaltranslationservice.py,v 1.5 2003/03/25 23:25:15 bwarsaw Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
-from zope.i18n.tests.test_ireadtranslationservice \
-     import TestIReadTranslationService, Environment
+from zope.i18n.tests.test_itranslationservice import \
+     TestITranslationService, Environment
 from zope.i18n import MessageIDFactory
 
 def testdir():
@@ -27,7 +27,7 @@ def testdir():
     return os.path.dirname(tests.__file__)
 
 
-class TestGlobalTranslationService(TestIReadTranslationService):
+class TestGlobalTranslationService(TestITranslationService):
 
     def _getTranslationService(self):
         service = GlobalTranslationService('default')
@@ -77,14 +77,6 @@ class TestGlobalTranslationService(TestIReadTranslationService):
         msgid = MessageIDFactory('alt')('short_greeting')
         self.assertEqual(translate('default', msgid,
                                    target_language='en'),
-                         u'Hey!')
-
-    def testMessageIDTranslate_w_Domain(self):
-        translate = self._service.getDomain('default').translate
-        self.assertEqual(translate(u'short_greeting', target_language='en'),
-                         u'Hello!')
-        msgid = MessageIDFactory('alt')('short_greeting')
-        self.assertEqual(translate(msgid, target_language='en'),
                          u'Hey!')
 
 

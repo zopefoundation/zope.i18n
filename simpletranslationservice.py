@@ -13,14 +13,13 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.3 2002/12/31 02:52:13 jim Exp $
+$Id: simpletranslationservice.py,v 1.4 2003/03/25 23:25:14 bwarsaw Exp $
 """
 
 import re
 from types import DictType
 from zope.component import getService
 from zope.i18n.interfaces import ITranslationService
-from zope.i18n.domain import Domain
 
 
 # Setting up some regular expressions for finding interpolation variables in
@@ -74,10 +73,6 @@ class SimpleTranslationService:
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)
 
-
-    def getDomain(self, domain):
-        '''See interface ITranslationService'''
-        return Domain(domain, self)
 
     def interpolate(self, text, mapping):
         """Insert the data passed from mapping into the text"""

@@ -13,17 +13,17 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.3 2002/12/31 02:52:13 jim Exp $
+$Id: gettextmessagecatalog.py,v 1.4 2003/03/25 23:25:14 bwarsaw Exp $
 """
 
 from gettext import GNUTranslations
-from zope.i18n.interfaces import IReadMessageCatalog
+from zope.i18n.interfaces import IMessageCatalog
 
 
 class GettextMessageCatalog:
     """ """
 
-    __implements__ =  IReadMessageCatalog
+    __implements__ =  IMessageCatalog
 
 
     def __init__(self, language, domain, path_to_file):
@@ -44,7 +44,7 @@ class GettextMessageCatalog:
 
 
     def getMessage(self, id):
-        'See IReadMessageCatalog'
+        'See IMessageCatalog'
         self._prepareTranslations()
         msg = self.__translation_object.ugettext(id)
         if msg == id:
@@ -52,7 +52,7 @@ class GettextMessageCatalog:
         return msg
 
     def queryMessage(self, id, default=None):
-        'See IReadMessageCatalog'
+        'See IMessageCatalog'
         self._prepareTranslations()
         text = self.__translation_object.ugettext(id)
         if text != id:
@@ -60,13 +60,13 @@ class GettextMessageCatalog:
         return default
 
     def getLanguage(self):
-        'See IReadMessageCatalog'
+        'See IMessageCatalog'
         return self._language
 
     def getDomain(self):
-        'See IReadMessageCatalog'
+        'See IMessageCatalog'
         return self._domain
 
     def getIdentifier(self):
-        'See IReadMessageCatalog'
+        'See IMessageCatalog'
         return self._path_to_file
