@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: testTranslate.py,v 1.1 2002/06/12 18:38:57 srichter Exp $
+$Id: testTranslate.py,v 1.2 2002/06/12 20:59:34 bwarsaw Exp $
 """
 
 import unittest
@@ -75,7 +75,7 @@ class TranslateTest(unittest.TestCase):
 
 
     def testGetMessages(self):
-        ids = map(lambda m: m[0], self._view.getMessages())
+        ids = [m[0] for m in self._view.getMessages()]
         ids.sort()
         self.assertEqual(ids, ['greeting', 'short_greeting'])
 
