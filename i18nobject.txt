@@ -54,8 +54,8 @@ subobject.
 -------------------------
 
 This object will basically provide an internationalized version of
-Zope.App.OFS.AttributeAnnotations. which will be accomplished in a
-similar manner as the `I18nObject`.
+zope.app.annotation.attribute.AttributeAnnotations, which will be
+accomplished in a similar manner as the `I18nObject`.
 
 
 Open Issues
