@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProdiver Implmentation.
 
-$Id: locales.py,v 1.4 2003/01/09 14:33:29 jim Exp $
+$Id: locales.py,v 1.5 2003/01/09 19:19:38 srichter Exp $
 """
 import time, os
 import datetime
@@ -96,10 +96,7 @@ class LocaleProvider:
                   'The desired locale is not available.\nPath: %s' %path
             
         # Let's get it!
-        org = os.curdir
-        os.chdir(LOCALEDIR)
         locale = ICUXMLLocaleFactory(path)()
-        os.chdir(org)
         self._locales[(language, country, variant)] = locale
 
 

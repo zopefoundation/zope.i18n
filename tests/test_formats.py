@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.3 2003/01/09 14:33:30 jim Exp $
+$Id: test_formats.py,v 1.4 2003/01/09 19:20:23 srichter Exp $
 """
 import os
 import datetime
@@ -131,11 +131,8 @@ class TestBuildDateTimeParseInfo(TestCase):
     """
 
     def setUp(self):
-        org = os.curdir
-        os.chdir(os.path.join(testdir(), 'xmllocales'))
         path = os.path.join(testdir(), 'xmllocales', 'de.xml')
         self.locale = ICUXMLLocaleFactory(path)()
-        os.chdir(org)
         self.info = buildDateTimeParseInfo(self.locale.getDefaultCalendar())
 
     def testEra(self):
@@ -167,11 +164,8 @@ class TestDateTimeFormat(TestCase):
     interface.""" 
 
     def setUp(self):
-        org = os.curdir
-        os.chdir(os.path.join(testdir(), 'xmllocales'))
         path = os.path.join(testdir(), 'xmllocales', 'de.xml')
         locale = ICUXMLLocaleFactory(path)()
-        os.chdir(org)
         self.format = DateTimeFormat(calendar=locale.getDefaultCalendar())
 
     def testInterfaceConformity(self):
@@ -465,11 +459,8 @@ class TestNumberFormat(TestCase):
     """Test the functionality of an implmentation of the NumberFormat.""" 
 
     def setUp(self):
-        org = os.curdir
-        os.chdir(os.path.join(testdir(), 'xmllocales'))
         path = os.path.join(testdir(), 'xmllocales', 'de_DE.xml')
         locale = ICUXMLLocaleFactory(path)()
-        os.chdir(org)
         self.format = NumberFormat(
             symbols=locale.getDefaultNumberFormat().getSymbolMap())
 

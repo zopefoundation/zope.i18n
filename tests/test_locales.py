@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.1 2003/01/05 20:20:21 srichter Exp $
+$Id: test_locales.py,v 1.2 2003/01/09 19:20:23 srichter Exp $
 """
 import os, sys
 import datetime
@@ -386,8 +386,6 @@ class TestICULocaleCurrency(TestCase):
 class TestICUXMLLocaleFactory(TestCase):
 
     def setUp(self):
-        org = os.curdir
-        os.chdir(os.path.join(testdir(), 'xmllocales'))
         self.factory0 = ICUXMLLocaleFactory(
             os.path.join(testdir(), 'xmllocales', 'root.xml'))
         self.factory = ICUXMLLocaleFactory(
@@ -396,7 +394,6 @@ class TestICUXMLLocaleFactory(TestCase):
             os.path.join(testdir(), 'xmllocales', 'de_DE.xml'))
         self.factory3 = ICUXMLLocaleFactory(
             os.path.join(testdir(), 'xmllocales', 'de_DE_PREEURO.xml'))
-        os.chdir(org)
         
     def test_GermanySpecificGermanLocale(self):
         # Well, if the factory can create the Locale we are in good
@@ -503,11 +500,8 @@ class TestILocale(TestCase):
 class TestICULocale(TestILocale):
     
     def _newLocale(self):
-        org = os.curdir
-        os.chdir(os.path.join(testdir(), 'xmllocales'))
         path = os.path.join(testdir(), 'xmllocales', 'root.xml')
         localeFactory = ICUXMLLocaleFactory(path)
-        os.chdir(org)
         return localeFactory()
 
     def testId(self):

@@ -13,7 +13,7 @@
 ##############################################################################
 """Testing all XML Locale functionality.
 
-$Id: test_xmllocales.py,v 1.3 2003/01/06 12:51:07 srichter Exp $
+$Id: test_xmllocales.py,v 1.4 2003/01/09 19:20:23 srichter Exp $
 """
 import os
 from unittest import TestCase, TestSuite, makeSuite
@@ -57,12 +57,15 @@ def test_suite():
     suite = TestSuite()
     from zope import i18n
     locale_dir = os.path.join(os.path.dirname(i18n.__file__), 'locales')
-    org = os.curdir
-    os.chdir(locale_dir)
     for file in filter(lambda f: f.endswith('.xml'),
                        os.listdir(locale_dir))[:]:
         path = os.path.join(locale_dir, file)
         case = LocaleXMLFileTestCase(path)
         suite.addTest(case)
-    os.chdir(org)
     return suite
+
+# Note: These tests are disabled, just because they take a long time to run.
+#       You should run these tests if you update the aprsing code and/or
+#       update the Locale XML Files.
+def test_suite():
+    return TestSuite()
