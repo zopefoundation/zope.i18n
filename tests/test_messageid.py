@@ -13,35 +13,16 @@
 ##############################################################################
 """Message ID tests.
 
-$Id: test_messageid.py,v 1.4 2003/08/18 19:20:23 srichter Exp $
+$Id: test_messageid.py,v 1.5 2004/02/20 09:24:38 philikon Exp $
 """
 
 import unittest
-from zope.i18n.messageid import MessageIDFactory, MessageID
-
-
-class TestMessageID(unittest.TestCase):
-    def testMessageIDFactory(self):
-        eq = self.assertEqual
-        fact = MessageIDFactory('test')
-        id = fact(u'this is a test')
-        self.failUnless(isinstance(id, MessageID))
-        self.failUnless(isinstance(id, unicode))
-        eq(id.domain, 'test')
-        eq(id.default, u'this is a test')
-        id.default = u'blah'
-        eq(id.default, u'blah')
-        id = fact(u'test-id', 'default test')
-        eq(id, u'test-id')
-        eq(id.default, u'default test')
-        eq(id.domain, 'test')
-
+from zope.testing.doctestunit import DocTestSuite
 
 def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestMessageID))
-    return suite
-
+    return unittest.TestSuite((
+        DocTestSuite('zope.i18n.messageid'),
+        ))
 
 if __name__ == '__main__':
     unittest.main()

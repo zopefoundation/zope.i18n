@@ -13,7 +13,7 @@
 ##############################################################################
 """Message IDs.
 
-$Id: messageid.py,v 1.8 2003/12/16 14:54:01 jim Exp $
+$Id: messageid.py,v 1.9 2004/02/20 09:24:38 philikon Exp $
 """
 
 class MessageID(unicode):
@@ -28,6 +28,44 @@ class MessageID(unicode):
     MessageID objects also have a mapping attribute which must be set after
     construction of the object.  This is used when translating and
     substituting variables.
+
+    To instanciate MessageIDs, it is recommended to use MessageIDFactory:
+
+    >>> fact = MessageIDFactory('test')
+
+    Now we can use the factory to make MessageIDs. Note that MessageID
+    is a subclass of unicode:
+
+    >>> id = fact(u'this is a test')
+    >>> isinstance(id, MessageID)
+    True
+    >>> isinstance(id, unicode)
+    True
+
+    Additional parameters, such as the i18n domain and the default
+    text are available through attributes:
+
+    >>> id.domain
+    'test'
+    >>> id.default
+    u'this is a test'
+
+    You can also reset the default text:
+
+    >>> id.default = u'blah'
+    >>> id.default
+    u'blah'
+    
+    It is quite common to pass an abstract identifier as message id
+    and then a default text:
+
+    >>> id = fact(u'test-id', 'default test')
+    >>> id
+    u'test-id'
+    >>> id.default
+    u'default test'
+    >>> id.domain
+    'test'
     """
 
     __slots__ = ('domain', 'default', 'mapping')
