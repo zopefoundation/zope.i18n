@@ -14,7 +14,7 @@
 """
 This module handles the :startup directives. 
 
-$Id: metaConfigure.py,v 1.1 2002/06/12 18:38:56 srichter Exp $
+$Id: metaConfigure.py,v 1.2 2002/06/12 19:11:49 bwarsaw Exp $
 """
 
 import os
@@ -30,9 +30,8 @@ def registerTranslations(_context, directory):
     path = os.path.normpath(path)
 
     for language in os.listdir(path):
-        lang_path = os.path.join(path, language)
-        if os.path.isdir(lang_path):
-            lc_messages_path = os.path.join(lang_path, 'LC_MESSAGES')
+        lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
+        if os.path.isdir(lc_messages_path):
             for domain_file in os.listdir(lc_messages_path):
                 if domain_file.endswith('.mo'):
                     domain_path = os.path.join(lc_messages_path, domain_file)
