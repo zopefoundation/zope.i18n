@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: __init__.py,v 1.1 2004/02/05 22:52:23 srichter Exp $
+$Id: __init__.py,v 1.2 2004/03/02 14:26:45 srichter Exp $
 """
 import os
 from datetime import datetime, date
@@ -482,16 +482,11 @@ class LocaleDates(AttributeInheritance):
 
     def getFormatter(self, category, length=None, name=None,
                      calendar=u'gregorian'):
-        """See zope.i18n.interfaces.locales.ILocaleDates
-
-        Examples::
-
-          XXX
-
-        """
+        """See zope.i18n.interfaces.locales.ILocaleDates"""
         assert category in (u'date', u'time', u'dateTime')
-        assert calendar in (u'gregorian', u'arabic', u'chinese', u'civil-arabic',
-                            u'hebrew', u'japanese', u'thai-buddhist')
+        assert calendar in (u'gregorian', u'arabic', u'chinese',
+                            u'civil-arabic', u'hebrew', u'japanese',
+                            u'thai-buddhist')
         assert length in (u'short', u'medium', u'long', u'full', None)
 
         cal = self.calendars[calendar]
