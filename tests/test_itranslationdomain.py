@@ -27,7 +27,7 @@ from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
 
-class Environment:
+class Environment(object):
 
     implements(IUserPreferredLanguages)
 

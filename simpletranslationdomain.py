@@ -20,7 +20,7 @@ from zope.component import getUtility
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 from zope.i18n import interpolate
 
-class SimpleTranslationDomain:
+class SimpleTranslationDomain(object):
     """This is the simplest implementation of the ITranslationDomain I
        could come up with.
 

@@ -23,7 +23,7 @@ from zope.i18n.locales import LocaleCalendar, LocaleCurrency, LocaleNumbers
 from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
 from zope.i18n.locales.inheritance import InheritingDictionary
 
-class LocaleFactory:
+class LocaleFactory(object):
     """This class creates a Locale object from an ICU XML file."""
 
     def __init__(self, path):
