@@ -28,11 +28,9 @@
 
 <!-- Register the Translation Service as a content object -->
 <content class=".TranslationService.">
-    <factory
-        id="TranslationService"
-        permission="Zope.ManageServices"
-        title="Translations"
-        description="A Persistent Translation Service for TTW development" />
+
+   <factory id="TranslationService" permission="Zope.ManageServices" />
+
    <require permission="Zope.Public"
                      interface="Zope.I18n.ITranslationService." 
                      />
@@ -42,6 +40,9 @@
                      />
 </content>
 
+<browser:menuItem menu="add_service" for="Zope.App.OFS.Container.IAdding."
+     action="TranslationService"  title="Translation Service"
+     description="A Persistent Translation Service for TTW development" />
 
 <serviceType id="GlobalTranslationService"
              interface=".ITranslationService." />
