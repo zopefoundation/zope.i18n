@@ -73,7 +73,7 @@ class LocaleIdentity(object):
     This class does not have to deal with inheritance.
 
     Examples::
-    
+
       >>> id = LocaleIdentity('en')
       >>> id
       <LocaleIdentity (en, None, None, None)>
@@ -165,7 +165,7 @@ class LocaleDisplayNames(AttributeInheritance):
       >>> locale.displayNames = LocaleDisplayNames()
       >>> locale.displayNames.keys = ['fu', 'bahr']
 
-      Here you can see the inheritance in action 
+      Here you can see the inheritance in action
 
       >>> locale.displayNames.languages
       ['en', 'de']
@@ -222,7 +222,7 @@ class LocaleFormat(object):
 class LocaleFormatLength(AttributeInheritance):
     """Specifies one of the format lengths of a specific quantity, like
     numbers, dates, times and datetimes."""
-    
+
     implements(ILocaleFormatLength)
 
     def __init__(self, type=None):
@@ -242,7 +242,7 @@ class LocaleCalendar(AttributeInheritance):
     Example::
 
       Even though the 'Locale' object has no 'calendar' attribute for real, it
-      helps us here to make the example simpler. 
+      helps us here to make the example simpler.
 
       >>> from zope.i18n.locales.tests.test_docstrings import \\
       ...     LocaleInheritanceStub
@@ -296,7 +296,7 @@ class LocaleCalendar(AttributeInheritance):
       u'AM'
     """
     implements(ILocaleCalendar)
-    
+
     def __init__(self, type):
         """Initialize the object."""
         self.type = type
@@ -351,7 +351,7 @@ class LocaleCalendar(AttributeInheritance):
     def getFirstWeekDayName(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
         return self.days[dayMapping[self.week['firstDay']]][0]
-        
+
 
 class LocaleDates(AttributeInheritance):
     """Simple ILocaleDates implementation that can inherit data from other
@@ -371,8 +371,8 @@ class LocaleDates(AttributeInheritance):
       >>> cal.week = {'firstDay': 1, 'minDays': 1}
       >>> dates.calendars = {'gregorian': cal}
 
-      Setting up and accessing date format through a specific length
-      (very common scenario)
+    Setting up and accessing date format through a specific length
+    (very common scenario)
 
       >>> fulllength = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -395,7 +395,7 @@ class LocaleDates(AttributeInheritance):
       >>> formatter.format(date(2004, 02, 04))
       u'Mittwoch, 4. Februar 2004'
 
-      Let's also test the time formatter
+    Let's also test the time formatter
 
       >>> fulllength = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -418,8 +418,8 @@ class LocaleDates(AttributeInheritance):
       >>> formatter.format(time(12, 15, 00))
       u'12:15 Uhr +000'
 
-      The datetime formatter is a bit special, since it is constructed from
-      the other two:
+    The datetime formatter is a bit special, since it is constructed from
+    the other two:
 
       >>> length = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -435,18 +435,34 @@ class LocaleDates(AttributeInheritance):
       >>> formatter.format(datetime(2004, 02, 04, 12, 15, 00))
       u'Mittwoch, 4. Februar 2004 12:15 Uhr +000'
 
-      
+    Finally, we'll test some invalid input:
+
+      >>> dates.getFormatter('timeDate')
+      Traceback (most recent call last):
+      ValueError: Invalid category: timeDate
+
+      >>> dates.getFormatter('date', length='superlong')
+      Traceback (most recent call last):
+      ValueError: Invalid format length: superlong
+
+      >>> dates.getFormatter('date', calendar='irish-catholic')
+      Traceback (most recent call last):
+      ValueError: Invalid calendar: irish-catholic
+
     """
     implements(ILocaleDates)
 
     def getFormatter(self, category, length=None, name=None,
                      calendar=u'gregorian'):
         """See zope.i18n.interfaces.locales.ILocaleDates"""
-        assert category in (u'date', u'time', u'dateTime')
-        assert calendar in (u'gregorian', u'arabic', u'chinese',
+        if category not in (u'date', u'time', u'dateTime'):
+            raise ValueError('Invalid category: %s' % category)
+        if calendar not in (u'gregorian', u'arabic', u'chinese',
                             u'civil-arabic', u'hebrew', u'japanese',
-                            u'thai-buddhist')
-        assert length in (u'short', u'medium', u'long', u'full', None)
+                            u'thai-buddhist'):
+            raise ValueError('Invalid calendar: %s' % calendar)
+        if length not in (u'short', u'medium', u'long', u'full', None):
+            raise ValueError('Invalid format length: %s' % length)
 
         cal = self.calendars[calendar]
 
@@ -459,7 +475,7 @@ class LocaleDates(AttributeInheritance):
 
         # 'datetime' is always a bit special; we often do not have a length
         # specification, but we need it for looking up the date and time
-        # formatters 
+        # formatters
         if category == 'dateTime':
             formatLength = formats.get(length, formats[None])
         else:
@@ -481,7 +497,7 @@ class LocaleDates(AttributeInheritance):
 
         return DateTimeFormat(pattern, cal)
 
-    
+
 class LocaleCurrency(object):
     """Simple implementation of ILocaleCurrency without inheritance support,
     since it is not needed for a single currency."""
@@ -562,7 +578,7 @@ class LocaleNumbers(AttributeInheritance):
       u'123%'
 
       ...using a default name
-      
+
       >>> numbers.percentFormats['long'].default = 'bar'
       >>> formatter = numbers.getFormatter('percent')
       >>> formatter.format(123.45678)
