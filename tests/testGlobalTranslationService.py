@@ -13,36 +13,36 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: testGlobalTranslationService.py,v 1.1 2002/06/12 18:38:58 srichter Exp $
+$Id: testGlobalTranslationService.py,v 1.2 2002/06/12 21:00:12 bwarsaw Exp $
 """
 import unittest, sys, os
 from Zope.I18n.GlobalTranslationService import GlobalTranslationService
 from Zope.I18n.GettextMessageCatalog import GettextMessageCatalog 
 from testITranslationService import TestITranslationService
 
+def testdir():
+    from Zope.I18n import tests
+    return os.path.dirname(tests.__file__)
+
 
 class TestGlobalTranslationService(TestITranslationService):
 
     def _getTranslationService(self):
         service = GlobalTranslationService('default') 
-
-        
-        from Zope.I18n import tests
-        path = os.path.split(tests.__file__)[0]
+        path = testdir()
         en_catalog = GettextMessageCatalog('en', 'default',
                                            os.path.join(path, 'en-default.mo'))
         de_catalog = GettextMessageCatalog('de', 'default',
                                            os.path.join(path, 'de-default.mo'))
-
         service.addCatalog(en_catalog)
         service.addCatalog(de_catalog)
-
         return service
 
 
 def test_suite():
-    loader=unittest.TestLoader()
+    loader = unittest.TestLoader()
     return loader.loadTestsFromTestCase(TestGlobalTranslationService)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     unittest.TextTestRunner().run(test_suite())
