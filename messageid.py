@@ -13,7 +13,7 @@
 ##############################################################################
 """Message IDs.
 
-$Id: messageid.py,v 1.7 2003/08/18 19:20:20 srichter Exp $
+$Id: messageid.py,v 1.8 2003/12/16 14:54:01 jim Exp $
 """
 
 class MessageID(unicode):
@@ -38,7 +38,7 @@ class MessageID(unicode):
         if default is None:
             self.default = ustr
         else:
-            self.default = default
+            self.default = unicode(default)
         self.mapping = {}
         return self
 
