@@ -17,6 +17,7 @@ $Id$
 """
 import re
 import warnings
+from zope.security.proxy import isinstance, removeSecurityProxy
 from zope.component import queryUtility
 from zope.i18nmessageid import MessageIDFactory, MessageID
 from zope.i18n.interfaces import ITranslationDomain
@@ -33,6 +34,7 @@ _get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
 def _translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
 
+    msgid = removeSecurityProxy(msgid)
 
     if isinstance(msgid, MessageID):
         domain = msgid.domain
