@@ -15,8 +15,7 @@
 
 $Id: gettextmessagecatalog.py,v 1.12 2004/03/08 23:35:59 srichter Exp $
 """
-
-from pythonlib.gettext import GNUTranslations
+from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implements
 
