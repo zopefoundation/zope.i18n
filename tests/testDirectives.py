@@ -13,7 +13,7 @@
 ##############################################################################
 """Test the gts ZCML namespace directives.
 
-$Id: testDirectives.py,v 1.2 2002/06/17 18:58:17 bwarsaw Exp $
+$Id: testDirectives.py,v 1.3 2002/06/18 18:23:29 bwarsaw Exp $
 """
 import unittest
 import sys
@@ -23,7 +23,7 @@ from cStringIO import StringIO
 from Zope.Configuration.xmlconfig import xmlconfig, Context
 from Zope.Configuration.Exceptions import ConfigurationError
 from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
-
+from Zope.I18n.GlobalTranslationService import translationService 
 
 import Zope.I18n
 defs_path = os.path.join(os.path.split(Zope.I18n.__file__)[0],
@@ -47,21 +47,28 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
 
     def testRegisterTranslations(self):
-        from Zope.I18n.GlobalTranslationService import translationService 
-             
-        self.assertEqual(translationService._catalogs, {})
-
-        from Zope.I18n import tests
+        eq = self.assertEqual
+        eq(translationService._catalogs, {})
         xmlconfig(StringIO(template % (
             '''
             <gts:registerTranslations directory="./locale" />
             '''
-            )), None, Context([], tests)) 
-
-        path = os.path.join(Context([], tests).path(), 'locale', 'en',
+            )), None, Context([], Zope.I18n.tests)) 
+        path = os.path.join(Context([], Zope.I18n.tests).path(),
+                            'locale', 'en',
                             'LC_MESSAGES', 'Zope-I18n.mo')
-        self.assertEqual(translationService._catalogs,
-                         {('en', 'Zope-I18n'): [unicode(path)]})
+        eq(translationService._catalogs,
+           {('en', 'Zope-I18n'): [unicode(path)]})
+
+    def testDefaultLanguages(self):
+        eq = self.assertEqual
+        eq(translationService._fallbacks, ['en'])
+        xmlconfig(StringIO(template % (
+            '''
+            <gts:defaultLanguages languages="de nl xx" />
+            '''
+            )), None, Context([], Zope.I18n.tests))
+        eq(translationService._fallbacks, ['de', 'nl', 'xx'])
 
 
 def test_suite():
