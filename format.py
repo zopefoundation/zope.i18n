@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.12 2003/09/24 02:57:11 garrett Exp $
+$Id: format.py,v 1.13 2004/02/05 22:52:21 srichter Exp $
 """
 import re
 import math
@@ -89,17 +89,20 @@ class DateTimeFormat(object):
         # Handle months
         if ('M', 3) in bin_pattern:
             abbr = results[bin_pattern.index(('M', 3))]
-            ordered[1] = self.calendar.getMonthIdFromAbbr(abbr)
+            ordered[1] = self.calendar.getMonthTypeFromAbbreviation(abbr)
         if ('M', 4) in bin_pattern:
             name = results[bin_pattern.index(('M', 4))]
-            ordered[1] = self.calendar.getMonthIdFromName(name)
+            ordered[1] = self.calendar.getMonthTypeFromName(name)
         # Handle AM/PM hours
         for length in (1, 2):
             id = ('h', length)
             if id in bin_pattern:
+                hour = int(results[bin_pattern.index(id)])
                 ampm = self.calendar.pm == results[
                     bin_pattern.index(('a', 1))]
-                ordered[3] = (int(results[bin_pattern.index(id)]) + 12*ampm)%24
+                if hour == 12:
+                    ampm = not ampm
+                ordered[3] = (hour + 12*ampm)%24
         # Shortcut for the simple int functions
         dt_fields_map = {'M': 1, 'd': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
         for field in dt_fields_map.keys():
@@ -204,8 +207,10 @@ class NumberFormat(object):
             if bin_pattern[sign][EXPONENTIAL] != '':
                 regex += self.symbols['exponential']
                 min_exp_size = bin_pattern[sign][EXPONENTIAL].count('0')
-                regex += '[%s]?[0-9]{%i,100}' %(self.symbols['minusSign'],
-                                                min_exp_size)
+                pre_symbols = self.symbols['minusSign']
+                if bin_pattern[sign][EXPONENTIAL][0] == '+':
+                    pre_symbols += self.symbols['plusSign']
+                regex += '[%s]?[0-9]{%i,100}' %(pre_symbols, min_exp_size)
             regex +=')'
             if bin_pattern[sign][PADDING3] is not None:
                 regex += '[' + bin_pattern[sign][PADDING3] + ']+'
@@ -270,6 +275,13 @@ class NumberFormat(object):
 
         if bin_pattern[EXPONENTIAL] != '':
             obj_int_frac = str(obj).split('.')
+            # The exponential might have a mandatory sign; remove it from the
+            # bin_pattern and remember the setting
+            exp_bin_pattern = bin_pattern[EXPONENTIAL]
+            plus_sign = u''
+            if exp_bin_pattern.startswith('+'):
+                plus_sign = self.symbols['plusSign']
+                exp_bin_pattern = exp_bin_pattern[1:]
             # We have to remove the possible '-' sign
             if obj < 0:
                 obj_int_frac[0] = obj_int_frac[0][1:]
@@ -278,23 +290,27 @@ class NumberFormat(object):
                 if len(obj_int_frac) > 1:
                     res = re.match('(0*)[0-9]*', obj_int_frac[1]).groups()[0]
                     exponent = self._format_integer(str(len(res)+1),
-                                                    bin_pattern[EXPONENTIAL])
+                                                    exp_bin_pattern)
                     exponent = self.symbols['minusSign']+exponent
                     number = obj_int_frac[1][len(res):]
                 else:
                     # We have exactly 0
-                    exponent = self._format_integer('0',
-                                                    bin_pattern[EXPONENTIAL])
+                    exponent = self._format_integer('0', exp_bin_pattern)
                     number = self.symbols['nativeZeroDigit']
             else:
                 exponent = self._format_integer(str(len(obj_int_frac[0])-1),
-                                                bin_pattern[EXPONENTIAL])
+                                                exp_bin_pattern)
                 number = ''.join(obj_int_frac)
 
             number = number[0] + self._format_fraction(number[1:],
                                                        bin_pattern[FRACTION])
+
+            # We might have a plus sign in front of the exponential integer
+            if not exponent.startswith('-'):
+                exponent = plus_sign + exponent
+
             pre_padding = len(bin_pattern[FRACTION]) - len(number) + 2
-            post_padding = len(bin_pattern[EXPONENTIAL]) - len(exponent)
+            post_padding = len(exp_bin_pattern) - len(exponent)
             number += self.symbols['exponential'] + exponent
 
         else:
@@ -338,7 +354,8 @@ class NumberFormat(object):
         if bin_pattern[PADDING4] is not None and post_padding > 0:
             text += bin_pattern[PADDING4]*post_padding
 
-        return text
+        # XXX: Need to make sure unicode is everywhere
+        return unicode(text)
 
 
 
@@ -439,19 +456,20 @@ def buildDateTimeParseInfo(calendar):
     It also depends on the locale of course."""
     return {
         ('a', 1): r'(%s|%s)' %(calendar.am, calendar.pm),
-        ('G', 1): r'(%s|%s)' %(calendar.eras[0], calendar.eras[1]),
+        # XXX: works for gregorian only right now
+        ('G', 1): r'(%s|%s)' %(calendar.eras[1][1], calendar.eras[2][1]),
         ('y', 2): r'([0-9]{2})',
         ('y', 4): r'([0-9]{4})',
         ('M', 1): r'([0-9]{1,2})',
         ('M', 2): r'([0-9]{2})',
-        ('M', 3): r'('+'|'.join(calendar.getMonthAbbr())+')',
+        ('M', 3): r'('+'|'.join(calendar.getMonthAbbreviations())+')',
         ('M', 4): r'('+'|'.join(calendar.getMonthNames())+')',
         ('d', 1): r'([0-9]{1,2})',
         ('d', 2): r'([0-9]{2})',
         ('E', 1): r'([0-9])',
         ('E', 2): r'([0-9]{2})',
-        ('E', 3): r'('+'|'.join(calendar.getWeekdayAbbr())+')',
-        ('E', 4): r'('+'|'.join(calendar.getWeekdayNames())+')',
+        ('E', 3): r'('+'|'.join(calendar.getDayAbbreviations())+')',
+        ('E', 4): r'('+'|'.join(calendar.getDayNames())+')',
         ('D', 1): r'([0-9]{1,3})',
         ('w', 1): r'([0-9])',
         ('w', 2): r'([0-9]{2})',
@@ -499,7 +517,7 @@ def buildDateTimeInfo(dt, calendar):
     if h == 0:
         h = 12
 
-    weekday = (dt.weekday()+1) % 7 + 1
+    weekday = dt.weekday()+1
 
     return {
         ('a', 1): ampm,
@@ -512,10 +530,10 @@ def buildDateTimeInfo(dt, calendar):
         ('M', 4): calendar.months[dt.month][0],
         ('d', 1): str(dt.day),
         ('d', 2): "%.2i" %dt.day,
-        ('E', 1): str(dt.weekday),
-        ('E', 2): "%.2i" %dt.weekday(),
-        ('E', 3): calendar.weekdays[weekday][1],
-        ('E', 4): calendar.weekdays[weekday][0],
+        ('E', 1): str(weekday),
+        ('E', 2): "%.2i" %weekday,
+        ('E', 3): calendar.days[weekday][1],
+        ('E', 4): calendar.days[weekday][0],
         ('D', 1): dt.strftime('%j'),
         ('w', 1): dt.strftime('%W'),
         ('w', 2): dt.strftime('%.2W'),
@@ -688,7 +706,7 @@ def parseNumberPattern(pattern):
                 state = READ_SUFFIX
 
         elif state == READ_EXPONENTIAL:
-            if char == "#" or char == "0":
+            if char in ('0', '#', '+'):
                 helper += char
             elif char == "*":
                 exponential = helper

@@ -13,13 +13,13 @@
 ##############################################################################
 """This module tests the ITranslator / Translator
 
-$Id: test_translator.py,v 1.7 2004/01/10 11:02:37 philikon Exp $
+$Id: test_translator.py,v 1.8 2004/02/05 22:52:33 srichter Exp $
 """
 
 import os
 import unittest
 
-from zope.i18n.interfaces import ILocaleIdentity, ILocale
+from zope.i18n.interfaces.locales import ILocaleIdentity, ILocale
 from zope.i18n.translate import Translator
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_globaltranslationservice import testdir

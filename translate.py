@@ -11,11 +11,10 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
+"""Translator
 
-$Id: translate.py,v 1.8 2003/06/06 19:29:09 stevea Exp $
+$Id: translate.py,v 1.9 2004/02/05 22:52:21 srichter Exp $
 """
-
 from zope.i18n.interfaces import ITranslator
 from zope.component import getService
 from zope.interface import implements

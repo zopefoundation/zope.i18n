@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.10 2003/09/24 02:57:12 garrett Exp $
+$Id: test_formats.py,v 1.11 2004/02/05 22:52:33 srichter Exp $
 """
 import os
 import datetime
@@ -28,13 +28,61 @@ from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat
 from zope.i18n.format import parseNumberPattern
 
-from zope.i18n.locales import XMLLocaleFactory
-
-from zope.i18n import tests
-testdir = os.path.dirname(tests.__file__)
-
 class LocaleStub:
     pass
+
+class LocaleCalendarStub:
+
+    type = u'gregorian'
+
+    months = { 1: ('Januar', 'Jan'),     2: ('Februar', 'Feb'),
+               3: ('Maerz', 'Mrz'),      4: ('April', 'Apr'),
+               5: ('Mai', 'Mai'),        6: ('Juni', 'Jun'),
+               7: ('Juli', 'Jul'),       8: ('August', 'Aug'),
+               9: ('September', 'Sep'), 10: ('Oktober', 'Okt'),
+              11: ('November', 'Nov'),  12: ('Dezember', 'Dez')}
+
+    days = {1: ('Montag', 'Mo'), 2: ('Dienstag', 'Di'),
+            3: ('Mittwoch', 'Mi'), 4: ('Donnerstag', 'Do'),
+            5: ('Freitag', 'Fr'), 6: ('Samstag', 'Sa'),
+            7: ('Sonntag', 'So')}
+
+    am = 'vorm.'
+    pm = 'nachm.'
+
+    eras = {1: (None, 'v. Chr.'), 2: (None, 'n. Chr.')}
+
+    def getMonthNames(self):
+        return [self.months.get(type, (None, None))[0] for type in range(1, 13)]
+
+    def getMonthTypeFromName(self, name):
+        for item in self.months.items():
+            if item[1][0] == name:
+                return item[0]
+
+    def getMonthAbbreviations(self):
+        return [self.months.get(type, (None, None))[1] for type in range(1, 13)]
+
+    def getMonthTypeFromAbbreviation(self, abbr):
+        for item in self.months.items():
+            if item[1][1] == abbr:
+                return item[0]
+
+    def getDayNames(self):
+        return [self.days.get(type, (None, None))[0] for type in range(1, 8)]
+
+    def getDayTypeFromName(self, name):
+        for item in self.days.items():
+            if item[1][0] == name:
+                return item[0]
+
+    def getDayAbbreviations(self):
+        return [self.days.get(type, (None, None))[1] for type in range(1, 8)]
+
+    def getDayTypeFromAbbreviation(self, abbr):
+        for item in self.days.items():
+            if item[1][1] == abbr:
+                return item[0]
 
 
 class TestDateTimePatternParser(TestCase):
@@ -133,15 +181,13 @@ class TestBuildDateTimeParseInfo(TestCase):
     method with the German locale.
     """
 
-    path = os.path.join(testdir, 'xmllocales', 'de.xml')
-    locale = XMLLocaleFactory(path)()
-    info = buildDateTimeParseInfo(locale.getDefaultCalendar())
+    info = buildDateTimeParseInfo(LocaleCalendarStub())
 
     def testEra(self):
         self.assertEqual(self.info[('G', 1)], '(v. Chr.|n. Chr.)')
 
     def testMonthNames(self):
-        names = [u'Januar', u'Februar', u'M\xe4rz', u'April',
+        names = [u'Januar', u'Februar', u'Maerz', u'April',
                  u'Mai', u'Juni', u'Juli', u'August', u'September', u'Oktober',
                  u'November', u'Dezember']
         self.assertEqual(self.info[('M', 4)], '('+'|'.join(names)+')')
@@ -152,12 +198,12 @@ class TestBuildDateTimeParseInfo(TestCase):
         self.assertEqual(self.info[('M', 3)], '('+'|'.join(names)+')')
 
     def testWeekdayNames(self):
-        names = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
-                 'Freitag', 'Samstag']
+        names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
+                 'Freitag', 'Samstag', 'Sonntag']
         self.assertEqual(self.info[('E', 4)], '('+'|'.join(names)+')')
 
     def testWeekdayAbbr(self):
-        names = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa']
+        names = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
         self.assertEqual(self.info[('E', 3)], '('+'|'.join(names)+')')
 
 
@@ -165,9 +211,7 @@ class TestDateTimeFormat(TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
 
-    path = os.path.join(testdir, 'xmllocales', 'de.xml')
-    locale = XMLLocaleFactory(path)()
-    format = DateTimeFormat(calendar=locale.getDefaultCalendar())
+    format = DateTimeFormat(calendar=LocaleCalendarStub())
 
     def testInterfaceConformity(self):
         self.assert_(IDateTimeFormat.isImplementedBy(self.format))
@@ -249,10 +293,10 @@ class TestDateTimeFormat(TestCase):
     def test_formatAllWeekdays(self):
         for day in range(1, 8):
             self.assertEqual(self.format.format(
-                datetime.datetime(2003, 01, day+4, 21, 48),
+                datetime.datetime(2003, 01, day+5, 21, 48),
                 "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
                 '%s, %i. Januar 2003 21:48 Uhr +000' %(
-                self.format.calendar.weekdays[day][0], day+4))
+                self.format.calendar.days[day][0], day+5))
 
     def testFormatSimpleHourRepresentation(self):
         self.assertEqual(
@@ -291,6 +335,10 @@ class TestNumberPatternParser(TestCase):
             parseNumberPattern('###0E#0'),
             ((None, '', None, '###0', '', '#0', None, '', None, 0),
              (None, '', None, '###0', '', '#0', None, '', None, 0)))
+        self.assertEqual(
+            parseNumberPattern('###0E+#0'),
+            ((None, '', None, '###0', '', '+#0', None, '', None, 0),
+             (None, '', None, '###0', '', '+#0', None, '', None, 0)))
 
     def testParsePosNegAlternativeIntegerPattern(self):
         self.assertEqual(
@@ -494,10 +542,11 @@ class TestNumberPatternParser(TestCase):
 class TestNumberFormat(TestCase):
     """Test the functionality of an implmentation of the NumberFormat."""
 
-    path = os.path.join(testdir, 'xmllocales', 'de_DE.xml')
-    locale = XMLLocaleFactory(path)()
-    format = NumberFormat(
-            symbols=locale.getDefaultNumberFormat().symbols)
+    format = NumberFormat(symbols={
+        'decimal': '.', 'group': ',', 'list': ';', 'percentSign': '%',
+        'nativeZeroDigit': '0', 'patternDigit': '#', 'plusSign': '+',
+        'minusSign': '-', 'exponential': 'E', 'perMille': 'o/oo',
+        'infinity': 'oo', 'nan': 'N/A'})
 
     def testInterfaceConformity(self):
         self.assert_(INumberFormat.isImplementedBy(self.format))
@@ -517,6 +566,10 @@ class TestNumberFormat(TestCase):
                          1)
         self.assertEqual(self.format.parse('0E0', '0E0'),
                          0)
+        # This is a special case I found not working, but is used frequently
+        # in the new LDML Locale files.  
+        self.assertEqual(self.format.parse('2.3341E+04', '0.000###E+00'),
+                         23341)
 
     def testParsePosNegAlternativeInteger(self):
         self.assertEqual(self.format.parse('23341', '#000;#00'),
@@ -657,6 +710,10 @@ class TestNumberFormat(TestCase):
                          '1E0')
         self.assertEqual(self.format.format(1, '0.00E00'),
                          '1.00E00')
+        # This is a special case I found not working, but is used frequently
+        # in the new LDML Locale files.  
+        self.assertEqual(self.format.format(23341, '0.000###E+00'),
+                         '2.3341E+04')
 
     def testFormatScientificZero(self):
         self.assertEqual(self.format.format(0, '0.00E00'),
