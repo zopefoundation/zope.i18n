@@ -13,11 +13,11 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.8 2003/08/12 15:55:10 gotcha Exp $
+$Id: gettextmessagecatalog.py,v 1.9 2003/08/12 19:11:11 srichter Exp $
 """
 
 from pythonlib.gettext import GNUTranslations
-from zope.i18n.interfaces import IMessageCatalog
+from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implements
 
 
@@ -29,7 +29,7 @@ class _KeyErrorRaisingFallback:
 class GettextMessageCatalog:
     """A message catalog based on GNU gettext and Python's gettext module."""
 
-    implements(IMessageCatalog)
+    implements(IGlobalMessageCatalog)
 
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
