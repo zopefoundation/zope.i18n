@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.14 2003/06/06 19:29:09 stevea Exp $
+$Id: locales.py,v 1.15 2003/07/26 13:11:14 srichter Exp $
 """
 import os
 import datetime
@@ -192,7 +192,7 @@ class LocaleCalendar:
         self.klass = klass
         self.months = {}
         self.weekdays = {}
-        self.eras = {}
+        self.eras = {0: '', 1: ''}
         self.am = u''
         self.pm = u''
         self.patternCharacters = u''

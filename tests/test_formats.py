@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.8 2003/04/13 00:21:42 srichter Exp $
+$Id: test_formats.py,v 1.9 2003/07/26 13:11:17 srichter Exp $
 """
 import os
 import datetime
@@ -207,6 +207,11 @@ class TestDateTimeFormat(TestCase):
         self.assertRaises(DateTimeParseError,
             self.format.parse, '02.01.03 21:48', 'dd.MM.yyyy HH:mm')
 
+    def testParse12PM(self):
+        self.assertEqual(
+            self.format.parse('01.01.03 12:00 nachm.', 'dd.MM.yy hh:mm a'),
+            datetime.datetime(2003, 01, 01, 12, 00, 00, 00))
+
     def testFormatSimpleDateTime(self):
         # German short
         self.assertEqual(
@@ -248,8 +253,16 @@ class TestDateTimeFormat(TestCase):
                 "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
                 '%s, %i. Januar 2003 21:48 Uhr +000' %(
                 self.format.calendar.weekdays[day][0], day+4))
-        
 
+    def testFormatSimpleHourRepresentation(self):
+        self.assertEqual(
+            self.format.format(datetime.datetime(2003, 01, 02, 23, 00),
+                               'dd.MM.yy h:mm:ss a'),
+            '02.01.03 11:00:00 nachm.')
+        self.assertEqual(
+            self.format.format(datetime.datetime(2003, 01, 02, 02, 00),
+                               'dd.MM.yy h:mm:ss a'),
+            '02.01.03 2:00:00 vorm.')
 
 class TestNumberPatternParser(TestCase):
     """Extensive tests for the ICU-based-syntax number pattern parser."""

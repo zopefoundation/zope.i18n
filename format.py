@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.10 2003/06/30 16:29:15 jeremy Exp $
+$Id: format.py,v 1.11 2003/07/26 13:11:14 srichter Exp $
 """
 import re
 import math
@@ -99,7 +99,7 @@ class DateTimeFormat(object):
             if id in bin_pattern:
                 ampm = self.calendar.pm == results[
                     bin_pattern.index(('a', 1))]
-                ordered[3] = int(results[bin_pattern.index(id)]) + 12*ampm
+                ordered[3] = (int(results[bin_pattern.index(id)]) + 12*ampm)%24
         # Shortcut for the simple int functions
         dt_fields_map = {'M': 1, 'd': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
         for field in dt_fields_map.keys():
@@ -515,7 +515,7 @@ def buildDateTimeInfo(dt, calendar):
         ('D', 1): dt.strftime('%j'),
         ('w', 1): dt.strftime('%W'),
         ('w', 2): dt.strftime('%.2W'),
-        ('h', 1): str(dt.hour%12+1),
+        ('h', 1): str(dt.hour%12),
         ('h', 2): "%.2i" %(dt.hour%12),
         ('H', 1): str(dt.hour),
         ('H', 2): "%.2i" %dt.hour,
