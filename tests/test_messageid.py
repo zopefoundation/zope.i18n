@@ -13,7 +13,7 @@
 ##############################################################################
 """Message ID tests.
 
-$Id: test_messageid.py,v 1.2 2003/04/09 21:23:14 bwarsaw Exp $
+$Id: test_messageid.py,v 1.3 2003/04/15 21:18:12 bwarsaw Exp $
 """
 
 import unittest
@@ -28,7 +28,7 @@ class TestMessageID(unittest.TestCase):
         self.failUnless(isinstance(id, MessageID))
         self.failUnless(isinstance(id, unicode))
         eq(id.domain, 'test')
-        eq(id.default, None)
+        eq(id.default, u'this is a test')
         id.default = u'blah'
         eq(id.default, u'blah')
 
