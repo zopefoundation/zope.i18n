@@ -13,7 +13,7 @@
 ##############################################################################
 """Message IDs.
 
-$Id: messageid.py,v 1.4 2003/04/15 21:17:48 bwarsaw Exp $
+$Id: messageid.py,v 1.5 2003/08/12 21:12:54 srichter Exp $
 """
 
 class MessageID(unicode):
@@ -41,6 +41,13 @@ class MessageID(unicode):
             self.default = default
         self.mapping = {}
         return self
+
+    def __getstate__(self):
+        return unicode(self), self.domain, self.default, self.mapping
+
+    def __setstate__(self, (ustr, domain, default, mapping)):
+        self.__new__(ustr, domain, default)
+        self.mapping = mapping
 
 
 class MessageIDFactory:
