@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: testSimpleTranslationService.py,v 1.1 2002/06/12 18:38:58 srichter Exp $
+$Id: testSimpleTranslationService.py,v 1.2 2002/06/12 21:01:41 bwarsaw Exp $
 """
 import unittest
 from Zope.I18n.SimpleTranslationService import SimpleTranslationService
@@ -29,13 +29,12 @@ class TestSimpleTranslationService(TestITranslationService):
              ('default', 'en', 'greeting'): 'Hello $name, how are you?',
              ('default', 'de', 'greeting'): 'Hallo $name, wie geht es Dir?'}
             ) 
-
         return service
 
 
 def test_suite():
-    loader=unittest.TestLoader()
+    loader = unittest.TestLoader()
     return loader.loadTestsFromTestCase(TestSimpleTranslationService)
 
-if __name__=='__main__':
+if __name__ == '__main__':
     unittest.TextTestRunner().run(test_suite())
