@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.5 2003/03/25 23:25:15 bwarsaw Exp $
+$Id: test_globaltranslationservice.py,v 1.6 2003/03/26 00:19:58 srichter Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
@@ -27,7 +27,10 @@ def testdir():
     return os.path.dirname(tests.__file__)
 
 
-class TestGlobalTranslationService(TestITranslationService):
+class TestGlobalTranslationService(unittest.TestCase, TestITranslationService):
+
+    def setUp(self):
+        TestITranslationService.setUp(self)
 
     def _getTranslationService(self):
         service = GlobalTranslationService('default')
@@ -95,8 +98,9 @@ class TestGlobalTranslationService(TestITranslationService):
 
 
 def test_suite():
-    loader = unittest.TestLoader()
-    return loader.loadTestsFromTestCase(TestGlobalTranslationService)
+    suite = unittest.TestSuite()
+    suite.addTest(unittest.makeSuite(TestGlobalTranslationService))
+    return suite
 
 
 if __name__ == '__main__':

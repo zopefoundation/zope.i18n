@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.1 2003/03/25 23:25:15 bwarsaw Exp $
+$Id: test_itranslationservice.py,v 1.2 2003/03/26 00:19:58 srichter Exp $
 """
 
 import unittest
@@ -40,7 +40,7 @@ class Environment:
 
 
 
-class TestITranslationService(PlacelessSetup, unittest.TestCase):
+class TestITranslationService(PlacelessSetup):
 
     # This should be overwritten by every clas that inherits this test
     def _getTranslationService(self):

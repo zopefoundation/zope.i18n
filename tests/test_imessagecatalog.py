@@ -13,14 +13,14 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: test_imessagecatalog.py,v 1.1 2003/03/25 23:25:15 bwarsaw Exp $
+$Id: test_imessagecatalog.py,v 1.2 2003/03/26 00:19:58 srichter Exp $
 """
 import unittest
 from zope.interface.verify import verifyObject
 from zope.i18n.interfaces import IMessageCatalog
 
 
-class TestIMessageCatalog(unittest.TestCase):
+class TestIMessageCatalog:
 
 
     # This should be overwritten by every class that inherits this test
