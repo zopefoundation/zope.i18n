@@ -11,9 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Locale and LocaleProdiver Implmentation.
+"""Locale and LocaleProvider Implementation.
 
-$Id: locales.py,v 1.8 2003/03/13 18:49:13 alga Exp $
+$Id: locales.py,v 1.9 2003/03/25 14:30:06 bwarsaw Exp $
 """
 import os
 import datetime
@@ -108,9 +108,17 @@ class LocaleProvider:
         locale = ICUXMLLocaleFactory(path)()
         self._locales[(language, country, variant)] = locale
 
-
     def getLocale(self, language=None, country=None, variant=None):
         "See ZopeProducts.LocaleProvider.interfaces.ILocaleProvider"
+        # We want to be liberal in what we accept, but the standard is lower
+        # case language codes, upper case country codes, and upper case
+        # variants, so coerce case here.
+        if language:
+            language = language.lower()
+        if country:
+            country = country.upper()
+        if variant:
+            variant = variant.upper()
         if not self._locales.has_key((language, country, variant)):
             self.loadLocale(language, country, variant)
         return self._locales[(language, country, variant)]
@@ -736,6 +744,11 @@ class ICULocale:
                 pass # Locale has no number format information
 
         return NumberFormat(pattern, symbols)
+
+    def getDateFormat(self, name):
+        """Get the DateFormat object called 'name'. The following names are
+        recognized: full, long, medium, short."""
+        raise NotImplementedError
 
 
 class ICUXMLLocaleFactory:
