@@ -13,7 +13,7 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.9 2003/06/06 19:29:09 stevea Exp $
+$Id: simpletranslationservice.py,v 1.10 2003/08/07 20:26:37 srichter Exp $
 """
 
 import re
@@ -94,6 +94,6 @@ class SimpleTranslationService:
         # Now substitute with the variables in mapping
         for string in to_replace:
             var = _get_var_regex.findall(string)[0]
-            text = text.replace(string, mapping.get(var))
+            text = text.replace(string, unicode(mapping.get(var)))
 
         return text

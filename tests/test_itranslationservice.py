@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.6 2003/06/06 19:29:10 stevea Exp $
+$Id: test_itranslationservice.py,v 1.7 2003/08/07 20:26:41 srichter Exp $
 """
 
 import unittest
@@ -61,7 +61,7 @@ class TestITranslationService(PlacelessSetup):
         service = self._service
         interp = service.interpolate
         eq = self.assertEqual
-        mapping = {'name': 'Zope', 'version': '3x'}
+        mapping = {'name': 'Zope', 'version': '3x', 'number': 3}
         # Test simple interpolations
         eq(interp('This is $name.', mapping), 'This is Zope.')
         eq(interp('This is ${name}.', mapping), 'This is Zope.')
@@ -77,6 +77,9 @@ class TestITranslationService(PlacelessSetup):
         # Test escaping the $
         eq(interp('This is $$name.', mapping), 'This is $$name.')
         eq(interp('This is $${name}.', mapping), 'This is $${name}.')
+        # Test interpolation of non-string objects
+        eq(interp('Number $number.', mapping), 'Number 3.')
+        
 
     def testSimpleTranslate(self):
         translate = self._service.translate
