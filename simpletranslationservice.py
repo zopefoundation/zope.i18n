@@ -13,18 +13,20 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationService interface.
 
-$Id: simpletranslationservice.py,v 1.5 2003/03/29 00:06:25 jim Exp $
+$Id: simpletranslationservice.py,v 1.6 2003/04/04 15:47:11 fdrake Exp $
 """
 
 import re
-from types import DictType
+
 from zope.component import getService
 from zope.i18n.interfaces import ITranslationService
 
 
-# Setting up some regular expressions for finding interpolation variables in
-# the text.
-NAME_RE = r"[a-zA-Z][a-zA-Z0-9_]*"
+# Set up regular expressions for finding interpolation variables in text.
+# NAME_RE must exactly match the expression of the same name in the
+# zope.tal.taldefs module:
+NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
+
 _interp_regex = re.compile(r'(?<!\$)(\$(?:%(n)s|{%(n)s}))' %({'n': NAME_RE}))
 _get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
 
@@ -50,7 +52,7 @@ class SimpleTranslationService:
         if messages is None:
             self.messages = {}
         else:
-            assert type(messages) == DictType
+            assert isinstance(messages, dict)
             self.messages = messages
 
 
