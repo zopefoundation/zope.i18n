@@ -1,0 +1,50 @@
+<zopeConfigure
+   xmlns='http://namespaces.zope.org/zope'
+   xmlns:security='http://namespaces.zope.org/security'
+   xmlns:zmi='http://namespaces.zope.org/zmi'
+   xmlns:browser='http://namespaces.zope.org/browser'
+   xmlns:service='http://namespaces.zope.org/service'
+>
+
+  <serviceType
+      id="LanguageNegotiation" 
+      interface=".INegotiator." />
+  <service
+      serviceType="LanguageNegotiation" 
+      component=".Negotiator.negotiator" />
+
+<!-- Language negotiation adapter 
+<adapter factory="Zope.Publisher.Browser.BrowserLanguages."
+         for="Zope.Publisher.Browser.IHTTPRequest."
+         provides="Zope.I18n.IUserPreferedLanguages"
+         />
+-->
+
+<content class=".TranslationService.">
+   <security:require permission="Zope.I18n"
+                     interface="Zope.I18n.ITranslationService." 
+                     />
+   <security:require permission="Zope.ManageServices"
+                     interface="Zope.App.OFS.Container.IContainer." 
+                     />
+</content>
+
+<content class=".MessageCatalog.">
+   <security:require permission="Zope.Security"
+                     interface=".IMessageCatalog." 
+                     />
+
+</content>
+
+    <service:factoryFromClass id="TranslationService"
+                     class=".MessageCatalog."
+                     permission="Zope.ManageServices"
+                     title="Translation Service" />
+
+<!--factory component=".MessageCatalog." /-->
+
+<!--include package=".Views" file="views.zcml" /-->
+
+
+
+</zopeConfigure>
