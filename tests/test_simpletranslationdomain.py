@@ -11,35 +11,35 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""This module tests the regular persistent Translation Service.
+"""This module tests the regular persistent Translation Domain.
 
-$Id: test_simpletranslationservice.py,v 1.5 2004/02/27 22:25:23 srichter Exp $
+$Id: test_simpletranslationdomain.py,v 1.1 2004/03/08 23:36:00 srichter Exp $
 """
 import unittest
-from zope.i18n.simpletranslationservice import SimpleTranslationService
-from zope.i18n.tests.test_itranslationservice import TestITranslationService
+from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
+from zope.i18n.tests.test_itranslationdomain import TestITranslationDomain
 
 
 data = {
-    ('default', 'en', 'short_greeting'): 'Hello!',
-    ('default', 'de', 'short_greeting'): 'Hallo!',
-    ('default', 'en', 'greeting'): 'Hello $name, how are you?',
-    ('default', 'de', 'greeting'): 'Hallo $name, wie geht es Dir?'}
+    ('en', 'short_greeting'): 'Hello!',
+    ('de', 'short_greeting'): 'Hallo!',
+    ('en', 'greeting'): 'Hello $name, how are you?',
+    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?'}
 
 
-class TestSimpleTranslationService(unittest.TestCase, TestITranslationService):
+class TestSimpleTranslationDomain(unittest.TestCase, TestITranslationDomain):
 
     def setUp(self):
-        TestITranslationService.setUp(self)
+        TestITranslationDomain.setUp(self)
 
-    def _getTranslationService(self):
-        service = SimpleTranslationService(data)
-        return service
+    def _getTranslationDomain(self):
+        domain = SimpleTranslationDomain('default', data)
+        return domain
 
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSimpleTranslationService))
+    suite.addTest(unittest.makeSuite(TestSimpleTranslationDomain))
     return suite
 
 

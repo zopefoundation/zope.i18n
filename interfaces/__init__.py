@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: __init__.py,v 1.4 2004/02/27 22:25:23 srichter Exp $
+$Id: __init__.py,v 1.5 2004/03/08 23:36:00 srichter Exp $
 """
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Dict, EnumeratedTextLine
@@ -69,11 +69,15 @@ class IMessageCatalog(Interface):
         If the message id is not found, default is returned.
         """
 
-    def getLanguage():
-        """Return the language this message catalog is representing."""
+    language = TextLine(
+        title=u"Language",
+        description=u"The language the catalog translates to.",
+        required=True)
 
-    def getDomain():
-        """Return the domain this message catalog is serving."""
+    domain = TextLine(
+        title=u"Domain",
+        description=u"The domain the catalog is registered for.",
+        required=True)
 
     def getIdentifier():
         """Return a identifier for this message catalog. Note that this
@@ -90,8 +94,8 @@ class IGlobalMessageCatalog(IMessageCatalog):
         """Reload and parse .po file"""
 
 
-class ITranslationService(Interface):
-    """The Translation Service
+class ITranslationDomain(Interface):
+    """The Translation Domain utility
 
     This interface provides methods for translating text, including text with
     interpolation.
@@ -99,16 +103,15 @@ class ITranslationService(Interface):
     When we refer to text here, we mean text that follows the standard Zope 3
     text representation.
 
+    The domain is used to specify which translation to use.  Different
+    products will often use a specific domain naming translations supplied
+    with the product.
+    
+    A favorite example is: How do you translate 'Sun'? Is it our star, the
+    abbreviation of Sunday or the company?  Specifying the domain, such as
+    'Stars' or 'DaysOfWeek' will solve this problem for us.
+
     Standard arguments in the methods described below:
-
-        domain -- The domain is used to specify which translation to use.
-                  Different products will often use a specific domain naming
-                  translations supplied with the product.
-
-                  A favorite example is: How do you translate "Sun"?  Is it
-                  our star, the abbreviation of Sunday or the company?
-                  Specifying the domain, such as "Stars" or "DaysOfWeek" will
-                  solve this problem for us.
 
         msgid -- The id of the message that should be translated.  This may be
                  an implicit or an explicit message id.
@@ -126,8 +129,12 @@ class ITranslationService(Interface):
         Also note that language tags are defined by RFC 1766.
     """
 
-    def translate(msgid, domain=None, mapping=None,
-                  context=None, target_language=None,
+    domain = TextLine(
+        title=u"Domain Name",
+        description=u"The name of the domain this object represents.",
+        required=True)
+
+    def translate(msgid, mapping=None, context=None, target_language=None,
                   default=None):
         """Return the translation for the message referred to by msgid.
 
@@ -138,7 +145,7 @@ class ITranslationService(Interface):
         After a translation it also replaces any $name variable variables
         inside the post-translation string.
 
-        Note: The TranslationService interface does not support simplified
+        Note: The TranslationDomain interface does not support simplified
         translation methods, since it is totally hidden by ZPT and in
         Python you should use a Domain object, since it supports all
         the simplifications.

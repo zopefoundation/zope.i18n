@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: test_imessagecatalog.py,v 1.2 2003/03/26 00:19:58 srichter Exp $
+$Id: test_imessagecatalog.py,v 1.3 2004/03/08 23:36:00 srichter Exp $
 """
 import unittest
 from zope.interface.verify import verifyObject
@@ -51,12 +51,12 @@ class TestIMessageCatalog:
 
     def testGetLanguage(self):
         catalog = self._catalog
-        self.assertEqual(catalog.getLanguage(), 'en')
+        self.assertEqual(catalog.language, 'en')
 
 
     def testGetDomain(self):
         catalog = self._catalog
-        self.assertEqual(catalog.getDomain(), 'default')
+        self.assertEqual(catalog.domain, 'default')
 
 
     def testGetIdentifier(self):

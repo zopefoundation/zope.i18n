@@ -13,11 +13,12 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.13 2004/02/24 14:07:18 srichter Exp $
+$Id: translationdomain.py,v 1.1 2004/03/08 23:35:59 srichter Exp $
 """
 from zope.i18n.negotiator import negotiator
-from zope.i18n.simpletranslationservice import SimpleTranslationService
+from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.messageid import MessageID
+from zope.i18n import interpolate
 
 # The configuration should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
@@ -30,12 +31,10 @@ from zope.i18n.messageid import MessageID
 LANGUAGE_FALLBACKS = ['en']
 
 
-class GlobalTranslationService(SimpleTranslationService):
+class TranslationDomain(SimpleTranslationDomain):
 
-    def __init__(self, default_domain='global', fallbacks=None):
-        # XXX We haven't specified that ITranslationServices have a default
-        # domain.  So far, we've required the domain argument to .translate()
-        self._domain = default_domain
+    def __init__(self, domain, fallbacks=None):
+        self.domain = domain
         # _catalogs maps (language, domain) to IMessageCatalog instances
         self._catalogs = {}
         # _data maps IMessageCatalog.getIdentifier() to IMessageCatalog
@@ -46,15 +45,14 @@ class GlobalTranslationService(SimpleTranslationService):
             fallbacks = LANGUAGE_FALLBACKS
         self._fallbacks = fallbacks
 
-    def _registerMessageCatalog(self, language, domain, catalog_name):
-        key = (language, domain)
+    def _registerMessageCatalog(self, language, catalog_name):
+        key = language
         mc = self._catalogs.setdefault(key, [])
         mc.append(catalog_name)
 
     def addCatalog(self, catalog):
         self._data[catalog.getIdentifier()] = catalog
-        self._registerMessageCatalog(catalog.getLanguage(),
-                                     catalog.getDomain(),
+        self._registerMessageCatalog(catalog.language,
                                      catalog.getIdentifier())
 
     def setLanguageFallbacks(self, fallbacks=None):
@@ -62,7 +60,7 @@ class GlobalTranslationService(SimpleTranslationService):
             fallbacks = LANGUAGE_FALLBACKS
         self._fallbacks = fallbacks
 
-    def translate(self, msgid, domain=None, mapping=None, context=None,
+    def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):
         '''See interface ITranslationService'''
 
@@ -73,20 +71,25 @@ class GlobalTranslationService(SimpleTranslationService):
 
         if target_language is None and context is not None:
             # Try to determine target language from context
-            langs = [m[0] for m in self._catalogs.keys()]
+            langs = self._catalogs.keys()
             target_language = negotiator.getLanguage(langs, context)
+
 
         # MessageID attributes override arguments
         if isinstance(msgid, MessageID):
-            domain = msgid.domain
-            mapping = msgid.mapping
-            default = msgid.default
+            if msgid.domain != self.domain:
+                util = getUtility(None, ITranslationDomain, msgid.domain)
+                return util.translate(msgid, mapping, context,
+                                      target_language, default)
+            else:
+                mapping = msgid.mapping
+                default = msgid.default
 
         # Get the translation. Use the specified fallbacks if this fails
-        catalog_names = self._catalogs.get((target_language, domain))
+        catalog_names = self._catalogs.get(target_language)
         if catalog_names is None:
             for language in self._fallbacks:
-                catalog_names = self._catalogs.get((language, domain))
+                catalog_names = self._catalogs.get(language)
                 if catalog_names is not None:
                     break
 
@@ -102,7 +105,7 @@ class GlobalTranslationService(SimpleTranslationService):
 
         # Now we need to do the interpolation
         if text is not None:
-            text = self.interpolate(text, mapping)
+            text = interpolate(text, mapping)
         return text
 
     def getCatalogsInfo(self):
@@ -112,10 +115,3 @@ class GlobalTranslationService(SimpleTranslationService):
         for catalogName in catalogNames:
             self._data[catalogName].reload()
 
-translationService = GlobalTranslationService()
-
-
-# Register our cleanup with Testing.CleanUp to make writing unit tests simpler.
-from zope.testing.cleanup import addCleanUp
-addCleanUp(translationService.__init__)
-del addCleanUp

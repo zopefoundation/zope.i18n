@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 
-$Id: gettextmessagecatalog.py,v 1.11 2003/11/26 00:25:26 srichter Exp $
+$Id: gettextmessagecatalog.py,v 1.12 2004/03/08 23:35:59 srichter Exp $
 """
 
 from pythonlib.gettext import GNUTranslations
@@ -33,8 +33,8 @@ class GettextMessageCatalog:
 
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
-        self._language = language
-        self._domain = domain
+        self.language = language
+        self.domain = domain
         self._path_to_file = path_to_file
         self.reload()
         self._catalog.add_fallback(_KeyErrorRaisingFallback())
@@ -57,14 +57,6 @@ class GettextMessageCatalog:
             return self._catalog.ugettext(id)
         except KeyError:
             return default
-
-    def getLanguage(self):
-        'See IMessageCatalog'
-        return self._language
-
-    def getDomain(self):
-        'See IMessageCatalog'
-        return self._domain
 
     def getIdentifier(self):
         'See IMessageCatalog'

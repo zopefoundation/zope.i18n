@@ -13,9 +13,8 @@
 ##############################################################################
 """Message ID tests.
 
-$Id: test_messageid.py,v 1.5 2004/02/20 09:24:38 philikon Exp $
+$Id: test_messageid.py,v 1.6 2004/03/08 23:36:00 srichter Exp $
 """
-
 import unittest
 from zope.testing.doctestunit import DocTestSuite
 
