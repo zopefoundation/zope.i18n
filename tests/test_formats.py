@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.12 2004/03/05 22:09:28 jim Exp $
+$Id: test_formats.py,v 1.13 2004/03/27 02:31:49 garrett Exp $
 """
 import os
 import datetime
@@ -773,9 +773,19 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(23341.02357, '###0.0#'),
                          '23341.02')
         self.assertEqual(self.format.format(23341.02357, '###0.000#'),
-                         '23341.0235')
+                         '23341.0236')
         self.assertEqual(self.format.format(23341.02, '###0.000#'),
                          '23341.020')
+                         
+    def testRounding(self):
+        self.assertEqual(self.format.format(0.5, '#'), '1')
+        self.assertEqual(self.format.format(0.49, '#'), '0')
+        self.assertEqual(self.format.format(0.45, '0.0'), '0.5')
+        self.assertEqual(self.format.format(150, '0E0'), '2E2')
+        self.assertEqual(self.format.format(149, '0E0'), '1E2')
+        self.assertEqual(self.format.format(1.9999, '0.000'), '2.000')
+        self.assertEqual(self.format.format(1.9999, '0.0000'), '1.9999')
+        
 
     def testFormatScientificDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '0.00####E00'),

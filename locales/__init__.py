@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProvider Implementation.
 
-$Id: __init__.py,v 1.2 2004/03/02 14:26:45 srichter Exp $
+$Id: __init__.py,v 1.3 2004/03/27 02:31:48 garrett Exp $
 """
 import os
 from datetime import datetime, date
@@ -560,7 +560,7 @@ class LocaleNumbers(AttributeInheritance):
       >>> formatter.format(3.4)
       u'3,4'
       >>> formatter.format(-3.4567)
-      u'-3,456'
+      u'-3,457'
       >>> formatter.format(3210.4)
       u'3.210,4'
 
@@ -579,10 +579,10 @@ class LocaleNumbers(AttributeInheritance):
       >>> numbers.defaultScientificFormat = 'long'
       >>> formatter = numbers.getFormatter('scientific')
       >>> formatter.format(1234.5678)
-      u'1,234567E+03'
+      u'1,234568E+03'
       >>> formatter = numbers.getFormatter('scientific', 'medium')
       >>> formatter.format(1234.5678)
-      u'1,2345E+03'
+      u'1,2346E+03'
 
       Setting up and accessing percent formats with named format lengths
       and format names
@@ -597,7 +597,7 @@ class LocaleNumbers(AttributeInheritance):
       >>> numbers.defaultPercentFormat = 'long'
       >>> formatter = numbers.getFormatter('percent')
       >>> formatter.format(123.45678)
-      u'123,456%'
+      u'123,457%'
       >>> formatter = numbers.getFormatter('percent', name='bar')
       >>> formatter.format(123.45678)
       u'123%'

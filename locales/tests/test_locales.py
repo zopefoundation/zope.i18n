@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.2 2004/03/05 22:09:27 jim Exp $
+$Id: test_locales.py,v 1.3 2004/03/27 02:31:49 garrett Exp $
 """
 import os
 import datetime
@@ -116,8 +116,8 @@ class TestLocaleAndProvider(TestCase):
     def test_getNumberFormatter(self):
         formatter = self.locale.numbers.getFormatter('decimal')
         self.assertEqual(formatter.getPattern(), '###0.###;-###0.###')
-        self.assertEqual(formatter.format(1234.5678), '1234.567')
-        self.assertEqual(formatter.format(-1234.5678), '-1234.567')
+        self.assertEqual(formatter.format(1234.5678), '1234.568')
+        self.assertEqual(formatter.format(-1234.5678), '-1234.568')
         self.assertEqual(formatter.parse('1234.567'), 1234.567)
         self.assertEqual(formatter.parse('-1234.567'), -1234.567)
 

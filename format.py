@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.13 2004/02/05 22:52:21 srichter Exp $
+$Id: format.py,v 1.14 2004/03/27 02:31:48 garrett Exp $
 """
 import re
 import math
@@ -250,14 +250,30 @@ class NumberFormat(object):
         max_precision = len(pattern)
         min_precision = pattern.count('0')
         precision = len(fraction)
+        roundInt = False
         if precision > max_precision:
+            round = int(fraction[max_precision]) >= 5
             fraction = fraction[:max_precision]
+            if round:
+                if fraction != '':
+                    # add 1 to the fraction, maintaining the decimal
+                    # precision; if the result >= 1, need to roundInt
+                    fractionLen = len(fraction)
+                    rounded = int(fraction) + 1
+                    fraction = ('%0' + str(fractionLen) + 'i') % rounded
+                    if len(fraction) > fractionLen:	# rounded fraction >= 1
+                        roundInt = True
+                        fraction = fraction[1:]
+                else:
+                    # fraction missing, e.g. 1.5 -> 1. -- need to roundInt
+                    roundInt = True
+
         if precision < min_precision:
             fraction += self.symbols['nativeZeroDigit']*(min_precision -
                                                          precision)
         if fraction != '':
             fraction = self.symbols['decimal'] + fraction
-        return fraction
+        return fraction, roundInt
 
     def format(self, obj, pattern=None):
         "See zope.i18n.interfaces.IFormat"
@@ -302,8 +318,12 @@ class NumberFormat(object):
                                                 exp_bin_pattern)
                 number = ''.join(obj_int_frac)
 
-            number = number[0] + self._format_fraction(number[1:],
+            fraction, roundInt = self._format_fraction(number[1:],
                                                        bin_pattern[FRACTION])
+            if roundInt:
+                number = str(int(number[0]) + 1) + fraction
+            else:
+                number = number[0] + fraction
 
             # We might have a plus sign in front of the exponential integer
             if not exponent.startswith('-'):
@@ -316,10 +336,13 @@ class NumberFormat(object):
         else:
             obj_int_frac = str(obj).split('.')
             if len(obj_int_frac) > 1:
-                fraction = self._format_fraction(obj_int_frac[1],
+                fraction, roundInt = self._format_fraction(obj_int_frac[1],
                                                  bin_pattern[FRACTION])
             else:
                 fraction = ''
+                roundInt = False
+            if roundInt:
+                obj = round(obj)
             integer = self._format_integer(str(int(math.fabs(obj))),
                                            bin_pattern[INTEGER])
             # Adding grouping
