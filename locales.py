@@ -13,11 +13,20 @@
 ##############################################################################
 """Locale and LocaleProdiver Implmentation.
 
-$Id: locales.py,v 1.5 2003/01/09 19:19:38 srichter Exp $
+$Id: locales.py,v 1.6 2003/01/10 18:55:32 tim_one Exp $
 """
-import time, os
+import os
 import datetime
 from xml.dom.minidom import parse as parseXML
+
+# time.strptime() isn't available on all platforms before Python 2.3.  When
+# it isn't available, use the implementation from 2.3's _strptime.py, checked
+# into this source tree for convenience.  This workaround can be removed
+# when Python 2.3 (or later) becomes required.
+try:
+    from time import strptime
+except ImportError:
+    from _strptime import strptime
 
 from zope.i18n.interfaces import ILocaleProvider, ILocale
 from zope.i18n.interfaces import ILocaleVersion, ILocaleIdentity
@@ -757,7 +766,7 @@ class ICUXMLLocaleFactory:
         for version in versioning.getElementsByTagName('version'):
             id = version.getAttribute('number')
             date = version.getAttribute('date')
-            date = time.strptime(date, '%a %b %d %H:%M:%S %Y')
+            date = strptime(date, '%a %b %d %H:%M:%S %Y')
             date = datetime.datetime(*date[:6])
             comment = self._getText(version.childNodes)
             versions.append(ICULocaleVersion(id, date, comment))
