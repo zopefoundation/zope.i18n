@@ -65,7 +65,7 @@
       <td width="25%" align="right" valign="top">
         <form action="." method="post">
           <div class="form-label"
-               i18n:translate="" i18n:domain="Zope-I18n">New Language:</div>
+               i18nXXX:translate="" i18nXXX:domain="Zope-I18n">New Language:</div>
           <div>
             <input type="text" name="language" size="20" value="">
             <input type="submit" name="@@addLanguage.html:method" value="Add">
