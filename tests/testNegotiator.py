@@ -13,51 +13,46 @@
 ##############################################################################
 """
 
-$Id: testNegotiator.py,v 1.2 2002/06/10 23:29:28 jim Exp $
+$Id: testNegotiator.py,v 1.3 2002/06/12 15:59:40 bwarsaw Exp $
 """
 import unittest, sys
 
 from Zope.I18n.Negotiator import Negotiator
-from Zope.I18n.IUserPreferedLanguages import IUserPreferedLanguages
+from Zope.I18n.IUserPreferredLanguages import IUserPreferredLanguages
 from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
 
 class Env:
-
-    __implements__ = IUserPreferedLanguages
+    __implements__ = IUserPreferredLanguages
 
     def __init__(self, langs=()):
         self.langs = langs
 
-    def getLanguages(self):
+    def getPreferredLanguages(self):
         return self.langs
 
 
 class Test(PlacelessSetup, unittest.TestCase):
-
     def setUp(self):
         PlacelessSetup.setUp(self)
-        self.Negotiator= Negotiator()
+        self.Negotiator = Negotiator()
 
     def test1(self):
 
         _cases = (
-            ( ('en','de'),    ('en','de','fr'),  'en'),
-            ( ('en'),         ('it','de','fr'),  None)
-        )
+            (('en','de'), ('en','de','fr'),  'en'),
+            (('en'),      ('it','de','fr'),  None)
+            )
 
         for user_pref_langs, obj_langs, expected in _cases:
-        
             env = Env(user_pref_langs)
-
-            self.assertEqual( self.Negotiator.getLanguage( obj_langs, env), 
-                                expected) 
-
-        
+            self.assertEqual(self.Negotiator.getLanguage(obj_langs, env), 
+                             expected)
 
 
 def test_suite():
-    loader=unittest.TestLoader()
+    loader = unittest.TestLoader()
     return loader.loadTestsFromTestCase(Test)
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     unittest.TextTestRunner().run(test_suite())
