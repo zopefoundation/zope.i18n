@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.2 2003/01/05 20:19:37 srichter Exp $
+$Id: interfaces.py,v 1.3 2003/01/23 15:25:03 tim_one Exp $
 """
 from zope.interface import Interface, Attribute
 
@@ -754,10 +754,10 @@ class INumberFormat(IFormat):
            used.
       %    Multiply by 100, as percentage  
       ?    Multiply by 1000, as per mille  
-      ¤    This is the currency sign. it will be replaced by a currency
+      \u00A4    This is the currency sign. it will be replaced by a currency
            symbol. If it is present in a pattern, the monetary decimal
            separator is used instead of the decimal separator.
-      ¤¤   This is the international currency sign. It will be replaced 
+      \u00A4\u00A4   This is the international currency sign. It will be replaced 
            by an international currency symbol.  If it is present in a
            pattern, the monetary decimal separator is used instead of 
            the decimal separator. 
