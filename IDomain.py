@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: IDomain.py,v 1.3 2002/06/12 15:51:26 bwarsaw Exp $
+$Id: IDomain.py,v 1.4 2002/06/12 20:55:59 bwarsaw Exp $
 """
 
 from Interface import Interface
@@ -27,16 +27,8 @@ class IDomain(Interface):
 
     Usage:
 
-        domain = Domain(self, 'MyProduct')
+        domain = translationService.getDomain('domain')
         domain.translate('MyProductTitle', context)
-
-    Constructor Arguments:
-
-         place -- A location where the Domain should look for the translation
-                  service.
-
-         domain -- Secifies the domain to look up for the translation.  See
-                   ITranslationService for more details on domains.
     """
 
     def translate(msgid, mapping=None, context=None, target_language=None):
