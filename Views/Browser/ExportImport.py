@@ -13,7 +13,7 @@
 ##############################################################################
 """Message Export/Import View
 
-$Id: ExportImport.py,v 1.1 2002/06/16 18:25:13 srichter Exp $
+$Id: ExportImport.py,v 1.2 2002/06/18 14:47:05 jim Exp $
 """
 
 from Zope.ComponentArchitecture import getAdapter
@@ -31,7 +31,7 @@ class ExportImport(BaseTranslationServiceView):
 
 
     def exportMessages(self, domains, languages):
-        self.request.getResponse().setHeader('content-type',
+        self.request.response.setHeader('content-type',
                                              'application/x-gettext')
         filter = getAdapter(self.context, IMessageExportFilter)
         return filter.exportMessages(domains, languages)
@@ -40,6 +40,6 @@ class ExportImport(BaseTranslationServiceView):
     def importMessages(self, domains, languages, file):
         filter = getAdapter(self.context, IMessageImportFilter)
         filter.importMessages(domains, languages, file)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
     

@@ -13,7 +13,7 @@
 ##############################################################################
 """Translation GUI
 
-$Id: Translate.py,v 1.3 2002/06/16 18:25:13 srichter Exp $
+$Id: Translate.py,v 1.4 2002/06/18 14:47:05 jim Exp $
 """
 from Zope.App.PageTemplate import ViewPageTemplateFile
 
@@ -64,7 +64,7 @@ class Translate(BaseTranslationServiceView):
             if msg != self.context.translate(domain, msg_id,
                                              target_language=language):
                 self.context.updateMessage(domain, msg_id, msg, language)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
         
 
     def editMessages(self):
@@ -92,7 +92,7 @@ class Translate(BaseTranslationServiceView):
                                                  target_language=language):
                     self.context.updateMessage(domain, msg_id, msg, language)
                 
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def deleteMessages(self, message_ids):
@@ -106,52 +106,52 @@ class Translate(BaseTranslationServiceView):
                     self.context.deleteMessage(domain, msgid, language)
                 except KeyError:
                     pass
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def addLanguage(self, language):
         """ """
         self.context.addLanguage(language)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def addDomain(self, domain):
         """ """
         self.context.addDomain(domain)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def changeEditLanguages(self, languages=[]):
         """ """
-        self.request.getResponse().setCookie('edit_languages',
+        self.request.response.setCookie('edit_languages',
                                              ','.join(languages))
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def changeEditDomains(self, domains=[]):
         """ """
-        self.request.getResponse().setCookie('edit_domains', ','.join(domains))
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        self.request.response.setCookie('edit_domains', ','.join(domains))
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def changeFilter(self):
         """ """
         filter = self.request.get('filter', '%')
-        self.request.getResponse().setCookie('filter', filter)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        self.request.response.setCookie('filter', filter)
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def deleteLanguages(self, languages):
         """ """
         for language in languages:
             self.context.deleteLanguage(language)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 
     def deleteDomains(self, domains):
         """ """
         for domain in domains:
             self.context.deleteDomain(domain)
-        return self.request.getResponse().redirect(self.request.URL[-1])
+        return self.request.response.redirect(self.request.URL[-1])
 
 

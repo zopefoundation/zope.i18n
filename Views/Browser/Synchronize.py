@@ -13,7 +13,7 @@
 ##############################################################################
 """Synchronize with Foreign Translation Services
 
-$Id: Synchronize.py,v 1.1 2002/06/16 18:25:13 srichter Exp $
+$Id: Synchronize.py,v 1.2 2002/06/18 14:47:05 jim Exp $
 """
 import xmlrpclib, httplib, urllib
 from base64 import encodestring
@@ -155,25 +155,25 @@ class Synchronize(BaseTranslationServiceView):
     def saveSettings(self):
         self.sync_domains = self.request.form.get('sync_domains', [])
         self.sync_languages = self.request.form.get('sync_languages', [])
-        self.request.getResponse().setCookie('sync_domains',
+        self.request.response.setCookie('sync_domains',
                                              ','.join(self.sync_domains))
-        self.request.getResponse().setCookie('sync_languages',
+        self.request.response.setCookie('sync_languages',
                                              ','.join(self.sync_languages))
-        self.request.getResponse().setCookie('sync_url',
+        self.request.response.setCookie('sync_url',
                             urllib.quote(self.request['sync_url']).strip())
-        self.request.getResponse().setCookie('sync_username',
+        self.request.response.setCookie('sync_username',
                                              self.request['sync_username'])
-        self.request.getResponse().setCookie('sync_password',
+        self.request.response.setCookie('sync_password',
                                              self.request['sync_password'])
 
-        return self.request.getResponse().redirect(self.request.URL[-1]+
+        return self.request.response.redirect(self.request.URL[-1]+
                                                    '/@@synchronizeForm.html')
 
         
     def synchronize(self):
         mapping = self.queryMessages()
         self.context.synchronize(mapping)
-        return self.request.getResponse().redirect(self.request.URL[-1]+
+        return self.request.response.redirect(self.request.URL[-1]+
                                                    '/@@synchronizeForm.html')
 
 
@@ -192,7 +192,7 @@ class Synchronize(BaseTranslationServiceView):
                 new_mapping[item[0]] = item[1]
 
         self.context.synchronize(new_mapping)
-        return self.request.getResponse().redirect(self.request.URL[-1]+
+        return self.request.response.redirect(self.request.URL[-1]+
                                                    '/@@synchronizeForm.html')
 
 
