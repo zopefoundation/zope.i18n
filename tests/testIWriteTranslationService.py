@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testIWriteTranslationService.py,v 1.5 2002/07/16 23:41:19 jim Exp $
+$Id: testIWriteTranslationService.py,v 1.6 2002/10/06 18:30:27 efge Exp $
 """
 
 import unittest
@@ -122,7 +122,7 @@ class TestIWriteTranslationService(PlacelessSetup, unittest.TestCase):
                          'Hallo Ihr da!')
         service.deleteMessage('test', 'greeting', 'de')
         self.assertEqual(service.translate('test', 'greeting',
-                                           target_language='de'), 'greeting')
+                                           target_language='de'), None)
 
 
     def _getMessageIds(self, service, domain, filter="%"):

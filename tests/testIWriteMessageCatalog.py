@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: testIWriteMessageCatalog.py,v 1.2 2002/07/01 17:45:50 mj Exp $
+$Id: testIWriteMessageCatalog.py,v 1.3 2002/10/06 18:30:27 efge Exp $
 """
 
 import unittest
@@ -61,11 +61,11 @@ class TestIWriteMessageCatalog(unittest.TestCase):
 
     def testDeleteMessage(self):
         catalog = self._catalog
-        self.assertEqual(catalog.queryMessage('test'), 'test')
+        self.assertEqual(catalog.queryMessage('test'), None)
         catalog.setMessage('test', 'Test', 1)
         self.assertEqual(catalog.queryMessage('test'), 'Test')
         catalog.deleteMessage('test')        
-        self.assertEqual(catalog.queryMessage('test'), 'test')
+        self.assertEqual(catalog.queryMessage('test'), None)
 
 
     def testGetMessageIds(self):
