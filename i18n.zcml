@@ -73,12 +73,12 @@
 
 <!-- Setup Export and Import Filters -->
 <adapter factory=".GettextExportFilter."
-         for=".IEditableTranslationService."
+         for=".ITranslationService.IWriteTranslationService."
          provides=".IMessageExportFilter."
          />
 
 <adapter factory=".GettextImportFilter."
-         for=".IEditableTranslationService."
+         for=".ITranslationService.IWriteTranslationService."
          provides=".IMessageImportFilter."
          />
 
