@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProdiver Implmentation.
 
-$Id: locales.py,v 1.7 2003/01/27 21:49:01 jeremy Exp $
+$Id: locales.py,v 1.8 2003/03/13 18:49:13 alga Exp $
 """
 import os
 import datetime
@@ -97,13 +97,13 @@ class LocaleProvider:
                     filename += '_'
                 filename += '_'+variant
             filename += '.xml'
-            
+
         # Making sure we have this locale
         path = os.path.join(self._locale_dir, filename)
         if not os.path.exists(path):
             raise LoadLocaleError, \
                   'The desired locale is not available.\nPath: %s' %path
-            
+
         # Let's get it!
         locale = ICUXMLLocaleFactory(path)()
         self._locales[(language, country, variant)] = locale
@@ -155,7 +155,7 @@ class ICULocaleIdentity:
         "See zope.i18n.interfaces.ILocaleIdentity"
         return "<ICULocaleIdentity (%s, %s, %s)>" %(
             self.__language, self.__country, self.__variant)
-    
+
 
 class ICULocaleVersion:
     __doc__ = ILocaleVersion.__doc__
@@ -213,7 +213,7 @@ class ICULocaleCalendar:
     __doc__ = ILocaleCalendar.__doc__
 
     __implements__ =  ILocaleCalendar
-    
+
     def __init__(self, klass):
         """Initialize the object."""
         self.klass = klass
@@ -350,7 +350,7 @@ class ICULocaleCalendar:
 
     def getTimePattern(self, type):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._time_patterns[type]        
+        return self._time_patterns[type]
 
     def setDatePattern(self, name, pattern):
         "See zope.i18n.interfaces.ILocaleCalendar"
@@ -358,7 +358,7 @@ class ICULocaleCalendar:
 
     def getDatePattern(self, name):
         "See zope.i18n.interfaces.ILocaleCalendar"
-        return self._date_patterns[name]        
+        return self._date_patterns[name]
 
     def setDateTimePattern(self, pattern):
         "See zope.i18n.interfaces.ILocaleCalendar"
@@ -367,7 +367,7 @@ class ICULocaleCalendar:
     def getDateTimePattern(self):
         "See zope.i18n.interfaces.ILocaleCalendar"
         return self._datetime_pattern
-    
+
 
 class ICULocaleNumberFormat:
     __doc__ = ILocaleNumberFormat.__doc__
@@ -433,19 +433,19 @@ class ICULocaleCurrency:
     def setName(self, name):
         "See zope.i18n.interfaces.ILocaleCurrency"
         self._name = name
-        
+
     def getName(self):
         "See zope.i18n.interfaces.ILocaleCurrency"
         return self._name
-    
+
     def setDecimal(self, decimal):
         "See zope.i18n.interfaces.ILocaleCurrency"
         self._decimal = decimal
-        
+
     def getDecimal(self):
         "See zope.i18n.interfaces.ILocaleCurrency"
         return self._decimal
-    
+
     def setPattern(self, pattern):
         "See zope.i18n.interfaces.ILocaleCurrency"
         self._pattern = pattern
@@ -454,7 +454,7 @@ class ICULocaleCurrency:
         "See zope.i18n.interfaces.ILocaleCurrency"
         return self._pattern
 
-        
+
 class ICULocale:
     __doc__ = ILocale.__doc__
 
@@ -495,7 +495,7 @@ class ICULocale:
 
     def setIdentity(self, id):
         """Define the unique identification object for this locale."""
-        
+
     def setLanguageName(self, id, name):
         """Add a language in the locale's native language defined by its
         two-letter id."""
@@ -529,7 +529,7 @@ class ICULocale:
         name in its native language.
         """
         self._countries.update(dict)
-        
+
 
     def getCountryName(self, id):
         """Get the localized country name for the given id."""
@@ -645,18 +645,18 @@ class ICULocale:
         that has no missing information. This methos will build this
         object.'''
         calendar = ICULocaleCalendar('gregorian')
-        for id in ( (None, None, None),
-                    (self.id.getLanguage(), None, None),
-                    (self.id.getLanguage(), self.id.getCountry(), None),
-                    (self.id.getLanguage(), self.id.getCountry(),
-                     self.id.getVariant()) ):
+        for id in ((None, None, None),
+                   (self.id.getLanguage(), None, None),
+                   (self.id.getLanguage(), self.id.getCountry(), None),
+                   (self.id.getLanguage(), self.id.getCountry(),
+                    self.id.getVariant())):
             try:
                 calendar.update(locales.getLocale(*id).getCalendar(
                     'gregorian'))
             except KeyError:
                 pass # Locale has no calendar information
         return calendar
-            
+
     def getLocaleLanguageId(self):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         return self.id.getLanguage()
@@ -696,7 +696,7 @@ class ICULocale:
         except AttributeError, KeyError:
             return self._getNextLocale().getTimeFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
-    
+
     def getDateFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
@@ -704,7 +704,7 @@ class ICULocale:
         except AttributeError, KeyError:
             return self._getNextLocale().getDateFormatter(name)
         return DateTimeFormat(pattern, self._createFullCalendar())
-    
+
     def getDateTimeFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
@@ -716,7 +716,7 @@ class ICULocale:
         pattern = pattern.replace('{1}', date_pat)
         pattern = pattern.replace('{0}', time_pat)
         return DateTimeFormat(pattern, self._createFullCalendar())
-    
+
     def getNumberFormatter(self, name):
         "See ZopeProducts.LocaleProvider.interfaces.ILocale"
         try:
@@ -724,11 +724,11 @@ class ICULocale:
         except AttributeError, KeyError:
             return self._getNextLocale().getNumberFormatter(name)
         symbols = {}
-        for id in ( (None, None, None),
-                    (self.id.getLanguage(), None, None),
-                    (self.id.getLanguage(), self.id.getCountry(), None),
-                    (self.id.getLanguage(), self.id.getCountry(),
-                     self.id.getVariant()) ):
+        for id in ((None, None, None),
+                   (self.id.getLanguage(), None, None),
+                   (self.id.getLanguage(), self.id.getCountry(), None),
+                   (self.id.getLanguage(), self.id.getCountry(),
+                    self.id.getVariant())):
             try:
                 format = locales.getLocale(*id).getDefaultNumberFormat()
                 symbols.update(format.getSymbolMap())
@@ -842,12 +842,12 @@ class ICUXMLLocaleFactory:
                     long_desc = self._getText(
                         long.getElementsByTagName(type)[0].childNodes)
                 except IndexError:
-                    long_desc = None # no long description 
+                    long_desc = None # no long description
                 try:
                     short_desc = self._getText(
                         short.getElementsByTagName(type)[0].childNodes)
                 except IndexError:
-                    short_desc = None # no short description 
+                    short_desc = None # no short description
                 if long_desc is not None or short_desc is not None:
                     zone.setName(type, long_desc, short_desc)
             for city in node.getElementsByTagName('city'):
@@ -961,7 +961,7 @@ class ICUXMLLocaleFactory:
             calendars.append((klass, calendar, default))
         return calendars
 
-    
+
     def _extractNumberFormats(self):
         """Extract all number format information from the Locale's DOM
         tree."""
@@ -974,7 +974,7 @@ class ICUXMLLocaleFactory:
                 default = True
             else:
                 default = False
-            
+
             pattern_nodes = format_node.getElementsByTagName('patterns')
             if len(pattern_nodes) == 1:
                 node = pattern_nodes[0]
@@ -998,7 +998,7 @@ class ICUXMLLocaleFactory:
                         pass # node does not exist
 
             formats.append((klass, format, default))
-            
+
         return formats
 
     def _extractCurrencies(self):
@@ -1034,9 +1034,9 @@ class ICUXMLLocaleFactory:
                 pass # No pattern node
 
             currencies.append((id, currency, default))
-            
+
         return currencies
-        
+
 
     def __call__(self):
         """Create the Locale."""
@@ -1060,4 +1060,4 @@ class ICUXMLLocaleFactory:
             locale.setCurrency(*currency)
 
         return locale
-        
+

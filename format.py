@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.2 2003/01/06 09:24:42 srichter Exp $
+$Id: format.py,v 1.3 2003/03/13 18:49:13 alga Exp $
 """
 import re
 import math
@@ -94,7 +94,7 @@ class DateTimeFormat(object):
             ordered[1] = self.calendar.getMonthIdFromName(name)
         # Handle AM/PM hours
         for length in (1, 2):
-            id = ('h', length) 
+            id = ('h', length)
             if id in bin_pattern:
                 ampm = self.calendar.getPM() == results[
                     bin_pattern.index(('a', 1))]
@@ -103,7 +103,7 @@ class DateTimeFormat(object):
         dt_fields_map = {'M': 1, 'd': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
         for field in dt_fields_map.keys():
             for length in (1, 2):
-                id = (field, length) 
+                id = (field, length)
                 if id in bin_pattern:
                     pos = dt_fields_map[field]
                     ordered[pos] = int(results[bin_pattern.index(id)])
@@ -123,7 +123,7 @@ class DateTimeFormat(object):
             bin_pattern = parseDateTimePattern(pattern)
         else:
             bin_pattern = self._bin_pattern
-            
+
         text = ''
         info = buildDateTimeInfo(obj, self.calendar)
         for elem in bin_pattern:
@@ -171,7 +171,7 @@ class NumberFormat(object):
     def getPattern(self):
         "See zope.i18n.interfaces.IFormat"
         return self._pattern
-        
+
     def parse(self, text, pattern=None):
         "See zope.i18n.interfaces.IFormat"
         # Make or get binary form of datetime pattern
@@ -232,7 +232,7 @@ class NumberFormat(object):
             type = float
             num_str.replace(self.symbols['exponential'], 'E')
         return sign*type(num_str)
-    
+
     def _format_integer(self, integer, pattern):
         size = len(integer)
         min_size = pattern.count('0')
@@ -252,7 +252,7 @@ class NumberFormat(object):
         if fraction != '':
             fraction = self.symbols['decimal'] + fraction
         return fraction
-    
+
     def format(self, obj, pattern=None):
         "See zope.i18n.interfaces.IFormat"
         # Make or get binary form of datetime pattern
@@ -295,7 +295,7 @@ class NumberFormat(object):
             pre_padding = len(bin_pattern[FRACTION]) - len(number) + 2
             post_padding = len(bin_pattern[EXPONENTIAL]) - len(exponent)
             number += self.symbols['exponential'] + exponent
-            
+
         else:
             obj_int_frac = str(obj).split('.')
             if len(obj_int_frac) > 1:
@@ -304,7 +304,7 @@ class NumberFormat(object):
             else:
                 fraction = ''
             integer = self._format_integer(str(int(math.fabs(obj))),
-                                           bin_pattern[INTEGER])            
+                                           bin_pattern[INTEGER])
             # Adding grouping
             if bin_pattern[GROUPING] == 1:
                 help = ''
@@ -336,7 +336,7 @@ class NumberFormat(object):
         text += bin_pattern[SUFFIX]
         if bin_pattern[PADDING4] is not None and post_padding > 0:
             text += bin_pattern[PADDING4]*post_padding
-        
+
         return text
 
 
@@ -366,7 +366,7 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
     char = ''
     quote_start = -2
 
-    for pos in range(len(pattern)): 
+    for pos in range(len(pattern)):
         prev_char = char
         char = pattern[pos]
         # Handle quotations
@@ -379,7 +379,7 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
                 state = DEFAULT
             elif state == IN_QUOTE:
                 # Do not care about putting the content of the quote in the
-                # result. The next state is responsible for that. 
+                # result. The next state is responsible for that.
                 quote_start = -1
                 state = DEFAULT
             elif state == IN_DATETIMEFIELD:
@@ -410,7 +410,7 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
 
             elif state == IN_DATETIMEFIELD and prev_char == char:
                 helper += char
-                
+
             elif state == IN_DATETIMEFIELD and prev_char != char:
                 result.append((helper[0], len(helper)))
                 helper = char
@@ -459,7 +459,7 @@ def buildDateTimeParseInfo(calendar):
         ('H', 1): r'([0-9]{1,2})',
         ('H', 2): r'([0-9]{2})',
         ('m', 1): r'([0-9]{1,2})',
-        ('m', 2): r'([0-9]{2})',   
+        ('m', 2): r'([0-9]{2})',
         ('s', 1): r'([0-9]{1, 2})',
         ('s', 2): r'([0-9]{2})',
         ('S', 1): r'([0-9]{0, 6})',
@@ -471,7 +471,7 @@ def buildDateTimeParseInfo(calendar):
         ('k', 1): r'([0-9]{1, 2})',
         ('k', 2): r'([0-9]{2})',
         ('K', 1): r'([0-9]{1, 2})',
-        ('K', 2): r'([0-9]{2})', 
+        ('K', 2): r'([0-9]{2})',
         ('z', 1): r'([\+-][0-9]{3,4})',
         ('z', 2): r'([\+-][0-9]{2}:[0-9]{2})',
         ('z', 3): r'([a-zA-Z]{3})',
@@ -485,14 +485,14 @@ def buildDateTimeInfo(dt, calendar):
     if isinstance(dt, datetime.time):
         dt = datetime.datetime(1969, 01, 01, dt.hour, dt.minute, dt.second,
                                dt.microsecond)
-    elif ( isinstance(dt, datetime.date) and
-           not isinstance(dt, datetime.datetime)):
+    elif (isinstance(dt, datetime.date) and
+          not isinstance(dt, datetime.datetime)):
         dt = datetime.datetime(dt.year, dt.month, dt.day)
-    
+
     if dt.hour >= 12:
         ampm = calendar.getPM()
     else:
-        ampm = calendar.getAM()        
+        ampm = calendar.getAM()
     return {
         ('a', 1): ampm,
         ('G', 1): 'AD',
@@ -512,24 +512,24 @@ def buildDateTimeInfo(dt, calendar):
         ('w', 1): dt.strftime('%W'),
         ('w', 2): dt.strftime('%.2W'),
         ('h', 1): str(dt.hour%12+1),
-        ('h', 2): "%.2i" %(dt.hour%12),   
+        ('h', 2): "%.2i" %(dt.hour%12),
         ('H', 1): str(dt.hour),
-        ('H', 2): "%.2i" %dt.hour,   
+        ('H', 2): "%.2i" %dt.hour,
         ('m', 1): str(dt.minute),
-        ('m', 2): "%.2i" %dt.minute,   
+        ('m', 2): "%.2i" %dt.minute,
         ('s', 1): str(dt.second),
-        ('s', 2): "%.2i" %dt.second,   
+        ('s', 2): "%.2i" %dt.second,
         ('S', 1): str(dt.microsecond),
-        ('S', 2): "%.6i" %dt.microsecond,   
+        ('S', 2): "%.6i" %dt.microsecond,
         # XXX not yet implemented
         ('F', 1): str(2),
         ('F', 2): "%.2i" %(2),
         ('W', 1): str(2),
         ('W', 2): "%.2i" %(2),
         ('k', 1): str(dt.hour+1),
-        ('k', 2): "%.2i" %(dt.hour+1),   
+        ('k', 2): "%.2i" %(dt.hour+1),
         ('K', 1): str(dt.hour%12),
-        ('K', 2): "%.2i" %(dt.hour%12),   
+        ('K', 2): "%.2i" %(dt.hour%12),
         ('z', 1): "+000",
         ('z', 2): "+00:00",
         ('z', 3): "UTC",
@@ -571,10 +571,10 @@ class NumberPatternParseError(Exception):
 def parseNumberPattern(pattern):
     """Parses all sorts of number pattern."""
     prefix = ''
-    padding_1 = None 
-    padding_2 = None 
-    padding_3 = None 
-    padding_4 = None 
+    padding_1 = None
+    padding_2 = None
+    padding_3 = None
+    padding_4 = None
     integer = ''
     fraction = ''
     exponential = ''
@@ -651,7 +651,7 @@ def parseNumberPattern(pattern):
                 state = READ_NEG_SUBPATTERN
             elif char == "'":
                 integer = helper
-                state = READ_SUFFIX_STRING                
+                state = READ_SUFFIX_STRING
             else:
                 integer = helper
                 suffix += char
@@ -673,7 +673,7 @@ def parseNumberPattern(pattern):
                 state = READ_NEG_SUBPATTERN
             elif char == "'":
                 fraction = helper
-                state = READ_SUFFIX_STRING                
+                state = READ_SUFFIX_STRING
             else:
                 fraction = helper
                 suffix += char
@@ -691,7 +691,7 @@ def parseNumberPattern(pattern):
                 state = READ_NEG_SUBPATTERN
             elif char == "'":
                 exponential = helper
-                state = READ_SUFFIX_STRING                
+                state = READ_SUFFIX_STRING
             else:
                 exponential = helper
                 suffix += char
@@ -710,7 +710,7 @@ def parseNumberPattern(pattern):
                 state = READ_NEG_SUBPATTERN
             else:
                 suffix += char
-                
+
         elif state == READ_SUFFIX_STRING:
             if char == "'":
                 state = READ_SUFFIX
@@ -740,7 +740,7 @@ def parseNumberPattern(pattern):
 
     if neg_pattern is None:
         neg_pattern = pattern
-        
+
     return pattern, neg_pattern
 
 

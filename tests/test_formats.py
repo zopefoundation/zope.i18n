@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.5 2003/01/27 21:51:56 jeremy Exp $
+$Id: test_formats.py,v 1.6 2003/03/13 18:49:14 alga Exp $
 """
 import os
 import datetime
@@ -66,7 +66,7 @@ class TestDateTimePatternParser(TestCase):
         # German short
         self.assertEqual(parseDateTimePattern("HH:mm"),
                          [('H', 2), ':', ('m', 2)])
-        
+
     def testParseRealDate(self):
         # German full
         self.assertEqual(parseDateTimePattern("EEEE, d. MMMM yyyy"),
@@ -163,7 +163,7 @@ class TestBuildDateTimeParseInfo(TestCase):
 
 class TestDateTimeFormat(TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
-    interface.""" 
+    interface."""
 
     path = os.path.join(testdir, 'xmllocales', 'de.xml')
     locale = ICUXMLLocaleFactory(path)()
@@ -175,72 +175,72 @@ class TestDateTimeFormat(TestCase):
     def testParseSimpleDateTime(self):
         # German short
         self.assertEqual(
-            self.format.parse('02.01.03 21:48', 'dd.MM.yy HH:mm'), 
+            self.format.parse('02.01.03 21:48', 'dd.MM.yy HH:mm'),
             datetime.datetime(2003, 01, 02, 21, 48))
 
     def testParseRealDateTime(self):
         # German medium
         self.assertEqual(
-            self.format.parse('02.01.2003 21:48:01', 'dd.MM.yyyy HH:mm:ss'), 
+            self.format.parse('02.01.2003 21:48:01', 'dd.MM.yyyy HH:mm:ss'),
             datetime.datetime(2003, 01, 02, 21, 48, 01))
 
         # German long
         # XXX The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             '2. Januar 2003 21:48:01 +100',
-            'd. MMMM yyyy HH:mm:ss z'), 
+            'd. MMMM yyyy HH:mm:ss z'),
             datetime.datetime(2003, 01, 02, 21, 48, 01))
 
         # German full
         # XXX The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
-            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"), 
+            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
             datetime.datetime(2003, 01, 02, 21, 48))
 
     def testParseAMPMDateTime(self):
         self.assertEqual(
-            self.format.parse('02.01.03 09:48 nachm.', 'dd.MM.yy hh:mm a'), 
+            self.format.parse('02.01.03 09:48 nachm.', 'dd.MM.yy hh:mm a'),
             datetime.datetime(2003, 01, 02, 21, 48))
 
     def testDateTimeParseError(self):
-        self.assertRaises(DateTimeParseError, 
+        self.assertRaises(DateTimeParseError,
             self.format.parse, '02.01.03 21:48', 'dd.MM.yyyy HH:mm')
-        
+
     def testFormatSimpleDateTime(self):
         # German short
         self.assertEqual(
             self.format.format(datetime.datetime(2003, 01, 02, 21, 48),
-                              'dd.MM.yy HH:mm'),  
+                              'dd.MM.yy HH:mm'),
             '02.01.03 21:48')
 
     def testFormatRealDateTime(self):
         # German medium
         self.assertEqual(
             self.format.format(datetime.datetime(2003, 01, 02, 21, 48, 01),
-                              'dd.MM.yyyy HH:mm:ss'),  
+                              'dd.MM.yyyy HH:mm:ss'),
             '02.01.2003 21:48:01')
 
         # German long
         # XXX The parser does not support timezones yet.
         self.assertEqual(self.format.format(
             datetime.datetime(2003, 01, 02, 21, 48, 01),
-            'd. MMMM yyyy HH:mm:ss z'), 
+            'd. MMMM yyyy HH:mm:ss z'),
             '2. Januar 2003 21:48:01 +000')
 
         # German full
         # XXX The parser does not support timezones yet.
         self.assertEqual(self.format.format(
             datetime.datetime(2003, 01, 02, 21, 48),
-            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"), 
+            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
             'Donnerstag, 2. Januar 2003 21:48 Uhr +000')
 
     def testFormatAMPMDateTime(self):
         self.assertEqual(self.format.format(
             datetime.datetime(2003, 01, 02, 21, 48),
-            'dd.MM.yy hh:mm a'), 
+            'dd.MM.yy hh:mm a'),
             '02.01.03 09:48 nachm.')
-            
+
 
 class TestNumberPatternParser(TestCase):
     """Extensive tests for the ICU-based-syntax number pattern parser."""
@@ -248,216 +248,216 @@ class TestNumberPatternParser(TestCase):
     def testParseSimpleIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('###0'),
-            ( (None, '', None, '###0', '', '', None, '', None, 0),
-              (None, '', None, '###0', '', '', None, '', None, 0)) )
+            ((None, '', None, '###0', '', '', None, '', None, 0),
+             (None, '', None, '###0', '', '', None, '', None, 0)))
 
     def testParseScientificIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('###0E#0'),
-            ( (None, '', None, '###0', '', '#0', None, '', None, 0),
-              (None, '', None, '###0', '', '#0', None, '', None, 0)) )
+            ((None, '', None, '###0', '', '#0', None, '', None, 0),
+             (None, '', None, '###0', '', '#0', None, '', None, 0)))
 
     def testParsePosNegAlternativeIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('###0;#0'),
-            ( (None, '', None, '###0', '', '', None, '', None, 0),
-              (None, '', None,   '#0', '', '', None, '', None, 0)) )
+            ((None, '', None, '###0', '', '', None, '', None, 0),
+             (None, '', None,   '#0', '', '', None, '', None, 0)))
 
     def testParsePrefixedIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('+###0'),
-            ( (None, '+', None, '###0', '', '', None, '', None, 0),
-              (None, '+', None, '###0', '', '', None, '', None, 0)) )
+            ((None, '+', None, '###0', '', '', None, '', None, 0),
+             (None, '+', None, '###0', '', '', None, '', None, 0)))
 
     def testParsePosNegIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('+###0;-###0'),
-            ( (None, '+', None, '###0', '', '', None, '', None, 0),
-              (None, '-', None, '###0', '', '', None, '', None, 0)) )
+            ((None, '+', None, '###0', '', '', None, '', None, 0),
+             (None, '-', None, '###0', '', '', None, '', None, 0)))
 
     def testParseScientificPosNegIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('+###0E0;-###0E#0'),
-            ( (None, '+', None, '###0', '', '0', None, '', None, 0),
-              (None, '-', None, '###0', '', '#0', None, '', None, 0)) )
+            ((None, '+', None, '###0', '', '0', None, '', None, 0),
+             (None, '-', None, '###0', '', '#0', None, '', None, 0)))
 
     def testParseThousandSeparatorIntegerPattern(self):
         self.assertEqual(
             parseNumberPattern('#,##0'),
-            ( (None, '', None, '###0', '', '', None, '', None, 1),
-              (None, '', None, '###0', '', '', None, '', None, 1)) )
-        
+            ((None, '', None, '###0', '', '', None, '', None, 1),
+             (None, '', None, '###0', '', '', None, '', None, 1)))
+
     def testParseSimpleDecimalPattern(self):
         self.assertEqual(
             parseNumberPattern('###0.00#'),
-            ( (None, '', None, '###0', '00#', '', None, '', None, 0),
-              (None, '', None, '###0', '00#', '', None, '', None, 0)) )
+            ((None, '', None, '###0', '00#', '', None, '', None, 0),
+             (None, '', None, '###0', '00#', '', None, '', None, 0)))
 
     def testParseScientificDecimalPattern(self):
         self.assertEqual(
             parseNumberPattern('###0.00#E#0'),
-            ( (None, '', None, '###0', '00#', '#0', None, '', None, 0),
-              (None, '', None, '###0', '00#', '#0', None, '', None, 0)) )
+            ((None, '', None, '###0', '00#', '#0', None, '', None, 0),
+             (None, '', None, '###0', '00#', '#0', None, '', None, 0)))
 
     def testParsePosNegAlternativeFractionPattern(self):
         self.assertEqual(
             parseNumberPattern('###0.00#;#0.0#'),
-            ( (None, '', None, '###0', '00#', '', None, '', None, 0),
-              (None, '', None,   '#0',  '0#', '', None, '', None, 0)) )
+            ((None, '', None, '###0', '00#', '', None, '', None, 0),
+             (None, '', None,   '#0',  '0#', '', None, '', None, 0)))
 
     def testParsePosNegFractionPattern(self):
         self.assertEqual(
             parseNumberPattern('+###0.0##;-###0.0##'),
-            ( (None, '+', None, '###0', '0##', '', None, '', None, 0),
-              (None, '-', None, '###0', '0##', '', None, '', None, 0)) )
+            ((None, '+', None, '###0', '0##', '', None, '', None, 0),
+             (None, '-', None, '###0', '0##', '', None, '', None, 0)))
 
     def testParseScientificPosNegFractionPattern(self):
         self.assertEqual(
             parseNumberPattern('+###0.0##E#0;-###0.0##E0'),
-            ( (None, '+', None, '###0', '0##', '#0', None, '', None, 0),
-              (None, '-', None, '###0', '0##', '0', None, '', None, 0)) )
+            ((None, '+', None, '###0', '0##', '#0', None, '', None, 0),
+             (None, '-', None, '###0', '0##', '0', None, '', None, 0)))
 
     def testParseThousandSeparatorFractionPattern(self):
         self.assertEqual(
             parseNumberPattern('#,##0.0#'),
-            ( (None, '', None, '###0', '0#', '', None, '', None, 1),
-              (None, '', None, '###0', '0#', '', None, '', None, 1)) )
+            ((None, '', None, '###0', '0#', '', None, '', None, 1),
+             (None, '', None, '###0', '0#', '', None, '', None, 1)))
 
     def testParsePadding1WithoutPrefixPattern(self):
         self.assertEqual(
             parseNumberPattern('* ###0'),
-            ( (' ', '', None, '###0', '', '', None, '', None, 0),
-              (' ', '', None, '###0', '', '', None, '', None, 0)) )
+            ((' ', '', None, '###0', '', '', None, '', None, 0),
+             (' ', '', None, '###0', '', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('* ###0.0##'),
-            ( (' ', '', None, '###0', '0##', '', None, '', None, 0),
-              (' ', '', None, '###0', '0##', '', None, '', None, 0)) )
+            ((' ', '', None, '###0', '0##', '', None, '', None, 0),
+             (' ', '', None, '###0', '0##', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('* ###0.0##;*_###0.0##'),
-            ( (' ', '', None, '###0', '0##', '', None, '', None, 0),
-              ('_', '', None, '###0', '0##', '', None, '', None, 0)) )
+            ((' ', '', None, '###0', '0##', '', None, '', None, 0),
+             ('_', '', None, '###0', '0##', '', None, '', None, 0)))
 
     def testParsePadding1WithPrefixPattern(self):
         self.assertEqual(
             parseNumberPattern('* +###0'),
-            ( (' ', '+', None, '###0', '', '', None, '', None, 0),
-              (' ', '+', None, '###0', '', '', None, '', None, 0)) )
+            ((' ', '+', None, '###0', '', '', None, '', None, 0),
+             (' ', '+', None, '###0', '', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('* +###0.0##'),
-            ( (' ', '+', None, '###0', '0##', '', None, '', None, 0),
-              (' ', '+', None, '###0', '0##', '', None, '', None, 0)) )
+            ((' ', '+', None, '###0', '0##', '', None, '', None, 0),
+             (' ', '+', None, '###0', '0##', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('* +###0.0##;*_-###0.0##'),
-            ( (' ', '+', None, '###0', '0##', '', None, '', None, 0),
-              ('_', '-', None, '###0', '0##', '', None, '', None, 0)) )
+            ((' ', '+', None, '###0', '0##', '', None, '', None, 0),
+             ('_', '-', None, '###0', '0##', '', None, '', None, 0)))
 
     def testParsePadding1Padding2WithPrefixPattern(self):
         self.assertEqual(
             parseNumberPattern('* +* ###0'),
-            ( (' ', '+', ' ', '###0', '', '', None, '', None, 0),
-              (' ', '+', ' ', '###0', '', '', None, '', None, 0)) )
+            ((' ', '+', ' ', '###0', '', '', None, '', None, 0),
+             (' ', '+', ' ', '###0', '', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('* +* ###0.0##'),
-            ( (' ', '+', ' ', '###0', '0##', '', None, '', None, 0),
-              (' ', '+', ' ', '###0', '0##', '', None, '', None, 0)) )
+            ((' ', '+', ' ', '###0', '0##', '', None, '', None, 0),
+             (' ', '+', ' ', '###0', '0##', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('* +* ###0.0##;*_-*_###0.0##'),
-            ( (' ', '+', ' ', '###0', '0##', '', None, '', None, 0),
-              ('_', '-', '_', '###0', '0##', '', None, '', None, 0)) )
+            ((' ', '+', ' ', '###0', '0##', '', None, '', None, 0),
+             ('_', '-', '_', '###0', '0##', '', None, '', None, 0)))
 
     def testParsePadding3WithoutSufffixPattern(self):
         self.assertEqual(
             parseNumberPattern('###0* '),
-            ( (None, '', None, '###0', '', '', ' ', '', None, 0),
-              (None, '', None, '###0', '', '', ' ', '', None, 0)) )
+            ((None, '', None, '###0', '', '', ' ', '', None, 0),
+             (None, '', None, '###0', '', '', ' ', '', None, 0)))
         self.assertEqual(
             parseNumberPattern('###0.0##* '),
-            ( (None, '', None, '###0', '0##', '', ' ', '', None, 0),
-              (None, '', None, '###0', '0##', '', ' ', '', None, 0)) )
+            ((None, '', None, '###0', '0##', '', ' ', '', None, 0),
+             (None, '', None, '###0', '0##', '', ' ', '', None, 0)))
         self.assertEqual(
             parseNumberPattern('###0.0##* ;###0.0##*_'),
-            ( (None, '', None, '###0', '0##', '', ' ', '', None, 0),
-              (None, '', None, '###0', '0##', '', '_', '', None, 0)) )
+            ((None, '', None, '###0', '0##', '', ' ', '', None, 0),
+             (None, '', None, '###0', '0##', '', '_', '', None, 0)))
 
     def testParsePadding3InScientificPattern(self):
         self.assertEqual(
             parseNumberPattern('###0E#0* '),
-            ( (None, '', None, '###0', '', '#0', ' ', '', None, 0),
-              (None, '', None, '###0', '', '#0', ' ', '', None, 0)) )
+            ((None, '', None, '###0', '', '#0', ' ', '', None, 0),
+             (None, '', None, '###0', '', '#0', ' ', '', None, 0)))
         self.assertEqual(
             parseNumberPattern('###0.0##E0* '),
-            ( (None, '', None, '###0', '0##', '0', ' ', '', None, 0),
-              (None, '', None, '###0', '0##', '0', ' ', '', None, 0)) )
+            ((None, '', None, '###0', '0##', '0', ' ', '', None, 0),
+             (None, '', None, '###0', '0##', '0', ' ', '', None, 0)))
         self.assertEqual(
             parseNumberPattern('###0.0##E#0* ;###0.0##E0*_'),
-            ( (None, '', None, '###0', '0##', '#0', ' ', '', None, 0),
-              (None, '', None, '###0', '0##', '0', '_', '', None, 0)) )
+            ((None, '', None, '###0', '0##', '#0', ' ', '', None, 0),
+             (None, '', None, '###0', '0##', '0', '_', '', None, 0)))
 
     def testParsePadding3WithSufffixPattern(self):
         self.assertEqual(
             parseNumberPattern('###0* /'),
-            ( (None, '', None, '###0', '', '', ' ', '/', None, 0),
-              (None, '', None, '###0', '', '', ' ', '/', None, 0)) )
+            ((None, '', None, '###0', '', '', ' ', '/', None, 0),
+             (None, '', None, '###0', '', '', ' ', '/', None, 0)))
         self.assertEqual(
             parseNumberPattern('###0.0#* /'),
-            ( (None, '', None, '###0', '0#', '', ' ', '/', None, 0),
-              (None, '', None, '###0', '0#', '', ' ', '/', None, 0)) )
+            ((None, '', None, '###0', '0#', '', ' ', '/', None, 0),
+             (None, '', None, '###0', '0#', '', ' ', '/', None, 0)))
         self.assertEqual(
             parseNumberPattern('###0.0#* /;###0.0#*_/'),
-            ( (None, '', None, '###0', '0#', '', ' ', '/', None, 0),
-              (None, '', None, '###0', '0#', '', '_', '/', None, 0)) )
+            ((None, '', None, '###0', '0#', '', ' ', '/', None, 0),
+             (None, '', None, '###0', '0#', '', '_', '/', None, 0)))
 
     def testParsePadding3And4WithSuffixPattern(self):
         self.assertEqual(
             parseNumberPattern('###0* /* '),
-            ( (None, '', None, '###0', '', '', ' ', '/', ' ', 0),
-              (None, '', None, '###0', '', '', ' ', '/', ' ', 0)) )
+            ((None, '', None, '###0', '', '', ' ', '/', ' ', 0),
+              (None, '', None, '###0', '', '', ' ', '/', ' ', 0)))
         self.assertEqual(
             parseNumberPattern('###0* /* ;###0*_/*_'),
-            ( (None, '', None, '###0', '', '', ' ', '/', ' ', 0),
-              (None, '', None, '###0', '', '', '_', '/', '_', 0)) )
+            ((None, '', None, '###0', '', '', ' ', '/', ' ', 0),
+             (None, '', None, '###0', '', '', '_', '/', '_', 0)))
 
     def testParseMultipleCharacterPrefix(self):
         self.assertEqual(
             parseNumberPattern('DM###0'),
-            ( (None, 'DM', None, '###0', '', '', None, '', None, 0),
-              (None, 'DM', None, '###0', '', '', None, '', None, 0)) )
+            ((None, 'DM', None, '###0', '', '', None, '', None, 0),
+             (None, 'DM', None, '###0', '', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern('DM* ###0'),
-            ( (None, 'DM', ' ', '###0', '', '', None, '', None, 0),
-              (None, 'DM', ' ', '###0', '', '', None, '', None, 0)) )
+            ((None, 'DM', ' ', '###0', '', '', None, '', None, 0),
+             (None, 'DM', ' ', '###0', '', '', None, '', None, 0)))
 
     def testParseStringEscapedPrefix(self):
         self.assertEqual(
             parseNumberPattern("'DEM'###0"),
-            ( (None, 'DEM', None, '###0', '', '', None, '', None, 0),
-              (None, 'DEM', None, '###0', '', '', None, '', None, 0)) )
+            ((None, 'DEM', None, '###0', '', '', None, '', None, 0),
+             (None, 'DEM', None, '###0', '', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern("D'EM'###0"),
-            ( (None, 'DEM', None, '###0', '', '', None, '', None, 0),
-              (None, 'DEM', None, '###0', '', '', None, '', None, 0)) )
+            ((None, 'DEM', None, '###0', '', '', None, '', None, 0),
+             (None, 'DEM', None, '###0', '', '', None, '', None, 0)))
         self.assertEqual(
             parseNumberPattern("D'E'M###0"),
-            ( (None, 'DEM', None, '###0', '', '', None, '', None, 0),
-              (None, 'DEM', None, '###0', '', '', None, '', None, 0)) )
+            ((None, 'DEM', None, '###0', '', '', None, '', None, 0),
+             (None, 'DEM', None, '###0', '', '', None, '', None, 0)))
 
     def testParseStringEscapedSuffix(self):
         self.assertEqual(
             parseNumberPattern("###0'DEM'"),
-            ( (None, '', None, '###0', '', '', None, 'DEM', None, 0),
-              (None, '', None, '###0', '', '', None, 'DEM', None, 0)) )
+            ((None, '', None, '###0', '', '', None, 'DEM', None, 0),
+             (None, '', None, '###0', '', '', None, 'DEM', None, 0)))
         self.assertEqual(
             parseNumberPattern("###0D'EM'"),
-            ( (None, '', None, '###0', '', '', None, 'DEM', None, 0),
-              (None, '', None, '###0', '', '', None, 'DEM', None, 0)) )
+            ((None, '', None, '###0', '', '', None, 'DEM', None, 0),
+             (None, '', None, '###0', '', '', None, 'DEM', None, 0)))
         self.assertEqual(
             parseNumberPattern("###0D'E'M"),
-            ( (None, '', None, '###0', '', '', None, 'DEM', None, 0),
-              (None, '', None, '###0', '', '', None, 'DEM', None, 0)) )
-    
+            ((None, '', None, '###0', '', '', None, 'DEM', None, 0),
+             (None, '', None, '###0', '', '', None, 'DEM', None, 0)))
+
 
 class TestNumberFormat(TestCase):
-    """Test the functionality of an implmentation of the NumberFormat.""" 
+    """Test the functionality of an implmentation of the NumberFormat."""
 
     path = os.path.join(testdir, 'xmllocales', 'de_DE.xml')
     locale = ICUXMLLocaleFactory(path)()
@@ -578,7 +578,7 @@ class TestNumberFormat(TestCase):
                          41.02)
         self.assertEqual(self.format.parse('41.02__', '#0.0###* ;#0.0###*_'),
                          -41.02)
-        
+
     def testParsePadding3WithSufffix(self):
         self.assertEqual(
             self.format.parse('[41.02  ]', '[#0.0###* ];(#0.0###*_)'),
@@ -612,7 +612,7 @@ class TestNumberFormat(TestCase):
                          '23341')
         self.assertEqual(self.format.format(41, '#000'),
                          '041')
-    
+
     def testFormatScientificInteger(self):
         self.assertEqual(self.format.format(23341, '0.000#E0'),
                          '2.3341E4')
@@ -730,7 +730,7 @@ class TestNumberFormat(TestCase):
                          '41.02  ')
         self.assertEqual(self.format.format(-41.02, '#0.0###* ;#0.0###*_'),
                          '41.02__')
-        
+
     def testFormatPadding3WithSufffix(self):
         self.assertEqual(self.format.format(41.02, '[#0.0###* ];(#0.0###*_)'),
                          '[41.02  ]')
@@ -761,4 +761,4 @@ def test_suite():
         makeSuite(TestDateTimeFormat),
         makeSuite(TestNumberPatternParser),
         makeSuite(TestNumberFormat),
-        ))
+       ))

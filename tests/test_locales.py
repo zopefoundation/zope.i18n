@@ -13,13 +13,13 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.3 2003/01/27 21:51:56 jeremy Exp $
+$Id: test_locales.py,v 1.4 2003/03/13 18:49:14 alga Exp $
 """
 import os, sys
 import datetime
 from unittest import TestCase, TestSuite, makeSuite
 
-from zope.i18n.interfaces import ILocaleProvider, ILocale 
+from zope.i18n.interfaces import ILocaleProvider, ILocale
 from zope.i18n.interfaces import ILocaleVersion, ILocaleIdentity
 from zope.i18n.interfaces import ILocaleTimeZone, ILocaleCalendar
 from zope.i18n.interfaces import ILocaleNumberFormat, ILocaleCurrency
@@ -28,15 +28,15 @@ from zope.i18n.locales import NoGeneralLocaleError, LoadLocaleError
 from zope.i18n.locales import LocaleProvider, ICULocale, ICUXMLLocaleFactory
 from zope.i18n.locales import locales
 from zope.i18n.locales import ICULocaleVersion, ICULocaleIdentity
-from zope.i18n.locales import ICULocaleTimeZone, ICULocaleCalendar 
-from zope.i18n.locales import ICULocaleNumberFormat, ICULocaleCurrency 
+from zope.i18n.locales import ICULocaleTimeZone, ICULocaleCalendar
+from zope.i18n.locales import ICULocaleNumberFormat, ICULocaleCurrency
 
 from zope.i18n import tests
 testdir = os.path.dirname(tests.__file__)
 
 class TestILocaleProvider(TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
-    interface.""" 
+    interface."""
 
     def _makeNewProvider(self):
         raise NotImplemented
@@ -193,7 +193,7 @@ class TestICULocaleCalendar(TestCase):
         self.cal._time_patterns = {'medium': 'HH:mm:ss'}
         self.cal._date_patterns = {'medium': 'dd.MM.yyyy'}
         self.cal._datetime_pattern = '{1} {0}'
-        
+
     def testInterfaceConformity(self):
         self.assert_(ILocaleCalendar.isImplementedBy(self.cal))
 
@@ -276,7 +276,7 @@ class TestICULocaleCalendar(TestCase):
         self.cal.setTimePattern('long', 'HH:mm:ss z')
         self.assertEqual(self.cal._time_patterns,
                          {'medium': 'HH:mm:ss', 'long': 'HH:mm:ss z'})
-        
+
     def test_getTimePattern(self):
         self.assertEqual(self.cal.getTimePattern('medium'), 'HH:mm:ss')
 
@@ -338,7 +338,7 @@ class TestICULocaleNumberFormat(TestCase):
 
     def test_getSymbolMap(self):
         self.assertEqual(self.format.getSymbolMap(), {'decimal': '.'})
-        
+
 
 class TestICULocaleCurrency(TestCase):
 
@@ -358,7 +358,7 @@ class TestICULocaleCurrency(TestCase):
 
     def test_getSymbol(self):
         self.assertEqual(self.curr.getSymbol(), '$')
-        
+
     def test_setName(self):
         self.curr.setName('EUR')
         self.assertEqual(self.curr._name, 'EUR')
@@ -391,7 +391,7 @@ class TestICUXMLLocaleFactory(TestCase):
         os.path.join(testdir, 'xmllocales', 'de_DE.xml'))
     factory3 = ICUXMLLocaleFactory(
         os.path.join(testdir, 'xmllocales', 'de_DE_PREEURO.xml'))
-        
+
     def test_GermanySpecificGermanLocale(self):
         # Well, if the factory can create the Locale we are in good
         # shape. This test is only suppose to test whether XML-files with
@@ -483,10 +483,10 @@ class TestICUXMLLocaleFactory(TestCase):
         self.assertEqual(curr[1].getDecimal(), u',')
         self.assertEqual(curr[1].getPattern(), None)
         self.assertEqual(curr[2], True)
-    
+
 
 class TestICULocale(TestCase):
-    
+
     path = os.path.join(testdir, 'xmllocales', 'root.xml')
     localeFactory = ICUXMLLocaleFactory(path)
     locale = localeFactory()
@@ -557,7 +557,7 @@ class TestICULocale(TestCase):
         self.assertEqual(cal.getMonth(1), (u'January', u'Jan'))
         self.assertEqual(cal.getWeekday(1), (u'Sunday', u'Sun'))
         self.assertEqual(cal.getDatePattern('full'), 'EEEE, MMMM d, yyyy')
-        
+
     def test_getDefaultCalendar(self):
         cal = self.locale.getDefaultCalendar()
         self.assertEqual(cal.klass, u'gregorian')
@@ -571,7 +571,7 @@ class TestICULocale(TestCase):
         self.assertEqual(format.klass, u'decimal')
         self.assertEqual(format.getPattern('decimal'), u'#,##0.###;-#,##0.###')
         self.assertEqual(format.getSymbol('exponential'), u'E')
-        
+
     def test_getDefaultNumberFormat(self):
         format = self.locale.getDefaultNumberFormat()
         self.assertEqual(format.klass, u'decimal')
@@ -586,7 +586,7 @@ class TestICULocale(TestCase):
         self.assertEqual(curr.getName(), u'XXX')
         self.assertEqual(curr.getSymbol(), u'\xa4')
         self.assertEqual(curr.getDecimal(), u'.')
-        
+
     def test_getDefaultCurrency(self):
         curr = self.locale.getDefaultCurrency()
         self.assertEqual(curr.id, u'XXX')
@@ -600,7 +600,7 @@ class TestICULocaleAndProvider(TestCase):
 
     # Set the locale on the class so that test cases don't have
     # to pay to construct a new one each time.
-    
+
     orig = locales._locale_dir
     locales._locale_dir = os.path.join(testdir, 'xmllocales')
     locales.loadLocale(None, None, None)
@@ -609,7 +609,7 @@ class TestICULocaleAndProvider(TestCase):
     locales.loadLocale('de', 'DE', 'PREEURO')
     locale = locales.getLocale('de', 'DE', 'PREEURO')
     locales._locale_dir = orig
-        
+
     def test_getDisplayLanguage(self):
         self.assertEqual(self.locale.getDisplayLanguage('de'), 'Deutsch')
         self.assertRaises(KeyError, self.locale.getDisplayLanguage,
@@ -653,7 +653,7 @@ class TestICULocaleAndProvider(TestCase):
         self.assertEqual(formatter.parse('1,234.567'), 1234.567)
         self.assertEqual(formatter.parse('-1,234.567'), -1234.567)
 
-        
+
 class TestGlobalLocaleProvider(TestCase):
 
     def testLoading(self):

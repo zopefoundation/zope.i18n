@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.3 2003/01/23 15:25:03 tim_one Exp $
+$Id: interfaces.py,v 1.4 2003/03/13 18:49:13 alga Exp $
 """
 from zope.interface import Interface, Attribute
 
@@ -403,7 +403,7 @@ class ILocaleProvider(Interface):
     sense to have many locale facilities, especially since this one will be so
     complete, since we will the ICU XML Files as data.  """
 
-    def loadLocale(language=None, country=None, variant=None): 
+    def loadLocale(language=None, country=None, variant=None):
         """Load the locale with the specs that are given by the arguments of
         the method. Note that the LocaleProvider must know where to get the
         locales from."""
@@ -427,7 +427,7 @@ class ILocaleIdentity(Interface):
       o variant -- Sometimes there are regional or historical differences even
         in a certain country. For these cases we use the variant field. A good
         example is the time before the Euro in Germany for example. Therefore
-        a valid variant would be 'PREEURO'.  
+        a valid variant would be 'PREEURO'.
 
     Note that all of these attributes are read-only once they are set (usually
     done in constructor)!
@@ -475,7 +475,7 @@ class ILocaleTimeZone(Interface):
 
     Important: ILocaleTimeZone objects are not intended to provide
     implementations for the standard datetime module timezone support. They
-    are merily used for Locale support. 
+    are merily used for Locale support.
     """
 
     id = Attribute("Standard name of the timezone for unique referencing.")
@@ -501,7 +501,7 @@ class ILocaleCalendar(Interface):
         """Update this calendar using data from other. Assume that unless
         other's data is not present, other has always more specific
         information."""
-    
+
     def setMonth(id, name, abbr):
         """Add a month's locale data."""
 
@@ -565,25 +565,25 @@ class ILocaleCalendar(Interface):
 
     def setTimePattern(type, pattern):
         """Set the time pattern for a particular time format type. Possible
-        types are full, long, medium, and short.""" 
+        types are full, long, medium, and short."""
 
     def getTimePattern(type):
         """Get the time pattern for a particular time format type. Possible
-        types are full, long, medium, and short.""" 
+        types are full, long, medium, and short."""
 
     def setDatePattern(name, pattern):
         """Set the date pattern for a particular date format type. Possible
-        types are full, long, medium, and short.""" 
+        types are full, long, medium, and short."""
 
     def getDatePattern(name):
         """Get the date pattern for a particular date format type. Possible
-        types are full, long, medium, and short.""" 
+        types are full, long, medium, and short."""
 
     def setDateTimePattern(pattern):
-        """Set the date pattern for the datetime.""" 
+        """Set the date pattern for the datetime."""
 
     def getDateTimePattern():
-        """Get the date pattern for the datetime.""" 
+        """Get the date pattern for the datetime."""
 
 
 class ILocaleNumberFormat(Interface):
@@ -611,7 +611,7 @@ class ILocaleNumberFormat(Interface):
     def getSymbolMap():
         """Return a map of all symbols. Thisis useful for the INumberFormat."""
 
-    
+
 class ILocaleCurrency(Interface):
     """Defines a particular currency."""
 
@@ -640,9 +640,9 @@ class ILocaleCurrency(Interface):
         currency unit is often not desired."""
 
     def getPattern():
-        """Get currency pattern."""    
+        """Get currency pattern."""
 
-        
+
 class ILocale(Interface):
     """This class contains all important information about the locale.
 
@@ -651,7 +651,7 @@ class ILocale(Interface):
     hierarchy develops. It is easy to recognize that a locale that is missing
     the variant is more general applicable than the one with the
     variant. Therefore, if a specific Locale does not contain the required
-    information, it should look one level higher. 
+    information, it should look one level higher.
     There will be a root locale that specifies none of the above identifiers.
     """
 
@@ -719,50 +719,50 @@ class INumberFormat(IFormat):
     rules (I modified the rules from ICU a bit, since I think they did not
     agree well with the real world XML formatting strings):
 
-      posNegPattern      := ({subpattern};{subpattern} | {subpattern})  
+      posNegPattern      := ({subpattern};{subpattern} | {subpattern})
       subpattern         := {padding}{prefix}{padding}{integer}{fraction}
-                            {exponential}{padding}{suffix}{padding}  
-      prefix             := '\u0000'..'\uFFFD' - specialCharacters *  
+                            {exponential}{padding}{suffix}{padding}
+      prefix             := '\u0000'..'\uFFFD' - specialCharacters *
       suffix             := '\u0000'..'\uFFFD' - specialCharacters *
-      integer            := {digitField}'0'  
-      fraction           := {decimalPoint}{digitField}  
+      integer            := {digitField}'0'
+      fraction           := {decimalPoint}{digitField}
       exponential        := E integer
-      digitField         := ( {digitField} {groupingSeparator} | 
-                              {digitField} '0'* | 
-                              '0'* | 
-                              {optionalDigitField} )  
-      optionalDigitField := ( {digitField} {groupingSeparator} | 
-                              {digitField} '#'* | 
-                              '#'* )  
-      groupingSeparator  := ,  
-      decimalPoint       := .  
+      digitField         := ( {digitField} {groupingSeparator} |
+                              {digitField} '0'* |
+                              '0'* |
+                              {optionalDigitField} )
+      optionalDigitField := ( {digitField} {groupingSeparator} |
+                              {digitField} '#'* |
+                              '#'* )
+      groupingSeparator  := ,
+      decimalPoint       := .
       padding            := * '\u0000'..'\uFFFD'
 
 
     Possible pattern symbols:
 
-      0    A digit. Always show this digit even if the value is zero.  
-      #    A digit, suppressed if zero  
-      .    Placeholder for decimal separator  
-      ,    Placeholder for grouping separator  
-      E    Separates mantissa and exponent for exponential formats  
+      0    A digit. Always show this digit even if the value is zero.
+      #    A digit, suppressed if zero
+      .    Placeholder for decimal separator
+      ,    Placeholder for grouping separator
+      E    Separates mantissa and exponent for exponential formats
       ;    Separates formats (that is, a positive number format verses a
            negative number format)
       -    Default negative prefix. Note that the locale's minus sign
            character is used.
       +    If this symbol is specified the locale's plus sign character is
            used.
-      %    Multiply by 100, as percentage  
-      ?    Multiply by 1000, as per mille  
+      %    Multiply by 100, as percentage
+      ?    Multiply by 1000, as per mille
       \u00A4    This is the currency sign. it will be replaced by a currency
            symbol. If it is present in a pattern, the monetary decimal
            separator is used instead of the decimal separator.
-      \u00A4\u00A4   This is the international currency sign. It will be replaced 
+      \u00A4\u00A4   This is the international currency sign. It will be replaced
            by an international currency symbol.  If it is present in a
-           pattern, the monetary decimal separator is used instead of 
-           the decimal separator. 
-      X    Any other characters can be used in the prefix or suffix  
-      '    Used to quote special characters in a prefix or suffix  
+           pattern, the monetary decimal separator is used instead of
+           the decimal separator.
+      X    Any other characters can be used in the prefix or suffix
+      '    Used to quote special characters in a prefix or suffix
     """
 
     symbols = Attribute(
@@ -773,7 +773,7 @@ class INumberFormat(IFormat):
 
           decimal, group, list, percentSign, nativeZeroDigit, patternDigit,
           plusSign, minusSign, exponential, perMille, infinity, nan
-        
+
         """)
 
 
@@ -788,27 +788,27 @@ class IDateTimeFormat(IFormat):
     """DateTime formatting and parsing interface. Here is a list of
     possible characters and their meaning:
 
-      Symbol Meaning               Presentation      Example  
+      Symbol Meaning               Presentation      Example
 
-      G      era designator        (Text)            AD  
-      y      year                  (Number)          1996  
+      G      era designator        (Text)            AD
+      y      year                  (Number)          1996
       M      month in year         (Text and Number) July and 07
       d      day in month          (Number)          10
-      h      hour in am/pm (1~12)  (Number)          12  
+      h      hour in am/pm (1~12)  (Number)          12
       H      hour in day (0~23)    (Number)          0
-      m      minute in hour        (Number)          30  
-      s      second in minute      (Number)          55  
-      S      millisecond           (Number)          978  
-      E      day in week           (Text)            Tuesday  
-      D      day in year           (Number)          189  
+      m      minute in hour        (Number)          30
+      s      second in minute      (Number)          55
+      S      millisecond           (Number)          978
+      E      day in week           (Text)            Tuesday
+      D      day in year           (Number)          189
       F      day of week in month  (Number)          2 (2nd Wed in July)
-      w      week in year          (Number)          27  
-      W      week in month         (Number)          2  
-      a      am/pm marker          (Text)            pm  
-      k      hour in day (1~24)    (Number)          24  
-      K      hour in am/pm (0~11)  (Number)          0  
+      w      week in year          (Number)          27
+      W      week in month         (Number)          2
+      a      am/pm marker          (Text)            pm
+      k      hour in day (1~24)    (Number)          24
+      K      hour in am/pm (0~11)  (Number)          0
       z      time zone             (Text)            Pacific Standard Time
-      '      escape for text  
+      '      escape for text
       ''     single quote                            '
 
     Meaning of the amount of characters:
