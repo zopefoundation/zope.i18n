@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the ITranslator / Translator
 
-$Id: test_translator.py,v 1.3 2003/03/25 23:25:15 bwarsaw Exp $
+$Id: test_translator.py,v 1.4 2003/04/11 13:42:37 mgedmin Exp $
 """
 
 import os
@@ -28,8 +28,23 @@ from zope.i18n.tests.test_globaltranslationservice import testdir
 from zope.app.tests.placelesssetup import PlacelessSetup
 from zope.component import getService
 
+class LocaleIdentityStub:
+    # Lie -- we're only going to implement part of the interface
+    __implements__ = ILocaleIdentity
+
+    def __init__(self, language=None):
+        self.language = language
+
+class LocaleStub:
+    # Lie -- we're only going to implement part of the interface
+    __implements__ = ILocale
+
+    def __init__(self, language=None):
+        self.id = LocaleIdentityStub(language)
+
 
 class TranslatorTests(unittest.TestCase, PlacelessSetup):
+
     def setUp(self):
         # Create all the goo for placeless services
         PlacelessSetup.setUp(self)
@@ -41,23 +56,16 @@ class TranslatorTests(unittest.TestCase, PlacelessSetup):
         service = getService(None, 'Translation')
         service.addCatalog(de_catalog)
 
-        # Create a stub ILocaleIdentity
-        class LocaleIdentityStub:
-            # Lie -- we're only going to implement part of the interface
-            __implements__ = ILocaleIdentity
-            language = 'de'
-
-        # Create a stub ILocale
-        class LocaleStub:
-            # Lie -- we're only going to implement part of the interface
-            __implements__ = ILocale
-            id = LocaleIdentityStub()
-
-        self._locale = LocaleStub()
-
     def test_translator(self):
-        translator = Translator(self._locale, 'default', None)
+        locale = LocaleStub('de')
+        translator = Translator(locale, 'default', None)
         self.assertEqual(translator.translate('short_greeting'), 'Hallo!')
+
+        # context is something that is not adaptable to IUserPreferredLanguages
+        context = object()
+        locale = LocaleStub(None)
+        translator = Translator(locale, 'default', context)
+        self.assertEqual(translator.translate('short_greeting', default=42), 42)
 
 
 
