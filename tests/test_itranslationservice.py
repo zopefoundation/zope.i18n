@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: test_itranslationservice.py,v 1.7 2003/08/07 20:26:41 srichter Exp $
+$Id: test_itranslationservice.py,v 1.8 2004/01/10 11:02:37 philikon Exp $
 """
 
 import unittest
@@ -48,7 +48,7 @@ class TestITranslationService(PlacelessSetup):
         pass
 
     def setUp(self):
-        PlacelessSetup.setUp(self)
+        super(TestITranslationService, self).setUp()
         self._service = self._getTranslationService()
         assert verifyObject(ITranslationService, self._service)
         # Setup the negotiator service registry entry

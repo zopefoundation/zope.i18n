@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the ITranslator / Translator
 
-$Id: test_translator.py,v 1.6 2003/06/06 19:29:10 stevea Exp $
+$Id: test_translator.py,v 1.7 2004/01/10 11:02:37 philikon Exp $
 """
 
 import os
@@ -42,11 +42,11 @@ class LocaleStub:
         self.id = LocaleIdentityStub(language)
 
 
-class TranslatorTests(unittest.TestCase, PlacelessSetup):
+class TranslatorTests(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
         # Create all the goo for placeless services
-        PlacelessSetup.setUp(self)
+        super(TranslatorTests, self).setUp()
         # Create a global translation service, initialized with a bunch of
         # catalogs (stolen from test_globaltranslationservice.py).
         path = testdir()

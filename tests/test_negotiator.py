@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: test_negotiator.py,v 1.5 2003/06/06 19:29:10 stevea Exp $
+$Id: test_negotiator.py,v 1.6 2004/01/10 11:02:37 philikon Exp $
 """
 import unittest
 
@@ -33,8 +33,9 @@ class Env:
 
 
 class Test(PlacelessSetup, unittest.TestCase):
+
     def setUp(self):
-        PlacelessSetup.setUp(self)
+        super(Test, self).setUp()
         self.Negotiator = Negotiator()
 
     def test1(self):
