@@ -13,7 +13,7 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.3 2003/03/25 17:01:52 slinkp Exp $
+$Id: globaltranslationservice.py,v 1.4 2003/03/25 20:43:35 jim Exp $
 """
 
 from zope.i18n.negotiator import negotiator
@@ -99,3 +99,9 @@ class GlobalTranslationService(SimpleTranslationService):
         return self.interpolate(text, mapping)
 
 translationService = GlobalTranslationService()
+
+
+# Register our cleanup with Testing.CleanUp to make writing unit tests simpler.
+from zope.testing.cleanup import addCleanUp
+addCleanUp(translationService.__init__)
+del addCleanUp
