@@ -391,7 +391,8 @@ class ILocaleDates(Interface):
                          description=u"This is a ILocaleTimeZone object."))
 
     def getFormatter(category, calendar='gregorian', length=None, name=None):
-        """Get the ... XXX"""
+        """Get a date/time formatter."""
+
 
 class ILocaleCurrency(Interface):
     """Defines a particular currency."""
