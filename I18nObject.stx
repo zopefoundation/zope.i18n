@@ -1,12 +1,12 @@
 I18n Objects
 
-  I18n objects are used to interantionalize content that cannot be translated
+  I18n objects are used to internationalize content that cannot be translated
   via messages. The problem is three fold:
 
-    - Internationalize an object iteself. The best example an Image. Often
+    - Internationalize an object iteself. The best example is an Image. Often
       people put text into an image that needs to be localized, but since it
       is a picture the text cannot be retrieved as a string. You therefore
-      will need a mechanism create a different version of the object for every
+      will need a mechanism to create a different version of the object for every
       language. (Note: This behavior is the same as currently implemented in
       the ZBabelObject.) 
 
@@ -15,7 +15,7 @@ I18n Objects
       object. In order for this to work out you need to have an
       I18n-supportive AttributeAnnotation. Solving this use case would be
       similar to some of the work David Juan did with
-      InternationcalizedContent in Localizer.
+      InternationalizedContent in Localizer.
 
     - Formatting Objects. This problem involves converting basic or complex
       types into a localized format. Good examples for this are decimal
@@ -24,7 +24,7 @@ I18n Objects
       formatter to apply the parsed template. Initial steps for implementing
       the template parser have been already taken, therefore we only need to
       develop some interfaces and unittests here, so the parser developer
-      (which will use the ICU C/C++ libraries) will what parts of the parser
+      (which will use the ICU C/C++ libraries) will (choose?) what parts of the parser
       to wrap for Python. 
 
    
