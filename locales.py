@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProdiver Implmentation.
 
-$Id: locales.py,v 1.6 2003/01/10 18:55:32 tim_one Exp $
+$Id: locales.py,v 1.7 2003/01/27 21:49:01 jeremy Exp $
 """
 import os
 import datetime
@@ -501,6 +501,14 @@ class ICULocale:
         two-letter id."""
         self._languages[id] = name
 
+    def updateLanguageNames(self, dict):
+        """Add a dictionary of languages.
+
+        The dict should map a two-letter id to the language in the locale's
+        native language.
+        """
+        self._languages.update(dict)
+
     def getLanguageName(self, id):
         """Get the localized language name for the given id."""
         return self._languages[id]
@@ -513,6 +521,15 @@ class ICULocale:
         """Add a country in the locale's native language defined by its
         two-letter id."""
         self._countries[id] = name
+
+    def updateCountryNames(self, dict):
+        """Add a dictionary of countries.
+
+        The dict should map the country's two-letter id to the country's
+        name in its native language.
+        """
+        self._countries.update(dict)
+        
 
     def getCountryName(self, id):
         """Get the localized country name for the given id."""
@@ -1027,12 +1044,8 @@ class ICUXMLLocaleFactory:
         # Set Versioning
         for version in self._extractVersions():
             locale.setVersion(version)
-        # Set Languages
-        for lang in self._extractLanguages().items():
-            locale.setLanguageName(*lang)
-        # Set Countries
-        for country in self._extractCountries().items():
-            locale.setCountryName(*country)
+        locale.updateLanguageNames(self._extractLanguages())
+        locale.updateCountryNames(self._extractCountries())
         # Set TimeZones
         for tz in self._extractTimeZones():
             locale.setTimeZone(*tz)
