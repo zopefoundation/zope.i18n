@@ -13,21 +13,24 @@
 ##############################################################################
 """Message ID tests.
 
-$Id: test_messageid.py,v 1.1 2003/03/25 00:23:05 slinkp Exp $
+$Id: test_messageid.py,v 1.2 2003/04/09 21:23:14 bwarsaw Exp $
 """
 
 import unittest
 from zope.i18n.messageid import MessageIDFactory, MessageID
 
+
 class TestMessageID(unittest.TestCase):
-    def test(self):
+    def testMessageIDFactory(self):
+        eq = self.assertEqual
         fact = MessageIDFactory('test')
         id = fact(u'this is a test')
-        self.assert_(isinstance(id, MessageID))
-        self.assertEqual(id.domain, 'test')
-        self.assertEqual(id.default, None)
-        id.setDefault(u'blah')
-        self.assertEqual(id.default, u'blah') 
+        self.failUnless(isinstance(id, MessageID))
+        self.failUnless(isinstance(id, unicode))
+        eq(id.domain, 'test')
+        eq(id.default, None)
+        id.default = u'blah'
+        eq(id.default, u'blah')
 
 
 def test_suite():
