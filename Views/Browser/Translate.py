@@ -13,7 +13,7 @@
 ##############################################################################
 """Translation GUI
 
-$Id: Translate.py,v 1.1 2002/06/12 18:38:57 srichter Exp $
+$Id: Translate.py,v 1.2 2002/06/13 14:04:58 srichter Exp $
 """
 from Zope.Publisher.Browser.BrowserView import BrowserView
 from Zope.App.PageTemplate import ViewPageTemplateFile
@@ -74,8 +74,8 @@ class Translate(BrowserView):
         for count in range(5):
             msg_id = self.request.get('new-msg_id-%i' %count, '')
             if msg_id:
-                domain = REQUEST.get('new-domain-%i' %count, 'default')
-                for language in self.getEditLanguages(self.request):
+                domain = self.request.get('new-domain-%i' %count, 'default')
+                for language in self.getEditLanguages():
                     msg = self.request.get('new-%s-%i' %(language, count),
                                            msg_id)
                     self.context.addMessage(domain, msg_id, msg, language)
@@ -87,7 +87,7 @@ class Translate(BrowserView):
         for key in keys:
             msg_id = self.request['edit-msg_id-'+key]
             domain = self.request['edit-domain-'+key]
-            for language in self.getEditLanguages(self.request):
+            for language in self.getEditLanguages():
                 msg = self.request['edit-%s-%s' %(language, key)]
                 if msg != self.context.translate(domain, msg_id,
                                                  target_language=language):
@@ -96,8 +96,17 @@ class Translate(BrowserView):
         return self.request.getResponse().redirect(self.request.URL[-1])
 
 
-    def deleteMessages(self):
+    def deleteMessages(self, message_ids):
         """ """
+        for id in message_ids:
+            domain = self.request.form['edit-domain-%s' %id]
+            msgid = self.request.form['edit-msg_id-%s' %id]
+            for language in self.context.getAvailableLanguages(domain):
+                # Some we edit a language, but no translation exists...
+                try:
+                    self.context.deleteMessage(domain, msgid, language)
+                except KeyError:
+                    pass
         return self.request.getResponse().redirect(self.request.URL[-1])
 
 

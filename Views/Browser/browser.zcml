@@ -19,6 +19,8 @@
 
      <browser:page name="editMessages.html" attribute="editMessages" />
 
+     <browser:page name="deleteMessages.html" attribute="deleteMessages" />
+
      <browser:page name="addLanguage.html" attribute="addLanguage" />
      <browser:page name="addDomain.html" attribute="addDomain" />
 

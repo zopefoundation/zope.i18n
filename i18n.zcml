@@ -26,12 +26,7 @@
                      interface="Zope.I18n.ITranslationService." 
                      />
    <security:require permission="Zope.ManageServices"
-                     attributes="getMessageIdsOfDomain
-		                 getAllDomains getAllLanguages 
-		                 getAvailableDomains getAvailableLanguages 
-				 addMessage updateMessage
-                                 addLanguage addDomain
-                                 deleteLanguage deleteDomain"
+                     interface="Zope.I18n.IEditableTranslationService." 
                      />
    <security:require permission="Zope.ManageServices"
                      interface="Zope.App.OFS.Container.IContainer." 

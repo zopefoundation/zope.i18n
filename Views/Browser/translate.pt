@@ -111,8 +111,8 @@
         <input type="hidden"
 	       tal:attributes="name python: 'edit-domain-%i' %message[2];
                                value python: message[1]">
-        <input type="checkbox" names="message_ids:list"
-	       tal:attributes="name python: message[2]">
+        <input type="checkbox" name="message_ids:list"
+	       tal:attributes="value python: message[2]">
       </td>
       <td>
         <a href="editMessage?messageId="
