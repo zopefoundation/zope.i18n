@@ -13,7 +13,7 @@
 ##############################################################################
 """This is the standard, placeful Translation Service for TTW development.
 
-$Id: TranslationService.py,v 1.7 2002/06/13 15:47:50 srichter Exp $
+$Id: TranslationService.py,v 1.8 2002/06/16 18:25:13 srichter Exp $
 """
 import re
 from types import StringTypes, TupleType
@@ -32,7 +32,6 @@ from Zope.I18n.Negotiator import negotiator
 from Zope.I18n.Domain import Domain
 from Zope.I18n.IMessageCatalog import IMessageCatalog
 from Zope.I18n.ITranslationService import ITranslationService
-from Zope.I18n.IEditableTranslationService import IEditableTranslationService
 from Zope.I18n.SimpleTranslationService import SimpleTranslationService
 
 
@@ -43,7 +42,7 @@ class ILocalTranslationService(ITranslationService,
 
 class TranslationService(BTreeContainer, SimpleTranslationService):
 
-    __implements__ =  ILocalTranslationService, IEditableTranslationService
+    __implements__ =  ILocalTranslationService
 
     def __init__(self, default_domain='global'):
         super(TranslationService, self).__init__()
@@ -95,7 +94,10 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
     ############################################################
     # Implementation methods for interface
-    # Zope.I18n.ITranslationService.
+    # Zope.I18n.ITranslationService.ITranslationService
+
+    ######################################
+    # from: Zope.I18n.ITranslationService.IReadTranslationService
 
     def translate(self, domain, msgid, mapping=None, context=None,  
                   target_language=None):
@@ -124,16 +126,12 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         # Now we need to do the interpolation
         return self.interpolate(text, mapping)
 
-    # end Zope.I18n.ITranslationService
-    ############################################################
 
-
-    ############################################################
-    # Implementation methods for interface
-    # Zope.I18n.IEditableTranslationService.
+    ######################################
+    # from: Zope.I18n.ITranslationService.IWriteTranslationService
     
     def getMessageIdsOfDomain(self, domain, filter='%'):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         filter = filter.replace('%', '.*')
         filter_re = re.compile(filter)
         
@@ -147,8 +145,27 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         return msgids.keys()
 
 
+    def getMessagesOfDomain(self, domain):
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
+        messages = []
+        languages = self.getAvailableLanguages(domain)
+        for language in languages:
+            for name in self._catalogs[(language, domain)]:
+                messages += self[name].getMessages()
+        return messages
+
+
+    def getMessage(self, msgid, domain, language):
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
+        for name in self._catalogs.get((language, domain), []):
+            try:
+                return self[name].getFullMessage(msgid)
+            except:
+                pass
+        return None
+
     def getAllLanguages(self):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         languages = {}
         for key in self._catalogs.keys():
             languages[key[0]] = None
@@ -156,7 +173,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAllDomains(self):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         domains = {}
         for key in self._catalogs.keys():
             domains[key[1]] = None
@@ -164,7 +181,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAvailableLanguages(self, domain):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         identifiers = self._catalogs.keys()
         identifiers = filter(lambda x, d=domain: x[1] == d, identifiers)
         languages = map(lambda x: x[0], identifiers)
@@ -172,42 +189,42 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def getAvailableDomains(self, language):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         identifiers = self._catalogs.keys()
         identifiers = filter(lambda x, l=language: x[0] == l, identifiers)
         domains = map(lambda x: x[1], identifiers)
         return domains
         
 
-    def addMessage(self, domain, msg_id, msg, target_language):
-        'See IEditableTranslationService'
-        if not self._catalogs.has_key((target_language, domain)):
-            if target_language not in self.getAllLanguages():
-                self.addLanguage(target_language)
+    def addMessage(self, domain, msgid, msg, language, mod_time=None):
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
+        if not self._catalogs.has_key((language, domain)):
+            if language not in self.getAllLanguages():
+                self.addLanguage(language)
             if domain not in self.getAllDomains():
                 self.addDomain(domain)
             
-        catalog_name = self._catalogs[(target_language, domain)][0]
+        catalog_name = self._catalogs[(language, domain)][0]
         catalog = self[catalog_name]
-        catalog.setMessage(msg_id, msg)
+        catalog.setMessage(msgid, msg, mod_time)
 
 
-    def updateMessage(self, domain, msg_id, msg, target_language):
-        'See IEditableTranslationService'
-        catalog_name = self._catalogs[(target_language, domain)][0]
+    def updateMessage(self, domain, msgid, msg, language, mod_time=None):
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
+        catalog_name = self._catalogs[(language, domain)][0]
         catalog = self[catalog_name]
-        catalog.setMessage(msg_id, msg)
+        catalog.setMessage(msgid, msg, mod_time)
 
 
-    def deleteMessage(self, domain, msg_id, target_language):
-        'See IEditableTranslationService'
-        catalog_name = self._catalogs[(target_language, domain)][0]
+    def deleteMessage(self, domain, msgid, language):
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
+        catalog_name = self._catalogs[(language, domain)][0]
         catalog = self[catalog_name]
-        catalog.deleteMessage(msg_id)
+        catalog.deleteMessage(msgid)
 
 
     def addLanguage(self, language):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         domains = self.getAllDomains()
         if not domains:
             domains = [self.default_domain]
@@ -218,7 +235,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def addDomain(self, domain):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         languages = self.getAllLanguages()
         if not languages:
             languages = ['en']
@@ -229,7 +246,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
 
 
     def deleteLanguage(self, language):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         domains = self.getAvailableDomains(language)
         for domain in domains:
             # Delete all catalogs from the data storage
@@ -240,7 +257,7 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
             del self._catalogs[(language, domain)]
 
     def deleteDomain(self, domain):
-        'See IEditableTranslationService'
+        'See Zope.I18n.ITranslationService.IWriteTranslationService'
         languages = self.getAvailableLanguages(domain)
         for language in languages:
             # Delete all catalogs from the data storage
@@ -249,6 +266,51 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
                     del self[name]
             # Now delete the specifc catalog registry for this lang/domain
             del self._catalogs[(language, domain)]
+
+
+    ######################################
+    # from: Zope.I18n.ITranslationService.ISyncTranslationService
+
+    def getMessagesMapping(self, domains, languages, foreign_messages):
+        'See Zope.I18n.ITranslationService.ISyncTranslationService'
+        mapping = {}
+        # Get all relevant local messages
+        local_messages = []
+        for domain in domains:
+            for language in languages:
+                for name in self._catalogs.get((language, domain), []):
+                    local_messages += self[name].getMessages()
+
+
+        for fmsg in foreign_messages:
+            ident = (fmsg['msgid'], fmsg['domain'], fmsg['language'])
+            mapping[ident] = (fmsg, self.getMessage(*ident))
+                
+        for lmsg in local_messages:
+            ident = (lmsg['msgid'], lmsg['domain'], lmsg['language'])
+            if ident not in mapping.keys(): 
+                mapping[ident] = (None, lmsg)
+
+        return mapping
+
+
+    def synchronize(self, messages_mapping):
+        'See Zope.I18n.ITranslationService.ISyncTranslationService'
+
+        for value in messages_mapping.values():
+            fmsg = value[0]
+            lmsg = value[1]
+            if fmsg is None:
+                self.deleteMessage(lmsg['domain'], lmsg['msgid'],
+                                   lmsg['language'])
+            elif lmsg is None:
+                self.addMessage(fmsg['domain'], fmsg['msgid'],
+                                fmsg['msgstr'], fmsg['language'],
+                                fmsg['mod_time'])
+            elif fmsg['mod_time'] > lmsg['mod_time']:
+                self.updateMessage(fmsg['domain'], fmsg['msgid'],
+                                   fmsg['msgstr'], fmsg['language'],
+                                   fmsg['mod_time'])
 
     #
     ############################################################

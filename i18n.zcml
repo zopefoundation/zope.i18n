@@ -33,9 +33,7 @@
    <security:require permission="Zope.Public"
                      interface="Zope.I18n.ITranslationService." 
                      />
-   <security:require permission="Zope.ManageServices"
-                     interface="Zope.I18n.IEditableTranslationService." 
-                     />
+
    <security:require permission="Zope.ManageServices"
                      interface="Zope.App.OFS.Container.IContainer." 
                      />
@@ -56,7 +54,9 @@
            permission="Zope.Public"
            component=".GlobalTranslationService.translationService" />
 
+<zmi:icon for=".ITranslationService." file="./i18n_service.gif" />
 
+<!-- Setup Message Catalogs -->
 <content class=".MessageCatalog.">
    <security:require permission="Zope.Security"
                      interface=".IMessageCatalog." 
@@ -69,6 +69,18 @@
 
 <factory component=".MessageCatalog." 
          id="Message Catalog"/>
+
+
+<!-- Setup Export and Import Filters -->
+<adapter factory=".GettextExportFilter."
+         for=".IEditableTranslationService."
+         provides=".IMessageExportFilter."
+         />
+
+<adapter factory=".GettextImportFilter."
+         for=".IEditableTranslationService."
+         provides=".IMessageImportFilter."
+         />
 
 
 <gts:registerTranslations directory="./locale" />

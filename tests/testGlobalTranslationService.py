@@ -13,19 +13,19 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: testGlobalTranslationService.py,v 1.2 2002/06/12 21:00:12 bwarsaw Exp $
+$Id: testGlobalTranslationService.py,v 1.3 2002/06/16 18:25:14 srichter Exp $
 """
 import unittest, sys, os
 from Zope.I18n.GlobalTranslationService import GlobalTranslationService
 from Zope.I18n.GettextMessageCatalog import GettextMessageCatalog 
-from testITranslationService import TestITranslationService
+from testIReadTranslationService import TestIReadTranslationService
 
 def testdir():
     from Zope.I18n import tests
     return os.path.dirname(tests.__file__)
 
 
-class TestGlobalTranslationService(TestITranslationService):
+class TestGlobalTranslationService(TestIReadTranslationService):
 
     def _getTranslationService(self):
         service = GlobalTranslationService('default') 

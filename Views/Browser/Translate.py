@@ -13,20 +13,16 @@
 ##############################################################################
 """Translation GUI
 
-$Id: Translate.py,v 1.2 2002/06/13 14:04:58 srichter Exp $
+$Id: Translate.py,v 1.3 2002/06/16 18:25:13 srichter Exp $
 """
-from Zope.Publisher.Browser.BrowserView import BrowserView
 from Zope.App.PageTemplate import ViewPageTemplateFile
-from Zope.I18n.ITranslationService import ITranslationService
 
+from BaseTranslationServiceView import BaseTranslationServiceView
 
-class Translate(BrowserView):
-    """ """
+class Translate(BaseTranslationServiceView):
     
-    __used_for__ = ITranslationService
-
-
     index = ViewPageTemplateFile('translate.pt')
+    translateMessage = ViewPageTemplateFile('translateMessage.pt')
 
 
     def getMessages(self):
@@ -47,15 +43,6 @@ class Translate(BrowserView):
                                       target_language=target_lang)
     
 
-    def getAllLanguages(self):
-        """Get all available languages from the Translation Service."""
-        return self.context.getAllLanguages()
-
-
-    def getAllDomains(self):
-        return self.context.getAllDomains()
-        
-
     def getEditLanguages(self):
         '''get the languages that are selected for editing'''
         languages = self.request.cookies.get('edit_languages', '')
@@ -67,6 +54,18 @@ class Translate(BrowserView):
         domains = self.request.cookies.get('edit_domains', '')
         return filter(None, domains.split(','))
 
+
+    def editMessage(self):
+        """ """
+        domain = self.request['msg_domain']
+        msg_id = self.request['msg_id']
+        for language in self.getEditLanguages():
+            msg = self.request['msg_lang_%s' %language]
+            if msg != self.context.translate(domain, msg_id,
+                                             target_language=language):
+                self.context.updateMessage(domain, msg_id, msg, language)
+        return self.request.getResponse().redirect(self.request.URL[-1])
+        
 
     def editMessages(self):
         """ """

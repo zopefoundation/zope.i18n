@@ -13,14 +13,14 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: testSimpleTranslationService.py,v 1.2 2002/06/12 21:01:41 bwarsaw Exp $
+$Id: testSimpleTranslationService.py,v 1.3 2002/06/16 18:25:14 srichter Exp $
 """
 import unittest
 from Zope.I18n.SimpleTranslationService import SimpleTranslationService
-from testITranslationService import TestITranslationService
+from testIReadTranslationService import TestIReadTranslationService
 
 
-class TestSimpleTranslationService(TestITranslationService):
+class TestSimpleTranslationService(TestIReadTranslationService):
 
     def _getTranslationService(self):
         service = SimpleTranslationService(

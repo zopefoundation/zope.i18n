@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testITranslationService.py,v 1.3 2002/06/12 21:01:27 bwarsaw Exp $
+$Id: testIReadTranslationService.py,v 1.1 2002/06/16 18:25:14 srichter Exp $
 """
 
 import unittest
@@ -24,7 +24,7 @@ from Zope.App.ComponentArchitecture.metaConfigure import \
 from Zope.I18n.Negotiator import negotiator
 from Zope.I18n.INegotiator import INegotiator
 from Zope.I18n.IUserPreferredLanguages import IUserPreferredLanguages
-from Zope.I18n.ITranslationService import ITranslationService
+from Zope.I18n.ITranslationService import IReadTranslationService
 from Zope.I18n.IDomain import IDomain
 
 
@@ -40,7 +40,7 @@ class Environment:
 
 
 
-class TestITranslationService(PlacelessSetup, unittest.TestCase):
+class TestIReadTranslationService(PlacelessSetup, unittest.TestCase):
 
     # This should be overwritten by every clas that inherits this test
     def _getTranslationService(self):
@@ -49,7 +49,7 @@ class TestITranslationService(PlacelessSetup, unittest.TestCase):
     def setUp(self):
         PlacelessSetup.setUp(self)
         self._service = self._getTranslationService() 
-        assert verifyObject(ITranslationService, self._service)
+        assert verifyObject(IReadTranslationService, self._service)
         # Setup the negotiator service registry entry
         managerHandler('defineService', 'LanguageNegotiation', INegotiator) 
         provideService('LanguageNegotiation', negotiator, 'Zope.Public')

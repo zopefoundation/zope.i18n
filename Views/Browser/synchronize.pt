@@ -1,0 +1,144 @@
+<html metal:use-macro="views/standard_macros/page">
+  <head>
+    <title>Translation Service - Synchronize</title>
+  </head>
+<body>
+
+<div metal:fill-slot="body">
+
+<style type="text/css">
+  <!--
+  .state0 {color: green;}
+  .state1 {color: yellow;}
+  .state2 {color: yellow;}
+  .state3 {color:  red;}
+  .state4 {color:  red;}
+ -->
+</style>
+
+  <table cols="4" width="100%" border="0" cellspacing="0">
+    <form action="./" method="post">
+      <tr>
+        <td width="30%">
+          <div class="form-label">Server URL</div>
+          <div>
+            <input type="text" size="40" name="sync_url" value=""
+                   tal:attributes="value view/sync_url" />
+          </div>
+          <div>Username</div>
+          <div>
+            <input type="text" size="40" name="sync_username" value=""
+                   tal:attributes="value view/sync_username" />
+          </div>
+          <div>Password</div>
+          <div>
+            <input type="password" size="40" name="sync_password" value=""
+                   tal:attributes="value view/sync_password" />
+          </div>
+        </td>
+        <td width="25%">
+          <div>Select Domains:</div>
+          <div>
+            <select name="sync_domains:list" size="6" style="width: 80%" 
+                    multiple>
+              <tal:block repeat="domain view/getAllDomains">
+              <option value="" 
+		      tal:attributes="value domain"
+		      tal:content="domain"
+                      tal:condition="python: domain not in
+                                     view.sync_domains" ></option>
+              <option value="" selected="1"
+		      tal:attributes="value domain"
+		      tal:content="domain"
+                      tal:condition="python: domain in
+                                     view.sync_domains" ></option>
+              </tal:block>
+            </select>
+          </div>
+        </td>
+        <td width="25%">
+          <div>Select Languages:</div>
+          <div>
+            <select name="sync_languages:list" size="6" style="width: 80%" 
+                    multiple>
+              <tal:block repeat="language view/getAllLanguages">
+              <option value="" 
+		      tal:attributes="value language"
+		      tal:content="language"
+                      tal:condition="python: language not in
+                                     view.sync_languages" ></option>
+              <option value="" selected="1"
+		      tal:attributes="value language"
+		      tal:content="language"
+                      tal:condition="python: language in
+                                     view.sync_languages" ></option>
+              </tal:block>
+            </select>
+          </div>
+        </td>
+        <td width="20%">
+          <center>
+            <div><input type="submit" name="saveSettings.html:method" 
+                        value="Save Settings"></div><br>
+            <div><input type="submit" name="synchronize.html:method" 
+                        value="Synchronize"></div>
+          </center>
+        </td>
+      </tr>
+    </form>
+  </table>
+  <br>
+
+<form action="./"
+      tal:condition="view/canConnect">
+  <table cols="5" width="95%" border="0" cellpadding="2" cellspacing="0" 
+         class="listing">
+    <tr>
+      <th width="16">&nbsp;</th>
+      <th width="55%">Message Id</th>
+      <th width="15%">Domain</th>
+      <th width="10%">Language</th>
+      <th width="15%">Status</th>
+    </tr>
+    <tal:block repeat="message python: view.queryMessages().items()">
+      <tr tal:define="number repeat/message/number;
+	              oddrow repeat/message/odd"
+          tal:attributes="class python: oddrow and 'odd' or 'even'">
+        <td width="16">
+          <input type="hidden"
+      	       tal:attributes="name python: 'update-msgid-%i' %number;
+                                 value python: message[0][0]">
+          <input type="hidden"
+      	       tal:attributes="name python: 'update-domain-%i' %number;
+                                 value python: message[0][1]">
+          <input type="hidden"
+      	       tal:attributes="name python: 'update-language-%i' %number;
+                                 value python: message[0][2]">
+          <input type="checkbox" name="message_ids:list"
+      	       tal:attributes="value python: number">
+        </td>
+        <td tal:content="python: message[0][0]">Hello World!</td>
+        <td tal:content="python: message[0][1]">default</td>
+        <td tal:content="python: message[0][2]">en</td>
+        <td>
+          <b tal:content="python: view.getStatus(*message[1])"
+             tal:attributes="class python:'state%i' %
+                             view.getStatus(message[1][0], message[1][1], 0)"
+            >status</b>
+        </td>
+      </tr>
+    </tal:block>
+  </table>
+  <div><input type="submit" name="@@synchronizeMessages.html:method" 
+              value="Update"></div>
+
+</form>
+
+<p tal:condition="python: not view.canConnect()">
+No connection could be made to remote data source.
+</p>
+
+</div>
+
+</body>
+</html>

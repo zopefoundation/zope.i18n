@@ -13,17 +13,17 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: GettextMessageCatalog.py,v 1.2 2002/06/13 16:35:19 srichter Exp $
+$Id: GettextMessageCatalog.py,v 1.3 2002/06/16 18:25:13 srichter Exp $
 """
 
 from gettext import GNUTranslations
-from Zope.I18n.IMessageCatalog import IMessageCatalog
+from Zope.I18n.IMessageCatalog import IReadMessageCatalog
 
 
 class GettextMessageCatalog:
     """ """
 
-    __implements__ =  IMessageCatalog
+    __implements__ =  IReadMessageCatalog
 
 
     def __init__(self, language, domain, path_to_file):
@@ -45,10 +45,10 @@ class GettextMessageCatalog:
 
     ############################################################
     # Implementation methods for interface
-    # Zope.I18n.IMessageCatalog.
+    # Zope.I18n.IMessageCatalog.IReadMessageCatalog
 
     def getMessage(self, id):
-        'See Zope.I18n.IMessageCatalog.IMessageCatalog'
+        'See Zope.I18n.IMessageCatalog.IReadMessageCatalog'
         self._prepareTranslations()
         msg = self.__translation_object.ugettext(id)
         if msg == id:
@@ -56,7 +56,7 @@ class GettextMessageCatalog:
         return msg
 
     def queryMessage(self, id, default=None):
-        'See Zope.I18n.IMessageCatalog.IMessageCatalog'
+        'See Zope.I18n.IMessageCatalog.IReadMessageCatalog'
         self._prepareTranslations()
         text = self.__translation_object.ugettext(id)
         if text != id:
@@ -66,15 +66,15 @@ class GettextMessageCatalog:
         return default
 
     def getLanguage(self):
-        'See Zope.I18n.IMessageCatalog.IMessageCatalog'
+        'See Zope.I18n.IMessageCatalog.IReadMessageCatalog'
         return self._language
         
     def getDomain(self):
-        'See Zope.I18n.IMessageCatalog.IMessageCatalog'
+        'See Zope.I18n.IMessageCatalog.IReadMessageCatalog'
         return self._domain
 
     def getIdentifier(self):
-        'See Zope.I18n.IMessageCatalog.IMessageCatalog'
+        'See Zope.I18n.IMessageCatalog.IReadMessageCatalog'
         return self._path_to_file
         
     #

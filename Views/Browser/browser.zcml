@@ -16,8 +16,10 @@
      factory="Zope.I18n.Views.Browser.Translate.">
 
      <browser:page name="index.html" attribute="index" />
+     <browser:page name="translateMessage.html" attribute="translateMessage" />
 
      <browser:page name="editMessages.html" attribute="editMessages" />
+     <browser:page name="editMessage.html" attribute="editMessage" />
 
      <browser:page name="deleteMessages.html" attribute="deleteMessages" />
 
@@ -36,8 +38,36 @@
 
   </browser:view>
 
+  <browser:view 
+     permission="Zope.ManageServices" 
+     for="Zope.I18n.ITranslationService."
+     factory="Zope.I18n.Views.Browser.ExportImport.">
+
+     <browser:page name="exportImportForm.html" attribute="exportImportForm" />
+
+     <browser:page name="export.html" attribute="exportMessages" />
+     <browser:page name="import.html" attribute="importMessages" />
+
+  </browser:view>
+
+  <browser:view 
+     permission="Zope.ManageServices" 
+     for="Zope.I18n.ITranslationService."
+     factory="Zope.I18n.Views.Browser.Synchronize.">
+
+     <browser:page name="synchronizeForm.html" attribute="synchronizeForm" />
+     <browser:page name="synchronize.html" attribute="synchronize" />
+     <browser:page name="synchronizeMessages.html" 
+                   attribute="synchronizeMessages" />
+     <browser:page name="saveSettings.html" attribute="saveSettings" />
+
+  </browser:view>
+
+
   <zmi:tabs for="Zope.I18n.ITranslationService.">
     <zmi:tab label="Translate" action="@@index.html"/>
+    <zmi:tab label="Import/Export" action="@@exportImportForm.html"/>
+    <zmi:tab label="Synchronize" action="@@synchronizeForm.html"/>
   </zmi:tabs>
 
 </zopeConfigure>

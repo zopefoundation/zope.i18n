@@ -13,15 +13,14 @@
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
 
-$Id: testIMessageCatalog.py,v 1.2 2002/06/13 16:35:20 srichter Exp $
+$Id: testIReadMessageCatalog.py,v 1.1 2002/06/16 18:25:14 srichter Exp $
 """
-
 import unittest
 from Interface.Verify import verifyObject
-from Zope.I18n.IMessageCatalog import IMessageCatalog
+from Zope.I18n.IMessageCatalog import IReadMessageCatalog
 
 
-class TestIMessageCatalog(unittest.TestCase):
+class TestIReadMessageCatalog(unittest.TestCase):
 
 
     # This should be overwritten by every class that inherits this test
@@ -34,7 +33,7 @@ class TestIMessageCatalog(unittest.TestCase):
 
     def setUp(self):
         self._catalog = self._getMessageCatalog() 
-        assert verifyObject(IMessageCatalog, self._catalog)
+        assert verifyObject(IReadMessageCatalog, self._catalog)
 
 
     def testGetMessage(self):

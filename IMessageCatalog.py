@@ -13,13 +13,13 @@
 ##############################################################################
 """
 
-$Id: IMessageCatalog.py,v 1.4 2002/06/12 18:38:56 srichter Exp $
+$Id: IMessageCatalog.py,v 1.5 2002/06/16 18:25:13 srichter Exp $
 """
 
 from Interface import Interface
 
 
-class IMessageCatalog(Interface):
+class IReadMessageCatalog(Interface):
     """A catalog (mapping) of message ids to message text strings.
 
     This interface provides a method for translating a message or message id,
@@ -37,6 +37,9 @@ class IMessageCatalog(Interface):
 
     When we refer to text here, we mean text that follows the standard Zope 3
     text representation.
+
+    Note: The IReadMessageCatalog is the absolut minimal version required for
+          the TranslationService to function. 
     """
 
     def getMessage(msgid):
@@ -54,17 +57,51 @@ class IMessageCatalog(Interface):
         """
 
     def getLanguage():
-        """Return the language this message catalog is representing.
-        """
+        """Return the language this message catalog is representing."""
         
     def getDomain():
-        """Return the domain this message catalog is serving.
-        """
+        """Return the domain this message catalog is serving."""
 
     def getIdentifier():
         """Return a identifier for this message catalog. Note that this
-           identifier does not have to be unique as several message catalog
-           could serve the same domain and language.
+        identifier does not have to be unique as several message catalog
+        could serve the same domain and language.
 
-           Also, there are no restrictions on the form of the identifier.
+        Also, there are no restrictions on the form of the identifier.
         """
+
+
+class IWriteMessageCatalog(Interface):
+    """If this interfaces is implemented by a message catalog, then we will be
+    able to update our messages.
+
+    Note that not all methods here require write access, but they should
+    not be required for an IReadMEssageCatalog and are used for editing
+    only. Therefore this is the more suitable interface to put them.
+    """
+
+    def getFullMessage(msgid):
+        """Get the message data and meta data as a nice dictionary. More
+        advanced implementation might choose to return an object with
+        the data, but the object should then implement IEnumerableMapping.
+
+        An exception is raised if the message id is not found.
+        """
+
+    def setMessage(msgid, message, mod_time=None):
+        """Set a message to the catalog. If mod_time is None use the current
+           time instead as modification time."""
+
+    def deleteMessage(msgid):
+        """Delete a message from the catalog."""
+
+    def getMessageIds():
+        """Get a list of all the message ids."""
+
+    def getMessages():
+        """Get a list of all the messages."""
+
+
+class IMessageCatalog(IReadMessageCatalog, IWriteMessageCatalog):
+    """Most message catalogs should support this interface. 
+    """

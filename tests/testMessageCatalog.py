@@ -13,38 +13,31 @@
 ##############################################################################
 """Test the generic persistent Message Catalog.
 
-$Id: testMessageCatalog.py,v 1.3 2002/06/12 18:38:58 srichter Exp $
+$Id: testMessageCatalog.py,v 1.4 2002/06/16 18:25:14 srichter Exp $
 """
 import unittest
 
 from Zope.I18n.MessageCatalog import MessageCatalog
-from testIMessageCatalog import TestIMessageCatalog
+from testIReadMessageCatalog import TestIReadMessageCatalog
+from testIWriteMessageCatalog import TestIWriteMessageCatalog
 
 
-class MessageCatalogTest(TestIMessageCatalog):
+class MessageCatalogTest(TestIReadMessageCatalog, TestIWriteMessageCatalog):
+
+
+    def startUp(self):
+        TestIReadMessageCatalog.startUp(self)
+        TestIWriteMessageCatalog.startUp(self)
 
 
     def _getMessageCatalog(self):
         catalog = MessageCatalog('en', 'default')
-        catalog.setMessage('short_greeting', 'Hello!')
-        catalog.setMessage('greeting', 'Hello $name, how are you?')
+        catalog.setMessage('short_greeting', 'Hello!', 0)
+        catalog.setMessage('greeting', 'Hello $name, how are you?', 0)
         return catalog
     
     def _getUniqueIndentifier(self):
         return ('en', 'default')
-
-
-    def testSetMessage(self):
-        catalog = self._catalog
-        catalog.setMessage('new', 'New Test')
-        self.assertEqual(catalog.getMessage('new'), 'New Test')
-
-
-    def testGetMessageIds(self):
-        catalog = self._catalog
-        ids = catalog.getMessageIds()
-        ids.sort()
-        self.assertEqual(ids, ['greeting', 'short_greeting'])
 
 
 def test_suite():

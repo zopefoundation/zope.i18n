@@ -1,0 +1,41 @@
+<html metal:use-macro="views/standard_macros/page">
+<head>
+  <title>Translation Service - Translate</title>
+</head>
+<body>
+
+<div metal:fill-slot="body">
+
+<span i18n:domain="Zope-I18n">
+
+<form action="./" method="post">
+<input type="hidden" name="msg_domain" value=""
+       tal:attributes="value request/domain" />
+<input type="hidden" name="msg_id" value=""
+       tal:attributes="value request/msgid" />
+<table>
+  <tr>
+    <th i18n:translate="">Message Id</th>
+    <td tal:content="request/msgid">Message Id of the message.</td>
+  </tr>
+  <tr tal:repeat="language view/getEditLanguages">
+    <th tal:content="language">Language</th>
+    <td>
+      <textarea cols="80" rows="10" name=""
+                tal:attributes="name string:msg_lang_${language}" 
+                tal:content="python: view.getTranslation(request['domain'], 
+                             request['msgid'], language)"
+       >Translation of Message</textarea>
+    </td>
+  </tr>
+</table>
+<input class="form-element" type="submit" 
+       name="@@editMessage.html:method" value="Edit Message"
+       i18n:attributes="value">
+</form>
+
+</span>
+</div>
+
+</body>
+</html>
