@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 
-$Id: test_locales.py,v 1.1 2004/02/05 22:52:32 srichter Exp $
+$Id: test_locales.py,v 1.2 2004/03/05 22:09:27 jim Exp $
 """
 import os
 import datetime
@@ -37,7 +37,7 @@ class TestILocaleProvider(TestCase):
         self.locales = self._makeNewProvider()
 
     def testInterfaceConformity(self):
-        self.assert_(ILocaleProvider.isImplementedBy(self.locales))
+        self.assert_(ILocaleProvider.providedBy(self.locales))
 
     def test_getLocale(self):
         locale = self.locales.getLocale(None, None, None)

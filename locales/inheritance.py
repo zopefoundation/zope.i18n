@@ -18,7 +18,7 @@ This module provides support for locale inheritance.
 Note: In many respects this is similar to Zope 2's acquisition model, since
 locale inheritance is not inheritance in the programming sense. 
 
-$Id: inheritance.py,v 1.1 2004/02/05 22:52:24 srichter Exp $
+$Id: inheritance.py,v 1.2 2004/03/05 22:09:26 jim Exp $
 """
 from zope.interface import implements
 from zope.i18n.interfaces.locales import \
@@ -89,8 +89,8 @@ class AttributeInheritance(Inheritance):
 
     def __setattr__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
-        if ILocaleInheritance.isImplementedBy(value) and \
-               not name.startswith('__'):
+        if (ILocaleInheritance.providedBy(value) and 
+            not name.startswith('__')):
             value.__parent__ = self
             value.__name__ = name
         super(AttributeInheritance, self).__setattr__(name, value)
@@ -162,7 +162,7 @@ class InheritingDictionary(Inheritance, dict):
 
     def __setitem__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
-        if ILocaleInheritance.isImplementedBy(value):
+        if ILocaleInheritance.providedBy(value):
             value.__parent__ = self
             value.__name__ = name
         super(InheritingDictionary, self).__setitem__(name, value)

@@ -13,7 +13,7 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 
-$Id: test_formats.py,v 1.11 2004/02/05 22:52:33 srichter Exp $
+$Id: test_formats.py,v 1.12 2004/03/05 22:09:28 jim Exp $
 """
 import os
 import datetime
@@ -214,7 +214,7 @@ class TestDateTimeFormat(TestCase):
     format = DateTimeFormat(calendar=LocaleCalendarStub())
 
     def testInterfaceConformity(self):
-        self.assert_(IDateTimeFormat.isImplementedBy(self.format))
+        self.assert_(IDateTimeFormat.providedBy(self.format))
 
     def testParseSimpleDateTime(self):
         # German short
@@ -549,7 +549,7 @@ class TestNumberFormat(TestCase):
         'infinity': 'oo', 'nan': 'N/A'})
 
     def testInterfaceConformity(self):
-        self.assert_(INumberFormat.isImplementedBy(self.format))
+        self.assert_(INumberFormat.providedBy(self.format))
 
     def testParseSimpleInteger(self):
         self.assertEqual(self.format.parse('23341', '###0'),
