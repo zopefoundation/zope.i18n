@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: MessageCatalog.py,v 1.3 2002/06/12 18:38:56 srichter Exp $
+$Id: MessageCatalog.py,v 1.4 2002/06/12 20:56:53 bwarsaw Exp $
 """
 
 from Persistence.BTrees.OOBTree import OOBTree
@@ -28,23 +28,19 @@ class MessageCatalog(RegisteredObject, Persistent):
     __implements__ =  IMessageCatalog
     __class_implements__ = IFactory
 
-
     def __init__(self, language, domain="default"):
         """Initialize the message catalog"""
         super(MessageCatalog, self).__init__('', '', '')
-
         self._language = language
         self._domain = domain
         self._messages = OOBTree()
     
-
-    def setMessage(self, id, message):
+    def setMessage(self, msgid, message):
         """Set a message to the catalog."""
-        self._messages[id] = message
-
+        self._messages[msgid] = message
 
     def getMessageIds(self):
-        """ """
+        """Get a list of all the message ids."""
         return list(self._messages.keys())
         
 
