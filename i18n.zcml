@@ -7,6 +7,7 @@
    xmlns:gts='http://namespaces.zope.org/gts'
 >
 
+<!-- Setup language negotiation -->
 <serviceType
       id="LanguageNegotiation" 
       interface=".INegotiator." />
@@ -17,6 +18,13 @@
 <adapter factory="Zope.Publisher.Browser.BrowserLanguages."
          for="Zope.Publisher.Browser.IBrowserRequest."
          provides="Zope.I18n.IUserPreferredLanguages."
+         />
+
+
+<!-- Setup charset negotiation -->
+<adapter factory="Zope.Publisher.Browser.BrowserCharsets."
+         for="Zope.Publisher.Browser.IBrowserRequest."
+         provides="Zope.I18n.IUserPreferredCharsets."
          />
 
 
