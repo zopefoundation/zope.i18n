@@ -37,7 +37,6 @@ import locale
 import calendar
 from re import compile as re_compile
 from re import IGNORECASE
-from string import whitespace as whitespace_string
 
 __author__ = "Brett Cannon"
 __email__ = "drifty@bigfoot.com"
@@ -46,6 +45,17 @@ __all__ = ['strptime']
 
 RegexpType = type(re_compile(''))
 
+def _getlang():
+    # Figure out what the current language is set to.
+    current_lang = locale.getlocale(locale.LC_TIME)[0]
+    if current_lang:
+        return current_lang
+    else:
+        current_lang = locale.getdefaultlocale()[0]
+        if current_lang:
+            return current_lang
+        else:
+            return ''
 
 class LocaleTime(object):
     """Stores and handles locale-specific information related to time.
@@ -271,13 +281,12 @@ class LocaleTime(object):
                     ('17', '%d'), ('03', '%m'), ('3', '%m'),
                     # '3' needed for when no leading zero.
                     ('2', '%w'), ('10', '%I')):
-                try:
-                    # Done this way to deal with possible lack of locale info
-                    # manifesting itself as the empty string (i.e., Swedish's
-                    # lack of AM/PM info).
+                # Must deal with possible lack of locale info
+                # manifesting itself as the empty string (e.g., Swedish's
+                # lack of AM/PM info) or a platform returning a tuple of empty
+                # strings (e.g., MacOS 9 having timezone as ('','')).
+                if old:
                     current_format = current_format.replace(old, new)
-                except ValueError:
-                    pass
             time_tuple = time.struct_time((1999,1,3,1,1,1,6,3,0))
             if time.strftime(directive, time_tuple).find('00'):
                 U_W = '%U'
@@ -299,19 +308,9 @@ class LocaleTime(object):
         self.__timezone = self.__pad(time.tzname, 0)
 
     def __calc_lang(self):
-        # Set self.__lang by using locale.getlocale() or
-        # locale.getdefaultlocale().  If both turn up empty, set the attribute
-        # to ''.  This is to stop calls to this method and to make sure
-        # strptime() can produce an re object correctly.
-        current_lang = locale.getlocale(locale.LC_TIME)[0]
-        if current_lang:
-            self.__lang = current_lang
-        else:
-            current_lang = locale.getdefaultlocale()[0]
-            if current_lang:
-                self.__lang = current_lang
-            else:
-                self.__lang = ''
+        # Set self.__lang by using __getlang().
+        self.__lang = _getlang()
+
 
 
 class TimeRE(dict):
@@ -364,7 +363,7 @@ class TimeRE(dict):
                 raise
 
     def __seqToRE(self, to_convert, directive):
-        """Convert a list to a regex string for matching directive."""
+        """Convert a list to a regex string for matching a directive."""
         def sorter(a, b):
             """Sort based on length.
 
@@ -383,6 +382,11 @@ class TimeRE(dict):
             return cmp(b_length, a_length)
 
         to_convert = to_convert[:]  # Don't want to change value in-place.
+        for value in to_convert:
+            if value != '':
+                break
+        else:
+            return ''
         to_convert.sort(sorter)
         regex = '|'.join(to_convert)
         regex = '(?P<%s>%s' % (directive, regex)
@@ -391,8 +395,8 @@ class TimeRE(dict):
     def pattern(self, format):
         """Return re pattern for the format string."""
         processed_format = ''
-        for whitespace in whitespace_string:
-            format = format.replace(whitespace, r'\s*')
+        whitespace_replacement = re_compile('\s+')
+        format = whitespace_replacement.sub('\s*', format)
         while format.find('%') != -1:
             directive_index = format.index('%')+1
             processed_format = "%s%s%s" % (processed_format,
@@ -403,106 +407,120 @@ class TimeRE(dict):
 
     def compile(self, format):
         """Return a compiled re object for the format string."""
-        format = "(?#%s)%s" % (self.locale_time.lang,format)
         return re_compile(self.pattern(format), IGNORECASE)
 
+# Cached TimeRE; probably only need one instance ever so cache it for performance
+_locale_cache = TimeRE()
+# Cached regex objects; same reason as for TimeRE cache
+_regex_cache = dict()
 
 def strptime(data_string, format="%a %b %d %H:%M:%S %Y"):
-    """Return a time struct based on the input data and the format string.
-
-    The format argument may either be a regular expression object compiled by
-    strptime(), or a format string.  If False is passed in for data_string
-    then the re object calculated for format will be returned.  The re object
-    must be used with the same locale as was used to compile the re object.
-    """
-    locale_time = LocaleTime()
-    if isinstance(format, RegexpType):
-        if format.pattern.find(locale_time.lang) == -1:
-            raise TypeError("re object not created with same language as "
-                            "LocaleTime instance")
-        else:
-            compiled_re = format
-    else:
-        compiled_re = TimeRE(locale_time).compile(format)
-    if data_string is False:
-        return compiled_re
-    else:
-        found = compiled_re.match(data_string)
-        if not found:
-            raise ValueError("time data did not match format")
-        year = month = day = hour = minute = second = weekday = julian = tz =-1
-        found_dict = found.groupdict()
-        for group_key in found_dict.iterkeys():
-            if group_key == 'y':
-                year = int("%s%s" %
-                           (time.strftime("%Y")[:-2], found_dict['y']))
-            elif group_key == 'Y':
-                year = int(found_dict['Y'])
-            elif group_key == 'm':
-                month = int(found_dict['m'])
-            elif group_key == 'B':
-                month = _insensitiveindex(locale_time.f_month, found_dict['B'])
-            elif group_key == 'b':
-                month = _insensitiveindex(locale_time.a_month, found_dict['b'])
-            elif group_key == 'd':
-                day = int(found_dict['d'])
-            elif group_key is 'H':
-                hour = int(found_dict['H'])
-            elif group_key == 'I':
-                hour = int(found_dict['I'])
-                ampm = found_dict.get('p', '').lower()
-                # If there was no AM/PM indicator, we'll treat this like AM
-                if ampm in ('', locale_time.am_pm[0].lower()):
-                    # We're in AM so the hour is correct unless we're
-                    # looking at 12 midnight.
-                    # 12 midnight == 12 AM == hour 0
-                    if hour == 12:
-                        hour = 0
-                elif ampm == locale_time.am_pm[1].lower():
-                    # We're in PM so we need to add 12 to the hour unless
-                    # we're looking at 12 noon.
-                    # 12 noon == 12 PM == hour 12
-                    if hour != 12:
-                        hour += 12
-            elif group_key == 'M':
-                minute = int(found_dict['M'])
-            elif group_key == 'S':
-                second = int(found_dict['S'])
-            elif group_key == 'A':
-                weekday = _insensitiveindex(locale_time.f_weekday,
-                                            found_dict['A'])
-            elif group_key == 'a':
-                weekday = _insensitiveindex(locale_time.a_weekday,
-                                            found_dict['a'])
-            elif group_key == 'w':
-                weekday = int(found_dict['w'])
-                if weekday == 0:
-                    weekday = 6
-                else:
-                    weekday -= 1
-            elif group_key == 'j':
-                julian = int(found_dict['j'])
-            elif group_key == 'Z':
-                found_zone = found_dict['Z'].lower()
-                if locale_time.timezone[0] == locale_time.timezone[1]:
-                    pass #Deals with bad locale setup where timezone info is
-                         # the same; first found on FreeBSD 4.4 -current
-                elif locale_time.timezone[0].lower() == found_zone:
-                    tz = 0
-                elif locale_time.timezone[1].lower() == found_zone:
-                    tz = 1
-                elif locale_time.timezone[2].lower() == found_zone:
-                    tz = 0
-        #XXX <bc>: If calculating fxns are never exposed to the general
-        #          populous then just inline calculations.
-        if julian == -1 and year != -1 and month != -1 and day != -1:
+    """Return a time struct based on the input data and the format string."""
+    global _locale_cache
+    global _regex_cache
+    locale_time = _locale_cache.locale_time
+    # If the language changes, caches are invalidated, so clear them
+    if locale_time.lang != _getlang():
+        _locale_cache = TimeRE()
+        _regex_cache.clear()
+    format_regex = _regex_cache.get(format)
+    if not format_regex:
+        # Limit regex cache size to prevent major bloating of the module;
+        # The value 5 is arbitrary
+        if len(_regex_cache) > 5:
+            _regex_cache.clear()
+        format_regex = _locale_cache.compile(format)
+        _regex_cache[format] = format_regex
+    found = format_regex.match(data_string)
+    if not found:
+        raise ValueError("time data did not match format")
+    year = 1900
+    month = day = 1
+    hour = minute = second = 0
+    tz = -1
+    # Defaulted to -1 so as to signal using functions to calc values
+    weekday = julian = -1
+    found_dict = found.groupdict()
+    for group_key in found_dict.iterkeys():
+        if group_key == 'y':
+            year = int(found_dict['y'])
+            # Open Group specification for strptime() states that a %y
+            #value in the range of [00, 68] is in the century 2000, while
+            #[69,99] is in the century 1900
+            if year <= 68:
+                year += 2000
+            else:
+                year += 1900
+        elif group_key == 'Y':
+            year = int(found_dict['Y'])
+        elif group_key == 'm':
+            month = int(found_dict['m'])
+        elif group_key == 'B':
+            month = _insensitiveindex(locale_time.f_month, found_dict['B'])
+        elif group_key == 'b':
+            month = _insensitiveindex(locale_time.a_month, found_dict['b'])
+        elif group_key == 'd':
+            day = int(found_dict['d'])
+        elif group_key is 'H':
+            hour = int(found_dict['H'])
+        elif group_key == 'I':
+            hour = int(found_dict['I'])
+            ampm = found_dict.get('p', '').lower()
+            # If there was no AM/PM indicator, we'll treat this like AM
+            if ampm in ('', locale_time.am_pm[0].lower()):
+                # We're in AM so the hour is correct unless we're
+                # looking at 12 midnight.
+                # 12 midnight == 12 AM == hour 0
+                if hour == 12:
+                    hour = 0
+            elif ampm == locale_time.am_pm[1].lower():
+                # We're in PM so we need to add 12 to the hour unless
+                # we're looking at 12 noon.
+                # 12 noon == 12 PM == hour 12
+                if hour != 12:
+                    hour += 12
+        elif group_key == 'M':
+            minute = int(found_dict['M'])
+        elif group_key == 'S':
+            second = int(found_dict['S'])
+        elif group_key == 'A':
+            weekday = _insensitiveindex(locale_time.f_weekday,
+                                        found_dict['A'])
+        elif group_key == 'a':
+            weekday = _insensitiveindex(locale_time.a_weekday,
+                                        found_dict['a'])
+        elif group_key == 'w':
+            weekday = int(found_dict['w'])
+            if weekday == 0:
+                weekday = 6
+            else:
+                weekday -= 1
+        elif group_key == 'j':
+            julian = int(found_dict['j'])
+        elif group_key == 'Z':
+            found_zone = found_dict['Z'].lower()
+            if locale_time.timezone[0] == locale_time.timezone[1]:
+                pass #Deals with bad locale setup where timezone info is
+                     # the same; first found on FreeBSD 4.4.
+            elif locale_time.timezone[0].lower() == found_zone:
+                tz = 0
+            elif locale_time.timezone[1].lower() == found_zone:
+                tz = 1
+            elif locale_time.timezone[2].lower() == found_zone:
+                tz = -1
+    #XXX <bc>: If calculating fxns are never exposed to the general
+    #populous then just inline calculations.  Also might be able to use
+    #``datetime`` and the methods it provides.
+    if julian == -1:
             julian = julianday(year, month, day)
-        if (month == -1 or day == -1) and julian != -1 and year != -1:
+    else:  # Assuming that if they bothered to include Julian day it will
+           #be accurate
             year, month, day = gregorian(julian, year)
-        if weekday == -1 and year != -1 and month != -1 and day != -1:
+    if weekday == -1:
             weekday = dayofweek(year, month, day)
-        return time.struct_time(
-            (year,month,day,hour,minute,second,weekday, julian,tz))
+    return time.struct_time((year, month, day,
+                             hour, minute, second,
+                             weekday, julian, tz))
 
 def _insensitiveindex(lst, findme):
     # Perform a case-insensitive index search.
@@ -555,3 +573,4 @@ def dayofweek(year, month, day):
         return 6
     else:
         return weekday-1
+
