@@ -13,14 +13,13 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.1 2002/12/31 02:52:13 jim Exp $
+$Id: interfaces.py,v 1.2 2003/01/05 20:19:37 srichter Exp $
 """
+from zope.interface import Interface, Attribute
 
-from zope.interface import Interface
 
 class II18nAware(Interface):
-    """Internationalization aware content object.
-    """
+    """Internationalization aware content object."""
 
     def getDefaultLanguage():
         """Return the default language."""
@@ -337,6 +336,7 @@ class IDomain(Interface):
         See ITranslationService for details.
         """
 
+
 class IMessageExportFilter(Interface):
     """The Export Filter for Translation Service Messages.
 
@@ -352,8 +352,8 @@ class IMessageExportFilter(Interface):
            one language. A good example for that is a GettextFile.
         """
 
-class INegotiator(Interface):
 
+class INegotiator(Interface):
     """A language negotiation service.
     """
 
@@ -379,7 +379,7 @@ class INegotiator(Interface):
         # XXX I'd like for there to be a symmetric interface method, one in
         # which an adaptor is gotten for both the first arg and the second
         # arg.  I.e. getLanguage(obj, env)
-        # But this isn't a good match for the iTranslationService.translate()
+        # But this isn't a good match for the ITranslationService.translate()
         # method. :(
 
 
@@ -392,3 +392,445 @@ class IUserPreferredCharsets(Interface):
            should describe the order of preference. Therefore the first
            character set in the list is the most preferred one.
         """
+
+
+class ILocaleProvider(Interface):
+    """This interface is our connection to the Zope 3 service. From it
+    we can request various Locale objects that can perform all sorts of
+    fancy operations.
+
+    This service will be singelton global service, since it doe not make much
+    sense to have many locale facilities, especially since this one will be so
+    complete, since we will the ICU XML Files as data.  """
+
+    def loadLocale(language=None, country=None, variant=None): 
+        """Load the locale with the specs that are given by the arguments of
+        the method. Note that the LocaleProvider must know where to get the
+        locales from."""
+
+    def getLocale(language=None, country=None, variant=None):
+        """Get the Locale object for a particular language, country and
+        variant."""
+
+
+class ILocaleIdentity(Interface):
+    """Identity information class for ILocale objects.
+
+    Three pieces of information are required to identify a locale:
+
+      o language -- Language in which all of the locale txt information are
+        returned.
+
+      o country -- Country for which the locale's information are
+        appropriate. None means all countries in which language is spoken.
+
+      o variant -- Sometimes there are regional or historical differences even
+        in a certain country. For these cases we use the variant field. A good
+        example is the time before the Euro in Germany for example. Therefore
+        a valid variant would be 'PREEURO'.  
+
+    Note that all of these attributes are read-only once they are set (usually
+    done in constructor)!
+
+    This object is also used to uniquely identify a locale."""
+
+    def getLanguage():
+        """Return the language of the id."""
+
+    def getCountry():
+        """Return the country of the id."""
+
+    def getVariant():
+        """Return the variant of the id."""
+
+    def setCorrespondence(vendor, text):
+        """Correspondences can be used to map our Locales to other system's
+        locales. A common use in ICU is to define a correspondence to the
+        Windows Locale System. This method sets a correspondence."""
+
+    def getAllCorrespondences():
+        """Return all defined correspondences."""
+
+    def __repr__(self):
+        """Defines the representation of the id, which should be a compact
+        string that references the language, country and variant."""
+
+
+class ILocaleVersion(Interface):
+    """Allows one to specify a version of a locale."""
+
+    id = Attribute("Version identifier; usually something like 1.0.1")
+
+    date = Attribute("A datetime object specifying the version creation date.")
+
+    comment = Attribute("A text comment about the version.")
+
+    def __cmp__(other):
+        """Compares versions, so the order can be determined."""
+
+
+class ILocaleTimeZone(Interface):
+    """Represents and defines various timezone information. It mainly manages
+    all the various names for a timezone and the cities contained in it.
+
+    Important: ILocaleTimeZone objects are not intended to provide
+    implementations for the standard datetime module timezone support. They
+    are merily used for Locale support. 
+    """
+
+    id = Attribute("Standard name of the timezone for unique referencing.")
+
+    def addCity(city):
+        """Add a city to the timezone."""
+
+    def getCities():
+        """Return all cities that are in this timezone."""
+
+    def setName(type, long, short):
+        """Add a new long and short name for the timezone."""
+
+    def getName(type):
+        """Get the long and names by type."""
+
+
+class ILocaleCalendar(Interface):
+    """There is a massive amount of information contained in the calendar,
+    which made it attractive to be added """
+
+    def update(other):
+        """Update this calendar using data from other. Assume that unless
+        other's data is not present, other has always more specific
+        information."""
+    
+    def setMonth(id, name, abbr):
+        """Add a month's locale data."""
+
+    def getMonth(id):
+        """Get a month (name, abbr) by its id."""
+
+    def getMonthNames():
+        """Return a list of month names."""
+
+    def getMonthIdFromName(name):
+        """Return the id of the month with the right name."""
+
+    def getMonthAbbr():
+        """Return a list of month abbreviations."""
+
+    def getMonthIdFromAbbr(abbr):
+        """Return the id of the month with the right abbreviation."""
+
+    def setWeekday(id, name, abbr):
+        """Add a weekday's locale data."""
+
+    def getWeekday(id):
+        """Get a weekday by its id."""
+
+    def getWeekdayNames():
+        """Return a list of weekday names."""
+
+    def getWeekdayIdFromName(name):
+        """Return the id of the weekday with the right name."""
+
+    def getWeekdayAbbr():
+        """Return a list of weekday abbreviations."""
+
+    def getWeekdayIdFromAbbr(abbr):
+        """Return the id of the weekday with the right abbr."""
+
+    def setEra(id, name):
+        """Add a era's locale data."""
+
+    def getEra(id):
+        """Get a era by its id."""
+
+    def setAM(text):
+        """Set AM text representation."""
+
+    def getAM():
+        """Get AM text representation."""
+
+    def setPM(text):
+        """Set PM text representation."""
+
+    def getPM():
+        """Get PM text representation."""
+
+    def setPatternCharacters(chars):
+        """Set allowed pattern characters for calendar patterns."""
+
+    def getPatternCharacters():
+        """Get allowed pattern characters for a particular type (id), which
+        can be claendar, number, and currency for example."""
+
+    def setTimePattern(type, pattern):
+        """Set the time pattern for a particular time format type. Possible
+        types are full, long, medium, and short.""" 
+
+    def getTimePattern(type):
+        """Get the time pattern for a particular time format type. Possible
+        types are full, long, medium, and short.""" 
+
+    def setDatePattern(name, pattern):
+        """Set the date pattern for a particular date format type. Possible
+        types are full, long, medium, and short.""" 
+
+    def getDatePattern(name):
+        """Get the date pattern for a particular date format type. Possible
+        types are full, long, medium, and short.""" 
+
+    def setDateTimePattern(pattern):
+        """Set the date pattern for the datetime.""" 
+
+    def getDateTimePattern():
+        """Get the date pattern for the datetime.""" 
+
+
+class ILocaleNumberFormat(Interface):
+    """This interface defines all the formatting information for one class of
+    numbers."""
+
+    def setPattern(name, pattern):
+        """Define a new pattern by name."""
+
+    def getPattern(name):
+        """Get a pattern by its name."""
+
+    def getAllPatternIds():
+        """Return a list of all pattern names."""
+
+    def setSymbol(name, symbol):
+        """Define a new symbol by name."""
+
+    def getSymbol(name):
+        """Get a symbol by its name."""
+
+    def getAllSymbolIds():
+        """Return a list of all symbol names."""
+
+    def getSymbolMap():
+        """Return a map of all symbols. Thisis useful for the INumberFormat."""
+
+    
+class ILocaleCurrency(Interface):
+    """Defines a particular currency."""
+
+    def setSymbol(symbol):
+        """Set currency symbol; i.e. $ for USD."""
+
+    def getSymbol():
+        """Get currency symbol."""
+
+    def setName(name):
+        """Set currency name; i.e. USD for US Dollars."""
+
+    def getName():
+        """Get currency name."""
+
+    def setDecimal(decimal):
+        """Set currency decimal separator. In the US this is usually the
+        period '.', while Germany uses the comma ','."""
+
+    def getDecimal():
+        """Get currency decimal separator."""
+
+    def setPattern(pattern):
+        """Set currency pattern. Often we want different formatting rules for
+        monetary amounts; for example a precision more than 1/100 of the main
+        currency unit is often not desired."""
+
+    def getPattern():
+        """Get currency pattern."""    
+
+        
+class ILocale(Interface):
+    """This class contains all important information about the locale.
+
+    Usually a Locale is identified using a specific language, country and
+    variant. However, the country and variant are optional, so that a lookup
+    hierarchy develops. It is easy to recognize that a locale that is missing
+    the variant is more general applicable than the one with the
+    variant. Therefore, if a specific Locale does not contain the required
+    information, it should look one level higher. 
+    There will be a root locale that specifies none of the above identifiers.
+    """
+
+    def getLocaleLanguageId():
+        """Return the id of the language that this locale represents. 'None'
+        can be returned."""
+
+    def getLocaleCountryId():
+        """Return the id of the country that this locale represents. 'None'
+        can be returned."""
+
+    def getLocaleVariantId():
+        """Return the id of the variant that this locale represents. 'None'
+        can be returned."""
+
+    def getDisplayLanguage(id):
+        """Return the full name of the language whose id was passed in the
+        language of this locale."""
+
+    def getDisplayCountry(id):
+        """Return the full name of the country of this locale."""
+
+    def getTimeFormatter(name):
+        """Get the TimeFormat object called 'name'. The following names are
+        recognized: full, long, medium, short."""
+
+    def getDateFormat(name):
+        """Get the DateFormat object called 'name'. The following names are
+        recognized: full, long, medium, short."""
+
+    def getDateTimeFormatter(name):
+        """Get the DateTimeFormat object called 'name'. The following names
+        are recognized: full, long, medium, short."""
+
+    def getNumberFormatter(name):
+        """Get the NumberFormat object called 'name'. The following names are
+        recognized: decimal, percent, scientific, currency."""
+
+
+
+class IFormat(Interface):
+    """A generic formatting class. It basically contains the parsing and
+    construction method for the particular object the formatting class
+    handles.
+
+    The constructor will always require a pattern (specific to the object).
+    """
+
+    def setPattern(pattern):
+        """Overwrite the old formatting pattern with the new one."""
+
+    def getPattern():
+        """Get the currently used pattern."""
+
+    def parse(text, pattern=None):
+        """Parse the text and convert it to an object, which is returned."""
+
+    def format(obj, pattern=None):
+        """Format an object to a string using the pattern as a rule."""
+
+
+
+class INumberFormat(IFormat):
+    u"""Specific number formatting interface. Here are the formatting
+    rules (I modified the rules from ICU a bit, since I think they did not
+    agree well with the real world XML formatting strings):
+
+      posNegPattern      := ({subpattern};{subpattern} | {subpattern})  
+      subpattern         := {padding}{prefix}{padding}{integer}{fraction}
+                            {exponential}{padding}{suffix}{padding}  
+      prefix             := '\u0000'..'\uFFFD' - specialCharacters *  
+      suffix             := '\u0000'..'\uFFFD' - specialCharacters *
+      integer            := {digitField}'0'  
+      fraction           := {decimalPoint}{digitField}  
+      exponential        := E integer
+      digitField         := ( {digitField} {groupingSeparator} | 
+                              {digitField} '0'* | 
+                              '0'* | 
+                              {optionalDigitField} )  
+      optionalDigitField := ( {digitField} {groupingSeparator} | 
+                              {digitField} '#'* | 
+                              '#'* )  
+      groupingSeparator  := ,  
+      decimalPoint       := .  
+      padding            := * '\u0000'..'\uFFFD'
+
+
+    Possible pattern symbols:
+
+      0    A digit. Always show this digit even if the value is zero.  
+      #    A digit, suppressed if zero  
+      .    Placeholder for decimal separator  
+      ,    Placeholder for grouping separator  
+      E    Separates mantissa and exponent for exponential formats  
+      ;    Separates formats (that is, a positive number format verses a
+           negative number format)
+      -    Default negative prefix. Note that the locale's minus sign
+           character is used.
+      +    If this symbol is specified the locale's plus sign character is
+           used.
+      %    Multiply by 100, as percentage  
+      ?    Multiply by 1000, as per mille  
+      ¤    This is the currency sign. it will be replaced by a currency
+           symbol. If it is present in a pattern, the monetary decimal
+           separator is used instead of the decimal separator.
+      ¤¤   This is the international currency sign. It will be replaced 
+           by an international currency symbol.  If it is present in a
+           pattern, the monetary decimal separator is used instead of 
+           the decimal separator. 
+      X    Any other characters can be used in the prefix or suffix  
+      '    Used to quote special characters in a prefix or suffix  
+    """
+
+    symbols = Attribute(
+        """The symbols attribute maps various formatting symbol names to the
+        symbol itself.
+
+        Here are the required names:
+
+          decimal, group, list, percentSign, nativeZeroDigit, patternDigit,
+          plusSign, minusSign, exponential, perMille, infinity, nan
+        
+        """)
+
+
+class ICurrencyFormat(INumberFormat):
+    """Special currency parsing class."""
+
+    currency = Attribute("""This object must implement ILocaleCurrency. See
+                            this interface's documentation for details.""")
+
+
+class IDateTimeFormat(IFormat):
+    """DateTime formatting and parsing interface. Here is a list of
+    possible characters and their meaning:
+
+      Symbol Meaning               Presentation      Example  
+
+      G      era designator        (Text)            AD  
+      y      year                  (Number)          1996  
+      M      month in year         (Text and Number) July and 07
+      d      day in month          (Number)          10
+      h      hour in am/pm (1~12)  (Number)          12  
+      H      hour in day (0~23)    (Number)          0
+      m      minute in hour        (Number)          30  
+      s      second in minute      (Number)          55  
+      S      millisecond           (Number)          978  
+      E      day in week           (Text)            Tuesday  
+      D      day in year           (Number)          189  
+      F      day of week in month  (Number)          2 (2nd Wed in July)
+      w      week in year          (Number)          27  
+      W      week in month         (Number)          2  
+      a      am/pm marker          (Text)            pm  
+      k      hour in day (1~24)    (Number)          24  
+      K      hour in am/pm (0~11)  (Number)          0  
+      z      time zone             (Text)            Pacific Standard Time
+      '      escape for text  
+      ''     single quote                            '
+
+    Meaning of the amount of characters:
+
+      Text
+
+        Four or more, use full form, <4, use short or abbreviated form if it
+        exists. (for example, "EEEE" produces "Monday", "EEE" produces "Mon")
+
+      Number
+
+        The minimum number of digits. Shorter numbers are zero-padded to this
+        amount (for example, if "m" produces "6", "mm" produces "06"). Year is
+        handled specially; that is, if the count of 'y' is 2, the Year will be
+        truncated to 2 digits. (for example, if "yyyy" produces "1997", "yy"
+        produces "97".)
+
+      Text and Number
+
+        Three or over, use text, otherwise use number. (for example, "M"
+        produces "1", "MM" produces "01", "MMM" produces "Jan", and "MMMM"
+        produces "January".)  """
+
+    calendar = Attribute("""This object must implement ILocaleCalendar. See
+                            this interface's documentation for details.""")
