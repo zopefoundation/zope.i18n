@@ -14,14 +14,16 @@
 """Message IDs.
 
 
-$Id: messageid.py,v 1.1 2003/03/25 00:23:05 slinkp Exp $
+$Id: messageid.py,v 1.2 2003/04/03 17:25:15 jim Exp $
 """
 
 class MessageID(unicode):
     """Message ID.
 
-    This is a string used as a message ID. It has a domain attribute that is its source
-    domain, and a default attribute that is its default text to display when there is no translation.
+    This is a string used as a message ID. It has a domain attribute
+    that is its source domain, and a default attribute that is its
+    default text to display when there is no translation.
+    
     """
 
     __slots__ = ('domain', 'default')
