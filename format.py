@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.4 2003/03/25 14:48:01 srichter Exp $
+$Id: format.py,v 1.5 2003/03/25 20:03:46 srichter Exp $
 """
 import re
 import math
@@ -441,7 +441,7 @@ def buildDateTimeParseInfo(calendar):
         ('G', 1): r'(%s|%s)' %(calendar.eras[0], calendar.eras[1]),
         ('y', 2): r'([0-9]{2})',
         ('y', 4): r'([0-9]{4})',
-        ('M', 1): r'([0-9]{1, 2})',
+        ('M', 1): r'([0-9]{1,2})',
         ('M', 2): r'([0-9]{2})',
         ('M', 3): r'('+'|'.join(calendar.getMonthAbbr())+')',
         ('M', 4): r'('+'|'.join(calendar.getMonthNames())+')',
@@ -460,17 +460,17 @@ def buildDateTimeParseInfo(calendar):
         ('H', 2): r'([0-9]{2})',
         ('m', 1): r'([0-9]{1,2})',
         ('m', 2): r'([0-9]{2})',
-        ('s', 1): r'([0-9]{1, 2})',
+        ('s', 1): r'([0-9]{1,2})',
         ('s', 2): r'([0-9]{2})',
-        ('S', 1): r'([0-9]{0, 6})',
+        ('S', 1): r'([0-9]{0,6})',
         ('S', 2): r'([0-9]{6})',
         ('F', 1): r'([0-9])',
-        ('F', 2): r'([0-9]{1, 2})',
+        ('F', 2): r'([0-9]{1,2})',
         ('W', 1): r'([0-9])',
         ('W', 2): r'([0-9]{2})',
-        ('k', 1): r'([0-9]{1, 2})',
+        ('k', 1): r'([0-9]{1,2})',
         ('k', 2): r'([0-9]{2})',
-        ('K', 1): r'([0-9]{1, 2})',
+        ('K', 1): r'([0-9]{1,2})',
         ('K', 2): r'([0-9]{2})',
         ('z', 1): r'([\+-][0-9]{3,4})',
         ('z', 2): r'([\+-][0-9]{2}:[0-9]{2})',
