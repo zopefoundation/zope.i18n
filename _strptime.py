@@ -296,9 +296,17 @@ class LocaleTime(object):
     def __calc_timezone(self):
         # Set self.__timezone by using time.tzname.
         #
-        # Empty string used for matching when timezone is not used/needed such
-        # as with UTC.
-        self.__timezone = self.__pad(time.tzname, 0)
+        # Empty string used for matching when timezone is not used/needed.
+        try:
+            time.tzset()
+        except AttributeError:
+            pass
+        time_zones = ["UTC", "GMT"]
+        if time.daylight:
+            time_zones.extend(time.tzname)
+        else:
+            time_zones.append(time.tzname[0])
+        self.__timezone = self.__pad(time_zones, 0)
 
     def __calc_lang(self):
         # Set self.__lang by using __getlang().
@@ -386,8 +394,17 @@ class TimeRE(dict):
         return '%s)' % regex
 
     def pattern(self, format):
-        """Return re pattern for the format string."""
+        """Return re pattern for the format string.
+
+        Need to make sure that any characters that might be interpreted as
+        regex syntax is escaped.
+
+        """
         processed_format = ''
+        # The sub() call escapes all characters that might be misconstrued
+        # as regex syntax.
+        regex_chars = re_compile(r"([\\.^$*+?{}\[\]|])")
+        format = regex_chars.sub(r"\\\1", format)
         whitespace_replacement = re_compile('\s+')
         format = whitespace_replacement.sub('\s*', format)
         while format.find('%') != -1:
@@ -427,6 +444,9 @@ def strptime(data_string, format="%a %b %d %H:%M:%S %Y"):
     found = format_regex.match(data_string)
     if not found:
         raise ValueError("time data did not match format")
+    if len(data_string) != found.end():
+        raise ValueError("unconverted data remains: %s" %
+                          data_string[found.end():])
     year = 1900
     month = day = 1
     hour = minute = second = 0
@@ -491,16 +511,20 @@ def strptime(data_string, format="%a %b %d %H:%M:%S %Y"):
         elif group_key == 'j':
             julian = int(found_dict['j'])
         elif group_key == 'Z':
+            # Since -1 is default value only need to worry about setting tz if
+            # it can be something other than -1.
             found_zone = found_dict['Z'].lower()
             if locale_time.timezone[0] == locale_time.timezone[1]:
                 pass #Deals with bad locale setup where timezone info is
                      # the same; first found on FreeBSD 4.4.
-            elif locale_time.timezone[0].lower() == found_zone:
+            elif found_zone in ("utc", "gmt"):
                 tz = 0
-            elif locale_time.timezone[1].lower() == found_zone:
-                tz = 1
             elif locale_time.timezone[2].lower() == found_zone:
-                tz = -1
+                tz = 0
+            elif time.daylight:
+                if locale_time.timezone[3].lower() == found_zone:
+                    tz = 1
+
     # Cannot pre-calculate datetime_date() since can change in Julian
     #calculation and thus could have different value for the day of the week
     #calculation
@@ -519,7 +543,6 @@ def strptime(data_string, format="%a %b %d %H:%M:%S %Y"):
     return time.struct_time((year, month, day,
                              hour, minute, second,
                              weekday, julian, tz))
-
 def _insensitiveindex(lst, findme):
     # Perform a case-insensitive index search.
 
