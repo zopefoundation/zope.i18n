@@ -13,7 +13,7 @@
 ##############################################################################
 """Synchronize with Foreign Translation Services
 
-$Id: Synchronize.py,v 1.2 2002/06/18 14:47:05 jim Exp $
+$Id: Synchronize.py,v 1.3 2002/06/29 15:41:43 srichter Exp $
 """
 import xmlrpclib, httplib, urllib
 from base64 import encodestring
@@ -50,7 +50,6 @@ class Synchronize(BaseTranslationServiceView):
             url = 'http://' + self.sync_url
         else:
             url = self.sync_url
-        url += '++view++methods/'
 
         # Now try to connect
         self._connection = xmlrpclib.Server(
