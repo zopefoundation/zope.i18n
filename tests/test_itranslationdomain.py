@@ -52,7 +52,7 @@ class TestITranslationDomain(PlacelessSetup):
         assert verifyObject(ITranslationDomain, self._domain)
 
         # Setup the negotiator utility
-        utilities = getService(None, Utilities)
+        utilities = getService(Utilities)
         utilities.provideUtility(INegotiator, negotiator)        
 
     def testSimpleTranslate(self):
