@@ -17,6 +17,7 @@ $Id$
 """
 import re
 import warnings
+from zope.component import queryUtility
 from zope.i18nmessageid import MessageIDFactory, MessageID
 from zope.i18n.interfaces import ITranslationDomain
 
@@ -38,8 +39,6 @@ def _translate(msgid, domain=None, mapping=None, context=None,
         default = msgid.default
         mapping = msgid.mapping
 
-    # XXX we shouldn't need this import here
-    from zope.component import queryUtility
     util = queryUtility(ITranslationDomain, domain)
 
     if util is None:
