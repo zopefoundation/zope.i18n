@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testIReadTranslationService.py,v 1.1 2002/06/16 18:25:14 srichter Exp $
+$Id: testIReadTranslationService.py,v 1.2 2002/06/18 18:23:56 bwarsaw Exp $
 """
 
 import unittest
@@ -77,23 +77,6 @@ class TestIReadTranslationService(PlacelessSetup, unittest.TestCase):
         eq(interp('This is $$name.', mapping), 'This is $$name.')
         eq(interp('This is $${name}.', mapping), 'This is $${name}.')
         
-    def testSimpleNoTranslate(self):
-        translate = self._service.translate
-        raises = self.assertRaises
-        eq = self.assertEqual
-        # Test that we have at least the minimum required arguments
-        raises(TypeError, translate, 'Hello')
-        # Test that a translation in an unsupported language returns the
-        # original message id unchanged.
-        eq(translate('default', 'short_greeting', target_language='es'),
-           'short_greeting')
-        # Same test, but use the context argument instead of target_language
-        context = Environment()
-        eq(translate('default', 'short_greeting', context=context),
-           'short_greeting')
-        # Test that at least one of context or target_language is given
-        raises(TypeError, translate, 'short_greeting', context=None)
-    
     def testSimpleTranslate(self):
         translate = self._service.translate
         eq = self.assertEqual
