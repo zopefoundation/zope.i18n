@@ -11,9 +11,9 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
+"""Language Negotiator tests.
 
-$Id: test_negotiator.py,v 1.7 2004/02/27 17:48:43 sidnei Exp $
+$Id: test_negotiator.py,v 1.8 2004/02/27 22:25:23 srichter Exp $
 """
 import unittest
 
@@ -38,7 +38,7 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
         super(NegotiatorTest, self).setUp()
         self.Negotiator = Negotiator()
 
-    def test1(self):
+    def test_findLanguages(self):
 
         _cases = (
             (('en','de'), ('en','de','fr'),  'en'),
@@ -49,14 +49,14 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
 
         for user_pref_langs, obj_langs, expected in _cases:
             env = Env(user_pref_langs)
-            self.assertEqual(self.Negotiator.getLanguage(obj_langs, env),
+            self.assertEqual(self.negotiator.getLanguage(obj_langs, env),
                              expected)
 
 
 def test_suite():
-    loader = unittest.TestLoader()
-    return loader.loadTestsFromTestCase(NegotiatorTest)
-
+    return unittest.TestSuite((
+        unittest.makeSuite(NegotiatorTest),
+                           ))
 
 if __name__ == '__main__':
-    unittest.TextTestRunner().run(test_suite())
+    unittest.main(defaultTest='test_suite')

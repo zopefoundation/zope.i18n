@@ -11,11 +11,10 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""
+"""Language Negotiator
 
-$Id: negotiator.py,v 1.7 2004/02/27 17:48:42 sidnei Exp $
+$Id: negotiator.py,v 1.8 2004/02/27 22:25:22 srichter Exp $
 """
-
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component import getAdapter
@@ -37,7 +36,6 @@ def normalize_langs(langs):
     return n_langs
 
 class Negotiator:
-
     implements(INegotiator)
 
     def getLanguage(self, langs, env):

@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: __init__.py,v 1.3 2004/02/27 17:48:42 sidnei Exp $
+$Id: __init__.py,v 1.4 2004/02/27 22:25:23 srichter Exp $
 """
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Dict, EnumeratedTextLine
@@ -152,7 +152,7 @@ class ITranslator(Interface):
     the domain, context, and target language.
     """
 
-    def translate(msgid, mapping=None):
+    def translate(msgid, mapping=None, default=None):
         """Translate the source msgid using the given mapping.
 
         See ITranslationService for details.

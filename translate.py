@@ -13,7 +13,7 @@
 ##############################################################################
 """Translator
 
-$Id: translate.py,v 1.9 2004/02/05 22:52:21 srichter Exp $
+$Id: translate.py,v 1.10 2004/02/27 22:25:22 srichter Exp $
 """
 from zope.i18n.interfaces import ITranslator
 from zope.component import getService
@@ -26,46 +26,18 @@ class Translator:
     It is expected that object be constructed with enough information to find
     the domain, context, and target language.
     """
-
     implements(ITranslator)
 
-    def __init__(self, locale, domain, context=None):
-        """locale comes from the request, domain specifies the application,
-        and context specifies the place (it may be none for global contexts).
-        """
-        self._locale = locale
+    def __init__(self, domain, context, location=None):
+        """Initialize the object."""
         self._domain = domain
         self._context = context
-        self._translation_service = getService(context, 'Translation')
+        self._translation_service = getService(location, 'Translation')
+
 
     def translate(self, msgid, mapping=None, default=None):
-        """Translate the source msgid using the given mapping.
+        """See zope.i18n.interfaces.ITranslator."""
 
-        See ITranslationService for details.
-        """
-        # XXX Note that we cannot pass `context` to translation service as it
-        #     is most likely a Zope container that is not adaptable to
-        #     IUserPreferredLanguages.  It would be possible to pass the
-        #     request if we had it (ZopeContext, which is currently the only
-        #     user of Translator, has the request and could pass it to us
-        #     here).
-        #
-        #     OTOH if the request had information about user's preferred
-        #     languages, self._locale.id.language would most likely be not
-        #     None.  Therefore passing request is only useful in one case:
-        #     when the user asked for an exotic language for which we have no
-        #     locale, and there were no fallback languages with a supported
-        #     locale.
-        #
-        #     Note that this also uncovers an interesting situation.  Suppose
-        #     the user sets HTTP_ACCEPT_LANGUAGES to lg, en;q=0.5.
-        #     BrowserRequest looks for a locale matching 'lg', does not find
-        #     it and settles on a locale for 'en'.  When we get here,
-        #     self._locale.id.language is 'en', so 'lg' translations will not
-        #     be used even if available.  Perhaps the fix would be to only
-        #     specify context=self.request and just ignore
-        #     self._locale.id.language.
         return self._translation_service.translate(
-            msgid, self._domain, mapping=mapping,
-            target_language=self._locale.id.language,
+            msgid, self._domain, mapping=mapping, context=self._context,
             default=default)
