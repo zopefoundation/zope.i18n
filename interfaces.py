@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.14 2003/04/17 20:05:13 bwarsaw Exp $
+$Id: interfaces.py,v 1.15 2003/07/12 02:47:20 richard Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -300,8 +300,8 @@ class ILocaleIdentity(Interface):
                          our Locales to other system's locales. A common use
                          in ICU is to define a correspondence to the Windows
                          Locale System.""",
-                         value_types=(Tuple(title=u"Vendor-Signature Pair",
-                                            min_length=2, max_length=2),))
+                         value_type=Tuple(title=u"Vendor-Signature Pair",
+                                            min_length=2, max_length=2))
 
     def __repr__(self):
         """Defines the representation of the id, which should be a compact
@@ -337,14 +337,14 @@ class ILocaleTimeZone(Interface):
         description=u"Standard name of the timezone for unique referencing.")
 
     cities = List(title=u"Cities", description=u"Cities in Timezone",
-                  value_types=(TextLine(title=u"City Name"),))
+                  value_type=TextLine(title=u"City Name"))
 
     names = Dict(
         title=u"Time Zone Names",
-        key_types=(EnumeratedTextLine(title=u"Time Zone Name Type",
+        key_type=EnumeratedTextLine(title=u"Time Zone Name Type",
                                       allowed_values=(u'generic', u'standard',
-                                                      u'daylight')),),
-        value_types=(TextLine(title=u"Time Zone Name"),))
+                                                      u'daylight')),
+        value_type=TextLine(title=u"Time Zone Name"))
 
 
 class ILocaleCalendar(Interface):
@@ -352,18 +352,18 @@ class ILocaleCalendar(Interface):
     which made it attractive to be added """
 
     months = Dict(title=u"Month Names",
-                  key_types=(Int(title=u"Id", min=1, max=12),),
-                  value_types=(Tuple(title=u"Month Name and Abbreviation",
-                  min_length=2, max_length=2),))
+                  key_type=Int(title=u"Id", min=1, max=12),
+                  value_type=Tuple(title=u"Month Name and Abbreviation",
+                    min_length=2, max_length=2))
 
     weekdays = Dict(title=u"Weekdays Names",
-                  key_types=(Int(title=u"Id", min=1, max=7),),
-                  value_types=(Tuple(title=u"Weekdays Name and Abbreviation",
-                  min_length=2, max_length=2),))
+                  key_type=Int(title=u"Id", min=1, max=7),
+                  value_type=Tuple(title=u"Weekdays Name and Abbreviation",
+                    min_length=2, max_length=2))
 
     eras = Dict(title=u"Era Names",
-                  key_types=(Int(title=u"Id", min=1, max=2),),
-                  value_types=(TextLine(title=u"Era Name"),))
+                  key_type=Int(title=u"Id", min=1, max=2),
+                  value_type=TextLine(title=u"Era Name"))
 
     am = TextLine(title=u"AM String")
 
@@ -373,20 +373,20 @@ class ILocaleCalendar(Interface):
 
     timePatterns = Dict(
         title=u"Time Patterns",
-        key_types=(EnumeratedTextLine(title=u"Pattern Name",
+        key_type=EnumeratedTextLine(title=u"Pattern Name",
                                       allowed_values=(u'full', u'long',
-                                                      u'medium', u'short')),),
-        value_types=(TextLine(title=u"Time Pattern"),))
+                                                      u'medium', u'short')),
+        value_type=TextLine(title=u"Time Pattern"))
 
     datePatterns = Dict(
         title=u"Date Patterns",
-        key_types=(EnumeratedTextLine(title=u"Pattern Name",
+        key_type=EnumeratedTextLine(title=u"Pattern Name",
                                       allowed_values=(u'full', u'long',
-                                                      u'medium', u'short')),),
-        value_types=(TextLine(title=u"Date Pattern"),))
+                                                      u'medium', u'short')),
+        value_type=TextLine(title=u"Date Pattern"))
 
     dateTimePattern = Dict(title=u"Date-Time Pattern",
-                           value_types=(TextLine(title=u"Pattern"),))
+                           value_type=TextLine(title=u"Pattern"))
 
     def update(other):
         """Update this calendar using data from other. Assume that unless
@@ -424,14 +424,14 @@ class ILocaleNumberFormat(Interface):
 
     patterns = Dict(
         title=u"Number Patterns",
-        key_types=(EnumeratedTextLine(title=u"Format Name",
+        key_type=EnumeratedTextLine(title=u"Format Name",
                                       allowed_values=(u'decimal', u'percent',
-                                                      u'scientific')),),
-        value_types=(TextLine(title=u"Pattern"),))
+                                                      u'scientific')),
+        value_type=TextLine(title=u"Pattern"))
 
     symbols = Dict(
         title=u"Number Symbols",
-        key_types=(EnumeratedTextLine(title=u"Format Name",
+        key_type=EnumeratedTextLine(title=u"Format Name",
                                       allowed_values=(u'decimal', u'group',
                                                       u'list', u'percentSign',
                                                       u'nativeZeroDigit',
@@ -440,8 +440,8 @@ class ILocaleNumberFormat(Interface):
                                                       u'minusSign',
                                                       u'exponential',
                                                       u'perMille', u'infinity',
-                                                      u'nan')),),
-        value_types=(TextLine(title=u"Symbol"),))
+                                                      u'nan')),
+        value_type=TextLine(title=u"Symbol"))
 
 
 class ILocaleCurrency(Interface):
@@ -479,21 +479,21 @@ class ILocale(Interface):
     currencies = Container(title=u"Currencies")
 
     languages = Dict(title=u"Language id to translated name",
-                     key_types=(TextLine(title=u"Language Id"),),
-                     value_types=(TextLine(title=u"Language Name"),),
+                     key_type=TextLine(title=u"Language Id"),
+                     value_type=TextLine(title=u"Language Name"),
                      )
 
     countries = Dict(title=u"Country id to translated name",
-                     key_types=(TextLine(title=u"Country Id"),),
-                     value_types=(TextLine(title=u"Country Name"),),
+                     key_type=TextLine(title=u"Country Id"),
+                     value_type=TextLine(title=u"Country Name"),
                      )
 
     timezones = Dict(title=u"Time zone id to ITimezone",
-                     key_types=(TextLine(title=u"Time Zone Id"),),
+                     key_type=TextLine(title=u"Time Zone Id"),
                      )
 
     calendars = Dict(title=u"Calendar id to ICalendar",
-                     key_types=(TextLine(title=u"Calendar Id"),),
+                     key_type=TextLine(title=u"Calendar Id"),
                      )
 
     def getDefaultTimeZone():
@@ -608,13 +608,13 @@ class INumberFormat(IFormat):
 
     symbols = Dict(
         title=u"Number Symbols",
-        key_types=(EnumeratedTextLine(
+        key_type=EnumeratedTextLine(
             title=u"Dictionary Class",
             allowed_values=(u'decimal', u'group', u'list', u'percentSign',
                             u'nativeZeroDigit', u'patternDigit', u'plusSign',
                             u'minusSign', u'exponential', u'perMille',
-                            u'infinity', u'nan')),),
-        value_types=(TextLine(title=u"Symbol"),))
+                            u'infinity', u'nan')),
+        value_type=TextLine(title=u"Symbol"))
 
 
 class ICurrencyFormat(INumberFormat):
