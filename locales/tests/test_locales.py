@@ -74,7 +74,7 @@ class TestLocaleProvider(TestILocaleProvider):
         self.assert_(('en', None, None) in self.locales._locales.keys())
 
     def test_loadLocaleFailure(self):
-        self.assertRaises(LoadLocaleError, self.locales.loadLocale, 'xxx')
+        self.assertRaises(LoadLocaleError, self.locales.loadLocale, 'zzz')
 
 
 class TestLocaleAndProvider(TestCase):
