@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: TranslationService.py,v 1.4 2002/06/12 18:38:56 srichter Exp $
+$Id: TranslationService.py,v 1.5 2002/06/12 20:59:09 bwarsaw Exp $
 """
 import re
 from types import StringTypes, TupleType
@@ -28,11 +28,11 @@ from Zope.App.OFS.Container.BTreeContainer import BTreeContainer
 from Zope.App.OFS.Container.IContainer import IContainer
 from Zope.App.OFS.Container.IContainer import IHomogenousContainer
 
-from Negotiator import negotiator
-from Domain import Domain
-from IMessageCatalog import IMessageCatalog
-from ITranslationService import ITranslationService
-from SimpleTranslationService import SimpleTranslationService
+from Zope.I18n.Negotiator import negotiator
+from Zope.I18n.Domain import Domain
+from Zope.I18n.IMessageCatalog import IMessageCatalog
+from Zope.I18n.ITranslationService import ITranslationService
+from Zope.I18n.SimpleTranslationService import SimpleTranslationService
 
 
 class ILocalTranslationService(ITranslationService,
@@ -41,12 +41,10 @@ class ILocalTranslationService(ITranslationService,
 
 
 class TranslationService(BTreeContainer, SimpleTranslationService):
-    ''' '''
 
     __implements__ =  ILocalTranslationService
 
     def __init__(self, default_domain='global'):
-        ''' '''
         super(TranslationService, self).__init__()
         self._catalogs = OOBTree()
         self.default_domain = default_domain
@@ -81,7 +79,6 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         super(TranslationService, self).__delitem__(name)
         self._unregisterMessageCatalog(object.getLanguage(),
                                        object.getDomain(), name)
-
 
     def isAddable(self, interfaces):
         """See Zope.App.OFS.Container.IContainer.IWriteContainer"""
@@ -139,14 +136,14 @@ class TranslationService(BTreeContainer, SimpleTranslationService):
         filter = filter.replace('%', '.*')
         filter_re = re.compile(filter)
         
-        msg_ids = {}
+        msgids = {}
         languages = self.getAvailableLanguages(domain)
         for language in languages:
             for name in self._catalogs[(language, domain)]:
-                for id in self[name].getMessageIds():
-                    if filter_re.match(id) >= 0:
-                        msg_ids[id] = None
-        return msg_ids.keys()
+                for msgid in self[name].getMessageIds():
+                    if filter_re.match(msgid) >= 0:
+                        msgids[msgid] = None
+        return msgids.keys()
 
 
     def getAllLanguages(self):
