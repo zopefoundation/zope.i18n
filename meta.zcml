@@ -6,6 +6,10 @@
                attributes="directory"
                handler="Zope.I18n.metaConfigure.registerTranslations" />
 
+    <directive name="defaultLanguages"
+               attributes="languages"
+               handler="Zope.I18n.metaConfigure.defaultLanguages" />
+
   </directives>
 
 </zopeConfigure>
