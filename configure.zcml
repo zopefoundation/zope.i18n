@@ -1,6 +1,5 @@
 <zopeConfigure
    xmlns='http://namespaces.zope.org/zope'
-   xmlns:zmi='http://namespaces.zope.org/zmi'
    xmlns:browser='http://namespaces.zope.org/browser'
    xmlns:service='http://namespaces.zope.org/service'
    xmlns:gts='http://namespaces.zope.org/gts'
