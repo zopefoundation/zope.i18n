@@ -13,7 +13,7 @@
 ##############################################################################
 """Locale and LocaleProdiver Implmentation.
 
-$Id: locales.py,v 1.1 2003/01/05 20:19:37 srichter Exp $
+$Id: locales.py,v 1.2 2003/01/06 16:35:11 fdrake Exp $
 """
 import time, os
 import datetime
@@ -721,7 +721,7 @@ class ICUXMLLocaleFactory:
     def __init__(self, path):
         """Initialize factory."""
         self._path = path
-        self._data = parseXML(path).firstChild
+        self._data = parseXML(path).documentElement
 
     def _getText(self, nodelist):
         rc = ""
