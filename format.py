@@ -16,7 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.1 2003/01/05 20:19:37 srichter Exp $
+$Id: format.py,v 1.2 2003/01/06 09:24:42 srichter Exp $
 """
 import re
 import math
@@ -27,7 +27,7 @@ from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 class DateTimeParseError(Exception):
     """Error is raised when parsing of datetime failed."""
 
-class DateTimeFormat:
+class DateTimeFormat(object):
     __doc__ = IDateTimeFormat.__doc__
 
     __implements__ =  IDateTimeFormat
@@ -137,7 +137,7 @@ class NumberParseError(Exception):
     number parsing process."""
 
 
-class NumberFormat:
+class NumberFormat(object):
     __doc__ = INumberFormat.__doc__
 
     __implements__ =  INumberFormat
