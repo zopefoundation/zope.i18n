@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: Domain.py,v 1.2 2002/06/10 23:29:27 jim Exp $
+$Id: Domain.py,v 1.3 2002/06/12 15:51:26 bwarsaw Exp $
 """
 
 from Zope.I18n.IDomain import IDomain
@@ -26,24 +26,19 @@ class Domain:
         self._place = place
         self.domain = domain
 
-
     def getPlace(self):
         """Return the place this domain was created for."""
         return self._place
-
 
     def getDomainName(self):
         """Return the domain name"""
         return self._domain
     
-
-    ############################################################
-    # Implementation methods for interface
-    # IDomain.py
+    # IDomain interface methods
 
     def translate(self, source, mapping=None, context=None,
                   target_language=None):
-        'See Zope.I18n.IDomain.IDomain'
+        """See Zope.I18n.IDomain.IDomain"""
 
         # lookup the correct translation service
         service_manager = getServiceManager(self.place)
@@ -51,6 +46,3 @@ class Domain:
 
         return service.translate(self.domain, source, mapping, context,
                                  target_language)
-
-    #
-    ############################################################

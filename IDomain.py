@@ -13,30 +13,31 @@
 ##############################################################################
 """
 
-$Id: IDomain.py,v 1.2 2002/06/10 23:29:27 jim Exp $
+$Id: IDomain.py,v 1.3 2002/06/12 15:51:26 bwarsaw Exp $
 """
 
 from Interface import Interface
 
 class IDomain(Interface):
-    """Since it is often tedious to always specify a domain and place for a
-       particular translation, the idea of a Domain object was created, which
-       allows to save the place and domain for a set of translations.
+    """A translation domain.
 
-       Usage:
+    Since it is often tedious to always specify a domain and a place for a
+    particular translation, the idea of a Domain object was created, which
+    allows to save the place and domain for a set of translations.
 
-       domain = Domain(self, 'MyProduct')
-       domain.translate('MyProductTitle', context)
+    Usage:
 
-       Constructor Arguments:
+        domain = Domain(self, 'MyProduct')
+        domain.translate('MyProductTitle', context)
+
+    Constructor Arguments:
 
          place -- A location where the Domain should look for the translation
                   service.
 
-         domain -- Secifies the domain to look up for the translation. See
+         domain -- Secifies the domain to look up for the translation.  See
                    ITranslationService for more details on domains.
     """
-
 
     def translate(msgid, mapping=None, context=None, target_language=None):
         """Translate the the source to its appropriate language.
