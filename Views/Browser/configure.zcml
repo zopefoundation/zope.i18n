@@ -64,10 +64,10 @@
   </browser:view>
 
 
-  <zmi:tabs for="Zope.I18n.ITranslationService.">
-    <zmi:tab label="Translate" action="@@index.html"/>
-    <zmi:tab label="Import/Export" action="@@exportImportForm.html"/>
-    <zmi:tab label="Synchronize" action="@@synchronizeForm.html"/>
-  </zmi:tabs>
+  <browser:menuItems menu="zmi_views" for="Zope.I18n.ITranslationService.">
+    <browser:menuItem title="Translate" action="@@index.html"/>
+    <browser:menuItem title="Import/Export" action="@@exportImportForm.html"/>
+    <browser:menuItem title="Synchronize" action="@@synchronizeForm.html"/>
+  </browser:menuItems>
 
 </zopeConfigure>
