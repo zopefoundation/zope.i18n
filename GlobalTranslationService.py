@@ -13,18 +13,28 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: GlobalTranslationService.py,v 1.4 2002/06/13 16:35:19 srichter Exp $
+$Id: GlobalTranslationService.py,v 1.5 2002/06/18 18:21:17 bwarsaw Exp $
 """
 
 from Negotiator import negotiator
 from SimpleTranslationService import SimpleTranslationService
+
+# The configure.zcml file should specify a list of fallback languages for the
+# site.  If a particular catalog for a negotiated language is not available,
+# then the zcml specified order should be tried.  If that fails, then as a
+# last resort the languages in the following list are tried.  If these fail
+# too, then the msgid is returned.
+#
+# Note that these fallbacks are used only to find a catalog.  If a particular
+# message in a catalog is not translated, tough luck, you get the msgid.
+LANGUAGE_FALLBACKS = ['en']
 
 
 class GlobalTranslationService(SimpleTranslationService):
 
     __implements__ =  SimpleTranslationService.__implements__
 
-    def __init__(self, default_domain='global'):
+    def __init__(self, default_domain='global', fallbacks=None):
         # XXX We haven't specified that ITranslationServices have a default
         # domain.  So far, we've required the domain argument to .translate()
         self._domain = default_domain
@@ -32,6 +42,11 @@ class GlobalTranslationService(SimpleTranslationService):
         self._catalogs = {}
         # _data maps IMessageCatalog.getIdentifier() to IMessageCatalog
         self._data = {}
+        # What languages to fallback to, if there is no catalog for the
+        # requested language (no fallback on individual messages)
+        if fallbacks is None:
+            fallbacks = LANGUAGE_FALLBACKS
+        self._fallbacks = fallbacks
 
     def _registerMessageCatalog(self, language, domain, catalog_name):
         key = (language, domain)
@@ -43,6 +58,11 @@ class GlobalTranslationService(SimpleTranslationService):
         self._registerMessageCatalog(catalog.getLanguage(),
                                      catalog.getDomain(),
                                      catalog.getIdentifier())
+
+    def setLanguageFallbacks(self, fallbacks=None):
+        if fallbacks is None:
+            fallbacks = LANGUAGE_FALLBACKS
+        self._fallbacks = fallbacks
 
 
     ############################################################
@@ -59,8 +79,16 @@ class GlobalTranslationService(SimpleTranslationService):
                 langs = [m[0] for m in self._catalogs.keys()]
                 target_language = negotiator.getLanguage(langs, context)
 
-        # Get the translation. Default is the msgid text itself.
-        catalog_names = self._catalogs.get((target_language, domain), [])
+        # Get the translation. Use the specified fallbacks if this fails
+        catalog_names = self._catalogs.get((target_language, domain))
+        if catalog_names is None:
+            for language in self._fallbacks:
+                catalog_names = self._catalogs.get((language, domain))
+                if catalog_names is not None:
+                    break
+        # Did the fallback fail?  Sigh, use the msgid
+        if catalog_names is None:
+            catalog_names = []
 
         text = msgid
         for name in catalog_names:
