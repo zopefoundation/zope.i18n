@@ -70,7 +70,8 @@
             <input type="text" name="language" size="20" value="">
             <input type="submit" name="@@addLanguage.html:method" value="Add">
           </div>
-          <div class="form-label">New Domain:</div>
+          <div class="form-label"
+               i18n:translate="" i18n:domain="Zope-I18n">New Domain:</div>
           <div>
             <input type="text" name="domain" size="20" value="">
             <input type="submit" name="@@addDomain.html:method" value="Add">
