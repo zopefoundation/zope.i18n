@@ -725,6 +725,8 @@ class LocaleFactory(object):
             self._extractMonths(cal_node, calendar)
             # get weekday names and abbreviations
             self._extractDays(cal_node, calendar)
+            # get week information
+            self._extractWeek(cal_node, calendar)
 
             # get am/pm designation values
             nodes = cal_node.getElementsByTagName('am')

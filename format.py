@@ -540,7 +540,11 @@ def buildDateTimeInfo(dt, calendar):
     if h == 0:
         h = 12
 
-    weekday = dt.weekday()+1
+    weekday = (dt.weekday() + (8 - calendar.week['firstDay'])) % 7 + 1
+
+    day_of_week_in_month = (dt.day - 1) / 7 + 1
+
+    week_in_month = (dt.day + 6 - dt.weekday()) / 7 + 1
 
     return {
         ('a', 1): ampm,
@@ -560,10 +564,18 @@ def buildDateTimeInfo(dt, calendar):
         ('D', 1): dt.strftime('%j'),
         ('w', 1): dt.strftime('%W'),
         ('w', 2): dt.strftime('%.2W'),
+        ('W', 1): "%i" %week_in_month,
+        ('W', 2): "%.2i" %week_in_month,
+        ('F', 1): "%i" %day_of_week_in_month,
+        ('F', 2): "%.2i" %day_of_week_in_month,
         ('h', 1): str(h),
         ('h', 2): "%.2i" %(h),
+        ('K', 1): str(dt.hour%12),
+        ('K', 2): "%.2i" %(dt.hour%12),
         ('H', 1): str(dt.hour),
         ('H', 2): "%.2i" %dt.hour,
+        ('k', 1): str(dt.hour or 24),
+        ('k', 2): "%.2i" %(dt.hour or 24),
         ('m', 1): str(dt.minute),
         ('m', 2): "%.2i" %dt.minute,
         ('s', 1): str(dt.second),
@@ -572,14 +584,6 @@ def buildDateTimeInfo(dt, calendar):
         ('S', 2): "%.6i" %dt.microsecond,
         # TODO: Implement the following symbols. This requires the handling of
         # timezones.
-        ('F', 1): str(2),
-        ('F', 2): "%.2i" %(2),
-        ('W', 1): str(2),
-        ('W', 2): "%.2i" %(2),
-        ('k', 1): str(dt.hour+1),
-        ('k', 2): "%.2i" %(dt.hour+1),
-        ('K', 1): str(dt.hour%12),
-        ('K', 2): "%.2i" %(dt.hour%12),
         ('z', 1): "+000",
         ('z', 2): "+00:00",
         ('z', 3): "UTC",

@@ -354,8 +354,8 @@ class IDateTimeFormat(IFormat):
       y      year                  (Number)          1996
       M      month in year         (Text and Number) July and 07
       d      day in month          (Number)          10
-      h      hour in am/pm (1~12)  (Number)          12
-      H      hour in day (0~23)    (Number)          0
+      h      hour in am/pm (1-12)  (Number)          12
+      H      hour in day (0-23)    (Number)          0
       m      minute in hour        (Number)          30
       s      second in minute      (Number)          55
       S      millisecond           (Number)          978
@@ -365,8 +365,8 @@ class IDateTimeFormat(IFormat):
       w      week in year          (Number)          27
       W      week in month         (Number)          2
       a      am/pm marker          (Text)            pm
-      k      hour in day (1~24)    (Number)          24
-      K      hour in am/pm (0~11)  (Number)          0
+      k      hour in day (1-24)    (Number)          24
+      K      hour in am/pm (0-11)  (Number)          0
       z      time zone             (Text)            Pacific Standard Time
       '      escape for text
       ''     single quote                            '

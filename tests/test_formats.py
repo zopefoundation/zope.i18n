@@ -52,6 +52,8 @@ class LocaleCalendarStub(object):
 
     eras = {1: (None, 'v. Chr.'), 2: (None, 'n. Chr.')}
 
+    week = {'firstDay': 1, 'minDays': 1}
+
     def getMonthNames(self):
         return [self.months.get(type, (None, None))[0] for type in range(1, 13)]
 
@@ -290,13 +292,105 @@ class TestDateTimeFormat(TestCase):
             'dd.MM.yy hh:mm a'),
             '02.01.03 09:48 nachm.')
 
-    def test_formatAllWeekdays(self):
+    def testFormatAllWeekdays(self):
         for day in range(1, 8):
             self.assertEqual(self.format.format(
                 datetime.datetime(2003, 01, day+5, 21, 48),
                 "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
                 '%s, %i. Januar 2003 21:48 Uhr +000' %(
                 self.format.calendar.days[day][0], day+5))
+
+    def testFormatWeekDay(self):
+        date = datetime.date(2003, 01, 02)
+        self.assertEqual(self.format.format(date, "E"),
+                         '4')
+        self.assertEqual(self.format.format(date, "EE"),
+                         '04')
+        self.assertEqual(self.format.format(date, "EEE"),
+                         'Do')
+        self.assertEqual(self.format.format(date, "EEEE"),
+                         'Donnerstag')
+
+        # Create custom calendar, which has Sunday as the first day of the
+        # week
+        calendar = LocaleCalendarStub()
+        calendar.week['firstDay'] = 7
+        format = DateTimeFormat(calendar=calendar)
+
+        self.assertEqual(format.format(date, "E"),
+                         '5')
+        self.assertEqual(format.format(date, "EE"),
+                         '05')
+        
+    def testFormatDayOfWeekInMonth(self):
+        date = datetime.date(2003, 01, 02)
+        self.assertEqual(self.format.format(date, "F"),
+                         '1')
+        self.assertEqual(self.format.format(date, "FF"),
+                         '01')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 9), "F"),
+            '2')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 16), "F"),
+            '3')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 23), "F"),
+            '4')
+
+    def testFormatWeekInMonth(self):
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 3), "W"),
+            '1')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 3), "WW"),
+            '01')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 8), "W"),
+            '2')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 19), "W"),
+            '3')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 20), "W"),
+            '4')
+        self.assertEqual(
+            self.format.format(datetime.date(2003, 1, 31), "W"),
+            '5')
+
+    def testFormatHourInDayOneTo24(self):
+        self.assertEqual(
+            self.format.format(datetime.time(5, 0), "k"),
+            '5')
+        self.assertEqual(
+            self.format.format(datetime.time(5, 0), "kk"),
+            '05')
+        self.assertEqual(
+            self.format.format(datetime.time(0, 0), "k"),
+            '24')
+        self.assertEqual(
+            self.format.format(datetime.time(1, 0), "k"),
+            '1')
+
+    def testFormatHourInDayZeroToEleven(self):
+        self.assertEqual(
+            self.format.format(datetime.time(5, 0), "K"),
+            '5')
+        self.assertEqual(
+            self.format.format(datetime.time(5, 0), "KK"),
+            '05')
+        self.assertEqual(
+            self.format.format(datetime.time(0, 0), "K"),
+            '0')
+        self.assertEqual(
+            self.format.format(datetime.time(12, 0), "K"),
+            '0')
+        self.assertEqual(
+            self.format.format(datetime.time(11, 0), "K"),
+            '11')
+        self.assertEqual(
+            self.format.format(datetime.time(23, 0), "K"),
+            '11')
 
     def testFormatSimpleHourRepresentation(self):
         self.assertEqual(

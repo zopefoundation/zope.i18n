@@ -368,6 +368,7 @@ class LocaleDates(AttributeInheritance):
       >>> cal.am = Stub.am
       >>> cal.pm = Stub.pm
       >>> cal.eras = Stub.eras
+      >>> cal.week = {'firstDay': 1, 'minDays': 1}
       >>> dates.calendars = {'gregorian': cal}
 
       Setting up and accessing date format through a specific length
