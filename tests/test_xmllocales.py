@@ -13,7 +13,7 @@
 ##############################################################################
 """Testing all XML Locale functionality.
 
-$Id: test_xmllocales.py,v 1.2 2003/01/06 09:24:45 srichter Exp $
+$Id: test_xmllocales.py,v 1.3 2003/01/06 12:51:07 srichter Exp $
 """
 import os
 from unittest import TestCase, TestSuite, makeSuite
@@ -21,12 +21,12 @@ from unittest import TestCase, TestSuite, makeSuite
 from zope.i18n.locales import ICUXMLLocaleFactory
 from zope.i18n.format import parseDateTimePattern, parseNumberPattern
 
-class LocaleXMLFileTestCase(TestCase, object):
+class LocaleXMLFileTestCase(TestCase):
     """This test verifies that every locale XML fiel can be loaded."""
 
     def __init__(self, path):
         self.__path = path
-        super(LocaleXMLFileTestCase, self).__init__()
+        TestCase.__init__(self)
         
     # For unittest.
     def shortDescription(self):
