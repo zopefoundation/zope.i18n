@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.6 2003/03/25 14:48:01 srichter Exp $
+$Id: interfaces.py,v 1.7 2003/03/25 17:01:52 slinkp Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -183,6 +183,26 @@ class IReadTranslationService(Interface):
         """
 
 
+class IDomain(Interface):
+    """A translation domain.
+
+    Since it is often tedious to always specify a domain and a place for a
+    particular translation, the idea of a Domain object was created, which
+    allows to save the place and domain for a set of translations.
+
+    Usage:
+
+        domain = translationService.getDomain('domain')
+        domain.translate('MyProductTitle', context)
+    """
+
+    def translate(msgid, mapping=None, context=None, target_language=None):
+        """Translate the the source to its appropriate language.
+
+        See ITranslationService for details.
+        """
+
+
 class IWriteTranslationService(Interface):
     """This interface describes the methods that are necessary for an editable
     Translation Service to work.
@@ -278,7 +298,8 @@ class ISyncTranslationService(Interface):
         """
 
 
-class ITranslationService(IReadTranslationService, IWriteTranslationService,
+class ITranslationService(IReadTranslationService,
+                          IWriteTranslationService,
                           ISyncTranslationService):
     """This is the common and full-features translation service. Almost all
     translation service implementations will use this interface.
@@ -317,26 +338,6 @@ class IUserPreferredLanguages(Interface):
 
     def getPreferredLanguages():
         """Return a sequence of user preferred languages.
-        """
-
-
-class IDomain(Interface):
-    """A translation domain.
-
-    Since it is often tedious to always specify a domain and a place for a
-    particular translation, the idea of a Domain object was created, which
-    allows to save the place and domain for a set of translations.
-
-    Usage:
-
-        domain = translationService.getDomain('domain')
-        domain.translate('MyProductTitle', context)
-    """
-
-    def translate(msgid, mapping=None, context=None, target_language=None):
-        """Translate the the source to its appropriate language.
-
-        See ITranslationService for details.
         """
 
 
@@ -823,3 +824,5 @@ class IDateTimeFormat(IFormat):
 
     calendar = Attribute("""This object must implement ILocaleCalendar. See
                             this interface's documentation for details.""")
+
+

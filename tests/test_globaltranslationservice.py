@@ -13,13 +13,14 @@
 ##############################################################################
 """This module tests the regular persistent Translation Service.
 
-$Id: test_globaltranslationservice.py,v 1.2 2002/12/25 14:13:40 jim Exp $
+$Id: test_globaltranslationservice.py,v 1.3 2003/03/25 17:01:53 slinkp Exp $
 """
 import unittest, sys, os
 from zope.i18n.globaltranslationservice import GlobalTranslationService
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
-from zope.i18n.tests.test_ireadtranslationservice import TestIReadTranslationService, \
-     Environment
+from zope.i18n.tests.test_ireadtranslationservice \
+     import TestIReadTranslationService, Environment
+from zope.i18n import MessageIDFactory
 
 def testdir():
     from zope.i18n import tests
@@ -35,6 +36,10 @@ class TestGlobalTranslationService(TestIReadTranslationService):
                                            os.path.join(path, 'en-default.mo'))
         de_catalog = GettextMessageCatalog('de', 'default',
                                            os.path.join(path, 'de-default.mo'))
+        alt_en_catalog = GettextMessageCatalog('en', 'alt',
+                                           os.path.join(path,
+                                                        'en-alt.mo'))
+        service.addCatalog(alt_en_catalog)
         service.addCatalog(en_catalog)
         service.addCatalog(de_catalog)
         return service
@@ -58,6 +63,32 @@ class TestGlobalTranslationService(TestIReadTranslationService):
         # Test that at least one of context or target_language is given
         raises(TypeError, translate, 'short_greeting', context=None)
 
+       
+    def testStringTranslate(self):
+        translate = self._service.translate
+        self.assertEqual(translate('default', u'short_greeting',
+                                   target_language='en'),
+                         u'Hello!')
+        
+    def testMessageIDTranslate(self):
+        translate = self._service.translate
+        self.assertEqual(translate('default', u'short_greeting',
+                                   target_language='en'),
+                         u'Hello!')
+        msgid = MessageIDFactory('alt')('short_greeting')
+        self.assertEqual(translate('default', msgid, 
+                                   target_language='en'),
+                         u'Hey!')
+       
+    def testMessageIDTranslate_w_Domain(self):
+        translate = self._service.getDomain('default').translate
+        self.assertEqual(translate(u'short_greeting', target_language='en'),
+                         u'Hello!')
+        msgid = MessageIDFactory('alt')('short_greeting')
+        self.assertEqual(translate(msgid, target_language='en'),
+                         u'Hey!')
+       
+           
     def testSimpleFallbackTranslation(self):
         translate = self._service.translate
         raises = self.assertRaises

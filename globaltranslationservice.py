@@ -13,11 +13,12 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 
-$Id: globaltranslationservice.py,v 1.2 2002/12/25 14:13:39 jim Exp $
+$Id: globaltranslationservice.py,v 1.3 2003/03/25 17:01:52 slinkp Exp $
 """
 
 from zope.i18n.negotiator import negotiator
 from zope.i18n.simpletranslationservice import SimpleTranslationService
+from zope.i18n.messageid import MessageID
 
 # The configure.zcml file should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
@@ -74,6 +75,10 @@ class GlobalTranslationService(SimpleTranslationService):
                 langs = [m[0] for m in self._catalogs.keys()]
                 target_language = negotiator.getLanguage(langs, context)
 
+        # Try to get domain from msgid.
+        if isinstance(msgid, MessageID):
+            domain = msgid.domain
+            
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get((target_language, domain))
         if catalog_names is None:
