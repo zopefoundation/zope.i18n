@@ -16,12 +16,12 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 
-$Id: format.py,v 1.8 2003/06/06 19:29:09 stevea Exp $
+$Id: format.py,v 1.9 2003/06/30 16:25:23 jeremy Exp $
 """
 import re
 import math
 import datetime
-import calendar
+
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implements
 
