@@ -13,21 +13,19 @@
 ##############################################################################
 """Test the gts ZCML namespace directives.
 
-$Id: testDirectives.py,v 1.3 2002/06/18 18:23:29 bwarsaw Exp $
+$Id: testDirectives.py,v 1.4 2002/06/20 15:55:08 jim Exp $
 """
 import unittest
-import sys
 import os
 from cStringIO import StringIO
 
-from Zope.Configuration.xmlconfig import xmlconfig, Context
+from Zope.Configuration.xmlconfig import xmlconfig, Context, XMLConfig
 from Zope.Configuration.Exceptions import ConfigurationError
+
 from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
-from Zope.I18n.GlobalTranslationService import translationService 
 
 import Zope.I18n
-defs_path = os.path.join(os.path.split(Zope.I18n.__file__)[0],
-                         'meta.zcml')
+from Zope.I18n.GlobalTranslationService import translationService 
 
 template = """<zopeConfigure
    xmlns='http://namespaces.zope.org/zope'
@@ -43,8 +41,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
         PlacelessSetup.setUp(self)
-        xmlconfig(open(defs_path))
-
+        XMLConfig('meta.zcml', Zope.I18n)()
 
     def testRegisterTranslations(self):
         eq = self.assertEqual

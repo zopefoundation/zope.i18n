@@ -1,6 +1,5 @@
 <zopeConfigure
    xmlns='http://namespaces.zope.org/zope'
-   xmlns:security='http://namespaces.zope.org/security'
    xmlns:zmi='http://namespaces.zope.org/zmi'
    xmlns:browser='http://namespaces.zope.org/browser'
    xmlns:service='http://namespaces.zope.org/service'
@@ -30,11 +29,11 @@
 
 <!-- Register the Translation Service as a content object -->
 <content class=".TranslationService.">
-   <security:require permission="Zope.Public"
+   <require permission="Zope.Public"
                      interface="Zope.I18n.ITranslationService." 
                      />
 
-   <security:require permission="Zope.ManageServices"
+   <require permission="Zope.ManageServices"
                      interface="Zope.App.OFS.Container.IContainer." 
                      />
 </content>
@@ -59,10 +58,10 @@
 
 <!-- Setup Message Catalogs -->
 <content class=".MessageCatalog.">
-   <security:require permission="Zope.Security"
+   <require permission="Zope.Security"
                      interface=".IMessageCatalog." 
                      />
-   <security:require permission="Zope.ManageServices"
+   <require permission="Zope.ManageServices"
                      attributes="setMessage getMessageIds"
                      />
 </content>

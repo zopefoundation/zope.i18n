@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog. 
 
-$Id: MessageCatalog.py,v 1.6 2002/06/16 18:25:13 srichter Exp $
+$Id: MessageCatalog.py,v 1.7 2002/06/20 15:55:07 jim Exp $
 """
 import time
 
@@ -21,7 +21,7 @@ from Persistence.BTrees.OOBTree import OOBTree
 from Persistence import Persistent
 from Zope.Proxy.ProxyIntrospection import removeAllProxies
 from Zope.ComponentArchitecture.IFactory import IFactory
-from Zope.App.Security.RegisteredObject import RegisteredObject
+from Zope.App.Security.Registries.RegisteredObject import RegisteredObject
 from Zope.I18n.IMessageCatalog import IMessageCatalog
 
 
