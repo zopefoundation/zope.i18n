@@ -33,8 +33,9 @@ class TestIMessageCatalog(object):
 
     def setUp(self):
         self._catalog = self._getMessageCatalog()
-        assert verifyObject(IMessageCatalog, self._catalog)
 
+    def testInterface(self):
+        verifyObject(IMessageCatalog, self._catalog)
 
     def testGetMessage(self):
         catalog = self._catalog

@@ -46,11 +46,13 @@ class TestITranslationDomain(PlacelessSetup):
     def setUp(self):
         super(TestITranslationDomain, self).setUp()
         self._domain = self._getTranslationDomain()
-        assert verifyObject(ITranslationDomain, self._domain)
 
         # Setup the negotiator utility
         utilities = getService(Utilities)
         utilities.provideUtility(INegotiator, negotiator)        
+
+    def testInterface(self):
+        verifyObject(ITranslationDomain, self._domain)
 
     def testSimpleTranslate(self):
         translate = self._domain.translate
