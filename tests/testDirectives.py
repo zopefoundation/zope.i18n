@@ -13,7 +13,7 @@
 ##############################################################################
 """Test the gts ZCML namespace directives.
 
-$Id: testDirectives.py,v 1.1 2002/06/12 18:38:58 srichter Exp $
+$Id: testDirectives.py,v 1.2 2002/06/17 18:58:17 bwarsaw Exp $
 """
 import unittest
 import sys
@@ -27,7 +27,7 @@ from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
 
 import Zope.I18n
 defs_path = os.path.join(os.path.split(Zope.I18n.__file__)[0],
-                         'i18n-meta.zcml')
+                         'meta.zcml')
 
 template = """<zopeConfigure
    xmlns='http://namespaces.zope.org/zope'
