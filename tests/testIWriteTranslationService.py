@@ -13,7 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationService interface.
 
-$Id: testIWriteTranslationService.py,v 1.3 2002/07/11 00:54:02 srichter Exp $
+$Id: testIWriteTranslationService.py,v 1.4 2002/07/11 07:12:47 srichter Exp $
 """
 
 import unittest
@@ -22,14 +22,12 @@ from Interface.Verify import verifyObject
 from Zope.ComponentArchitecture.tests.PlacelessSetup import PlacelessSetup
 from Zope.App.ComponentArchitecture.metaConfigure import \
      provideService, managerHandler
-from Zope.App.ComponentArchitecture.metaConfigure import handler
 
 from Zope.I18n.Negotiator import negotiator
 from Zope.I18n.INegotiator import INegotiator
 from Zope.I18n.IUserPreferredLanguages import IUserPreferredLanguages
 from Zope.I18n.ITranslationService import ITranslationService
 from Zope.I18n.IDomain import IDomain
-from Zope.I18n.MessageCatalog import MessageCatalog 
 
 class Environment:
 
@@ -64,9 +62,6 @@ class TestIWriteTranslationService(PlacelessSetup, unittest.TestCase):
         # Setup the negotiator service registry entry
         managerHandler('defineService', 'LanguageNegotiation', INegotiator) 
         provideService('LanguageNegotiation', negotiator, 'Zope.Public')
-
-        handler('Factories', 'provideFactory', 'Message Catalog',
-                MessageCatalog)
 
 
     def _getDomains(self, service):

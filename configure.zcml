@@ -1,6 +1,5 @@
 <zopeConfigure
    xmlns="http://namespaces.zope.org/zope"
-   xmlns:browser="http://namespaces.zope.org/browser"
    xmlns:service="http://namespaces.zope.org/service"
    xmlns:gts="http://namespaces.zope.org/gts">
 
@@ -19,45 +18,11 @@
     for="Zope.Publisher.HTTP.IHTTPRequest."
     provides="Zope.I18n.IUserPreferredCharsets." />
 
-<!-- Register the Translation Service as a content object -->
-<content class=".TranslationService.">
-   <factory id="TranslationService" permission="Zope.ManageServices" />
-   <require permission="Zope.Public"
-       interface="Zope.I18n.ITranslationService." />
-   <require permission="Zope.ManageServices"
-       interface="Zope.App.OFS.Container.IContainer." />
-</content>
-
+<!-- Setup Translation Service -->
 <serviceType id="TranslationService" interface=".ITranslationService." />
 
 <service serviceType="TranslationService"
     permission="Zope.Public"
     component=".GlobalTranslationService.translationService" />
-
-<browser:icon name="zmi_icon" for=".ITranslationService."
-    file="./i18n_service.gif" />
-
-<!-- Setup Message Catalogs -->
-<content class=".MessageCatalog.">
-  <require permission="Zope.Security" interface=".IMessageCatalog." />
-  <require permission="Zope.ManageServices"
-      attributes="setMessage getMessageIds" />
-</content>
-
-<factory component=".MessageCatalog." id="Message Catalog"/>
-
-<!-- Setup Export and Import Filters -->
-<adapter factory=".GettextExportFilter."
-    for=".ITranslationService.IWriteTranslationService."
-    provides=".IMessageExportFilter." />
-
-<adapter factory=".GettextImportFilter."
-    for=".ITranslationService.IWriteTranslationService."
-    provides=".IMessageImportFilter." />
-
-<gts:registerTranslations directory="./locale" />
-<gts:defaultLanguages languages="en" />
-
-<include package=".Views" />
 
 </zopeConfigure>
