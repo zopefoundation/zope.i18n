@@ -102,7 +102,6 @@ class LocaleIdentity(object):
         self.script = script
         self.territory = territory
         self.variant = variant
-        self.version = None
 
     def __repr__(self):
         """See zope.i18n.interfaces.ILocaleIdentity
@@ -173,16 +172,7 @@ class LocaleDisplayNames(AttributeInheritance):
       >>> locale.displayNames.keys
       ['fu', 'bahr']
     """
-
     implements(ILocaleDisplayNames)
-
-    def __init__(self):
-        """Initialize object."""
-        self.languages = None
-        self.scripts = None
-        self.territories = None
-        self.keys = None
-        self.types = None
 
 
 class LocaleTimeZone(object):
@@ -203,8 +193,6 @@ class LocaleTimeZone(object):
       >>> tz.cities
       ['Berlin']
     """
-    
-
     implements(ILocaleTimeZone)
 
     def __init__(self, type):
@@ -222,7 +210,6 @@ class LocaleFormat(object):
     itself is often not useful, since other calendar data is required to use
     the specified pattern for formatting and parsing.
     """
-    
     implements(ILocaleFormat)
 
     def __init__(self, type=None):
@@ -230,6 +217,7 @@ class LocaleFormat(object):
         self.type = type
         self.displayName = u''
         self.pattern = u''
+
 
 class LocaleFormatLength(AttributeInheritance):
     """Specifies one of the format lengths of a specific quantity, like
@@ -241,7 +229,6 @@ class LocaleFormatLength(AttributeInheritance):
         """Initialize the object."""
         self.type = type
         self.default = None
-        self.formats = None
 
 
 class LocaleCalendar(AttributeInheritance):
@@ -302,38 +289,17 @@ class LocaleCalendar(AttributeInheritance):
 
       >>> root.am = u'AM'
       >>> root.pm = u'PM'
-      >>> locale.am = None
       >>> locale.pm = u'nachm.'
       >>> locale.pm
       u'nachm.'
       >>> locale.am
       u'AM'
     """
-
     implements(ILocaleCalendar)
     
     def __init__(self, type):
         """Initialize the object."""
         self.type = type
-        # See zope.i18n.interfaces.ILocaleCalendar
-        # I am initializing all attributes with None, so that the inheriting
-        # mechanism can get the entire dictionary from the higher-up locale,
-        # instead of searching for each key from the beginning.
-        self.months = None
-        self.days = None
-        self.week = None
-        self.am = None
-        self.pm = None
-        self.eras = None
-
-        self.defaultDateFormat = None
-        self.dateFormats = None
-
-        self.defaultTimeFormat = None
-        self.timeFormats = None
-
-        self.defaultDateTimeFormat = None
-        self.dateTimeFormats = None
 
     def getMonthNames(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
@@ -470,15 +436,7 @@ class LocaleDates(AttributeInheritance):
 
       
     """
-
     implements(ILocaleDates)
-
-
-    def __init__(self):
-        # See zope.i18n.interfaces.ILocaleCalendar
-        self.localizedPatternChars = None
-        self.calendars = None
-        self.timezones = None
 
     def getFormatter(self, category, length=None, name=None,
                      calendar=u'gregorian'):
@@ -539,7 +497,7 @@ class LocaleCurrency(object):
 class LocaleNumbers(AttributeInheritance):
     """Implementation of ILocaleCurrency including inheritance support.
 
-    Examples::
+`    Examples::
 
       >>> numbers = LocaleNumbers()
       >>> numbers.symbols = {
@@ -612,25 +570,6 @@ class LocaleNumbers(AttributeInheritance):
     """
     implements(ILocaleNumbers)
 
-    def __init__(self):
-        """Initialize object."""
-        # See zope.i18n.interfaces.ILocaleNumbers    
-        self.symbols = None
-
-        self.defaultDecimalFormat = None
-        self.decimalFormats = None
-
-        self.defaultScientificFormat = None
-        self.scientificFormats = None
-
-        self.defaultPercentFormat = None
-        self.percentFormats = None
-
-        self.defaultCurrencyFormat = None
-        self.currencyFormats = None
-        self.currencies = None
-
-
     def getFormatter(self, category, length=None, name=None):
         """See zope.i18n.interfaces.locales.ILocaleNumbers"""
         assert category in (u'decimal', u'percent', u'scientific', u'currency')
@@ -654,15 +593,10 @@ class LocaleNumbers(AttributeInheritance):
 
 class Locale(AttributeInheritance):
     """Implementation of the ILocale interface."""
-
     implements(ILocale)
 
     def __init__(self, id):
         self.id = id
-        self.displayNames = None
-        self.dates = None
-        self.numbers = None
-        self.delimiters = None
 
     def getLocaleID(self):
         """Return the locale id."""

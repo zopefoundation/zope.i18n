@@ -53,11 +53,11 @@ class Inheritance(object):
 
 
 class AttributeInheritance(Inheritance):
-    """Implementation of locale inheritance for attributes.
+    r"""Implementation of locale inheritance for attributes.
 
     Example::
 
-      >>> from zope.i18n.locales.tests.test_docstrings import \\
+      >>> from zope.i18n.locales.tests.test_docstrings import \
       ...     LocaleInheritanceStub
 
       >>> root = LocaleInheritanceStub()
@@ -67,10 +67,8 @@ class AttributeInheritance(Inheritance):
       >>> root.data2.attr = 'value2' 
 
       >>> locale = LocaleInheritanceStub(root)
-      >>> locale.data = None
       >>> locale.attr = 'foo value'
       >>> locale.data2 = AttributeInheritance()
-      >>> locale.data2.attr = None
 
       Here is an attribute lookup directly from the locale ...
 
@@ -83,12 +81,28 @@ class AttributeInheritance(Inheritance):
 
       >>> locale.data2.attr
       'value2'
+
+      Once we have looked up a particular attribute, it should be cached,
+      i.e. exist in the dictionary of this inheritance object.
+
+      >>> 'attr' in locale.data2.__dict__
+      True
+      >>> locale.data2.__dict__['attr']
+      'value2'
+
+      Make sure that None can be assigned as value as well.
+
+      >>> locale.data2.attr = None
+      >>> locale.data2.attr is None
+      True
     """
 
     implements(IAttributeInheritance)
 
     def __setattr__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
+        # If we have a value that can also inherit data from other locales, we
+        # set its parent and name, so that we know how to get to it. 
         if (ILocaleInheritance.providedBy(value) and 
             not name.startswith('__')):
             value.__parent__ = self
@@ -96,20 +110,27 @@ class AttributeInheritance(Inheritance):
         super(AttributeInheritance, self).__setattr__(name, value)
 
 
-    def __getattribute__(self, name):
+    def __getattr__(self, name):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
-        if not name.startswith('__') and name != 'getInheritedSelf':
-            dict = self.__dict__
-            if dict.has_key(name) and dict[name] is None:
-                try:
-                    selfUp = self.getInheritedSelf()
-                except NoParentException:
-                    # There was simply no parent anymore, so let's go the
-                    # usual way
-                    pass
-                else:
-                    return selfUp.__getattribute__(name)
-        return super(AttributeInheritance, self).__getattribute__(name)
+        try:
+            selfUp = self.getInheritedSelf()
+        except NoParentException:
+            # There was simply no parent anymore, so let's raise an error
+            # for good
+            raise AttributeError, \
+                "'%s' object (or any of its parents) has no attribute '%s'" %(
+                self.__class__.__name__, name)
+        else:
+            value = getattr(selfUp, name)
+            # Since a locale hierarchy never changes after startup, we can
+            # cache the value locally, saving the time to ever look it up
+            # again.
+            # Note that we cannot use the normal setattr function, since
+            # __setattr__ of this class tries to assign a parent and name,
+            # which we do not want to override.
+            super(AttributeInheritance, self).__setattr__(name, value)
+            return value
+        
 
 
 class InheritingDictionary(Inheritance, dict):
