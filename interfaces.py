@@ -13,7 +13,7 @@
 ##############################################################################
 """Internationalization of content objects.
 
-$Id: interfaces.py,v 1.10 2003/03/29 00:06:25 jim Exp $
+$Id: interfaces.py,v 1.11 2003/04/11 12:47:42 mgedmin Exp $
 """
 import re
 from zope.interface import Interface, Attribute
@@ -229,7 +229,7 @@ class INegotiator(Interface):
         """
 
         # XXX I'd like for there to be a symmetric interface method, one in
-        # which an adaptor is gotten for both the first arg and the second
+        # which an adapter is gotten for both the first arg and the second
         # arg.  I.e. getLanguage(obj, env)
         # But this isn't a good match for the ITranslationService.translate()
         # method. :(
@@ -388,7 +388,7 @@ class ILocaleCalendar(Interface):
 
     dateTimePattern = Dict(title=u"Date-Time Pattern",
                            value_types=(TextLine(title=u"Pattern"),))
- 
+
     def update(other):
         """Update this calendar using data from other. Assume that unless
         other's data is not present, other has always more specific

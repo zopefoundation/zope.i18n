@@ -13,7 +13,7 @@
 ##############################################################################
 """
 
-$Id: negotiator.py,v 1.3 2002/12/31 02:52:13 jim Exp $
+$Id: negotiator.py,v 1.4 2003/04/11 12:47:42 mgedmin Exp $
 """
 
 from zope.i18n.interfaces import INegotiator
@@ -26,8 +26,8 @@ class Negotiator:
     __implements__ = INegotiator
 
     def getLanguage(self, langs, env):
-        envadaptor = getAdapter(env, IUserPreferredLanguages)
-        userlangs = envadaptor.getPreferredLanguages()
+        envadapter = getAdapter(env, IUserPreferredLanguages)
+        userlangs = envadapter.getPreferredLanguages()
         # Prioritize on the user preferred languages.  Return the first user
         # preferred language that the object has available.
         for lang in userlangs:
