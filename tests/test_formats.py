@@ -412,16 +412,18 @@ class TestDateTimeFormat(TestCase):
                          'Donnerstag')
 
         # Create custom calendar, which has Sunday as the first day of the
-        # week
+        # week. I am assigning a totally new dict here, since dicts are
+        # mutable and the value would be changed for the class and all its
+        # instances.
         calendar = LocaleCalendarStub()
-        calendar.week['firstDay'] = 7
+        calendar.week = {'firstDay': 7, 'minDays': 1}
         format = DateTimeFormat(calendar=calendar)
 
         self.assertEqual(format.format(date, "E"),
                          '5')
         self.assertEqual(format.format(date, "EE"),
                          '05')
-        
+
     def testFormatDayOfWeekInMonth(self):
         date = datetime.date(2003, 01, 02)
         self.assertEqual(self.format.format(date, "F"),
