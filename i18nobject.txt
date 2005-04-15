@@ -44,7 +44,7 @@ and then redirect the call to the correct local content.
 ------------
 
 There will be an interface called II18nObject (which inherits I18nContent
-of course), which is a cameleon-like container, as it adapts to the
+of course), which is a chameleon-like container, as it adapts to the
 properties of the contained object type. In order to accomplish all this,
 you will have to implement your own traverser which looks up the correct
 subobject.
