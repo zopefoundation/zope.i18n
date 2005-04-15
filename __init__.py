@@ -19,6 +19,7 @@ import re
 import warnings
 from zope.component import queryUtility
 from zope.i18nmessageid import MessageIDFactory, MessageID
+from zope.i18nmessageid import MessageFactory, Message
 from zope.i18n.interfaces import ITranslationDomain
 
 # Set up regular expressions for finding interpolation variables in text.
@@ -33,9 +34,11 @@ _get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
 def _translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
 
-    if isinstance(msgid, MessageID):
+    if isinstance(msgid, (MessageID, Message)):
         domain = msgid.domain
         default = msgid.default
+        if default is None:
+            default = msgid
         mapping = msgid.mapping
 
     util = queryUtility(ITranslationDomain, domain)

@@ -13,3 +13,4 @@
 ##############################################################################
 "$Id$"
 from zope.i18nmessageid import MessageID, MessageIDFactory
+from zope.i18nmessageid import Message, MessageFactory
