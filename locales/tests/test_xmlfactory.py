@@ -25,6 +25,9 @@ import zope.i18n
 class LocaleXMLFileTestCase(TestCase):
     """This test verifies that every locale XML file can be loaded."""
 
+    # only run when running tests of level 2
+    level = 2
+
     def __init__(self, path):
         self.__path = path
         TestCase.__init__(self)
@@ -49,20 +52,14 @@ class LocaleXMLFileTestCase(TestCase):
                 
                     
 
-##def test_suite():
-##    suite = TestSuite()
-##    locale_dir = os.path.join(os.path.dirname(zope.i18n.__file__),
-##                              'locales', 'data')
-##    for path in os.listdir(locale_dir):
-##        if not path.endswith(".xml"):
-##            continue
-##        path = os.path.join(locale_dir, path)
-##        case = LocaleXMLFileTestCase(path)
-##        suite.addTest(case)
-##    return suite
-
-# Note: These tests are disabled, just because they take a long time to run.
-#       You should run these tests if you update the parsing code and/or
-#       update the Locale XML Files.
 def test_suite():
-    return None
+   suite = TestSuite()
+   locale_dir = os.path.join(os.path.dirname(zope.i18n.__file__),
+                             'locales', 'data')
+   for path in os.listdir(locale_dir):
+       if not path.endswith(".xml"):
+           continue
+       path = os.path.join(locale_dir, path)
+       case = LocaleXMLFileTestCase(path)
+       suite.addTest(case)
+   return suite
