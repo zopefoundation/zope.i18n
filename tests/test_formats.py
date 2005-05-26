@@ -944,6 +944,15 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.parse('(4.102E1 )  ', '(0.0##E0##* )* '),
                          41.02)
 
+    def testParseDecimalWithGermanDecimalSeparator(self):
+        format = NumberFormat(symbols={'decimal': ',', 'group': '.'})
+        self.assertEqual(format.parse('1.234,567', '#,##0.000'), 1234.567)
+
+    def testParseWithAlternativeExponentialSymbol(self):
+        format = NumberFormat(
+            symbols={'decimal': '.', 'group': ',', 'exponential': 'X'})
+        self.assertEqual(format.parse('1.2X11', '#.#E0'), 1.2e11)
+
     def testFormatSimpleInteger(self):
         self.assertEqual(self.format.format(23341, '###0'),
                          '23341')

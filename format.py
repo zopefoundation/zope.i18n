@@ -277,9 +277,10 @@ class NumberFormat(object):
         type = int
         if self.symbols['decimal'] in num_str:
             type = float
+            num_str = num_str.replace(self.symbols['decimal'], '.')
         if self.symbols['exponential'] in num_str:
             type = float
-            num_str.replace(self.symbols['exponential'], 'E')
+            num_str = num_str.replace(self.symbols['exponential'], 'E')
         return sign*type(num_str)
 
     def _format_integer(self, integer, pattern):
