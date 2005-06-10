@@ -26,6 +26,7 @@ from zope.i18n.interfaces.locales import ILocaleVersion, ILocaleIdentity
 from zope.i18n.interfaces.locales import ILocaleTimeZone, ILocaleCalendar
 from zope.i18n.interfaces.locales import ILocaleCurrency, ILocaleNumbers
 from zope.i18n.interfaces.locales import ILocaleFormat, ILocaleFormatLength
+from zope.i18n.interfaces.locales import ILocaleOrientation
 from zope.i18n.format import NumberFormat, DateTimeFormat
 from zope.i18n.locales.inheritance import \
      AttributeInheritance, InheritingDictionary, NoParentException
@@ -607,6 +608,11 @@ class LocaleNumbers(AttributeInheritance):
 
         return NumberFormat(format.pattern, self.symbols)
 
+
+class LocaleOrientation(AttributeInheritance):
+    """Implementation of ILocaleOrientation
+    """
+    implements(ILocaleOrientation)
 
 class Locale(AttributeInheritance):
     """Implementation of the ILocale interface."""

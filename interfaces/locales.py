@@ -498,7 +498,23 @@ class ILocaleNumbers(Interface):
     def getDefaultCurrency():
         """Get the default currency."""
 
+_orientations = [u"left-to-right", u"right-to-left",
+                 u"top-to-bottom", u"bottom-to-top"]
+class ILocaleOrientation(Interface):
+    """Information about the orientation of text."""
 
+    characters = Choice(
+        title = u"Orientation of characters",
+        values = _orientations,
+        default = u"left-to-right"
+        )
+
+    lines = Choice(
+        title = u"Orientation of characters",
+        values = _orientations,
+        default = u"top-to-bottom"
+        )
+    
 class ILocale(Interface):
     """This class contains all important information about the locale.
 
@@ -529,6 +545,10 @@ class ILocale(Interface):
     numbers = Field(
         title = u"Numbers",
         description = u"ILocaleNumbers object that contains number data.")
+
+    orientation = Field(
+        title = u"Orientation",
+        description = u"ILocaleOrientation with text orientation info.")
 
     delimiters = Dict(
         title=u"Delimiters",

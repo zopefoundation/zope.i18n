@@ -21,6 +21,7 @@ from zope.i18n.locales import Locale, LocaleDisplayNames, LocaleDates
 from zope.i18n.locales import LocaleVersion, LocaleIdentity, LocaleTimeZone
 from zope.i18n.locales import LocaleCalendar, LocaleCurrency, LocaleNumbers
 from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
+from zope.i18n.locales import LocaleOrientation
 from zope.i18n.locales.inheritance import InheritingDictionary
 
 class LocaleFactory(object):
@@ -1138,6 +1139,36 @@ class LocaleFactory(object):
         return delimiters
 
 
+    def _extractOrientation(self):
+        """Extract orientation information.
+
+          >>> factory = LocaleFactory(None)
+          >>> from xml.dom.minidom import parseString
+          >>> xml = u'''
+          ... <ldml>
+          ...   <layout>
+          ...     <orientation lines="bottom-to-top" characters="right-to-left" />
+          ...   </layout>
+          ... </ldml>'''
+          >>> dom = parseString(xml)
+          >>> factory._data = parseString(xml).documentElement
+          >>> orientation = factory._extractOrientation()
+          >>> orientation.lines
+          u'bottom-to-top'
+          >>> orientation.characters
+          u'right-to-left'
+        """
+        orientation_nodes = self._data.getElementsByTagName('orientation')
+        if not orientation_nodes:
+            return
+        orientation = LocaleOrientation()
+        for name in (u'characters', u'lines'):
+            value = orientation_nodes[0].getAttribute(name)
+            if value:
+                setattr(orientation, name, value)
+        return orientation
+
+
     def __call__(self):
         """Create the Locale."""
         locale = Locale(self._extractIdentity())
@@ -1157,11 +1188,14 @@ class LocaleFactory(object):
         delimiters = self._extractDelimiters()
         if delimiters is not None:
             locale.delimiters = delimiters
+
+        orientation = self._extractOrientation()
+        if orientation is not None:
+            locale.orientation = orientation
         
         # Unmapped:
         #
         #   - <characters>
-        #   - <layout>
         #   - <measurement>
         #   - <collations>, <collation>
 
