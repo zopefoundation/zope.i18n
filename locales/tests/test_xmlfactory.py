@@ -16,7 +16,7 @@
 $Id$
 """
 import os
-from unittest import TestCase, TestSuite, makeSuite
+from unittest import TestCase, TestSuite, makeSuite, main
 
 from zope.i18n.locales.xmlfactory import LocaleFactory
 from zope.i18n.format import parseDateTimePattern, parseNumberPattern
@@ -63,3 +63,6 @@ def test_suite():
        case = LocaleXMLFileTestCase(path)
        suite.addTest(case)
    return suite
+
+if __name__ == '__main__':
+    main(defaultTest='test_suite')
