@@ -17,10 +17,12 @@ $Id$
 """
 import re
 import warnings
+
 from zope.component import queryUtility
 from zope.i18nmessageid import MessageIDFactory, MessageID
 from zope.i18nmessageid import MessageFactory, Message
 from zope.i18n.interfaces import ITranslationDomain
+
 
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the
@@ -30,16 +32,16 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 _interp_regex = re.compile(r'(?<!\$)(\$(?:%(n)s|{%(n)s}))' %({'n': NAME_RE}))
 _get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
 
-
 def _translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
 
     if isinstance(msgid, (MessageID, Message)):
         domain = msgid.domain
         default = msgid.default
-        if default is None:
-            default = msgid
         mapping = msgid.mapping
+
+    if default is None:
+        default = msgid
 
     util = queryUtility(ITranslationDomain, domain)
 
