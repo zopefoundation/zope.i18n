@@ -26,7 +26,7 @@ class LocaleInheritanceStub(AttributeInheritance):
 
     def getInheritedSelf(self):
         if self.__nextLocale__ is None:
-            raise NoParentException, 'No parent was specified.'
+            raise NoParentException('No parent was specified.')
         return self.__nextLocale__
 
 

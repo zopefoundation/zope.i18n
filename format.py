@@ -113,8 +113,8 @@ class DateTimeFormat(object):
             hour = int(results[bin_pattern.index(hour_entry[0])])
             ampm_entry = _findFormattingCharacterInPattern('a', bin_pattern)
             if not ampm_entry:
-                raise DateTimeParseError, \
-                      'Cannot handle 12-hour format without am/pm marker.'
+                raise DateTimeParseError(
+                      'Cannot handle 12-hour format without am/pm marker.')
             ampm = self.calendar.pm == results[bin_pattern.index(ampm_entry[0])]
             if hour == 12:
                 ampm = not ampm
@@ -270,7 +270,7 @@ class NumberFormat(object):
             num_str = num_res[1].groups()[0]
             sign = -1
         else:
-            raise NumberParseError, 'Not a valid number for this pattern.'
+            raise NumberParseError('Not a valid number for this pattern.')
         # Remove possible grouping separators
         num_str = num_str.replace(self.symbols['group'], '')
         # Extract number
@@ -494,11 +494,11 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
     # Some cleaning up
     if state == IN_QUOTE:
         if quote_start == -1:
-            raise DateTimePatternParseError, \
-                  'Waaa: state = IN_QUOTE and quote_start = -1!'
+            raise DateTimePatternParseError(
+                  'Waaa: state = IN_QUOTE and quote_start = -1!')
         else:
-            raise DateTimePatternParseError, \
-                  ('The quote starting at character %i is not closed.' %
+            raise DateTimePatternParseError(
+                  'The quote starting at character %i is not closed.' %
                    quote_start)
     elif state == IN_DATETIMEFIELD:
         result.append((helper[0], len(helper)))
@@ -526,7 +526,7 @@ def buildDateTimeParseInfo(calendar, pattern):
         elif entry[1] == 4:
             info[entry] = r'([0-9]{4})'
         else:
-            raise DateTimePatternParseError, "Only 'yy' and 'yyyy' allowed." 
+            raise DateTimePatternParseError("Only 'yy' and 'yyyy' allowed." )
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
@@ -732,8 +732,8 @@ def parseNumberPattern(pattern):
                 state = READ_INTEGER
                 helper += char
             else:
-                raise NumberPatternParseError, \
-                      'Wrong syntax at beginning of pattern.'
+                raise NumberPatternParseError(
+                      'Wrong syntax at beginning of pattern.')
 
         elif state == READ_PADDING_1:
             padding_1 = char

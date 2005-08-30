@@ -22,7 +22,7 @@ from zope.interface import implements
 
 class _KeyErrorRaisingFallback(object):
     def ugettext(self, message):
-        raise KeyError, message
+        raise KeyError(message)
 
 
 class GettextMessageCatalog(object):

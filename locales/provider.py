@@ -53,8 +53,8 @@ class LocaleProvider(object):
         # Making sure we have this locale
         path = os.path.join(self._locale_dir, filename)
         if not os.path.exists(path):
-            raise LoadLocaleError, \
-                  'The desired locale is not available.\nPath: %s' %path
+            raise LoadLocaleError(
+                  'The desired locale is not available.\nPath: %s' % path)
 
         # Import here to avoid circular imports
         from zope.i18n.locales.xmlfactory import LocaleFactory

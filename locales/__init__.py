@@ -653,4 +653,4 @@ class Locale(AttributeInheritance):
             return locales.getLocale(None, None, None)
         else:
             # Well, this is bad; we are already at the root locale
-            raise NoParentException, 'Cannot find a more general locale.'
+            raise NoParentException('Cannot find a more general locale.')

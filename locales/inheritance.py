@@ -45,7 +45,7 @@ class Inheritance(object):
     def getInheritedSelf(self):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
         if self.__parent__ is None:
-            raise NoParentException, 'No parent was specified.'
+            raise NoParentException('No parent was specified.')
         parent = self.__parent__.getInheritedSelf()
         if isinstance(parent, dict):
             return parent[self.__name__]
@@ -117,9 +117,9 @@ class AttributeInheritance(Inheritance):
         except NoParentException:
             # There was simply no parent anymore, so let's raise an error
             # for good
-            raise AttributeError, \
-                "'%s' object (or any of its parents) has no attribute '%s'" %(
-                self.__class__.__name__, name)
+            raise AttributeError("'%s' object (or any of its parents) has no "
+                                 "attribute '%s'" % (self.__class__.__name__,
+                                                     name))
         else:
             value = getattr(selfUp, name)
             # Since a locale hierarchy never changes after startup, we can
