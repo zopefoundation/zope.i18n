@@ -302,18 +302,40 @@ class TestDateTimeFormat(TestCase):
         self.assertEqual(dt.tzinfo.tzname(dt), None)
 
     def testParseTimeZoneNames(self):
+        # Note that EST is a deprecated timezone name since it is a US
+        # interpretation (other countries also use the EST timezone
+        # abbreviation)
         dt = self.format.parse('01.01.2003 09:48 EST', 'dd.MM.yyyy HH:mm zzz')
-        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-6))
+        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-5))
         self.assertEqual(dt.tzinfo.zone, 'EST')
-        # I think this is wrong due to a bug in pytz
-        self.assertEqual(dt.tzinfo.tzname(dt), 'CST')
+        self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
 
         dt = self.format.parse('01.01.2003 09:48 US/Eastern',
                                'dd.MM.yyyy HH:mm zzzz')
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-5))
         self.assertEqual(dt.tzinfo.zone, 'US/Eastern')
-        # I think this is wrong due to a bug in pytz
         self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
+
+        dt = self.format.parse('01.01.2003 09:48 Australia/Sydney',
+                               'dd.MM.yyyy HH:mm zzzz')
+        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=11))
+        self.assertEqual(dt.tzinfo.zone, 'Australia/Sydney')
+        self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
+
+        # Note that historical and future (as far as known)
+        # timezones are handled happily using the pytz timezone database
+        # US DST transition points are changing in 2007
+        dt = self.format.parse('01.04.2006 09:48 US/Eastern',
+                               'dd.MM.yyyy HH:mm zzzz')
+        self.assertEqual(dt.tzinfo.zone, 'US/Eastern')
+        self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
+        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-5))
+        dt = self.format.parse('01.04.2007 09:48 US/Eastern',
+                               'dd.MM.yyyy HH:mm zzzz')
+        self.assertEqual(dt.tzinfo.zone, 'US/Eastern')
+        self.assertEqual(dt.tzinfo.tzname(dt), 'EDT')
+        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-4))
+
 
     def testDateTimeParseError(self):
         self.assertRaises(DateTimeParseError,

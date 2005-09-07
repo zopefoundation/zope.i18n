@@ -130,6 +130,7 @@ class DateTimeFormat(object):
 
         # Handle timezones
         tzinfo = None
+        pytz_tzinfo = False # If True, we should use pytz specific syntax
         tz_entry = _findFormattingCharacterInPattern('z', bin_pattern)
         if ordered[3:] != [None, None, None, None] and tz_entry:
             length = tz_entry[0][1]
@@ -137,31 +138,53 @@ class DateTimeFormat(object):
             if length == 1:
                 hours, mins = int(value[:-2]), int(value[-2:])
                 delta = datetime.timedelta(hours=hours, minutes=mins)
+                # XXX: I think this is making an unpickable tzinfo.
+                # Note that StaticTzInfo is not part of the exposed pytz API.
                 tzinfo = pytz.tzinfo.StaticTzInfo()
                 tzinfo._utcoffset = delta
+                pytz_tzinfo = True
             elif length == 2:
                 hours, mins = int(value[:-3]), int(value[-2:])
                 delta = datetime.timedelta(hours=hours, minutes=mins)
+                # XXX: I think this is making an unpickable tzinfo.
+                # Note that StaticTzInfo is not part of the exposed pytz API.
                 tzinfo = pytz.tzinfo.StaticTzInfo()
                 tzinfo._utcoffset = delta
+                pytz_tzinfo = True
             else:
-                if value in pytz.all_timezones:
+                try:
                     tzinfo = pytz.timezone(value)
-                else:
+                    pytz_tzinfo = True
+                except KeyError:
                     # TODO: Find timezones using locale information
                     pass
-                    
 
         # Create a date/time object from the data
+        # If we have a pytz tzinfo, we need to invoke localize() as per
+        # the pytz documentation on creating local times.
+        # NB. If we are in an end-of-DST transition period, we have a 50%
+        # chance of getting a time 1 hour out here, but that is the price
+        # paid for dealing with localtimes.
         if ordered[3:] == [None, None, None, None]:
             return datetime.date(*[e or 0 for e in ordered[:3]])
         elif ordered[:3] == [None, None, None]:
-            return datetime.time(*[e or 0 for e in ordered[3:]],
-                                 **{'tzinfo' :tzinfo})
+            if pytz_tzinfo:
+                return tzinfo.localize(
+                    datetime.time(*[e or 0 for e in ordered[3:]])
+                    )
+            else:
+                return datetime.time(
+                    *[e or 0 for e in ordered[3:]], **{'tzinfo' :tzinfo}
+                    )
         else:
-            return datetime.datetime(*[e or 0 for e in ordered],
-                                     **{'tzinfo' :tzinfo})
-
+            if pytz_tzinfo:
+                return tzinfo.localize(datetime.datetime(
+                    *[e or 0 for e in ordered]
+                    ))
+            else:
+                return datetime.datetime(
+                    *[e or 0 for e in ordered], **{'tzinfo' :tzinfo}
+                    )
 
     def format(self, obj, pattern=None):
         "See zope.i18n.interfaces.IFormat"
@@ -599,7 +622,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
     week_in_month = (dt.day + 6 - dt.weekday()) / 7 + 1
 
     # Getting the timezone right
-    tzinfo = dt.tzinfo or pytz.reference.utc
+    tzinfo = dt.tzinfo or pytz.utc
     tz_secs = tzinfo.utcoffset(dt).seconds
     tz_secs = (tz_secs > 12*3600) and tz_secs-24*3600 or tz_secs
     tz_mins = int(math.fabs(tz_secs % 3600 / 60))
