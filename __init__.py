@@ -18,11 +18,15 @@ $Id$
 import re
 import warnings
 
-from zope.component import queryUtility
+# BBB 2005/10/10
+import zope.deprecation
+zope.deprecation.__show__.off()
 from zope.i18nmessageid import MessageIDFactory, MessageID
+zope.deprecation.__show__.on()
+
 from zope.i18nmessageid import MessageFactory, Message
 from zope.i18n.interfaces import ITranslationDomain
-
+from zope.component import queryUtility
 
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the
