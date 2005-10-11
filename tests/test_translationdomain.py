@@ -59,19 +59,15 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
 
         # Test that a translation in an unsupported language returns the
         # default, if there is no fallback language
-        eq(translate('short_greeting', target_language='es'),
-           None)
+        eq(translate('short_greeting', target_language='es'), 'short_greeting')
         eq(translate('short_greeting', target_language='es',
-                     default='short_greeting'),
-           'short_greeting')
+                     default='short_greeting'), 'short_greeting')
 
         # Same test, but use the context argument instead of target_language
         context = Environment()
-        eq(translate('short_greeting', context=context),
-           None)
+        eq(translate('short_greeting', context=context), 'short_greeting')
         eq(translate('short_greeting', context=context,
-                     default='short_greeting'),
-           'short_greeting')
+                     default='short_greeting'), 'short_greeting')
 
     def testEmptyStringTranslate(self):
         translate = self._domain.translate

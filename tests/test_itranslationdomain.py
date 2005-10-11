@@ -78,9 +78,9 @@ class TestITranslationDomain(PlacelessSetup):
     def testNoTranslation(self):
         translate = self._domain.translate
         eq = self.assertEqual
-        # Test that an unknown message id returns None as a translation
+        # Verify that an unknown message id will end up not being translated
         eq(translate('glorp_smurf_hmpf', target_language='en'),
-           None)
+           'glorp_smurf_hmpf')
         # Test default value behaviour
         eq(translate('glorp_smurf_hmpf', target_language='en',
                      default='Glorp Smurf Hmpf'),

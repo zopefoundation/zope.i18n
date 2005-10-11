@@ -59,6 +59,8 @@ class SimpleTranslationDomain(object):
 
         # Find a translation; if nothing is found, use the default
         # value
+        if default is None:
+            default = msgid
         text = self.messages.get((target_language, msgid))
         if text is None:
             text = default

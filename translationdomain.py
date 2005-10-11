@@ -15,9 +15,14 @@
 
 $Id$
 """
-from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
-from zope.i18n.messageid import MessageID
+# BBB 2005/10/10
+import zope.deprecation
+zope.deprecation.__show__.off()
+from zope.i18nmessageid import MessageID, Message
+zope.deprecation.__show__.on()
+
 from zope.i18n import interpolate
+from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.component import getUtility
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import INegotiator
@@ -64,7 +69,7 @@ class TranslationDomain(SimpleTranslationDomain):
 
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):
-        '''See interface ITranslationService'''
+        """See zope.i18n.interfaces.ITranslationDomain"""
 
         # if the msgid is empty, let's save a lot of calculations and return
         # an empty string.
@@ -79,14 +84,16 @@ class TranslationDomain(SimpleTranslationDomain):
             target_language = negotiator.getLanguage(langs, context)
 
         # MessageID attributes override arguments
-        if isinstance(msgid, MessageID):
+        if isinstance(msgid, (Message, MessageID)):
             if msgid.domain != self.domain:
                 util = getUtility(ITranslationDomain, msgid.domain)
                 return util.translate(msgid, mapping, context,
                                       target_language, default)
-            else:
-                mapping = msgid.mapping
-                default = msgid.default
+            mapping = msgid.mapping
+            default = msgid.default
+
+        if default is None:
+            default = msgid
 
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get(target_language)
