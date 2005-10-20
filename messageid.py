@@ -17,7 +17,7 @@ ids.  This module will be removed from Zope 3.3.
 $Id$
 """
 ##############################################################################
-# BBB 2005/10/10 -- removed the whole module for Zope 3.3
+# BBB 2005/10/10 -- remove the whole module for Zope 3.3
 #
 import zope.deprecation
 zope.deprecation.__show__.off()
