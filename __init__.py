@@ -18,7 +18,7 @@ $Id$
 import re
 import warnings
 
-# BBB 2005/10/10
+# BBB 2005/10/10 -- MessageIDs are to be removed for Zope 3.3
 import zope.deprecation
 zope.deprecation.__show__.off()
 from zope.i18nmessageid import MessageIDFactory, MessageID
