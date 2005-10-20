@@ -138,7 +138,7 @@ class DateTimeFormat(object):
             if length == 1:
                 hours, mins = int(value[:-2]), int(value[-2:])
                 delta = datetime.timedelta(hours=hours, minutes=mins)
-                # XXX: I think this is making an unpickable tzinfo.
+                # XXX: I think this is making an unpicklable tzinfo.
                 # Note that StaticTzInfo is not part of the exposed pytz API.
                 tzinfo = pytz.tzinfo.StaticTzInfo()
                 tzinfo._utcoffset = delta
@@ -146,7 +146,7 @@ class DateTimeFormat(object):
             elif length == 2:
                 hours, mins = int(value[:-3]), int(value[-2:])
                 delta = datetime.timedelta(hours=hours, minutes=mins)
-                # XXX: I think this is making an unpickable tzinfo.
+                # XXX: I think this is making an unpicklable tzinfo.
                 # Note that StaticTzInfo is not part of the exposed pytz API.
                 tzinfo = pytz.tzinfo.StaticTzInfo()
                 tzinfo._utcoffset = delta
