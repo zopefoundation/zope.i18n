@@ -16,15 +16,21 @@ ids.  This module will be removed from Zope 3.3.
 
 $Id$
 """
-import warnings
+##############################################################################
+# BBB 2005/10/10 -- removed the whole module for Zope 3.3
+#
 import zope.deprecation
 zope.deprecation.__show__.off()
 from zope.i18nmessageid import MessageID, MessageIDFactory
 from zope.i18nmessageid import Message, MessageFactory
 zope.deprecation.__show__.on()
 
-warnings.warn("The zope.i18n.messageid module as a backwards-compatible import "
-              "location for i18n message ids has been deprecated and will be "
-              "removed from Zope 3.3.  Please use Message and MessageFactory "
-              "from the zope.i18nmessageid package instead.",
-              DeprecationWarning, 2)
+zope.deprecation.deprecated(
+    ('MessageID', 'MessageIDFactory' 'Message', 'MessageFactory'),
+    "The zope.i18n.messageid module as a backwards-compatible import "
+    "location for i18n message ids has been deprecated and will be "
+    "removed from Zope 3.3.  Please use Message and MessageFactory "
+    "from the zope.i18nmessageid package instead."
+    )
+#
+##############################################################################
