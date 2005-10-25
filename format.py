@@ -81,7 +81,7 @@ class DateTimeFormat(object):
         # Sometimes you only want the parse results
         if not asObject:
             return results
-        
+
         # Map the parsing results to a datetime object
         ordered = [None, None, None, None, None, None, None]
         bin_pattern = filter(lambda x: isinstance(x, tuple), bin_pattern)
@@ -539,7 +539,7 @@ def buildDateTimeParseInfo(calendar, pattern):
     for field in 'dDFkKhHmsSwW':
         for entry in _findFormattingCharacterInPattern(field, pattern):
             # The maximum amount of digits should be infinity, but 1000 is
-            # close enough here. 
+            # close enough here.
             info[entry] = r'([0-9]{%i,1000})' %entry[1]
 
     # year (Number)
