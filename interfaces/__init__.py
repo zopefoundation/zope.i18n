@@ -202,6 +202,15 @@ class IUserPreferredLanguages(Interface):
         languages first.
         """
 
+class IModifiableUserPreferredLanguages(IUserPreferredLanguages):
+
+    def setPreferredLanguages(languages):
+        """Set a sequence of user preferred languages.
+
+        The sequence should be sorted in order of quality, with the most
+        preferred languages first.
+        """
+
 
 class IMessageExportFilter(Interface):
     """The Export Filter for Translation Service Messages.
@@ -394,5 +403,3 @@ class IDateTimeFormat(IFormat):
 
     calendar = Attribute("""This object must implement ILocaleCalendar. See
                             this interface's documentation for details.""")
-
-
