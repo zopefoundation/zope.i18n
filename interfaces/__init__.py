@@ -106,7 +106,7 @@ class ITranslationDomain(Interface):
     The domain is used to specify which translation to use.  Different
     products will often use a specific domain naming translations supplied
     with the product.
-    
+
     A favorite example is: How do you translate 'Sun'? Is it our star, the
     abbreviation of Sunday or the company?  Specifying the domain, such as
     'Stars' or 'DaysOfWeek' will solve this problem for us.
