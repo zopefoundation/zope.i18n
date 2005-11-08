@@ -1,0 +1,22 @@
+Test Message Catalog
+====================
+
+The test message catalog "translates" test by simply outputing the
+domain and message id in square-bracket markers:
+
+    >>> import zope.i18n.testmessagecatalog
+    >>> cat = zope.i18n.testmessagecatalog.TestMessageCatalog('foo.bar')
+
+    >>> cat.language, cat.domain
+    ('test', 'foo.bar')
+
+    >>> cat.queryMessage('eek')
+    u'[[foo.bar][eek]]'
+
+    >>> cat.getMessage('eek')
+    u'[[foo.bar][eek]]'
+
+    >>> cat.getIdentifier()
+    'test'
+
+    >>> cat.reload()
