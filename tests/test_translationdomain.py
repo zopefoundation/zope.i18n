@@ -16,6 +16,7 @@
 $Id$
 """
 import unittest, os
+from zope.testing import doctest
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_itranslationdomain import \
@@ -126,11 +127,43 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
             "this THAT the other")
 
 
+def test_message_domain_ignored_by_fallback_domain():
+    """\
+
+Normally, a translation domain will try to lookup an alternative
+translation domain if a message's domain is different than it's own:
+
+    >>> domain = TranslationDomain('mydomain')
+    >>> msgid = MessageIDFactory('huh')(u'short_greeting', 'default')
+    >>> domain.translate(msgid, target_language='en')
+    ... # doctest: +NORMALIZE_WHITESPACE
+    Traceback (most recent call last):
+    ...
+    ComponentLookupError:
+    (<InterfaceClass zope.i18n.interfaces.ITranslationDomain>, 'huh')
+
+
+However, fallback domains, which have an empty domain name, ignore
+message domains:
+
+    >>> domain = TranslationDomain('')
+    >>> path = testdir()
+    >>> en_catalog = GettextMessageCatalog('en', 'other',
+    ...                                    os.path.join(path, 'en-default.mo'))
+    >>> domain.addCatalog(en_catalog)
+    >>> domain.translate(msgid, target_language='en')
+    u'Hello!'
+
+Fallback domains are used mainly for testing.
+
+"""
+
 def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestGlobalTranslationDomain))
+    suite.addTest(doctest.DocTestSuite())
     return suite
 
-
 if __name__ == '__main__':
-    unittest.TextTestRunner().run(test_suite())
+    unittest.main(defaultTest='test_suite')
+
