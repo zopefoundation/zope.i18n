@@ -47,7 +47,12 @@ def _translate(msgid, domain=None, mapping=None, context=None,
     if default is None:
         default = msgid
 
-    util = queryUtility(ITranslationDomain, domain)
+    if domain:
+        util = queryUtility(ITranslationDomain, domain)
+        if util is None:
+            util = queryUtility(ITranslationDomain)
+    else:
+        util = queryUtility(ITranslationDomain)
 
     if util is None:
         return interpolate(default, mapping)
