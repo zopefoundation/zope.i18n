@@ -28,7 +28,8 @@ class TestMessageCatalog:
         self.domain = domain
 
     def queryMessage(self, msgid, default=None):
-        return u'[[%s][%s]]' % (self.domain, msgid)
+        return u'[[%s][%s]]' % (self.domain or getattr(msgid, 'domain', ''),
+                                msgid)
 
     getMessage = queryMessage
 

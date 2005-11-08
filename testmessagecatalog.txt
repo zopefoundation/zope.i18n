@@ -20,3 +20,26 @@ domain and message id in square-bracket markers:
     'test'
 
     >>> cat.reload()
+
+Normally, the catalog's domain overrides the message id's domain:
+
+    >>> import zope.i18nmessageid
+    >>> id = zope.i18nmessageid.MessageFactory('baz.splat')('eek')
+
+    >>> cat.queryMessage(id)
+    u'[[foo.bar][eek]]'
+
+    >>> cat.getMessage(id)
+    u'[[foo.bar][eek]]'
+
+However, if the catalog's domain is '', indicating a fallback domain,
+then the id's domain is used:
+
+    >>> cat = zope.i18n.testmessagecatalog.TestMessageCatalog('')
+
+    >>> cat.queryMessage(id)
+    u'[[baz.splat][eek]]'
+
+    >>> cat.getMessage(id)
+    u'[[baz.splat][eek]]'
+    
