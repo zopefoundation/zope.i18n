@@ -85,7 +85,7 @@ class TranslationDomain(SimpleTranslationDomain):
 
         # MessageID attributes override arguments
         if isinstance(msgid, (Message, MessageID)):
-            if (msgid.domain != self.domain) and self.domain:
+            if msgid.domain != self.domain:
                 util = getUtility(ITranslationDomain, msgid.domain)
             mapping = msgid.mapping
             default = msgid.default
@@ -101,15 +101,22 @@ class TranslationDomain(SimpleTranslationDomain):
                 if catalog_names is not None:
                     break
 
-        # Did the fallback fail?  Sigh, return None
         text = default
         if catalog_names:
-            for name in catalog_names:
-                catalog = self._data[name]
-                s = catalog.queryMessage(msgid)
-                if s is not None:
-                    text = s
-                    break
+            if len(catalog_names) == 1:
+                # this is a slight optimization for the case when there is a
+                # single catalog. More importantly, it is extremely helpful
+                # when testing and the test language is used, because it
+                # allows the test language to get the default. 
+                text = self._data[catalog_names[0]].queryMessage(
+                    msgid, default)
+            else:
+                for name in catalog_names:
+                    catalog = self._data[name]
+                    s = catalog.queryMessage(msgid)
+                    if s is not None:
+                        text = s
+                        break
 
         # Now we need to do the interpolation
         if text is not None:

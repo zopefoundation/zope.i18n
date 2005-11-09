@@ -49,15 +49,22 @@ for the given domain, then the text isn't translated:
     >>> _translate(u'eek', 'your.domain')
     u'eek'
 
-A fallback domain can be provided. This is normally used for testing:
+A fallback domain factory can be provided. This is normally used for testing:
 
-    >>> component.provideUtility(TestDomain(eek=u'test'))
+    >>> def fallback(domain=u''):
+    ...     return TestDomain(eek=u'test-from-' + domain)
+    >>> interface.directlyProvides(
+    ...     fallback,
+    ...     zope.i18n.interfaces.IFallbackTranslationDomainFactory,
+    ...     )
+
+    >>> component.provideUtility(fallback)
 
     >>> _translate(u'eek')
-    u'test'
+    u'test-from-'
 
     >>> _translate(u'eek', 'your.domain')
-    u'test'
+    u'test-from-your.domain'
     
     """
 

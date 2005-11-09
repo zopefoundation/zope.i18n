@@ -151,6 +151,16 @@ class ITranslationDomain(Interface):
         the simplifications.
         """
 
+class IFallbackTranslationDomainFactory(Interface):
+    """Factory for creating fallback translation domains
+
+    Fallback translation domains are primarily used for testing or
+    debugging i18n.
+    """
+
+    def __call__(domain_id=u''):
+        """Return a fallback translation domain for the given domain id. 
+        """
 
 class ITranslator(Interface):
     """A collaborative object which contains the domain, context, and locale.

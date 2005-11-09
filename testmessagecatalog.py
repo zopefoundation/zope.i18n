@@ -16,11 +16,12 @@
 $Id$
 """
 
-from zope import interface
-from zope.i18n.interfaces import IGlobalMessageCatalog
+from zope import component, interface
+import zope.i18n.interfaces
+from zope.i18n.translationdomain import TranslationDomain
 
 class TestMessageCatalog:
-    interface.implements(IGlobalMessageCatalog)
+    interface.implements(zope.i18n.interfaces.IGlobalMessageCatalog)
 
     language = 'test'
 
@@ -28,8 +29,13 @@ class TestMessageCatalog:
         self.domain = domain
 
     def queryMessage(self, msgid, default=None):
-        return u'[[%s][%s]]' % (self.domain or getattr(msgid, 'domain', ''),
-                                msgid)
+        default = getattr(msgid, 'default', default)
+        if default != None and default != msgid:
+            msg = u"%s (%s)" % (msgid, default)
+        else:
+            msg = msgid
+            
+        return u'[[%s][%s]]' % (self.domain, msg)
 
     getMessage = queryMessage
 
@@ -39,4 +45,13 @@ class TestMessageCatalog:
     def reload(self):
         pass
 
-                     
+@interface.implementer(zope.i18n.interfaces.ITranslationDomain)
+def TestMessageFallbackDomain(domain_id=u''):
+    domain = TranslationDomain(domain_id)
+    domain.addCatalog(TestMessageCatalog(domain_id))
+    return domain
+
+interface.directlyProvides(
+    TestMessageFallbackDomain,
+    zope.i18n.interfaces.IFallbackTranslationDomainFactory,
+    )

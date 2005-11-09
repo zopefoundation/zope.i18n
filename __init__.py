@@ -26,6 +26,7 @@ zope.deprecation.__show__.on()
 
 from zope.i18nmessageid import MessageFactory, Message
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.interfaces import IFallbackTranslationDomainFactory
 from zope.component import queryUtility
 
 # Set up regular expressions for finding interpolation variables in text.
@@ -50,9 +51,13 @@ def _translate(msgid, domain=None, mapping=None, context=None,
     if domain:
         util = queryUtility(ITranslationDomain, domain)
         if util is None:
-            util = queryUtility(ITranslationDomain)
+            util = queryUtility(IFallbackTranslationDomainFactory)
+            if util is not None:
+                util = util(domain)
     else:
-        util = queryUtility(ITranslationDomain)
+        util = queryUtility(IFallbackTranslationDomainFactory)
+        if util is not None:
+            util = util()
 
     if util is None:
         return interpolate(default, mapping)
