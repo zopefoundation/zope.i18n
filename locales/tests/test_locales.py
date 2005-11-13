@@ -17,7 +17,7 @@ $Id$
 """
 import os
 import datetime
-from unittest import TestCase, TestSuite, makeSuite
+from unittest import TestCase, TestSuite, makeSuite, main
 
 from zope.i18n.interfaces.locales import ILocaleProvider
 from zope.i18n.locales import locales
@@ -168,4 +168,4 @@ def test_suite():
         ))
 
 if __name__ == "__main__":
-    unittest.main(defaultTest='test_suite')
+    main(defaultTest='test_suite')
