@@ -618,3 +618,22 @@ class IDictionaryInheritance(ILocaleInheritance):
         If an key is not found or is None, the next higher up Locale
         object is consulted.
         """
+
+class ICollator(Interface):
+    """Provide support for collating text strings
+
+    This interface will typically be provided by adapting a locale.
+    """
+
+    def key(text):
+        """Return a collation key for the given text.
+        """
+
+    def cmp(text1, text2):
+        """Compare two text strings.
+
+        The return value is negative if text1 < text2, 0 is they are
+        equal, and positive if text1 > text2.
+        """
+    
+    
