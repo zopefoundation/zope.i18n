@@ -18,6 +18,7 @@ $Id$
 import os
 import datetime
 import pytz
+import pickle
 from unittest import TestCase, TestSuite, makeSuite
 
 from zope.i18n.interfaces import IDateTimeFormat
@@ -292,11 +293,13 @@ class TestDateTimeFormat(TestCase):
 
     def testParseTimeZone(self):
         dt = self.format.parse('09:48 -600', 'HH:mm z')
+        pickle.loads(pickle.dumps(dt)) == dt
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-6))
         self.assertEqual(dt.tzinfo.zone, None)
         self.assertEqual(dt.tzinfo.tzname(dt), None)
 
         dt = self.format.parse('09:48 -06:00', 'HH:mm zz')
+        pickle.loads(pickle.dumps(dt)) == dt
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-6))
         self.assertEqual(dt.tzinfo.zone, None)
         self.assertEqual(dt.tzinfo.tzname(dt), None)
@@ -306,12 +309,14 @@ class TestDateTimeFormat(TestCase):
         # interpretation (other countries also use the EST timezone
         # abbreviation)
         dt = self.format.parse('01.01.2003 09:48 EST', 'dd.MM.yyyy HH:mm zzz')
+        pickle.loads(pickle.dumps(dt)) == dt
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-5))
         self.assertEqual(dt.tzinfo.zone, 'EST')
         self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
 
         dt = self.format.parse('01.01.2003 09:48 US/Eastern',
                                'dd.MM.yyyy HH:mm zzzz')
+        pickle.loads(pickle.dumps(dt)) == dt
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-5))
         self.assertEqual(dt.tzinfo.zone, 'US/Eastern')
         self.assertEqual(dt.tzinfo.tzname(dt), 'EST')

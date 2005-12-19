@@ -137,20 +137,10 @@ class DateTimeFormat(object):
             value = results[bin_pattern.index(tz_entry[0])]
             if length == 1:
                 hours, mins = int(value[:-2]), int(value[-2:])
-                delta = datetime.timedelta(hours=hours, minutes=mins)
-                # XXX: I think this is making an unpicklable tzinfo.
-                # Note that StaticTzInfo is not part of the exposed pytz API.
-                tzinfo = pytz.tzinfo.StaticTzInfo()
-                tzinfo._utcoffset = delta
-                pytz_tzinfo = True
+                tzinfo = pytz.FixedOffset(hours * 60 + mins)
             elif length == 2:
                 hours, mins = int(value[:-3]), int(value[-2:])
-                delta = datetime.timedelta(hours=hours, minutes=mins)
-                # XXX: I think this is making an unpicklable tzinfo.
-                # Note that StaticTzInfo is not part of the exposed pytz API.
-                tzinfo = pytz.tzinfo.StaticTzInfo()
-                tzinfo._utcoffset = delta
-                pytz_tzinfo = True
+                tzinfo = pytz.FixedOffset(hours * 60 + mins)
             else:
                 try:
                     tzinfo = pytz.timezone(value)
