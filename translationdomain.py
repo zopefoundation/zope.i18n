@@ -119,7 +119,7 @@ class TranslationDomain(SimpleTranslationDomain):
                         break
 
         # Now we need to do the interpolation
-        if text is not None:
+        if text and mapping:
             text = interpolate(text, mapping)
         return text
 

@@ -29,13 +29,14 @@ from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
 from zope.component import queryUtility
 
+
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the
 # zope.tal.taldefs module:
 NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 
-_interp_regex = re.compile(r'(?<!\$)(\$(?:%(n)s|{%(n)s}))' %({'n': NAME_RE}))
-_get_var_regex = re.compile(r'%(n)s' %({'n': NAME_RE}))
+_interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
+    % ({'n': NAME_RE}))
 
 def _translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
@@ -74,24 +75,40 @@ def translate(*args, **kw):
         args = args[1:]
     return _translate(*args, **kw)
 
-def interpolate(text, mapping):
-    """Insert the data passed from mapping into the text"""
+def interpolate(text, mapping=None):
+    """Insert the data passed from mapping into the text.
 
-    # If no translation was found, there is nothing to do.
-    if text is None:
-        return None
+    First setup a test mapping:
 
-    # If the mapping does not exist, make a "raw translation" without
-    # interpolation.
-    if mapping is None:
+    >>> mapping = {"name": "Zope", "version": 3}
+
+    In the text we can use substitution slots like $varname or ${varname}:
+
+    >>> interpolate(u"This is $name version ${version}.", mapping)
+    u'This is Zope version 3.'
+
+    Interpolation variables can be used more than once in the text:
+
+    >>> interpolate(u"This is $name version ${version}. ${name} $version!",
+    ...             mapping)
+    u'This is Zope version 3. Zope 3!'
+
+    In case if the variable wasn't found in the mapping or '$$' form
+    was used no substitution will happens:
+
+    >>> interpolate(u"This is $name $version. $unknown $$name $${version}.",
+    ...             mapping)
+    u'This is Zope 3. $unknown $$name $${version}.'
+
+    >>> interpolate(u"This is ${name}")
+    u'This is ${name}'
+    """
+
+    def replace(match):
+        whole, param1, param2 = match.groups()
+        return unicode(mapping.get(param1 or param2, whole))
+
+    if not text or not mapping:
         return text
 
-    # Find all the spots we want to substitute
-    to_replace = _interp_regex.findall(text)
-
-    # Now substitute with the variables in mapping
-    for string in to_replace:
-        var = _get_var_regex.findall(string)[0]
-        text = text.replace(string, unicode(mapping.get(var)))
-
-    return text
+    return _interp_regex.sub(replace, text)
