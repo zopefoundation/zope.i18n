@@ -23,7 +23,7 @@ try:
 except ImportError, e:
     from distutils.core import setup, Extension
 
-setup(name='zope_i18n',
+setup(name='zope.i18n',
       version='1.0',
       url='http://svn.zope.org/zope.i18n',
       license='ZPL 2.1',
@@ -36,13 +36,13 @@ setup(name='zope_i18n',
       package_dir = {'': os.path.join(os.path.dirname(__file__), 'src')},
 
       namespace_packages=['zope',],
-      tests_require = ['zope_testing'],
+      tests_require = ['zope.testing'],
       install_requires=['pytz',
-                        'zope_component',
-                        'zope_deprecation',
-                        'zope_interface',
-                        'zope_schema',
-                        'zope_testing',
+                        'zope.component',
+                        'zope.deprecation',
+                        'zope.interface',
+                        'zope.schema',
+                        'zope.testing',
                        ],
       include_package_data = True,
 
