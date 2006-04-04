@@ -85,8 +85,8 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
         msgid = factory(u'short_greeting', 'default')
         self.assertEqual(translate(msgid, target_language='en'), u'Hello!')
         # MessageID attributes override arguments
-        msgid = factory('43-not-there', 'this ${that} the other')
-        msgid.mapping["that"] = "THAT"
+        msgid = factory('43-not-there', 'this ${that} the other',
+                        mapping={'that': 'THAT'})
         self.assertEqual(
             translate(msgid, target_language='en', default="default",
                          mapping={"that": "that"}), "this THAT the other")
