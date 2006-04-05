@@ -24,8 +24,8 @@ except ImportError, e:
     from distutils.core import setup, Extension
 
 setup(name='zope.i18n',
-      version='1.0',
-      url='http://svn.zope.org/zope.i18n',
+      version='3.2.0',
+      url='http://svn.zope.org/zope.i18n/tags/3.2.0',
       license='ZPL 2.1',
       description='Zope3 Internationalization Support',
       author='Zope Corporation and Contributors',
@@ -42,7 +42,6 @@ setup(name='zope.i18n',
                         'zope.deprecation',
                         'zope.interface',
                         'zope.schema',
-                        'zope.testing',
                        ],
       include_package_data = True,
 
