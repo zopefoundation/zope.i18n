@@ -25,7 +25,7 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
-from zope.app.component.metaconfigure import utility
+from zope.component.zcml import utility
 
 class IRegisterTranslationsDirective(Interface):
     """Register translations with the global site manager."""
