@@ -1,6 +1,16 @@
 zope.i18n Package Changelog
 ===========================
 
+zope.i18n version 3.2.0.2 (2006/04/14)
+--------------------------------------
+
+- Packaging change:  suppress inclusion of 'setup.cfg' in 'sdist' builds.
+
+zope.i18n version 3.2.0.1 (2006/04/04)
+--------------------------------------
+
+- Fix packaging bug:  include 'interfaces', 'locales', 'tests' subpackages.
+
 zope.i18n version 3.2.0 (2006/01/05)
 ------------------------------------
 
