@@ -1,6 +1,11 @@
 zope.i18n Package Changelog
 ===========================
 
+zope.i18n version 3.0.0.3 (2006/04/15)
+--------------------------------------
+
+- Fix packaging bug:  'package_dir' must be a *relative* path.
+
 zope.i18n version 3.0.0.2 (2006/04/14)
 --------------------------------------
 
