@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2004 Zope Corporation and Contributors.
+# Copyright (c) 2006 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -11,7 +11,7 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Setup for zope.i18nmessageid package
+"""Setup for zope.i18n package
 
 $Id$
 """
@@ -30,7 +30,6 @@ setup(name='zope.i18n',
       description='Zope3 Internationalization Support',
       author='Zope Corporation and Contributors',
       author_email='zope3-dev@zope.org',
-      long_description='',
       
       packages=['zope', 'zope.i18n'],
       package_dir = {'': os.path.join(os.path.dirname(__file__), 'src')},
@@ -42,7 +41,6 @@ setup(name='zope.i18n',
                         'zope.deprecation',
                         'zope.interface',
                         'zope.schema',
-                        'zope.testing',
                        ],
       include_package_data = True,
 
