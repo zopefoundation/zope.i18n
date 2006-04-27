@@ -20,7 +20,7 @@ from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_itranslationdomain import \
      TestITranslationDomain, Environment
-from zope.i18n import MessageIDFactory
+from zope.i18nmessageid import MessageFactory
 from zope.i18n.interfaces import ITranslationDomain
 import zope.component
 
@@ -80,13 +80,13 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
             u'Hello!')
 
     def testMessageIDTranslate(self):
-        factory = MessageIDFactory('default')
+        factory = MessageFactory('default')
         translate = self._domain.translate
         msgid = factory(u'short_greeting', 'default')
         self.assertEqual(translate(msgid, target_language='en'), u'Hello!')
         # MessageID attributes override arguments
-        msgid = factory('43-not-there', 'this ${that} the other')
-        msgid.mapping["that"] = "THAT"
+        msgid = factory('43-not-there', 'this ${that} the other',
+                        mapping={'that': 'THAT'})
         self.assertEqual(
             translate(msgid, target_language='en', default="default",
                          mapping={"that": "that"}), "this THAT the other")
@@ -100,7 +100,7 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
 
         zope.component.provideUtility(domain, ITranslationDomain, 'other')
 
-        factory = MessageIDFactory('other')
+        factory = MessageFactory('other')
         msgid = factory(u'short_greeting', 'default')
         self.assertEqual(
             self._domain.translate(msgid, target_language='en'), u'Hello!')

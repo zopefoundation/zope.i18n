@@ -19,7 +19,7 @@ import unittest
 
 from zope.i18n.negotiator import Negotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
-from zope.component.tests.placelesssetup import PlacelessSetup
+from zope.component.testing import PlacelessSetup
 from zope.interface import implements
 
 class Env(object):

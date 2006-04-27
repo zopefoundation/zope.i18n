@@ -20,7 +20,7 @@ from zope.interface.verify import verifyObject
 from zope.interface import implements
 
 import zope.component
-from zope.component.tests.placelesssetup import PlacelessSetup
+from zope.component.testing import PlacelessSetup
 
 from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages

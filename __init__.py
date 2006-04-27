@@ -18,12 +18,6 @@ $Id$
 import re
 import warnings
 
-# BBB 2005/10/10 -- MessageIDs are to be removed for Zope 3.3
-import zope.deprecation
-zope.deprecation.__show__.off()
-from zope.i18nmessageid import MessageIDFactory, MessageID
-zope.deprecation.__show__.on()
-
 from zope.i18nmessageid import MessageFactory, Message
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
@@ -41,7 +35,7 @@ _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
 def _translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
 
-    if isinstance(msgid, (MessageID, Message)):
+    if isinstance(msgid, Message):
         domain = msgid.domain
         default = msgid.default
         mapping = msgid.mapping

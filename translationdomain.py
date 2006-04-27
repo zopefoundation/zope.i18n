@@ -15,17 +15,11 @@
 
 $Id$
 """
-# BBB 2005/10/10 -- MessageIDs are to be removed for Zope 3.3
-import zope.deprecation
-zope.deprecation.__show__.off()
-from zope.i18nmessageid import MessageID, Message
-zope.deprecation.__show__.on()
-
+from zope.component import getUtility
+from zope.i18nmessageid import Message
 from zope.i18n import interpolate
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
-from zope.component import getUtility
-from zope.i18n.interfaces import ITranslationDomain
-from zope.i18n.interfaces import INegotiator
+from zope.i18n.interfaces import ITranslationDomain, INegotiator
 
 # The configuration should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
@@ -84,7 +78,7 @@ class TranslationDomain(SimpleTranslationDomain):
             target_language = negotiator.getLanguage(langs, context)
 
         # MessageID attributes override arguments
-        if isinstance(msgid, (Message, MessageID)):
+        if isinstance(msgid, Message):
             if msgid.domain != self.domain:
                 util = getUtility(ITranslationDomain, msgid.domain)
             mapping = msgid.mapping
