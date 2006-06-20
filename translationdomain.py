@@ -85,7 +85,7 @@ class TranslationDomain(SimpleTranslationDomain):
             default = msgid.default
 
         if default is None:
-            default = msgid
+            default = unicode(msgid)
 
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get(target_language)
@@ -123,4 +123,3 @@ class TranslationDomain(SimpleTranslationDomain):
     def reloadCatalogs(self, catalogNames):
         for catalogName in catalogNames:
             self._data[catalogName].reload()
-

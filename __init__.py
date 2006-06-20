@@ -16,7 +16,6 @@
 $Id$
 """
 import re
-import warnings
 
 from zope.i18nmessageid import MessageFactory, Message
 from zope.i18n.interfaces import ITranslationDomain
@@ -32,8 +31,59 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
 
-def _translate(msgid, domain=None, mapping=None, context=None,
+def translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
+    """Translate text.
+
+    First setup some test components:
+
+    >>> from zope import component, interface
+    >>> import zope.i18n.interfaces
+
+    >>> class TestDomain:
+    ...     interface.implements(zope.i18n.interfaces.ITranslationDomain)
+    ...
+    ...     def __init__(self, **catalog):
+    ...         self.catalog = catalog
+    ...
+    ...     def translate(self, text, *_, **__):
+    ...         return self.catalog[text]
+
+    Normally, the translation system will use a domain utility:
+
+    >>> component.provideUtility(TestDomain(eek=u'ook'), name='my.domain')
+    >>> translate(u'eek', 'my.domain')
+    u'ook'
+
+    Normally, if no domain is given, or if there is no domain utility
+    for the given domain, then the text isn't translated:
+
+    >>> translate(u'eek')
+    u'eek'
+
+    Moreover the text will be converted to unicode:
+
+    >>> translate('eek', 'your.domain')
+    u'eek'
+
+    A fallback domain factory can be provided. This is normally used
+    for testing:
+
+    >>> def fallback(domain=u''):
+    ...     return TestDomain(eek=u'test-from-' + domain)
+    >>> interface.directlyProvides(
+    ...     fallback,
+    ...     zope.i18n.interfaces.IFallbackTranslationDomainFactory,
+    ...     )
+
+    >>> component.provideUtility(fallback)
+
+    >>> translate(u'eek')
+    u'test-from-'
+
+    >>> translate(u'eek', 'your.domain')
+    u'test-from-your.domain'
+    """
 
     if isinstance(msgid, Message):
         domain = msgid.domain
@@ -41,7 +91,7 @@ def _translate(msgid, domain=None, mapping=None, context=None,
         mapping = msgid.mapping
 
     if default is None:
-        default = msgid
+        default = unicode(msgid)
 
     if domain:
         util = queryUtility(ITranslationDomain, domain)
@@ -58,16 +108,6 @@ def _translate(msgid, domain=None, mapping=None, context=None,
         return interpolate(default, mapping)
 
     return util.translate(msgid, mapping, context, target_language, default)
-
-# BBB Backward compat
-def translate(*args, **kw):
-    if args and not isinstance(args[0], basestring):
-        warnings.warn(
-            "translate no longer takes a location argument. "
-            "The argument was ignored.",
-            DeprecationWarning, 2)
-        args = args[1:]
-    return _translate(*args, **kw)
 
 def interpolate(text, mapping=None):
     """Insert the data passed from mapping into the text.

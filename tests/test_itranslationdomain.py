@@ -26,6 +26,7 @@ from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
 
+
 class Environment(object):
 
     implements(IUserPreferredLanguages)
@@ -47,7 +48,7 @@ class TestITranslationDomain(PlacelessSetup):
         self._domain = self._getTranslationDomain()
 
         # Setup the negotiator utility
-        zope.component.provideUtility(negotiator, INegotiator)        
+        zope.component.provideUtility(negotiator, INegotiator)
 
     def testInterface(self):
         verifyObject(ITranslationDomain, self._domain)
@@ -85,6 +86,12 @@ class TestITranslationDomain(PlacelessSetup):
         eq(translate('glorp_smurf_hmpf', target_language='en',
                      default='Glorp Smurf Hmpf'),
            'Glorp Smurf Hmpf')
+
+    def testUnicodeDefaultValue(self):
+        translate = self._domain.translate
+        translated = translate('no way', target_language='en')
+        self.assertEqual(translated, "no way")
+        self.assert_(type(translated) is unicode)
 
     def testNoTargetLanguage(self):
         translate = self._domain.translate
