@@ -27,6 +27,7 @@ import pytz.reference
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implements
 
+
 def _findFormattingCharacterInPattern(char, pattern):
     return [entry for entry in pattern
             if isinstance(entry, tuple) and entry[0] == char]
@@ -67,6 +68,7 @@ class DateTimeFormat(object):
             bin_pattern = parseDateTimePattern(pattern)
         else:
             bin_pattern = self._bin_pattern
+            pattern = self._pattern
 
         # Generate the correct regular expression to parse the date and parse.
         regex = ''
@@ -77,7 +79,8 @@ class DateTimeFormat(object):
             results = re.match(regex, text).groups()
         except AttributeError:
             raise DateTimeParseError(
-                  'The datetime string did not match the pattern.')
+                  'The datetime string did not match the pattern %r.'
+                  % pattern)
         # Sometimes you only want the parse results
         if not asObject:
             return results
@@ -239,6 +242,7 @@ class NumberFormat(object):
             bin_pattern = parseNumberPattern(pattern)
         else:
             bin_pattern = self._bin_pattern
+            pattern = self._pattern
         # Determine sign
         num_res = [None, None]
         for sign in (0, 1):
@@ -283,7 +287,8 @@ class NumberFormat(object):
             num_str = num_res[1].groups()[0]
             sign = -1
         else:
-            raise NumberParseError('Not a valid number for this pattern.')
+            raise NumberParseError('Not a valid number for this pattern %r.'
+                                    % pattern)
         # Remove possible grouping separators
         num_str = num_str.replace(self.symbols['group'], '')
         # Extract number
@@ -886,5 +891,3 @@ def parseNumberPattern(pattern):
         neg_pattern = pattern
 
     return pattern, neg_pattern
-
-
