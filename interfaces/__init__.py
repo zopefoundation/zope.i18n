@@ -195,7 +195,11 @@ class IMessageImportFilter(Interface):
 class ILanguageAvailability(Interface):
 
     def getAvailableLanguages():
-        """Return a sequence of language tags for available languages
+        """Return a sequence of 3-tuples for available languages
+
+        Each 3-tuple should be of the form (language,country,variant) so as
+        to be suitable for passing to methods in
+        zope.i18n.interfaces.locales.ILocaleProvider.
         """
 
 
