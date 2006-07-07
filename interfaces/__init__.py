@@ -144,11 +144,6 @@ class ITranslationDomain(Interface):
         The method also looks for a possible language to translate to.
         After a translation it also replaces any $name variable variables
         inside the post-translation string.
-
-        Note: The TranslationDomain interface does not support simplified
-        translation methods, since it is totally hidden by ZPT and in
-        Python you should use a Domain object, since it supports all
-        the simplifications.
         """
 
 class IFallbackTranslationDomainFactory(Interface):
