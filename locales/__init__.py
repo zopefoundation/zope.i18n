@@ -15,6 +15,8 @@
 
 $Id$
 """
+__docformat__ = 'restructuredtext'
+
 import os
 from datetime import datetime, date
 from time import strptime
@@ -166,7 +168,7 @@ class LocaleDisplayNames(AttributeInheritance):
       >>> locale.displayNames = LocaleDisplayNames()
       >>> locale.displayNames.keys = ['fu', 'bahr']
 
-      Here you can see the inheritance in action
+    Here you can see the inheritance in action::
 
       >>> locale.displayNames.languages
       ['en', 'de']
@@ -240,10 +242,10 @@ class LocaleCalendar(AttributeInheritance):
     available for this locale. This was done, since most other calendars have
     different year and era data, but everything else remains the same.
 
-    Example::
+    Example:
 
-      Even though the 'Locale' object has no 'calendar' attribute for real, it
-      helps us here to make the example simpler.
+    Even though the 'Locale' object has no 'calendar' attribute for real, it
+    helps us here to make the example simpler.
 
       >>> from zope.i18n.locales.tests.test_docstrings import \\
       ...     LocaleInheritanceStub
@@ -286,7 +288,7 @@ class LocaleCalendar(AttributeInheritance):
       >>> locale.calendar.getDayTypeFromAbbreviation(u'Die')
       2
 
-      Let's test the direct attribute access as well.
+    Let's test the direct attribute access as well.
 
       >>> root.am = u'AM'
       >>> root.pm = u'PM'
@@ -373,7 +375,7 @@ class LocaleDates(AttributeInheritance):
       >>> dates.calendars = {'gregorian': cal}
 
     Setting up and accessing date format through a specific length
-    (very common scenario)
+    (very common scenario)::
 
       >>> fulllength = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -396,7 +398,7 @@ class LocaleDates(AttributeInheritance):
       >>> formatter.format(date(2004, 02, 04))
       u'Mittwoch, 4. Februar 2004'
 
-    Let's also test the time formatter
+    Let's also test the time formatter::
 
       >>> fulllength = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -420,7 +422,7 @@ class LocaleDates(AttributeInheritance):
       u'12:15 Uhr +000'
 
     The datetime formatter is a bit special, since it is constructed from
-    the other two:
+    the other two::
 
       >>> length = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -436,7 +438,7 @@ class LocaleDates(AttributeInheritance):
       >>> formatter.format(datetime(2004, 02, 04, 12, 15, 00))
       u'Mittwoch, 4. Februar 2004 12:15 Uhr +000'
 
-    Finally, we'll test some invalid input:
+    Finally, we'll test some invalid input::
 
       >>> dates.getFormatter('timeDate')
       Traceback (most recent call last):
@@ -515,7 +517,7 @@ class LocaleCurrency(object):
 class LocaleNumbers(AttributeInheritance):
     """Implementation of ILocaleCurrency including inheritance support.
 
-`    Examples::
+    Examples::
 
       >>> numbers = LocaleNumbers()
       >>> numbers.symbols = {
@@ -524,8 +526,8 @@ class LocaleNumbers(AttributeInheritance):
       ...     'minusSign': '-', 'exponential': 'E', 'perMille': 'o/oo',
       ...     'infinity': 'oo', 'nan': 'N/A'}
 
-      Setting up and accessing totally unnamed decimal format
-      (very common scenario)
+    Setting up and accessing totally unnamed decimal format
+    (very common scenario)::
 
       >>> length = LocaleFormatLength()
       >>> format = LocaleFormat()
@@ -540,7 +542,7 @@ class LocaleNumbers(AttributeInheritance):
       >>> formatter.format(3210.4)
       u'3.210,4'
 
-      Setting up and accessing scientific formats with named format lengths
+    Setting up and accessing scientific formats with named format lengths::
 
       >>> longlength = LocaleFormatLength('long')
       >>> format = LocaleFormat()
@@ -560,8 +562,8 @@ class LocaleNumbers(AttributeInheritance):
       >>> formatter.format(1234.5678)
       u'1,2346E+03'
 
-      Setting up and accessing percent formats with named format lengths
-      and format names
+    Setting up and accessing percent formats with named format lengths
+    and format names::
 
       >>> longlength = LocaleFormatLength('long')
       >>> fooformat = LocaleFormat()
@@ -578,7 +580,7 @@ class LocaleNumbers(AttributeInheritance):
       >>> formatter.format(123.45678)
       u'123%'
 
-      ...using a default name
+    ...using a default name::
 
       >>> numbers.percentFormats['long'].default = 'bar'
       >>> formatter = numbers.getFormatter('percent')

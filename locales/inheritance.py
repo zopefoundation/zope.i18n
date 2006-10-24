@@ -16,10 +16,12 @@
 This module provides support for locale inheritance.
 
 Note: In many respects this is similar to Zope 2's acquisition model, since
-locale inheritance is not inheritance in the programming sense. 
+locale inheritance is not inheritance in the programming sense.
 
 $Id$
 """
+__docformat__ = 'restructuredtext'
+
 from zope.interface import implements
 from zope.i18n.interfaces.locales import \
      ILocaleInheritance, IAttributeInheritance, IDictionaryInheritance
@@ -64,33 +66,33 @@ class AttributeInheritance(Inheritance):
       >>> root.data = 'value'
       >>> root.attr = 'bar value'
       >>> root.data2 = AttributeInheritance()
-      >>> root.data2.attr = 'value2' 
+      >>> root.data2.attr = 'value2'
 
       >>> locale = LocaleInheritanceStub(root)
       >>> locale.attr = 'foo value'
       >>> locale.data2 = AttributeInheritance()
 
-      Here is an attribute lookup directly from the locale ...
+    Here is an attribute lookup directly from the locale::
 
       >>> locale.data
       'value'
       >>> locale.attr
       'foo value'
 
-      ... however, we can also have any amount of nesting.
+    ... however, we can also have any amount of nesting::
 
       >>> locale.data2.attr
       'value2'
 
-      Once we have looked up a particular attribute, it should be cached,
-      i.e. exist in the dictionary of this inheritance object.
+    Once we have looked up a particular attribute, it should be cached,
+    i.e. exist in the dictionary of this inheritance object::
 
       >>> 'attr' in locale.data2.__dict__
       True
       >>> locale.data2.__dict__['attr']
       'value2'
 
-      Make sure that None can be assigned as value as well.
+    Make sure that None can be assigned as value as well::
 
       >>> locale.data2.attr = None
       >>> locale.data2.attr is None
@@ -102,8 +104,8 @@ class AttributeInheritance(Inheritance):
     def __setattr__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
         # If we have a value that can also inherit data from other locales, we
-        # set its parent and name, so that we know how to get to it. 
-        if (ILocaleInheritance.providedBy(value) and 
+        # set its parent and name, so that we know how to get to it.
+        if (ILocaleInheritance.providedBy(value) and
             not name.startswith('__')):
             value.__parent__ = self
             value.__name__ = name
@@ -130,7 +132,7 @@ class AttributeInheritance(Inheritance):
             # which we do not want to override.
             super(AttributeInheritance, self).__setattr__(name, value)
             return value
-        
+
 
 
 class InheritingDictionary(Inheritance, dict):
@@ -151,23 +153,23 @@ class InheritingDictionary(Inheritance, dict):
       >>> locale.data2 = AttributeInheritance()
       >>> locale.data2.dict = InheritingDictionary({1: 'I'})
 
-      Here is a dictionary lookup directly from the locale ...
+    Here is a dictionary lookup directly from the locale::
 
       >>> locale.data[1]
       'eins'
       >>> locale.data[2]
       'two'
 
-      ... however, we can also have any amount of nesting.
+    ... however, we can also have any amount of nesting::
 
       >>> locale.data2.dict[1]
       'I'
       >>> locale.data2.dict[2]
       'ii'
 
-      We also have to overwrite 'get()', 'keys()' and 'items()' since we want
-      to make sure that all upper locales are consulted before returning the
-      default or to construct the list of elements, respectively.
+    We also have to overwrite 'get()', 'keys()' and 'items()' since we want
+    to make sure that all upper locales are consulted before returning the
+    default or to construct the list of elements, respectively::
 
       >>> locale.data2.dict.get(2)
       'ii'
@@ -191,7 +193,7 @@ class InheritingDictionary(Inheritance, dict):
     def __getitem__(self, name):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
         if not self.has_key(name):
-            try: 
+            try:
                 selfUp = self.getInheritedSelf()
             except NoParentException:
                 pass
@@ -219,5 +221,5 @@ class InheritingDictionary(Inheritance, dict):
 
     def value(self):
         return [item[1] for item in self.items()]
-        
-        
+
+
