@@ -34,6 +34,9 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
     def setUp(self):
         TestITranslationDomain.setUp(self)
 
+    def tearDown(self):
+        TestITranslationDomain.tearDown(self)
+
     def _getTranslationDomain(self):
         domain = TranslationDomain('default')
         path = testdir()
