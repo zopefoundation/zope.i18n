@@ -21,7 +21,7 @@ import os
 from setuptools import setup, find_packages
 
 setup(name='zope.i18n',
-      version='3.3dev',
+      version='3.4dev',
       url='http://svn.zope.org/zope.i18n',
       license='ZPL 2.1',
       description='Zope3 Internationalization Support',
@@ -33,11 +33,14 @@ setup(name='zope.i18n',
 
       namespace_packages=['zope',],
       tests_require = ['zope.testing'],
-      install_requires=['pytz',
+      install_requires=['setuptools',
+                        'pytz',
                         'zope.component',
                         'zope.deprecation',
                         'zope.interface',
                         'zope.schema',
+                        'zope.configuration',
+                        'zope.security', #TODO: dependency of zope.component
                        ],
       include_package_data = True,
 
