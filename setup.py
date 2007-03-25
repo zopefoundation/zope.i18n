@@ -32,15 +32,12 @@ setup(name='zope.i18n',
       package_dir = {'': 'src'},
 
       namespace_packages=['zope',],
-      tests_require = ['zope.testing'],
       install_requires=['setuptools',
                         'pytz',
+                        'zope.i18nmessageid',
                         'zope.component',
-                        'zope.deprecation',
-                        'zope.interface',
-                        'zope.schema',
                         'zope.configuration',
-                        'zope.security', #TODO: dependency of zope.component
+                        'zope.security', 
                        ],
       include_package_data = True,
 
