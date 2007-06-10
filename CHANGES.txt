@@ -1,8 +1,16 @@
 zope.i18n package changelog
 ===========================
 
+3.4.0b1
+-------
+
+- Fixed dependency on zope.security to require a version that does not have
+  the hidden dependency on zope.testing.
+
+
 Note: Releases between 3.2.0 and 3.4.0b1 were not tracked as individual
 packages. The changes can be reconstructed from the Zope 3 changelog.
+
 
 3.2.0 - 2006/01/05
 ------------------
@@ -19,6 +27,7 @@ packages. The changes can be reconstructed from the Zope 3 changelog.
 
 - Implemented remaining date/time formatters, including adding week
   information to the calendar.
+
 
 3.0.0 - 2004/11/07
 ------------------

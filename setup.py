@@ -27,7 +27,7 @@ setup(name='zope.i18n',
       description='Zope3 Internationalization Support',
       author='Zope Corporation and Contributors',
       author_email='zope3-dev@zope.org',
-      
+
       packages=find_packages('src'),
       package_dir = {'': 'src'},
 
@@ -37,7 +37,7 @@ setup(name='zope.i18n',
                         'zope.i18nmessageid',
                         'zope.component',
                         'zope.configuration',
-                        'zope.security', 
+                        'zope.security>=3.4.0b1',
                        ],
       include_package_data = True,
 
