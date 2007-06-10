@@ -1,24 +1,27 @@
-zope.i18n Package Changelog
+zope.i18n package changelog
 ===========================
 
-zope.i18n version 3.2.0 (2006/01/05)
-------------------------------------
+Note: Releases between 3.2.0 and 3.4.0b1 were not tracked as individual
+packages. The changes can be reconstructed from the Zope 3 changelog.
 
-Corresponds to the verison of the zope.i18n package shipped as part of
-the Zope 3.2.0 release.
+3.2.0 - 2006/01/05
+------------------
 
-Added a picklable offset-based timezone to 'pytz', a la
-zope.app.datetimeutils'.  Added tests in 'zope.i18n' to show that we
-need something like it, and then actually use it in 'zope.18n.format'.
+- Corresponds to the verison of the zope.i18n package shipped as part of the
+  Zope 3.2.0 release.
 
-Added support for parsing / formatting timezones using 'pytz' (new
-external dependency).
+- Added a picklable offset-based timezone to 'pytz', a la
+  zope.app.datetimeutils'.  Added tests in 'zope.i18n' to show that we need
+  something like it, and then actually use it in 'zope.18n.format'.
 
-Implemented remaining date/time formatters, including adding week
-information to the calendar.
+- Added support for parsing / formatting timezones using 'pytz' (new external
+  dependency).
 
-zope.i18n version 3.0.0 (2004/11/07)
-------------------------------------
+- Implemented remaining date/time formatters, including adding week
+  information to the calendar.
 
-Corresponds to the verison of the zope.i18n package shipped as part of
-the Zope X3.0.0 release.
+3.0.0 - 2004/11/07
+------------------
+
+- Corresponds to the verison of the zope.i18n package shipped as part of the
+  Zope X3.0.0 release.
