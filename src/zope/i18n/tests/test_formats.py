@@ -15,6 +15,7 @@
 
 $Id$
 """
+import decimal
 import os
 import datetime
 import pytz
@@ -979,6 +980,14 @@ class TestNumberFormat(TestCase):
         format = NumberFormat(
             symbols={'decimal': '.', 'group': ',', 'exponential': 'X'})
         self.assertEqual(format.parse('1.2X11', '#.#E0'), 1.2e11)
+
+    def testChangeOutputType(self):
+        format = NumberFormat()
+        format.type = decimal.Decimal
+        self.assertEqual(format.parse('23341', '###0'),
+                         decimal.Decimal('23341'))
+        self.assertEqual(format.parse('233.41', '###0.00'),
+                         decimal.Decimal('233.41'))
 
     def testFormatSimpleInteger(self):
         self.assertEqual(self.format.format(23341, '###0'),

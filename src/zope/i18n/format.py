@@ -205,6 +205,8 @@ class NumberFormat(object):
 
     implements(INumberFormat)
 
+    type = None
+
     def __init__(self, pattern=None, symbols={}):
         # setup default symbols
         self.symbols = {
@@ -299,6 +301,8 @@ class NumberFormat(object):
         if self.symbols['exponential'] in num_str:
             type = float
             num_str = num_str.replace(self.symbols['exponential'], 'E')
+        if self.type:
+            type = self.type
         return sign*type(num_str)
 
     def _format_integer(self, integer, pattern):

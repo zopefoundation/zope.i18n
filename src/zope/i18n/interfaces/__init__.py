@@ -16,7 +16,7 @@
 $Id$
 """
 from zope.interface import Interface, Attribute
-from zope.schema import TextLine, Dict, Choice
+from zope.schema import TextLine, Dict, Choice, Field
 
 
 class II18nAware(Interface):
@@ -350,6 +350,14 @@ class INumberFormat(IFormat):
       X    Any other characters can be used in the prefix or suffix
       '    Used to quote special characters in a prefix or suffix
     """
+
+    type = Field(
+        title=u'Type',
+        description=(u'The type into which a string is parsed. If ``None``, '
+                     u'then ``int`` will be used for whole numbers and '
+                     u'``float`` for decimals.'),
+        default=None,
+        required=False)
 
     symbols = Dict(
         title=u"Number Symbols",
