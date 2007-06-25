@@ -1,9 +1,13 @@
 zope.i18n package changelog
 ===========================
 
-After 3.4.0b1
+After 3.4.0b2
 -------------
 
+3.4.0b2 - (6/25/2007)
+---------------------
+
+- Added ability to change the output type when parsing a number.
 
 3.4.0b1
 -------
