@@ -1,19 +1,27 @@
 zope.i18n package changelog
 ===========================
 
-After 3.4.0b2
+After 3.4.0b3
 -------------
+
+3.4.0b3 - (6/28/2007)
+---------------------
+
+- Bug: There was a bug in the parser that if no decimal place is given 
+  you still had to type the decimal symbol. Corrected this problem (one 
+  character ;-) and provided a test.
 
 3.4.0b2 - (6/25/2007)
 ---------------------
 
-- Added ability to change the output type when parsing a number.
+- Feature: Added ability to change the output type when parsing a 
+  number.
 
 3.4.0b1
 -------
 
-- Fixed dependency on zope.security to require a version that does not have
-  the hidden dependency on zope.testing.
+- Bug: Fixed dependency on ``zope.security`` to require a version that 
+  does not have the hidden dependency on ``zope.testing``.
 
 
 Note: Releases between 3.2.0 and 3.4.0b1 were not tracked as individual
@@ -40,5 +48,5 @@ packages. The changes can be reconstructed from the Zope 3 changelog.
 3.0.0 - 2004/11/07
 ------------------
 
-- Corresponds to the verison of the zope.i18n package shipped as part of the
-  Zope X3.0.0 release.
+- Corresponds to the version of the zope.i18n package shipped as part of 
+  the Zope X3.0.0 release.

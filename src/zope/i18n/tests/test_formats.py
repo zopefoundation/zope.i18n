@@ -892,6 +892,14 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.parse('23341.020', '###0.000#'),
                          23341.02)
 
+    def testParseDecimalWithOptionalDecimalDigits(self):
+        self.assertEqual(self.format.parse('23341.02', '###0.##'),
+                         23341.02)
+        self.assertEqual(self.format.parse('23341', '###0.#'),
+                         23341.0)
+        self.assertEqual(self.format.parse('23341.', '###0.#'),
+                         23341.0)
+
     def testParseScientificDecimal(self):
         self.assertEqual(self.format.parse('2.334102E04', '0.00####E00'),
                          23341.02)

@@ -264,7 +264,7 @@ class NumberFormat(object):
             if bin_pattern[sign][FRACTION]:
                 max_precision = len(bin_pattern[sign][FRACTION])
                 min_precision = bin_pattern[sign][FRACTION].count('0')
-                regex += '['+self.symbols['decimal']+']'
+                regex += '['+self.symbols['decimal']+']?'
                 regex += '[0-9]{%i,%i}' %(min_precision, max_precision)
             if bin_pattern[sign][EXPONENTIAL] != '':
                 regex += self.symbols['exponential']
