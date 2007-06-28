@@ -21,16 +21,16 @@ import os
 from setuptools import setup, find_packages
 
 setup(name='zope.i18n',
-      version = '3.4.0b2',
+      version = '3.4.0b3',
       url='http://svn.zope.org/zope.i18n',
       license='ZPL 2.1',
       description='Zope3 Internationalization Support',
+      keywords=('zope3 internationalization localization i18n l10n '
+                'gettext ICU locale'),
       author='Zope Corporation and Contributors',
       author_email='zope3-dev@zope.org',
-
       packages=find_packages('src'),
       package_dir = {'': 'src'},
-
       namespace_packages=['zope',],
       install_requires=['setuptools',
                         'pytz',
@@ -40,6 +40,5 @@ setup(name='zope.i18n',
                         'zope.security>=3.4.0b1',
                        ],
       include_package_data = True,
-
       zip_safe = False,
       )
