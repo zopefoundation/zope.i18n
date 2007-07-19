@@ -248,7 +248,7 @@ class NumberFormat(object):
         # Determine sign
         num_res = [None, None]
         for sign in (0, 1):
-            regex = ''
+            regex = '^'
             if bin_pattern[sign][PADDING1] is not None:
                 regex += '[' + bin_pattern[sign][PADDING1] + ']+'
             if bin_pattern[sign][PREFIX] != '':
@@ -280,6 +280,7 @@ class NumberFormat(object):
                 regex += '[' + bin_pattern[sign][SUFFIX] + ']'
             if bin_pattern[sign][PADDING4] is not None:
                 regex += '[' + bin_pattern[sign][PADDING4] + ']+'
+            regex += '$'
             num_res[sign] = re.match(regex, text)
 
         if num_res[0] is not None:

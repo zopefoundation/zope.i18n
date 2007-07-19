@@ -28,7 +28,7 @@ from zope.i18n.format import parseDateTimePattern, buildDateTimeParseInfo
 from zope.i18n.format import DateTimePatternParseError, DateTimeParseError
 
 from zope.i18n.interfaces import INumberFormat
-from zope.i18n.format import NumberFormat
+from zope.i18n.format import NumberFormat, NumberParseError
 from zope.i18n.format import parseNumberPattern
 
 class LocaleStub(object):
@@ -532,68 +532,68 @@ class TestDateTimeFormat(TestCase):
                                'dd.MM.yy h:mm:ss a'),
             '02.01.03 2:00:00 vorm.')
         self.assertEqual(
-            self.format.format(datetime.time(0, 15), 'h:mm a'), 
+            self.format.format(datetime.time(0, 15), 'h:mm a'),
             '12:15 vorm.')
         self.assertEqual(
-            self.format.format(datetime.time(1, 15), 'h:mm a'), 
+            self.format.format(datetime.time(1, 15), 'h:mm a'),
             '1:15 vorm.')
         self.assertEqual(
-            self.format.format(datetime.time(12, 15), 'h:mm a'), 
+            self.format.format(datetime.time(12, 15), 'h:mm a'),
             '12:15 nachm.')
         self.assertEqual(
-            self.format.format(datetime.time(13, 15), 'h:mm a'), 
+            self.format.format(datetime.time(13, 15), 'h:mm a'),
             '1:15 nachm.')
 
     def testFormatDayInYear(self):
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 3), 'D'), 
+            self.format.format(datetime.date(2003, 1, 3), 'D'),
             u'3')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 3), 'DD'), 
+            self.format.format(datetime.date(2003, 1, 3), 'DD'),
             u'03')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 3), 'DDD'), 
+            self.format.format(datetime.date(2003, 1, 3), 'DDD'),
             u'003')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 12, 31), 'D'), 
+            self.format.format(datetime.date(2003, 12, 31), 'D'),
             u'365')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 12, 31), 'DD'), 
+            self.format.format(datetime.date(2003, 12, 31), 'DD'),
             u'365')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 12, 31), 'DDD'), 
+            self.format.format(datetime.date(2003, 12, 31), 'DDD'),
             u'365')
         self.assertEqual(
-            self.format.format(datetime.date(2004, 12, 31), 'DDD'), 
+            self.format.format(datetime.date(2004, 12, 31), 'DDD'),
             u'366')
 
     def testFormatDayOfWeekInMOnth(self):
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 3), 'F'), 
+            self.format.format(datetime.date(2003, 1, 3), 'F'),
             u'1')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 10), 'F'), 
+            self.format.format(datetime.date(2003, 1, 10), 'F'),
             u'2')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 17), 'F'), 
+            self.format.format(datetime.date(2003, 1, 17), 'F'),
             u'3')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 24), 'F'), 
+            self.format.format(datetime.date(2003, 1, 24), 'F'),
             u'4')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 31), 'F'), 
+            self.format.format(datetime.date(2003, 1, 31), 'F'),
             u'5')
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 6), 'F'), 
+            self.format.format(datetime.date(2003, 1, 6), 'F'),
             u'1')
 
     def testFormatUnusualFormats(self):
         self.assertEqual(
-            self.format.format(datetime.date(2003, 1, 3), 'DDD-yyyy'), 
+            self.format.format(datetime.date(2003, 1, 3), 'DDD-yyyy'),
             u'003-2003')
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10),
-                               "F. EEEE 'im' MMMM, yyyy"), 
+                               "F. EEEE 'im' MMMM, yyyy"),
             u'2. Freitag im Januar, 2003')
 
 
@@ -844,7 +844,7 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.parse('0E0', '0E0'),
                          0)
         # This is a special case I found not working, but is used frequently
-        # in the new LDML Locale files.  
+        # in the new LDML Locale files.
         self.assertEqual(self.format.parse('2.3341E+04', '0.000###E+00'),
                          23341)
 
@@ -989,6 +989,22 @@ class TestNumberFormat(TestCase):
             symbols={'decimal': '.', 'group': ',', 'exponential': 'X'})
         self.assertEqual(format.parse('1.2X11', '#.#E0'), 1.2e11)
 
+    def testParseFailWithInvalidCharacters(self):
+        self.assertRaises(
+            NumberParseError,self.format.parse, '123xx', '###0.0#')
+        self.assertRaises(
+            NumberParseError, self.format.parse, 'xx123', '###0.0#')
+        self.assertRaises(
+            NumberParseError, self.format.parse, '1xx23', '###0.0#')
+
+    def testParseFailWithInvalidGroupCharacterPosition(self):
+        self.assertRaises(
+            NumberParseError,self.format.parse, '123,00', '###0.0#')
+        self.assertRaises(
+            NumberParseError, self.format.parse, ',123', '###0.0#')
+        self.assertRaises(
+            NumberParseError, self.format.parse, '1,23.00', '###0.0#')
+
     def testChangeOutputType(self):
         format = NumberFormat()
         format.type = decimal.Decimal
@@ -1013,7 +1029,7 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(1, '0.00E00'),
                          '1.00E00')
         # This is a special case I found not working, but is used frequently
-        # in the new LDML Locale files.  
+        # in the new LDML Locale files.
         self.assertEqual(self.format.format(23341, '0.000###E+00'),
                          '2.3341E+04')
 
@@ -1078,7 +1094,7 @@ class TestNumberFormat(TestCase):
                          '23341.0236')
         self.assertEqual(self.format.format(23341.02, '###0.000#'),
                          '23341.020')
-                         
+
     def testRounding(self):
         self.assertEqual(self.format.format(0.5, '#'), '1')
         self.assertEqual(self.format.format(0.49, '#'), '0')
@@ -1087,7 +1103,7 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(149, '0E0'), '1E2')
         self.assertEqual(self.format.format(1.9999, '0.000'), '2.000')
         self.assertEqual(self.format.format(1.9999, '0.0000'), '1.9999')
-        
+
 
     def testFormatScientificDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '0.00####E00'),

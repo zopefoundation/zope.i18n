@@ -15,30 +15,48 @@
 
 $Id$
 """
-
 import os
-
 from setuptools import setup, find_packages
 
-setup(name='zope.i18n',
-      version = '3.4.0b3',
-      url='http://svn.zope.org/zope.i18n',
-      license='ZPL 2.1',
-      description='Zope3 Internationalization Support',
-      keywords=('zope3 internationalization localization i18n l10n '
-                'gettext ICU locale'),
-      author='Zope Corporation and Contributors',
-      author_email='zope3-dev@zope.org',
-      packages=find_packages('src'),
-      package_dir = {'': 'src'},
-      namespace_packages=['zope',],
-      install_requires=['setuptools',
-                        'pytz',
-                        'zope.i18nmessageid',
-                        'zope.component',
-                        'zope.configuration',
-                        'zope.security>=3.4.0b1',
-                       ],
-      include_package_data = True,
-      zip_safe = False,
+def read(*rnames):
+    text = open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+    return text
+
+setup(
+    name='zope.i18n',
+    version = '3.4.0b4',
+    author='Zope Corporation and Contributors',
+    author_email='zope3-dev@zope.org',
+    description='Zope3 Internationalization Support',
+    long_description=(
+        read('README.txt')
+        + '\n\n' +
+        read('CHANGES.txt')
+        ),
+    license='ZPL 2.1',
+    keywords=('zope3 internationalization localization i18n l10n '
+              'gettext ICU locale'),
+    classifiers = [
+        'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: Zope Public License',
+        'Programming Language :: Python',
+        'Natural Language :: English',
+        'Operating System :: OS Independent',
+        'Topic :: Internet :: WWW/HTTP',
+        'Framework :: Zope3'],
+    url='http://svn.zope.org/zope.i18n',
+    packages=find_packages('src'),
+    package_dir = {'': 'src'},
+    namespace_packages=['zope',],
+    install_requires=['setuptools',
+                      'pytz',
+                      'zope.i18nmessageid',
+                      'zope.component',
+                      'zope.configuration',
+                      'zope.security>=3.4.0b1',
+                      ],
+    include_package_data = True,
+    zip_safe = False,
       )
