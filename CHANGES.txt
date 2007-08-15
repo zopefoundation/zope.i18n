@@ -1,8 +1,8 @@
 zope.i18n package changelog
 ===========================
 
-After 3.4.0b4
--------------
+3.4.0b5 - (8/15/2007)
+---------------------
 
 - Bug: Fixed dependency on zope.component to require it with the 'zcml' extra
   instead of requiring zope.security directly.
