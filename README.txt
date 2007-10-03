@@ -1,3 +1,6 @@
+Zope3 Internationalization Support
+==================================
+
 This package implements several APIs related to internationalization and
 localization.
 

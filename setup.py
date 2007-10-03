@@ -24,7 +24,7 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version = '3.4.0b5',
+    version = '3.4.0',
     author='Zope Corporation and Contributors',
     author_email='zope3-dev@zope.org',
     description='Zope3 Internationalization Support',
@@ -37,7 +37,7 @@ setup(
     keywords=('zope3 internationalization localization i18n l10n '
               'gettext ICU locale'),
     classifiers = [
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
@@ -46,7 +46,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope3'],
-    url='http://svn.zope.org/zope.i18n',
+    url='http://cheeseshop.python.org/pypi/zope.i18n',
     packages=find_packages('src'),
     package_dir = {'': 'src'},
     namespace_packages=['zope',],
@@ -58,4 +58,4 @@ setup(
                       ],
     include_package_data = True,
     zip_safe = False,
-      )
+    )
