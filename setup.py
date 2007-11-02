@@ -24,7 +24,7 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version = '3.4.0',
+    version = '3.4.0.1-repoze',
     author='Zope Corporation and Contributors',
     author_email='zope3-dev@zope.org',
     description='Zope3 Internationalization Support',
@@ -51,10 +51,9 @@ setup(
     package_dir = {'': 'src'},
     namespace_packages=['zope',],
     install_requires=['setuptools',
-                      'pytz',
-                      'zope.i18nmessageid',
-                      'zope.component [zcml]',
-                      'zope.configuration',
+                      'pytz == 2007g',
+                      'zope.i18nmessageid >= 3.4.0a1, < 3.4.1',
+		      'zope.component >= 3.4.0a1, < 3.4.1',
                       ],
     include_package_data = True,
     zip_safe = False,

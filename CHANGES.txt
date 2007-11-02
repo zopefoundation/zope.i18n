@@ -2,6 +2,14 @@
 CHANGES
 =======
 
+3.4.0.1-repoze (2007-11-01)
+--------------------
+
+ - Repoze-local release which fixes dependencies (don't depend on
+   zope.configuration or zope.component's [zcml] extra) so we can use
+   this package as a library with sane transitive dependencies (as
+   opposed to a Zope plugin).
+
 3.4.0 (2007-10-02)
 ------------------
 
