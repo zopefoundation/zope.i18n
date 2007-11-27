@@ -1,89 +1,85 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
-		<language type="en" /> 
-		<territory type="SG" /> 
+		<version number="$Revision: 1.50 $"/>
+		<generation date="$Date: 2007/07/19 22:31:39 $"/>
+		<language type="en"/>
+		<territory type="SG"/>
 	</identity>
 	<dates>
 		<calendars>
 			<calendar type="gregorian">
 				<dateFormats>
-					<default type="medium"/>
 					<dateFormatLength type="full">
-						<dateFormat >
-							<pattern>dd MMMM yyyy</pattern>
+						<dateFormat>
+							<pattern draft="provisional">EEEE, dd MMMM yyyy</pattern>
+							<pattern alt="proposed-x1001" draft="unconfirmed">dd MMMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="long">
-						<dateFormat >
-							<pattern>dd MMM yyyy</pattern>
+						<dateFormat>
+							<pattern draft="unconfirmed">dd MMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="medium">
-						<dateFormat >
-							<pattern>dd-MMM-yy</pattern>
+						<dateFormat>
+							<pattern>dd-MMM-yyyy</pattern>
+							<pattern alt="proposed-x1001" draft="unconfirmed">dd-MMM-yy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="short">
-						<dateFormat >
-							<pattern>dd/MM/yy</pattern>
+						<dateFormat>
+							<pattern draft="unconfirmed">dd/MM/yy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 				</dateFormats>
 				<timeFormats>
-					<default type="medium"/>
 					<timeFormatLength type="full">
-						<timeFormat >
-							<pattern>a hh:mm:ss</pattern>
+						<timeFormat>
+							<pattern>a hh:mm:ss v</pattern>
+							<pattern alt="proposed-x1001" draft="unconfirmed">a hh:mm:ss</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="long">
-						<timeFormat >
-							<pattern>a hh:mm:ss</pattern>
+						<timeFormat>
+							<pattern>a hh:mm:ss z</pattern>
+							<pattern alt="proposed-x1001" draft="unconfirmed">a hh:mm:ss</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="medium">
-						<timeFormat >
-							<pattern>a hh:mm</pattern>
+						<timeFormat>
+							<pattern>a hh:mm:ss</pattern>
+							<pattern alt="proposed-x1001" draft="unconfirmed">a hh:mm</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="short">
-						<timeFormat >
-							<pattern>a hh:mm</pattern>
+						<timeFormat>
+							<pattern draft="unconfirmed">a hh:mm</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength >
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength >
+					<availableFormats>
+						<dateFormatItem id="MMdd" draft="unconfirmed">dd/MM</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM" draft="unconfirmed">MMMM yyyy</dateFormatItem>
+					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
 		</calendars>
-		<timeZoneNames>
-			<zone type="SST">
-				<long>
-				<standard>Singapore Standard Time</standard>
-				<daylight>Singapore Standard Time</daylight>
-				</long>
-				<short>
-					<standard>SST</standard>
-					<daylight>SST</daylight>
-				</short>
-				<exemplarCity>Singapore</exemplarCity>
-			</zone>
-		</timeZoneNames>
 	</dates>
 	<numbers>
+		<currencyFormats>
+			<currencyFormatLength>
+				<currencyFormat>
+					<pattern>¤#,##0.00</pattern>
+				</currencyFormat>
+			</currencyFormatLength>
+		</currencyFormats>
 		<currencies>
 			<currency type="SGD">
-				<displayName>Singapore Dollar</displayName>
 				<symbol>$</symbol>
+				<symbol alt="proposed-x1001" draft="unconfirmed">S$</symbol>
 			</currency>
 			<currency type="USD">
 				<displayName>USD</displayName>
@@ -92,3 +88,9 @@
 		</currencies>
 	</numbers>
 </ldml>
+<!-- Old Comments. See root.xml for more info.
+URL: http://oss.software.ibm.com/cvs/icu/icu/source/data/locales/en_SG.txt?only_with_tag=final-update-LDML
+
+Singapore English locale: Data By Syn Wee Quek
+-->
+

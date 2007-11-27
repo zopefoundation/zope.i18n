@@ -1,109 +1,71 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
-		<language type="fr" /> 
-		<territory type="CA" /> 
+		<version number="$Revision: 1.49 $"/>
+		<generation date="$Date: 2007/07/19 22:31:39 $"/>
+		<language type="fr"/>
+		<territory type="CA"/>
 	</identity>
 	<dates>
 		<calendars>
 			<calendar type="gregorian">
 				<dateFormats>
-					<default type="medium"/>
-					<dateFormatLength type="full">
-						<dateFormat >
-							<pattern>EEEE d MMMM yyyy</pattern>
-						</dateFormat>
-					</dateFormatLength >
-					<dateFormatLength type="long">
-						<dateFormat >
-							<pattern>d MMMM yyyy</pattern>
-						</dateFormat>
-					</dateFormatLength >
 					<dateFormatLength type="medium">
-						<dateFormat >
-							<pattern>yy-MM-dd</pattern>
+						<dateFormat>
+							<pattern references="RP2">yyyy-MM-dd</pattern>
+							<pattern alt="proposed-x1001" draft="unconfirmed">yy-MM-dd</pattern>
+							<pattern alt="proposed-x1002" draft="unconfirmed">d MMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="short">
-						<dateFormat >
+						<dateFormat>
 							<pattern>yy-MM-dd</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 				</dateFormats>
 				<timeFormats>
-					<default type="medium"/>
 					<timeFormatLength type="full">
-						<timeFormat >
-							<pattern>HH' h 'mm' min 'ss' s 'z</pattern>
+						<timeFormat>
+							<pattern>HH 'h' mm 'min' ss 's' v</pattern>
 						</timeFormat>
-					</timeFormatLength >
-					<timeFormatLength type="long">
-						<timeFormat >
-							<pattern>HH:mm:ss z</pattern>
-						</timeFormat>
-					</timeFormatLength >
-					<timeFormatLength type="medium">
-						<timeFormat >
-							<pattern>HH:mm:ss</pattern>
-						</timeFormat>
-					</timeFormatLength >
-					<timeFormatLength type="short">
-						<timeFormat >
-							<pattern>HH:mm</pattern>
-						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength >
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength >
+					<availableFormats>
+						<dateFormatItem id="MMdd" draft="unconfirmed">MM-dd</dateFormatItem>
+						<dateFormatItem id="MMdd" alt="proposed-x1001" draft="unconfirmed">dd/MM</dateFormatItem>
+						<dateFormatItem id="yyMM" draft="unconfirmed">yy-MM</dateFormatItem>
+						<dateFormatItem id="yyMM" alt="proposed-x1001" draft="unconfirmed">MM/yy</dateFormatItem>
+					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
 		</calendars>
+		<timeZoneNames>
+			<metazone type="Europe_Central">
+				<commonlyUsed>false</commonlyUsed>
+			</metazone>
+			<metazone type="Europe_Eastern">
+				<commonlyUsed>false</commonlyUsed>
+			</metazone>
+		</timeZoneNames>
 	</dates>
 	<numbers>
-		<decimalFormats>
-			<decimalFormatLength >
-				<decimalFormat >
-					<pattern>#,##0.###;-#,##0.###</pattern>
-				</decimalFormat>
-			</decimalFormatLength >
-		</decimalFormats>
-		<scientificFormats>
-			<scientificFormatLength >
-				<scientificFormat >
-					<pattern>#E0</pattern>
-				</scientificFormat>
-			</scientificFormatLength >
-		</scientificFormats>
-		<percentFormats>
-			<percentFormatLength >
-				<percentFormat >
-					<pattern>#,##0%</pattern>
-				</percentFormat>
-			</percentFormatLength >
-		</percentFormats>
 		<currencyFormats>
-			<currencyFormatLength >
-				<currencyFormat >
+			<currencyFormatLength>
+				<currencyFormat>
 					<pattern>#,##0.00 ¤;(#,##0.00¤)</pattern>
 				</currencyFormat>
-			</currencyFormatLength >
+			</currencyFormatLength>
 		</currencyFormats>
 		<currencies>
 			<currency type="CAD">
-				<displayName>dollar canadien</displayName>
 				<symbol>$</symbol>
 			</currency>
 			<currency type="USD">
-				<displayName>dollar des Etats-Unis</displayName>
-				<symbol>US$</symbol>
+				<symbol>$ US</symbol>
 			</currency>
 		</currencies>
 	</numbers>
 </ldml>
+

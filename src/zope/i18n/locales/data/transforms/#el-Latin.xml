@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE supplementalData SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldmlSupplemental.dtd">
+<supplementalData>
+	<transforms>
+		<transform source="el" target="Latin" direction="both">
+			<tRule>::Greek-Latin/UNGEGN;</tRule>
+		</transform>
+	</transforms>
+</supplementalData>
+

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
-		<language type="en" /> 
-		<territory type="IE" /> 
+		<version number="$Revision: 1.52 $"/>
+		<generation date="$Date: 2007/07/19 22:31:39 $"/>
+		<language type="en"/>
+		<territory type="IE"/>
 	</identity>
 	<dates>
 		<calendars>
@@ -13,108 +13,82 @@
 				<am>a.m.</am>
 				<pm>p.m.</pm>
 				<dateFormats>
-					<default type="medium"/>
 					<dateFormatLength type="full">
-						<dateFormat >
+						<dateFormat>
 							<pattern>EEEE d MMMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="long">
-						<dateFormat >
+						<dateFormat>
 							<pattern>d MMMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="medium">
-						<dateFormat >
+						<dateFormat>
 							<pattern>d MMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="short">
-						<dateFormat >
+						<dateFormat>
 							<pattern>dd/MM/yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 				</dateFormats>
 				<timeFormats>
-					<default type="medium"/>
 					<timeFormatLength type="full">
-						<timeFormat >
-							<pattern>HH:mm:ss z</pattern>
+						<timeFormat>
+							<pattern>HH:mm:ss v</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="long">
-						<timeFormat >
+						<timeFormat>
 							<pattern>HH:mm:ss z</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="medium">
-						<timeFormat >
+						<timeFormat>
 							<pattern>HH:mm:ss</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="short">
-						<timeFormat >
+						<timeFormat>
 							<pattern>HH:mm</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength >
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength >
+					<availableFormats>
+						<dateFormatItem id="MMMMd" draft="unconfirmed">d MMMM</dateFormatItem>
+						<dateFormatItem id="MMdd" draft="unconfirmed">dd/MM</dateFormatItem>
+						<dateFormatItem id="yyyyMM" draft="unconfirmed">MM/yyyy</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM" draft="unconfirmed">MMMM yyyy</dateFormatItem>
+					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
 		</calendars>
-		<timeZoneNames>
-			<zone type="Europe/Dublin">
-				<long>
-				<standard>Greenwich Mean Time</standard>
-				<daylight>Irish Summer Time</daylight>
-				</long>
-				<short>
-					<standard>GMT</standard>
-					<daylight>IST</daylight>
-				</short>
-				<exemplarCity>Dublin</exemplarCity>
-			</zone>
-		</timeZoneNames>
 	</dates>
 	<numbers>
-		<decimalFormats>
-			<decimalFormatLength >
-				<decimalFormat >
-					<pattern>#,##0.###;-#,##0.###</pattern>
-				</decimalFormat>
-			</decimalFormatLength >
-		</decimalFormats>
-		<scientificFormats>
-			<scientificFormatLength >
-				<scientificFormat >
-					<pattern>#E0</pattern>
-				</scientificFormat>
-			</scientificFormatLength >
-		</scientificFormats>
-		<percentFormats>
-			<percentFormatLength >
-				<percentFormat >
-					<pattern>#,##0%</pattern>
-				</percentFormat>
-			</percentFormatLength >
-		</percentFormats>
 		<currencyFormats>
-			<currencyFormatLength >
-				<currencyFormat >
-					<pattern>¤#,##0.00;-¤#,##0.00</pattern>
+			<currencyFormatLength>
+				<currencyFormat>
+					<pattern>¤#,##0.00</pattern>
 				</currencyFormat>
-			</currencyFormatLength >
+			</currencyFormatLength>
 		</currencyFormats>
 		<currencies>
+			<currency type="GBP">
+				<symbol>GBP</symbol>
+			</currency>
 			<currency type="IEP">
-				<displayName>Irish Pound</displayName>
 				<symbol>£</symbol>
 			</currency>
 		</currencies>
 	</numbers>
 </ldml>
+<!-- Old Comments. See root.xml for more info.
+URL: http://oss.software.ibm.com/cvs/icu/icu/source/data/locales/en_IE.txt?only_with_tag=final-update-LDML
+
+            "Greenwich Mean Time",   // This doesn't look correct
+            "GMT",                   // This doesn't look correct
+-->
+

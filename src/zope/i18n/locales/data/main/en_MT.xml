@@ -1,109 +1,96 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
-		<language type="en" /> 
-		<territory type="MT" /> 
+		<version number="$Revision: 1.50 $"/>
+		<generation date="$Date: 2007/07/19 22:31:39 $"/>
+		<language type="en"/>
+		<territory type="MT"/>
 	</identity>
 	<dates>
 		<calendars>
 			<calendar type="gregorian">
 				<dateFormats>
-					<default type="medium"/>
 					<dateFormatLength type="full">
-						<dateFormat >
-							<pattern>dd MMMM yyyy</pattern>
+						<dateFormat>
+							<pattern>EEEE, d MMMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="long">
-						<dateFormat >
+						<dateFormat>
 							<pattern>dd MMMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="medium">
-						<dateFormat >
-							<pattern>dd-MMM-yyyy</pattern>
+						<dateFormat>
+							<pattern>dd MMM yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 					<dateFormatLength type="short">
-						<dateFormat >
-							<pattern>dd/MM/yy</pattern>
+						<dateFormat>
+							<pattern>dd/MM/yyyy</pattern>
 						</dateFormat>
-					</dateFormatLength >
+					</dateFormatLength>
 				</dateFormats>
 				<timeFormats>
-					<default type="medium"/>
 					<timeFormatLength type="full">
-						<timeFormat >
-							<pattern>h:mm:ss a z</pattern>
+						<timeFormat>
+							<pattern>HH:mm:ss v</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="long">
-						<timeFormat >
-							<pattern>h:mm:ss a z</pattern>
+						<timeFormat>
+							<pattern>HH:mm:ss z</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="medium">
-						<timeFormat >
-							<pattern>h:mm:ss a</pattern>
+						<timeFormat>
+							<pattern>HH:mm:ss</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 					<timeFormatLength type="short">
-						<timeFormat >
-							<pattern>h:mm a</pattern>
+						<timeFormat>
+							<pattern>HH:mm</pattern>
 						</timeFormat>
-					</timeFormatLength >
+					</timeFormatLength>
 				</timeFormats>
 				<dateTimeFormats>
-					<dateTimeFormatLength >
-						<dateTimeFormat>
-							<pattern>{1} {0}</pattern>
-						</dateTimeFormat>
-					</dateTimeFormatLength >
+					<availableFormats>
+						<dateFormatItem id="MMdd" draft="unconfirmed">dd/MM</dateFormatItem>
+						<dateFormatItem id="yyyyMM" draft="unconfirmed">MM/yyyy</dateFormatItem>
+						<dateFormatItem id="yyyyMMMM" draft="unconfirmed">MMMM yyyy</dateFormatItem>
+					</availableFormats>
 				</dateTimeFormats>
 			</calendar>
 		</calendars>
 	</dates>
 	<numbers>
-		<decimalFormats>
-			<decimalFormatLength >
-				<decimalFormat >
-					<pattern>#,##0.###;-#,##0.###</pattern>
-				</decimalFormat>
-			</decimalFormatLength >
-		</decimalFormats>
-		<scientificFormats>
-			<scientificFormatLength >
-				<scientificFormat >
-					<pattern>#E0</pattern>
-				</scientificFormat>
-			</scientificFormatLength >
-		</scientificFormats>
-		<percentFormats>
-			<percentFormatLength >
-				<percentFormat >
-					<pattern>#,##0%</pattern>
-				</percentFormat>
-			</percentFormatLength >
-		</percentFormats>
 		<currencyFormats>
-			<currencyFormatLength >
-				<currencyFormat >
-					<pattern>¤#,##0.00;(¤#,##0.00)</pattern>
+			<currencyFormatLength>
+				<currencyFormat>
+					<pattern>¤#,##0.00</pattern>
 				</currencyFormat>
-			</currencyFormatLength >
+			</currencyFormatLength>
 		</currencyFormats>
 		<currencies>
 			<currency type="GBP">
-				<displayName>British Pound Sterling</displayName>
 				<symbol>GBP</symbol>
-			</currency>
-			<currency type="MTP">
-				<displayName>Maltese Pound</displayName>
-				<symbol>£</symbol>
 			</currency>
 		</currencies>
 	</numbers>
 </ldml>
+<!-- Old Comments. See root.xml for more info.
+URL: http://oss.software.ibm.com/cvs/icu/icu/source/data/locales/en_MT.txt?only_with_tag=final-update-LDML
+
+English, Malta locale
+Note: please see the 'mt.txt' file for more information.
+** Maltese Standardization Authority http://www.msa.org.mt - MSA 200:2003 "Maltese Data and Information Requirements on Information and Communication Technology" is now the normative document for this data file.  [MSA 200:2003]
+    Version{ "2.1" } // Oct 2003
+        "\u00A4#,##0.00;-\u00A4#,##0.00", // [MSA 200:2003 4.4]
+MTP { "\u00A3", "Maltese Pound"}  (Obsolete)
+        GBP { "GBP", "British Pound Sterling" } // British Pound Sterling.  (Entered here to prevent GBP from showing up with the pound symbol, and being confused with MTL.)
+                1,       // Sunday (il-Hadd) is first day of calendar week
+                4        // four days minimal in first week for week numbering  [MSA 200:2003 4.5.5, referencing 8601?]
+Monday is first day of workweek. [MSA 200:2003 4.5.5]
+-->
+

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
-		<language type="fa" /> 
-		<territory type="AF" /> 
+		<version number="$Revision: 1.55 $"/>
+		<generation date="$Date: 2007/07/19 22:31:39 $"/>
+		<language type="fa"/>
+		<territory type="AF"/>
 	</identity>
 	<localeDisplayNames>
 		<languages>
@@ -29,6 +29,9 @@
 			<language type="sv">سویدنی</language>
 			<language type="tg">تاجکی</language>
 		</languages>
+		<scripts>
+			<script type="Mong">مغلی</script>
+		</scripts>
 		<territories>
 			<territory type="AD">اندورا</territory>
 			<territory type="AE">امارات متحدهٔ عربی</territory>
@@ -125,107 +128,182 @@
 			<territory type="VC">سنت وینسنت و گرینادین</territory>
 			<territory type="VE">ونزویلا</territory>
 			<territory type="WS">ساموآی غربی</territory>
-			<territory type="YU">یوگوسلاویا</territory>
-			<territory type="ZA">افریقای جنوبی</territory>
 			<territory type="ZW">زیمبابوی</territory>
 		</territories>
 	</localeDisplayNames>
-	<layout>
-		<orientation lines="top-to-bottom" characters="right-to-left" />
-	</layout>
+	<characters>
+		<exemplarCharacters type="auxiliary" references="R445">[ٖ ٰ \u200C \u200D ټ ځ څ ډ ړ ږ ښ ګ ڼ ي]</exemplarCharacters>
+	</characters>
 	<dates>
 		<calendars>
 			<calendar type="gregorian">
-				<monthNames>
-					<month type="1">جنوری</month>
-					<month type="2">فبروری</month>
-					<month type="3">مارچ</month>
-					<month type="4">اپریل</month>
-					<month type="5">می</month>
-					<month type="6">جون</month>
-					<month type="7">جولای</month>
-					<month type="8">اگست</month>
-					<month type="9">سپتمبر</month>
-					<month type="10">اکتوبر</month>
-					<month type="11">نومبر</month>
-					<month type="12">دسمبر</month>
-				</monthNames>
-				<monthAbbr>
-					<month type="1">جنو</month>
-					<month type="2">فبر</month>
-					<month type="3">مار</month>
-					<month type="4">اپر</month>
-					<month type="5">مـی</month>
-					<month type="6">جون</month>
-					<month type="7">جول</month>
-					<month type="8">اگس</month>
-					<month type="9">سپت</month>
-					<month type="10">اکت</month>
-					<month type="11">نوم</month>
-					<month type="12">دسم</month>
-				</monthAbbr>
-				<week>
-					<minDays count="1"/>
-					<firstDay day="sat"/>
-				</week>
+				<months>
+					<monthContext type="format">
+						<monthWidth type="abbreviated">
+							<month type="1">جنو</month>
+							<month type="5">مـی</month>
+							<month type="6">جون</month>
+							<month type="7">جول</month>
+							<month type="12">دسم</month>
+						</monthWidth>
+						<monthWidth type="wide">
+							<month type="1">جنوری</month>
+							<month type="2">فبروری</month>
+							<month type="3">مارچ</month>
+							<month type="4">اپریل</month>
+							<month type="5">می</month>
+							<month type="6">جون</month>
+							<month type="7">جولای</month>
+							<month type="8">اگست</month>
+							<month type="9">سپتمبر</month>
+							<month type="10">اکتوبر</month>
+							<month type="11">نومبر</month>
+							<month type="12">دسمبر</month>
+						</monthWidth>
+					</monthContext>
+					<monthContext type="stand-alone">
+						<monthWidth type="narrow">
+							<month type="1">ج</month>
+							<month type="2">ف</month>
+							<month type="3">م</month>
+							<month type="4">ا</month>
+							<month type="5">م</month>
+							<month type="6">ج</month>
+							<month type="7">ج</month>
+							<month type="8">ا</month>
+							<month type="9">س</month>
+							<month type="10">ا</month>
+							<month type="11">ن</month>
+							<month type="12">د</month>
+						</monthWidth>
+					</monthContext>
+				</months>
+			</calendar>
+			<calendar type="persian">
+				<months>
+					<monthContext type="format">
+						<monthWidth type="wide">
+							<month type="1">حمل</month>
+							<month type="2">ثور</month>
+							<month type="3">جوزا</month>
+							<month type="4">سرطان</month>
+							<month type="5">اسد</month>
+							<month type="6">سنبلهٔ</month>
+							<month type="7">میزان</month>
+							<month type="8">عقرب</month>
+							<month type="9">قوس</month>
+							<month type="10">جدی</month>
+							<month type="11">دلو</month>
+							<month type="12">حوت</month>
+						</monthWidth>
+					</monthContext>
+					<monthContext type="stand-alone">
+						<monthWidth type="narrow">
+							<month type="1">ح</month>
+							<month type="2">ث</month>
+							<month type="3">ج</month>
+							<month type="4">س</month>
+							<month type="5">ا</month>
+							<month type="6">س</month>
+							<month type="8">ع</month>
+							<month type="9">ق</month>
+							<month type="10">ج</month>
+							<month type="11">د</month>
+							<month type="12">ح</month>
+						</monthWidth>
+					</monthContext>
+				</months>
 			</calendar>
 		</calendars>
-		<timeZoneNames>
-			<zone type="Asia/Kabul">
-				<long>
-				<standard>وقت افغانستان</standard>
-				<daylight>وقت افغانستان</daylight>
-				</long>
-				<short>
-					<standard>AFT</standard>
-					<daylight>AFT</daylight>
-				</short>
-				<exemplarCity>کابل</exemplarCity>
-			</zone>
-		</timeZoneNames>
 	</dates>
 	<numbers>
 		<symbols>
 			<decimal>٫</decimal>
 			<group>٬</group>
-			<list>;</list>
 			<percentSign>٪</percentSign>
 			<nativeZeroDigit>۰</nativeZeroDigit>
-			<patternDigit>#</patternDigit>
-			<plusSign>+</plusSign>
 			<minusSign>−</minusSign>
-			<exponential>×۱۰^</exponential>
-			<perMille>‰</perMille>
-			<infinity>∞</infinity>
-			<nan>�</nan>
 		</symbols>
-		<decimalFormats>
-			<decimalFormatLength >
-				<decimalFormat >
-					<pattern>#,##0.###;-#,##0.###</pattern>
-				</decimalFormat>
-			</decimalFormatLength >
-		</decimalFormats>
-		<scientificFormats>
-			<scientificFormatLength >
-				<scientificFormat >
-					<pattern>#E0</pattern>
-				</scientificFormat>
-			</scientificFormatLength >
-		</scientificFormats>
 		<percentFormats>
-			<percentFormatLength >
-				<percentFormat >
-					<pattern>#,##0%</pattern>
+			<percentFormatLength>
+				<percentFormat>
+					<pattern>'‪'#,##0%'‬'</pattern>
 				</percentFormat>
-			</percentFormatLength >
+			</percentFormatLength>
 		</percentFormats>
-		<currencyFormats>
-			<currencyFormatLength >
-				<currencyFormat >
-					<pattern>#,##0 ¤;-#,##0 ¤</pattern>
-				</currencyFormat>
-			</currencyFormatLength >
-		</currencyFormats>
+		<currencies>
+			<currency type="AUD">
+				<displayName>دالر آسترالیا</displayName>
+			</currency>
+			<currency type="BND">
+				<displayName>دالر برونی</displayName>
+			</currency>
+			<currency type="BYR">
+				<displayName>روبل روسیهٔ سفید</displayName>
+			</currency>
+			<currency type="CAD">
+				<displayName>دالر کانادا</displayName>
+			</currency>
+			<currency type="CHF">
+				<displayName>فرانک سویس</displayName>
+			</currency>
+			<currency type="DKK">
+				<displayName>کرون دنمارک</displayName>
+			</currency>
+			<currency type="JPY">
+				<displayName>ین جاپان</displayName>
+			</currency>
+			<currency type="MXN">
+				<displayName>پزوی مکسیکو</displayName>
+			</currency>
+			<currency type="NLG">
+				<displayName>گیلدر هالند</displayName>
+			</currency>
+			<currency type="NOK">
+				<displayName>کرون ناروی</displayName>
+			</currency>
+			<currency type="SEK">
+				<displayName>کرون سویدن</displayName>
+			</currency>
+			<currency type="SGD">
+				<displayName>دالر سینگاپور</displayName>
+			</currency>
+			<currency type="TJS">
+				<displayName>سامانی تاجکستان</displayName>
+			</currency>
+			<currency type="USD">
+				<displayName>دالر امریکا</displayName>
+			</currency>
+		</currencies>
 	</numbers>
 </ldml>
+<!-- Old Comments. See root.xml for more info.
+URL: http://oss.software.ibm.com/cvs/icu/icu/source/data/locales/fa_AF.txt?only_with_tag=final-update-LDML
+
+Created by Roozbeh Pournader <roozbeh@sharif.edu> and Michael Everson <everson@evertype.com>
+Use the fa rules instead
+AmPmMarkers {
+"\u0642.\u0638.",
+"\u0628.\u0638.",
+}
+Use the fa rules instead
+DateTimePatterns { 
+"H:mm:ss (z)",
+"H:mm:ss (z)",
+"H:mm:ss ",
+"H:mm",
+"EEEE\u060c d MMMM yyyy",
+"d MMMM yyyy",
+"yyyy/M/d",
+"yyyy/M/d",
+"{1} {0}",
+}
+                7,      // Saturday
+                        "\u0641\u0628\u0631\u0648\u0631\u06cc", // DoL says "\u0641\u0631\u0648\u0631\u06cc"
+                        "\u0633\u067e\u062a\u0645\u0628\u0631", // MoIC says "\u0633\u067e\u062a\u0627\u0645\u0628\u0631"
+                        "\u0646\u0648\u0645\u0628\u0631", // MoIC says "\u0646\u0648\u0627\u0645\u0628\u0631"
+                        "\u062f\u0633\u0645\u0628\u0631", // MoIC says "\u062f\u0633\u0627\u0645\u0628\u0631"
+ExemplarCharacters {"[\u0621-\u0624\u0626-\u063a\u0641\u0642\u0644-\u0648\u064a-\u0652\u0654\u0670\u067c\u067e\u0681\u0685-\u0686\u0689\u0693\u0696\u0698\u069a\u06a9\u06ab\u06af\u06bc\u06cc-\u06cd\u06d0 \u200c\u200d\u200f\u200e]"}
+        "#,##0%", // The percent sign should appear on the right side. Academy says it should appear on the left (like fa_IR).
+-->
+

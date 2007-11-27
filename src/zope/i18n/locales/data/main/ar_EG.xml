@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.5/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
-		<language type="ar" /> 
-		<territory type="EG" /> 
+		<version number="$Revision: 1.46 $"/>
+		<generation date="$Date: 2007/07/19 22:31:38 $"/>
+		<language type="ar"/>
+		<territory type="EG"/>
 	</identity>
-	<layout>
-		<orientation lines="top-to-bottom" characters="right-to-left" />
-	</layout>
 </ldml>
+
