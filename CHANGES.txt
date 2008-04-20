@@ -2,6 +2,13 @@
 CHANGES
 =======
 
+3.4.1 (unreleased)
+------------------
+
+- Feature: Recursive translations of message strings with mappings
+  (https://bugs.launchpad.net/zope3/+bug/210177), thanks to Hermann
+  Himmelbauer for the inital patch.
+
 3.4.0 (2007-10-02)
 ------------------
 

@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2001, 2002 Zope Corporation and Contributors.
+# Copyright (c) 2001-2008 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -15,7 +15,7 @@
 
 $Id$
 """
-from zope.component import getUtility
+import zope.component
 from zope.i18nmessageid import Message
 from zope.i18n import interpolate
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
@@ -64,7 +64,6 @@ class TranslationDomain(SimpleTranslationDomain):
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):
         """See zope.i18n.interfaces.ITranslationDomain"""
-
         # if the msgid is empty, let's save a lot of calculations and return
         # an empty string.
         if msgid == u'':
@@ -73,16 +72,40 @@ class TranslationDomain(SimpleTranslationDomain):
         if target_language is None and context is not None:
             langs = self._catalogs.keys()
             # invoke local or global unnamed 'INegotiator' utilities
-            negotiator = getUtility(INegotiator)
+            negotiator = zope.component.getUtility(INegotiator)
             # try to determine target language from negotiator utility
             target_language = negotiator.getLanguage(langs, context)
 
+        return self._recursive_translate(
+            msgid, mapping, target_language, default)
+
+    def _recursive_translate(self, msgid, mapping, target_language, default,
+                             seen=None):
+        """Recurivly translate msg."""
         # MessageID attributes override arguments
         if isinstance(msgid, Message):
             if msgid.domain != self.domain:
-                util = getUtility(ITranslationDomain, msgid.domain)
-            mapping = msgid.mapping
+                util = zope.component.getUtility(
+                    ITranslationDomain, msgid.domain)
             default = msgid.default
+            mapping = msgid.mapping
+
+        # Recursively translate mappings, if they are translatable
+        if (mapping is not None
+            and Message in (type(m) for m in mapping.values())):
+            if seen is None:
+                seen = set()
+            seen.add(msgid)
+            mapping = mapping.copy()
+            for key, value in mapping.items():
+                if isinstance(value, Message):
+                    # XXX why isn't there an IMessage interface?
+                    if value in seen:
+                        raise RuntimeError(  # XXX ValueError
+                            "Circular Reference in Mappings detected")
+                    mapping[key]=self._recursive_translate(
+                        value, mapping, target_language,
+                        default, seen)
 
         if default is None:
             default = unicode(msgid)

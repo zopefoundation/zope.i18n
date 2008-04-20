@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2001, 2002 Zope Corporation and Contributors.
+# Copyright (c) 2001-2008 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -92,7 +92,41 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
                         mapping={'that': 'THAT'})
         self.assertEqual(
             translate(msgid, target_language='en', default="default",
-                         mapping={"that": "that"}), "this THAT the other")
+                      mapping={"that": "that"}), "this THAT the other")
+
+    def testMessageIDRecursiveTranslate(self):
+        factory = MessageFactory('default')
+        translate = self._domain.translate
+        msgid_sub1 = factory(u'44-not-there', '${blue}',
+                            mapping = {'blue': 'BLUE'})
+        msgid_sub2 = factory(u'45-not-there', '${yellow}',
+                            mapping = {'yellow': 'YELLOW'})
+        mapping = {'color1': msgid_sub1,
+                   'color2': msgid_sub2}
+        msgid = factory(u'46-not-there', 'Color: ${color1}/${color2}',
+                        mapping=mapping)
+        self.assertEqual(
+            translate(msgid, target_language='en', default="default"),
+            "Color: BLUE/YELLOW")
+        # The recursive translation must not change the mappings
+        self.assertEqual(msgid.mapping, {'color1': msgid_sub1,
+                                         'color2': msgid_sub2})
+        # A circular reference should not lead to crashes
+        msgid1 = factory(u'47-not-there', 'Message 1 and $msg2',
+                         mapping = {})
+        msgid2 = factory(u'48-not-there', 'Message 2 and $msg1',
+                         mapping = {})
+        msgid1.mapping['msg2'] = msgid2
+        msgid2.mapping['msg1'] = msgid1
+        self.assertRaises(RuntimeError,
+                          translate, msgid1, None, None, 'en',"default")
+        # Recusrive translations also work if the original message id wasn't a
+        # message id but a unicode with a directly passed mapping
+        self.assertEqual("Color: BLUE/YELLOW",
+                         translate(u'Color: ${color1}/${color2}', mapping=mapping,
+                                   target_language='en'))
+
+
 
     def testMessageIDTranslateForDifferentDomain(self):
         domain = TranslationDomain('other')

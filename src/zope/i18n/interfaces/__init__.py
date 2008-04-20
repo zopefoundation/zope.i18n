@@ -1,6 +1,6 @@
 ##############################################################################
 #
-# Copyright (c) 2001, 2002 Zope Corporation and Contributors.
+# Copyright (c) 2001-2008 Zope Corporation and Contributors.
 # All Rights Reserved.
 #
 # This software is subject to the provisions of the Zope Public License,
@@ -143,7 +143,10 @@ class ITranslationDomain(Interface):
         However, the method does a little more than a vanilla translation.
         The method also looks for a possible language to translate to.
         After a translation it also replaces any $name variable variables
-        inside the post-translation string.
+        inside the post-translation string with data from `mapping`. If a
+        value of `mapping` is a Message it is also translated before
+        interpolation.
+
         """
 
 class IFallbackTranslationDomainFactory(Interface):
