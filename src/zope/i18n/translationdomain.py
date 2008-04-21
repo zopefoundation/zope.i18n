@@ -105,7 +105,7 @@ class TranslationDomain(SimpleTranslationDomain):
                         raise ValueError(
                             "Circular reference in mappings detected: %s" %
                             value)
-                    mapping[key]=self._recursive_translate(
+                    mapping[key] = self._recursive_translate(
                         value, mapping, target_language,
                         default, seen)
 
