@@ -101,8 +101,9 @@ class TranslationDomain(SimpleTranslationDomain):
                 if isinstance(value, Message):
                     # XXX why isn't there an IMessage interface?
                     if value in seen:
-                        raise RuntimeError(  # XXX ValueError
-                            "Circular Reference in Mappings detected")
+                        raise ValueError(
+                            "Circular reference in mappings detected: %s" %
+                            value)
                     mapping[key]=self._recursive_translate(
                         value, mapping, target_language,
                         default, seen)

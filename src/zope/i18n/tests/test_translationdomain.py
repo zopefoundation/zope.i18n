@@ -118,7 +118,7 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
                          mapping = {})
         msgid1.mapping['msg2'] = msgid2
         msgid2.mapping['msg1'] = msgid1
-        self.assertRaises(RuntimeError,
+        self.assertRaises(ValueError,
                           translate, msgid1, None, None, 'en',"default")
         # Recusrive translations also work if the original message id wasn't a
         # message id but a unicode with a directly passed mapping
