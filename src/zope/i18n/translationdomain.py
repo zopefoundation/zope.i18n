@@ -99,7 +99,8 @@ class TranslationDomain(SimpleTranslationDomain):
             mapping = mapping.copy()
             for key, value in mapping.items():
                 if isinstance(value, Message):
-                    # XXX why isn't there an IMessage interface?
+                    # TODO Why isn't there an IMessage interface?
+                    # https://bugs.launchpad.net/zope3/+bug/220122
                     if value in seen:
                         raise ValueError(
                             "Circular reference in mappings detected: %s" %
