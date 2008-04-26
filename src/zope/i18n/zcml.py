@@ -30,7 +30,7 @@ from zope.i18n.interfaces import ITranslationDomain
 from zope.component import queryUtility
 from zope.component.zcml import utility
 
-COMPILE_MO_FILES_KEY = 'zope.i18n.compile_mo_files'
+COMPILE_MO_FILES_KEY = 'zope_i18n_compile_mo_files'
 COMPILE_MO_FILES = os.environ.get(COMPILE_MO_FILES_KEY, False)
 
 
@@ -55,6 +55,7 @@ def registerTranslations(_context, directory):
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files
             if COMPILE_MO_FILES:
+                import pdb; pdb.set_trace()
                 for domain_file in os.listdir(lc_messages_path):
                     if domain_file.endswith('.po'):
                         domain = domain_file[:-3]
