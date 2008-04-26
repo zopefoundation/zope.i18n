@@ -8,8 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 msgid "New Domain"
-msgstr "New Domain"
+msgstr "New Domain translated"
 
 msgid "New Language"
-msgstr "New Language"
-
+msgstr "New Language translated"
