@@ -25,6 +25,7 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
+from zope.component import queryUtility
 from zope.component.zcml import utility
 
 class IRegisterTranslationsDirective(Interface):
@@ -56,7 +57,10 @@ def registerTranslations(_context, directory):
 
     # Now create TranslationDomain objects and add them as utilities
     for name, langs in domains.items():
-        domain = TranslationDomain(name)
+        # Try to get an existing domain and add catalogs to it
+        domain = queryUtility(ITranslationDomain, name)
+        if domain is None:
+            domain = TranslationDomain(name)
 
         for lang, file in langs.items():
             domain.addCatalog(GettextMessageCatalog(lang, name, file))

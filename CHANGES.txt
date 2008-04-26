@@ -5,6 +5,11 @@ CHANGES
 3.4.1 (unreleased)
 ------------------
 
+- Feature: Re-use existing translation domains when registering new ones.
+  This allows multiple packages to register translations in the same domain.
+  If the same message exists in multiple catalogs the one registered first
+  will take precedence.
+
 - Feature: Recursive translations of message strings with mappings
   (https://bugs.launchpad.net/zope3/+bug/210177), thanks to Hermann
   Himmelbauer for the inital patch.
