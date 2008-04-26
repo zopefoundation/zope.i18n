@@ -55,7 +55,6 @@ def registerTranslations(_context, directory):
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files
             if COMPILE_MO_FILES:
-                import pdb; pdb.set_trace()
                 for domain_file in os.listdir(lc_messages_path):
                     if domain_file.endswith('.po'):
                         domain = domain_file[:-3]
