@@ -59,6 +59,6 @@ setup(
     include_package_data = True,
     zip_safe = False,
     extras_require = dict(
-        compile = ['pythongettext'],
+        compile = ['python-gettext'],
         ),
     )
