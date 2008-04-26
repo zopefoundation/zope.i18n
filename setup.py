@@ -24,7 +24,7 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version = '3.4.1dev',
+    version = '3.5dev',
     author='Zope Corporation and Contributors',
     author_email='zope3-dev@zope.org',
     description='Zope3 Internationalization Support',
@@ -58,4 +58,7 @@ setup(
                       ],
     include_package_data = True,
     zip_safe = False,
+    extras_require = dict(
+        compile = ['pythongettext'],
+        ),
     )

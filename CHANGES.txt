@@ -2,8 +2,13 @@
 CHANGES
 =======
 
-3.4.1 (unreleased)
+3.5 (unreleased)
 ------------------
+
+- Feature: Added optional automatic compilation of mo files from po files.
+  You need to depend on the `zope.i18n [compile]` extra and set an environment
+  variable called `zope.i18n.compile_mo_files` to any True value to enable
+  this option.
 
 - Feature: Re-use existing translation domains when registering new ones.
   This allows multiple packages to register translations in the same domain.

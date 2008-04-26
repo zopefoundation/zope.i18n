@@ -1,4 +1,5 @@
-##############################################################################
+
+# ##############################################################################
 #
 # Copyright (c) 2001, 2002 Zope Corporation and Contributors.
 # All Rights Reserved.
@@ -21,12 +22,17 @@ import os
 
 from zope.interface import Interface
 from zope.configuration.fields import Path
+from zope.i18n.compile import compile_mo_file
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
 from zope.component import queryUtility
 from zope.component.zcml import utility
+
+COMPILE_MO_FILES_KEY = 'zope.i18n.compile_mo_files'
+COMPILE_MO_FILES = os.environ.get(COMPILE_MO_FILES_KEY, False)
+
 
 class IRegisterTranslationsDirective(Interface):
     """Register translations with the global site manager."""
@@ -47,6 +53,12 @@ def registerTranslations(_context, directory):
     for language in os.listdir(path):
         lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
         if os.path.isdir(lc_messages_path):
+            # Preprocess files and update or compile the mo files
+            if COMPILE_MO_FILES:
+                for domain_file in os.listdir(lc_messages_path):
+                    if domain_file.endswith('.po'):
+                        domain = domain_file[:-3]
+                        compile_mo_file(domain, lc_messages_path)
             for domain_file in os.listdir(lc_messages_path):
                 if domain_file.endswith('.mo'):
                     domain_path = os.path.join(lc_messages_path, domain_file)

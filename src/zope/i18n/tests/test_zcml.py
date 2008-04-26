@@ -16,13 +16,18 @@
 $Id$
 """
 import os
+import shutil
 import unittest
 
-import zope.component
-import zope.i18n.tests
+from zope.component import getUtility
+from zope.component import queryUtility
 from zope.component.testing import PlacelessSetup
 from zope.configuration import xmlconfig
+
+import zope.i18n.tests
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.compile import HAS_PYTHON_GETTEXT
+from zope.i18n import zcml
 
 template = """\
 <configure
@@ -38,7 +43,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         self.context = xmlconfig.file('meta.zcml', zope.i18n)
 
     def testRegisterTranslations(self):
-        self.assert_(zope.component.queryUtility(ITranslationDomain) is None)
+        self.assert_(queryUtility(ITranslationDomain) is None)
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -47,12 +52,12 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
             ''', self.context)
         path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
                             'locale', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
-        util = zope.component.getUtility(ITranslationDomain, 'zope-i18n')
+        util = getUtility(ITranslationDomain, 'zope-i18n')
         self.assertEquals(util._catalogs,
                           {'test': ['test'], 'en': [unicode(path)]})
 
     def testRegisterDistributedTranslations(self):
-        self.assert_(zope.component.queryUtility(ITranslationDomain) is None)
+        self.assert_(queryUtility(ITranslationDomain) is None)
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -69,7 +74,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
                              'locale', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
         path2 = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
                              'locale2', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
-        util = zope.component.getUtility(ITranslationDomain, 'zope-i18n')
+        util = getUtility(ITranslationDomain, 'zope-i18n')
         self.assertEquals(util._catalogs,
                           {'test': ['test', 'test'],
                                    'en': [unicode(path1), unicode(path2)]})
@@ -82,6 +87,36 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
         msg = util.translate(u'New Language', target_language='en')
         self.assertEquals(msg, u'New Language translated')
+
+    if HAS_PYTHON_GETTEXT:
+        def testRegisterAndCompileTranslations(self):
+            zcml.COMPILE_MO_FILES = True
+            self.assert_(queryUtility(ITranslationDomain) is None)
+
+            # Copy an old and outdated file over, so we can test if the
+            # newer file check works
+            testpath = os.path.join(os.path.dirname(zope.i18n.tests.__file__))
+            basepath = os.path.join(testpath, 'locale3', 'en', 'LC_MESSAGES')
+            in_ = os.path.join(basepath, 'zope-i18n.in')
+            path = os.path.join(basepath, 'zope-i18n.mo')
+            shutil.copy2(in_, path)
+
+            xmlconfig.string(
+                template % '''
+                <configure package="zope.i18n.tests">
+                <i18n:registerTranslations directory="locale3" />
+                </configure>
+                ''', self.context)
+            util = getUtility(ITranslationDomain, 'zope-i18n')
+            self.assertEquals(util._catalogs,
+                              {'test': ['test'], 'en': [unicode(path)]})
+
+            msg = util.translate(u"I'm a newer file", target_language='en')
+            self.assertEquals(msg, u"I'm a newer file translated")
+
+            util = getUtility(ITranslationDomain, 'zope-i18n2')
+            msg = util.translate(u"I'm a new file", target_language='en')
+            self.assertEquals(msg, u"I'm a new file translated")
 
 
 def test_suite():
