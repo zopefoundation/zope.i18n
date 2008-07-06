@@ -33,6 +33,13 @@ from zope.component.zcml import utility
 COMPILE_MO_FILES_KEY = 'zope_i18n_compile_mo_files'
 COMPILE_MO_FILES = os.environ.get(COMPILE_MO_FILES_KEY, False)
 
+ALLOWED_LANGUAGES_KEY = 'zope_i18n_allowed_languages'
+ALLOWED_LANGUAGES = os.environ.get(ALLOWED_LANGUAGES_KEY, None)
+
+if ALLOWED_LANGUAGES is not None:
+    ALLOWED_LANGUAGES = ALLOWED_LANGUAGES.strip().replace(',', ' ')
+    ALLOWED_LANGUAGES = frozenset(ALLOWED_LANGUAGES.split())
+
 
 class IRegisterTranslationsDirective(Interface):
     """Register translations with the global site manager."""
@@ -43,6 +50,11 @@ class IRegisterTranslationsDirective(Interface):
         required=True
         )
 
+def allow_language(lang):
+    if ALLOWED_LANGUAGES is None:
+        return True
+    return lang in ALLOWED_LANGUAGES
+
 def registerTranslations(_context, directory):
     path = os.path.normpath(directory)
     domains = {}
@@ -51,6 +63,8 @@ def registerTranslations(_context, directory):
     # which is exactly the opposite as we need it. So create a dictionary that
     # reverses the nesting.
     for language in os.listdir(path):
+        if not allow_language(language):
+            continue
         lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files

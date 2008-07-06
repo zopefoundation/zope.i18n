@@ -5,6 +5,12 @@ CHANGES
 3.5 (unreleased)
 ------------------
 
+- Feature: Added support for restricting the available languages. We support
+  an environment variable called `zope_i18n_allowed_languages` now, which is
+  a list of comma or space separated language codes. If the environment
+  variable is set, the ZCML registration will only process those folders
+  which are in the allowed languages list.
+
 - Feature: Added optional automatic compilation of mo files from po files.
   You need to depend on the `zope.i18n [compile]` extra and set an environment
   variable called `zope_i18n_compile_mo_files` to any True value to enable
