@@ -15,9 +15,10 @@
 
 $Id$
 """
+from zope.interface import implements
+
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
-from zope.interface import implements
 
 def normalize_lang(lang):
     lang = lang.strip().lower()

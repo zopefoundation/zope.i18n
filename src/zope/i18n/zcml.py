@@ -20,25 +20,17 @@ __docformat__ = 'restructuredtext'
 
 import os
 
-from zope.interface import Interface
+from zope.component import queryUtility
+from zope.component.zcml import utility
 from zope.configuration.fields import Path
+from zope.interface import Interface
+
+from zope.i18n import config
 from zope.i18n.compile import compile_mo_file
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
-from zope.component import queryUtility
-from zope.component.zcml import utility
-
-COMPILE_MO_FILES_KEY = 'zope_i18n_compile_mo_files'
-COMPILE_MO_FILES = os.environ.get(COMPILE_MO_FILES_KEY, False)
-
-ALLOWED_LANGUAGES_KEY = 'zope_i18n_allowed_languages'
-ALLOWED_LANGUAGES = os.environ.get(ALLOWED_LANGUAGES_KEY, None)
-
-if ALLOWED_LANGUAGES is not None:
-    ALLOWED_LANGUAGES = ALLOWED_LANGUAGES.strip().replace(',', ' ')
-    ALLOWED_LANGUAGES = frozenset(ALLOWED_LANGUAGES.split())
 
 
 class IRegisterTranslationsDirective(Interface):
@@ -51,9 +43,9 @@ class IRegisterTranslationsDirective(Interface):
         )
 
 def allow_language(lang):
-    if ALLOWED_LANGUAGES is None:
+    if config.ALLOWED_LANGUAGES is None:
         return True
-    return lang in ALLOWED_LANGUAGES
+    return lang in config.ALLOWED_LANGUAGES
 
 def registerTranslations(_context, directory):
     path = os.path.normpath(directory)
@@ -68,7 +60,7 @@ def registerTranslations(_context, directory):
         lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files
-            if COMPILE_MO_FILES:
+            if config.COMPILE_MO_FILES:
                 for domain_file in os.listdir(lc_messages_path):
                     if domain_file.endswith('.po'):
                         domain = domain_file[:-3]

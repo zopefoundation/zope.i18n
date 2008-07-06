@@ -17,11 +17,13 @@ $Id$
 """
 import re
 
+from zope.component import queryUtility
 from zope.i18nmessageid import MessageFactory, Message
+
+from zope.i18n.config import ALLOWED_LANGUAGES
+from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
-from zope.component import queryUtility
-
 
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the
@@ -30,6 +32,19 @@ NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))
+
+
+def negotiate(context):
+    """Negotiate language.
+
+    This only works if the languages are set globally, otherwise each message
+    catalog needs to do the language negotiation.
+    """
+    if ALLOWED_LANGUAGES is not None:
+        negotiator = queryUtility(INegotiator)
+        if negotiator is not None:
+            return negotiator.getLanguage(ALLOWED_LANGUAGES, context)
+    return None
 
 def translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):
@@ -106,6 +121,9 @@ def translate(msgid, domain=None, mapping=None, context=None,
 
     if util is None:
         return interpolate(default, mapping)
+
+    if target_language is None and context is not None:
+        target_language = negotiate(context)
 
     return util.translate(msgid, mapping, context, target_language, default)
 

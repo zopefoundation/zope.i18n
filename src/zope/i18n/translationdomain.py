@@ -81,7 +81,7 @@ class TranslationDomain(SimpleTranslationDomain):
 
     def _recursive_translate(self, msgid, mapping, target_language, default,
                              seen=None):
-        """Recurivly translate msg."""
+        """Recursively translate msg."""
         # MessageID attributes override arguments
         if isinstance(msgid, Message):
             if msgid.domain != self.domain:

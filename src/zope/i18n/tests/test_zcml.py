@@ -27,6 +27,7 @@ from zope.configuration import xmlconfig
 import zope.i18n.tests
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.compile import HAS_PYTHON_GETTEXT
+from zope.i18n import config
 from zope.i18n import zcml
 
 template = """\
@@ -41,12 +42,12 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
     def setUp(self):
         super(DirectivesTest, self).setUp()
         self.context = xmlconfig.file('meta.zcml', zope.i18n)
-        self.allowed = zcml.ALLOWED_LANGUAGES
-        zcml.ALLOWED_LANGUAGES = None
+        self.allowed = config.ALLOWED_LANGUAGES
+        config.ALLOWED_LANGUAGES = None
 
     def tearDown(self):
         super(DirectivesTest, self).tearDown()
-        zcml.ALLOWED_LANGUAGES = self.allowed
+        config.ALLOWED_LANGUAGES = self.allowed
 
     def testRegisterTranslations(self):
         self.assert_(queryUtility(ITranslationDomain) is None)
@@ -64,7 +65,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     def testAllowedTranslations(self):
         self.assert_(queryUtility(ITranslationDomain) is None)
-        zcml.ALLOWED_LANGUAGES = ('de', 'fr')
+        config.ALLOWED_LANGUAGES = ('de', 'fr')
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -111,7 +112,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     if HAS_PYTHON_GETTEXT:
         def testRegisterAndCompileTranslations(self):
-            zcml.COMPILE_MO_FILES = True
+            config.COMPILE_MO_FILES = True
             self.assert_(queryUtility(ITranslationDomain) is None)
 
             # Copy an old and outdated file over, so we can test if the

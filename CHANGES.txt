@@ -5,6 +5,10 @@ CHANGES
 3.5 (unreleased)
 ------------------
 
+- Feature: Added new top-level negotiate function, which can be used to
+  negotiate the language when the available languages are set globally via
+  `zope_i18n_allowed_languages`.
+
 - Feature: Added support for restricting the available languages. We support
   an environment variable called `zope_i18n_allowed_languages` now, which is
   a list of comma or space separated language codes. If the environment
