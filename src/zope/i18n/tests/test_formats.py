@@ -346,6 +346,10 @@ class TestDateTimeFormat(TestCase):
     def testDateTimeParseError(self):
         self.assertRaises(DateTimeParseError,
             self.format.parse, '02.01.03 21:48', 'dd.MM.yyyy HH:mm')
+        self.assertRaises(DateTimeParseError,
+            self.format.parse, '02.01.2003', 'dd.MM.yy')
+        self.assertRaises(DateTimeParseError,
+            self.format.parse, 'ff02.01.03', 'dd.MM.yy')
 
     def testParse12PM(self):
         self.assertEqual(

@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-3.5 (unreleased)
+3.5.0 (2008-07-10)
 ------------------
 
 - Feature: Added new top-level negotiate function, which can be used to
@@ -29,6 +29,9 @@ CHANGES
   (https://bugs.launchpad.net/zope3/+bug/210177), thanks to Hermann
   Himmelbauer for the inital patch.
 
+- Bug: When parsing a date, the parsing pattern did not ensure that the line
+  started and ended with the matching pattern, so that '1/1/2007' parsed into
+  '1/1/20' for example.
 
 3.4.0 (2007-10-02)
 ------------------

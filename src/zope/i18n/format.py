@@ -71,10 +71,11 @@ class DateTimeFormat(object):
             pattern = self._pattern
 
         # Generate the correct regular expression to parse the date and parse.
-        regex = ''
+        regex = '^'
         info = buildDateTimeParseInfo(self.calendar, bin_pattern)
         for elem in bin_pattern:
             regex += info.get(elem, elem)
+        regex += '$'
         try:
             results = re.match(regex, text).groups()
         except AttributeError:
