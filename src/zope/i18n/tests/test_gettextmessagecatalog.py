@@ -37,7 +37,7 @@ class GettextMessageCatalogTest(TestIMessageCatalog):
 
 def test_suite():
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(GettextMessageCatalog))
+    suite.addTest(unittest.makeSuite(GettextMessageCatalogTest))
     return suite
 
 

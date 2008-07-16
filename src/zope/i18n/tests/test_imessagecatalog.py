@@ -20,7 +20,7 @@ from zope.interface.verify import verifyObject
 from zope.i18n.interfaces import IMessageCatalog
 
 
-class TestIMessageCatalog(object):
+class TestIMessageCatalog(unittest.TestCase):
 
 
     # This should be overwritten by every class that inherits this test
