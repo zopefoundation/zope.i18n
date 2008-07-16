@@ -46,14 +46,28 @@ class GettextMessageCatalog(object):
         finally:
             fp.close()
 
-    def getMessage(self, id):
+    def getMessage(self, id, n=None):
         'See IMessageCatalog'
-        return self._catalog.ugettext(id)
+        if n is None:
+            return self._catalog.ugettext(id)
+        else:
+            msg = self._catalog.ungettext(id, id, n)
+            try:
+                return msg % n
+            except TypeError:
+                return msg                    
 
-    def queryMessage(self, id, default=None):
+    def queryMessage(self, id, default=None, n=None):
         'See IMessageCatalog'
         try:
-            return self._catalog.ugettext(id)
+            if n is None:
+                return self._catalog.ugettext(id)
+            else:
+                msg = self._catalog.ungettext(id, id, n)
+                try:
+                    return msg % n
+                except TypeError:
+                    return msg                    
         except KeyError:
             return default
 

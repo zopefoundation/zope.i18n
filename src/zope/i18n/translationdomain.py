@@ -127,6 +127,8 @@ class TranslationDomain(SimpleTranslationDomain):
                 # single catalog. More importantly, it is extremely helpful
                 # when testing and the test language is used, because it
                 # allows the test language to get the default. 
+                #if target_language == 'en':
+                    #import pdb;pdb.set_trace()
                 text = self._data[catalog_names[0]].queryMessage(
                     msgid, default)
             else:

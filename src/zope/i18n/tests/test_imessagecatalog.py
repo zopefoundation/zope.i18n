@@ -49,6 +49,12 @@ class TestIMessageCatalog(unittest.TestCase):
         self.assertEqual(catalog.queryMessage('foo'), None)
         self.assertEqual(catalog.queryMessage('foo', 'bar'), 'bar')
 
+    def testPluralMessage(self):
+        catalog = self._catalog
+        self.assertEqual(catalog.getMessage('There are %d files.', n=1),
+                         'There is one file.')
+        self.assertEqual(catalog.getMessage('There are %d files.', n=3),
+                         'There are 3 files.')
 
     def testGetLanguage(self):
         catalog = self._catalog
