@@ -23,6 +23,9 @@ from zope.interface import implements
 class _KeyErrorRaisingFallback(object):
     def ugettext(self, message):
         raise KeyError(message)
+    
+    def ungettext(self, message, message2, n):
+        raise KeyError(message)
 
 
 class GettextMessageCatalog(object):
@@ -46,30 +49,39 @@ class GettextMessageCatalog(object):
         finally:
             fp.close()
 
-    def getMessage(self, id, n=None):
+    def getMessage(self, id):
         'See IMessageCatalog'
-        if n is None:
-            return self._catalog.ugettext(id)
-        else:
-            msg = self._catalog.ungettext(id, id, n)
-            try:
-                return msg % n
-            except TypeError:
-                return msg                    
+        return self._catalog.ugettext(id)
+    
+    def getPluralMessage(self, id1, id2, n):
+        'See IMessageCatalog'
+        msg = self._catalog.ungettext(id1, id2, n)
+        try:
+            return msg % n
+        except TypeError:
+            return msg                    
 
-    def queryMessage(self, id, default=None, n=None):
+    def queryMessage(self, id, default=None):
         'See IMessageCatalog'
         try:
-            if n is None:
-                return self._catalog.ugettext(id)
-            else:
-                msg = self._catalog.ungettext(id, id, n)
-                try:
-                    return msg % n
-                except TypeError:
-                    return msg                    
+            return self._catalog.ugettext(id)
         except KeyError:
             return default
+
+    def queryPluralMessage(self, id1, id2, n, default1=None, default2=None):
+        'See IMessageCatalog'
+        try:
+            msg = self._catalog.ungettext(id1, id2, n)
+        except KeyError:
+            if n == 1:
+                msg = default1
+            else:
+                msg = default2
+        try:
+            return msg % n
+        except TypeError:
+            return msg                    
+
 
     def getIdentifier(self):
         'See IMessageCatalog'

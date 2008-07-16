@@ -49,13 +49,34 @@ class TestIMessageCatalog(unittest.TestCase):
         self.assertEqual(catalog.queryMessage('foo'), None)
         self.assertEqual(catalog.queryMessage('foo', 'bar'), 'bar')
 
-    def testPluralMessage(self):
+    def testGetPluralMessage(self):
         catalog = self._catalog
-        self.assertEqual(catalog.getMessage('There are %d files.', n=1),
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 1),
                          'There is one file.')
-        self.assertEqual(catalog.getMessage('There are %d files.', n=3),
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 3),
                          'There are 3 files.')
+        self.assertRaises(KeyError, catalog.getPluralMessage, 
+                          'There are %d files.', 'bar', 6)
 
+    def testQeuryPluralMessage(self):
+        catalog = self._catalog
+        self.assertEqual(catalog.queryPluralMessage(
+                         'There is one file.', 'There are %d files.', 1),
+                         'There is one file.')
+        self.assertEqual(catalog.queryPluralMessage(
+                         'There is one file.', 'There are %d files.', 3),
+                         'There are 3 files.')
+        self.assertEqual(catalog.queryPluralMessage(
+                         'There are %d files.', 'There is one file.', 1,
+                         'There is one file.', 'There are %d files.', ),
+                         'There is one file.')
+        self.assertEqual(catalog.queryPluralMessage(
+                         'There are %d files.', 'There is one file.', 3,
+                         'There is one file.', 'There are %d files.', ),
+                         'There are 3 files.')
+        
     def testGetLanguage(self):
         catalog = self._catalog
         self.assertEqual(catalog.language, 'en')

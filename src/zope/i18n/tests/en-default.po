@@ -14,7 +14,7 @@ msgstr "Hello!"
 msgid "greeting"
 msgstr "Hello $name, how are you?"
 
-msgid "There are %d files."
+msgid "There is one file."
 msgid_plural "There are %d files."
 msgstr[0] "There is one file."
 msgstr[1] "There are %d files."
