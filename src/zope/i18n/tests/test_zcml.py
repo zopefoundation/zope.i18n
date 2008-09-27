@@ -22,7 +22,6 @@ import unittest
 from zope.component import getUtility
 from zope.component import queryUtility
 from zope.component.testing import PlacelessSetup
-from zope.configuration import xmlconfig
 
 import zope.i18n.tests
 from zope.i18n.interfaces import ITranslationDomain
@@ -39,6 +38,7 @@ template = """\
 class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
+        from zope.configuration import xmlconfig
         super(DirectivesTest, self).setUp()
         self.context = xmlconfig.file('meta.zcml', zope.i18n)
         self.allowed = config.ALLOWED_LANGUAGES
@@ -49,6 +49,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         config.ALLOWED_LANGUAGES = self.allowed
 
     def testRegisterTranslations(self):
+        from zope.configuration import xmlconfig
         self.assert_(queryUtility(ITranslationDomain) is None)
         xmlconfig.string(
             template % '''
@@ -63,6 +64,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         self.assertEquals(util._catalogs.get('en'), [unicode(path)])
 
     def testAllowedTranslations(self):
+        from zope.configuration import xmlconfig
         self.assert_(queryUtility(ITranslationDomain) is None)
         config.ALLOWED_LANGUAGES = ('de', 'fr')
         xmlconfig.string(
@@ -78,6 +80,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
                           {'test': ['test'], 'de': [unicode(path)]})
 
     def testRegisterDistributedTranslations(self):
+        from zope.configuration import xmlconfig
         self.assert_(queryUtility(ITranslationDomain) is None)
         xmlconfig.string(
             template % '''
@@ -111,6 +114,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     if HAS_PYTHON_GETTEXT:
         def testRegisterAndCompileTranslations(self):
+            from zope.configuration import xmlconfig
             config.COMPILE_MO_FILES = True
             self.assert_(queryUtility(ITranslationDomain) is None)
 
