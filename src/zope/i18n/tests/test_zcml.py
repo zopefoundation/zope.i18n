@@ -28,7 +28,6 @@ import zope.i18n.tests
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.compile import HAS_PYTHON_GETTEXT
 from zope.i18n import config
-from zope.i18n import zcml
 
 template = """\
 <configure
