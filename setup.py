@@ -54,12 +54,14 @@ setup(
                       'pytz',
                       'zope.i18nmessageid',
                       'zope.component',
-                      'zope.configuration',
                       ],
     include_package_data = True,
     zip_safe = False,
     extras_require = dict(
         compile = ['python-gettext'],
-        zcml = ['zope.component [zcml]'],
+        zcml = [
+            'zope.component [zcml]',
+            'zope.configuration',
+            ],
         ),
     )
