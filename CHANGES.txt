@@ -2,8 +2,8 @@
 CHANGES
 =======
 
-head
-----
+3.6.0 (unreleased)
+------------------
 
 - Move the zcml support into an extra. This reduces the dependencies of a
   standard zope.i18n install by half a dozen packages.
