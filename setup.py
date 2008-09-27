@@ -52,6 +52,7 @@ setup(
     namespace_packages=['zope',],
     install_requires=['setuptools',
                       'pytz',
+                      'zope.schema',
                       'zope.i18nmessageid',
                       'zope.component',
                       ],
