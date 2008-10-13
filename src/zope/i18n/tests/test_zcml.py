@@ -17,6 +17,7 @@ $Id$
 """
 import os
 import shutil
+import stat
 import unittest
 
 from zope.component import getUtility
@@ -127,6 +128,12 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         path = os.path.join(basepath, 'zope-i18n.mo')
         shutil.copy2(in_, path)
 
+        # Make sure the older mo file always has an older time stamp
+        # than the po file
+        path_atime = os.stat(path)[stat.ST_ATIME]
+        path_mtime = os.stat(path)[stat.ST_MTIME]
+        os.utime(path, (path_atime, path_mtime - 6000))
+
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -143,6 +150,9 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         util = getUtility(ITranslationDomain, 'zope-i18n2')
         msg = util.translate(u"I'm a new file", target_language='en')
         self.assertEquals(msg, u"I'm a new file translated")
+
+        # Reset the mtime of the mo file
+        os.utime(path, (path_atime, path_mtime))
 
 
 def test_suite():

@@ -5,6 +5,9 @@ CHANGES
 3.6.0 (unreleased)
 ------------------
 
+- Fixed a test failure in the compile mo file support.
+  [hannosch]
+
 - Move the zcml support into an extra. This reduces the dependencies of a
   standard zope.i18n install by half a dozen packages.
 
