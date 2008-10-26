@@ -24,9 +24,9 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version = '3.6.0dev',
+    version = '3.6.0',
     author='Zope Corporation and Contributors',
-    author_email='zope3-dev@zope.org',
+    author_email='zope-dev@zope.org',
     description='Zope3 Internationalization Support',
     long_description=(
         read('README.txt')
@@ -46,7 +46,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope3'],
-    url='http://cheeseshop.python.org/pypi/zope.i18n',
+    url='http://pypi.python.org/pypi/zope.i18n',
     packages=find_packages('src'),
     package_dir = {'': 'src'},
     namespace_packages=['zope',],

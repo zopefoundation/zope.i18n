@@ -2,11 +2,10 @@
 CHANGES
 =======
 
-3.6.0 (unreleased)
+3.6.0 (2008-10-26)
 ------------------
 
 - Fixed a test failure in the compile mo file support.
-  [hannosch]
 
 - Move the zcml support into an extra. This reduces the dependencies of a
   standard zope.i18n install by half a dozen packages.
