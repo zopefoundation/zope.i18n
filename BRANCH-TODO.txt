@@ -1,0 +1,78 @@
+=================
+CLDR upgrade plan
+=================
+
+The purpose of this branch is to update locale data to latest version
+of CLDR. Current zope.i18n has the very first version of the data and
+it's really very hard to update the data to latest version at once, as
+there's many structure changes and many new entities were introduced.
+
+So, we'll update the CLDR data version by version, implementing new and
+changed interfaces and functionality for each version, starting with 1.1,
+where month/day contexts and widths were introduced. We'll try hard to
+maintain full backward compatibility with earlier locale interfaces.
+
+CLDR 1.1 (LDML 1.1)
+-------------------
+
+Updated the XML files and fixed incompatibilities.
+
+Still need to add interface/implementation for day/month context
+and day/month width system.
+
+Review other non-critical changes and implement them.
+
+CLDR 1.2 (LDML 1.2)
+-------------------
+
+TODO
+
+
+CLDR 1.3 (LDML 1.3)
+-------------------
+
+TODO
+
+
+CLDR 1.4 (LDML 1.4)
+-------------------
+
+TODO
+
+
+CLDR 1.4.1 (LDML 1.4.1)
+-----------------------
+
+TODO
+
+
+CLDR 1.5 (LDML 1.5)
+-------------------
+
+TODO
+
+
+CLDR 1.5.1 (LDML 1.5.1)
+-----------------------
+
+TODO
+
+
+CLDR 1.6 (LDML 1.6)
+-------------------
+
+TODO
+
+
+CLDR 1.6.1 (LDML 1.6.1)
+-----------------------
+
+TODO
+
+
+After that
+----------
+
+Use pickled python structures instead of reading XML files. Pickles
+should be prepared during package build time.
+
