@@ -286,7 +286,7 @@ class LocaleFactory(object):
         return displayNames
 
 
-    def _extractMonths(self, cal_node, calendar):
+    def _extractMonths(self, months_node, calendar):
         """Extract all month entries from cal_node and store them in calendar.
 
         Example::
@@ -297,36 +297,38 @@ class LocaleFactory(object):
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
           >>> xml = u'''
-          ... <calendar type="gregorian">
-          ...   <monthNames>
-          ...     <month type="1">Januar</month>
-          ...     <month type="2">Februar</month>
-          ...     <month type="3">Maerz</month>
-          ...     <month type="4">April</month>
-          ...     <month type="5">Mai</month>
-          ...     <month type="6">Juni</month>
-          ...     <month type="7">Juli</month>
-          ...     <month type="8">August</month>
-          ...     <month type="9">September</month>
-          ...     <month type="10">Oktober</month>
-          ...     <month type="11">November</month>
-          ...     <month type="12">Dezember</month>
-          ...   </monthNames>
-          ...   <monthAbbr>
-          ...     <month type="1">Jan</month>
-          ...     <month type="2">Feb</month>
-          ...     <month type="3">Mrz</month>
-          ...     <month type="4">Apr</month>
-          ...     <month type="5">Mai</month>
-          ...     <month type="6">Jun</month>
-          ...     <month type="7">Jul</month>
-          ...     <month type="8">Aug</month>
-          ...     <month type="9">Sep</month>
-          ...     <month type="10">Okt</month>
-          ...     <month type="11">Nov</month>
-          ...     <month type="12">Dez</month>
-          ...   </monthAbbr>
-          ... </calendar>'''
+          ... <months>
+          ...   <monthContext type="format">
+          ...     <monthWidth type="wide">
+          ...       <month type="1">Januar</month>
+          ...       <month type="2">Februar</month>
+          ...       <month type="3">Maerz</month>
+          ...       <month type="4">April</month>
+          ...       <month type="5">Mai</month>
+          ...       <month type="6">Juni</month>
+          ...       <month type="7">Juli</month>
+          ...       <month type="8">August</month>
+          ...       <month type="9">September</month>
+          ...       <month type="10">Oktober</month>
+          ...       <month type="11">November</month>
+          ...       <month type="12">Dezember</month>
+          ...     </monthWidth>
+          ...     <monthWidth type="abbreviated">
+          ...       <month type="1">Jan</month>
+          ...       <month type="2">Feb</month>
+          ...       <month type="3">Mrz</month>
+          ...       <month type="4">Apr</month>
+          ...       <month type="5">Mai</month>
+          ...       <month type="6">Jun</month>
+          ...       <month type="7">Jul</month>
+          ...       <month type="8">Aug</month>
+          ...       <month type="9">Sep</month>
+          ...       <month type="10">Okt</month>
+          ...       <month type="11">Nov</month>
+          ...       <month type="12">Dez</month>
+          ...     </monthWidth>
+          ...   </monthContext>
+          ... </months>'''
           >>> dom = parseString(xml)
           >>> factory._extractMonths(dom.documentElement, calendar)
 
@@ -344,32 +346,48 @@ class LocaleFactory(object):
           >>> abbrs[6:]
           [u'Jul', u'Aug', u'Sep', u'Okt', u'Nov', u'Dez']
         """
-        # See whether we have month names and abbreviations
-        names_nodes = cal_node.getElementsByTagName('monthNames')
-        abbrs_nodes = cal_node.getElementsByTagName('monthAbbr')
-        if not (names_nodes and abbrs_nodes):
+        monthContext_nodes = months_node.getElementsByTagName('monthContext')
+        if not monthContext_nodes:
+            return
+        format_node = None
+        for node in monthContext_nodes:
+            if node.getAttribute('type') == 'format':
+                format_node = node
+                break
+        if not format_node:
+            return
+
+        names_node = abbrs_node = None
+        for node in format_node.getElementsByTagName('monthWidth'):
+            type = node.getAttribute('type')
+            if type == 'abbreviated':
+                abbrs_node = node
+            elif type == 'wide':
+                names_node = node
+        
+        if not (names_node and abbrs_node):
             return
         
         # Get all month names
         names = {}
-        for name_node in names_nodes[0].getElementsByTagName('month'):
+        for name_node in names_node.getElementsByTagName('month'):
             type = int(name_node.getAttribute('type'))
             names[type] = self._getText(name_node.childNodes)
 
         # Get all month abbrs
         abbrs = {}
-        for abbr_node in abbrs_nodes[0].getElementsByTagName('month'):
+        for abbr_node in abbrs_node.getElementsByTagName('month'):
             type = int(abbr_node.getAttribute('type'))
             abbrs[type] = self._getText(abbr_node.childNodes)
 
         # Put the info together
         calendar.months = InheritingDictionary()
-        for type in range(1, 13):
+        for type in xrange(1, 13):
             calendar.months[type] = (names.get(type, None),
                                      abbrs.get(type, None))
 
 
-    def _extractDays(self, cal_node, calendar):
+    def _extractDays(self, days_node, calendar):
         """Extract all day entries from cal_node and store them in
         calendar.
 
@@ -381,26 +399,28 @@ class LocaleFactory(object):
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
           >>> xml = u'''
-          ... <calendar type="gregorian">
-          ...   <dayNames>
-          ...     <day type="sun">Sonntag</day>
-          ...     <day type="mon">Montag</day>
-          ...     <day type="tue">Dienstag</day>
-          ...     <day type="wed">Mittwoch</day>
-          ...     <day type="thu">Donnerstag</day>
-          ...     <day type="fri">Freitag</day>
-          ...     <day type="sat">Samstag</day>
-          ...   </dayNames>
-          ...   <dayAbbr>
-          ...     <day type="sun">So</day>
-          ...     <day type="mon">Mo</day>
-          ...     <day type="tue">Di</day>
-          ...     <day type="wed">Mi</day>
-          ...     <day type="thu">Do</day>
-          ...     <day type="fri">Fr</day>
-          ...     <day type="sat">Sa</day>
-          ...   </dayAbbr>
-          ... </calendar>'''
+          ... <days>
+          ...   <dayContext type="format">
+          ...     <dayWidth type="wide">
+          ...       <day type="sun">Sonntag</day>
+          ...       <day type="mon">Montag</day>
+          ...       <day type="tue">Dienstag</day>
+          ...       <day type="wed">Mittwoch</day>
+          ...       <day type="thu">Donnerstag</day>
+          ...       <day type="fri">Freitag</day>
+          ...       <day type="sat">Samstag</day>
+          ...     </dayWidth>
+          ...     <dayWidth type="abbreviated">
+          ...       <day type="sun">So</day>
+          ...       <day type="mon">Mo</day>
+          ...       <day type="tue">Di</day>
+          ...       <day type="wed">Mi</day>
+          ...       <day type="thu">Do</day>
+          ...       <day type="fri">Fr</day>
+          ...       <day type="sat">Sa</day>
+          ...     </dayWidth>
+          ...   </dayContext>
+          ... </days>'''
           >>> dom = parseString(xml)
           >>> factory._extractDays(dom.documentElement, calendar)
 
@@ -416,26 +436,42 @@ class LocaleFactory(object):
           >>> abbrs
           [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
         """
-        # See whether we have weekday names and abbreviations
-        names_nodes = cal_node.getElementsByTagName('dayNames')
-        abbrs_nodes = cal_node.getElementsByTagName('dayAbbr')
-        if not (names_nodes and abbrs_nodes):
+        dayContext_nodes = days_node.getElementsByTagName('dayContext')
+        if not dayContext_nodes:
+            return
+        format_node = None
+        for node in dayContext_nodes:
+            if node.getAttribute('type') == 'format':
+                format_node = node
+                break
+        if not format_node:
+            return
+
+        names_node = abbrs_node = None
+        for node in format_node.getElementsByTagName('dayWidth'):
+            type = node.getAttribute('type')
+            if type == 'abbreviated':
+                abbrs_node = node
+            elif type == 'wide':
+                names_node = node
+        
+        if not (names_node and abbrs_node):
             return
 
         # Get all weekday names
         names = {}
-        for name_node in names_nodes[0].getElementsByTagName('day'):
+        for name_node in names_node.getElementsByTagName('day'):
             type = dayMapping[name_node.getAttribute('type')]
             names[type] = self._getText(name_node.childNodes)
         # Get all weekday abbreviations
         abbrs = {}
-        for abbr_node in abbrs_nodes[0].getElementsByTagName('day'):
+        for abbr_node in abbrs_node.getElementsByTagName('day'):
             type = dayMapping[abbr_node.getAttribute('type')]
             abbrs[type] = self._getText(abbr_node.childNodes)
 
         # Put the info together
         calendar.days = InheritingDictionary()
-        for type in range(1, 13):
+        for type in xrange(1, 13):
             calendar.days[type] = (names.get(type, None),
                                    abbrs.get(type, None))
 
@@ -722,10 +758,17 @@ class LocaleFactory(object):
             # get the calendar type
             type = cal_node.getAttribute('type')
             calendar = LocaleCalendar(type)
+
             # get month names and abbreviations
-            self._extractMonths(cal_node, calendar)
+            months_nodes = cal_node.getElementsByTagName('months')
+            if months_nodes:
+                self._extractMonths(months_nodes[0], calendar)
+
             # get weekday names and abbreviations
-            self._extractDays(cal_node, calendar)
+            days_nodes = cal_node.getElementsByTagName('days')
+            if days_nodes:
+                self._extractDays(days_nodes[0], calendar)
+
             # get week information
             self._extractWeek(cal_node, calendar)
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.1/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
+		<version number="1.1"/>
+		<generation date="2004-06-04" />
 		<language type="uk" /> 
 	</identity>
 	<localeDisplayNames>
@@ -137,7 +137,7 @@
 			<language type="uk">Українська</language>
 			<language type="ur">Урду</language>
 			<language type="uz">Узбецька</language>
-			<language type="vi">В'єтнамська</language>
+			<language type="vi">Вʼєтнамська</language>
 			<language type="vo">Волапак</language>
 			<language type="wo">Волоф</language>
 			<language type="xh">Кхоса</language>
@@ -189,7 +189,7 @@
 			<territory type="CF">Центрально-Африканська Республіка</territory>
 			<territory type="CG">Конго</territory>
 			<territory type="CH">Швейцарія</territory>
-			<territory type="CI">Кот-д'Івуар</territory>
+			<territory type="CI">Кот-д’Івуар</territory>
 			<territory type="CK">Кука, острови</territory>
 			<territory type="CL">Чилі</territory>
 			<territory type="CM">Камерун</territory>
@@ -285,7 +285,7 @@
 			<territory type="MH">Маршалові Острови</territory>
 			<territory type="MK">Македонія</territory>
 			<territory type="ML">Малі</territory>
-			<territory type="MM">М'янмар</territory>
+			<territory type="MM">Мʼянмар</territory>
 			<territory type="MN">Монголія</territory>
 			<territory type="MO">Макао</territory>
 			<territory type="MP">Північна Маріана, острови</territory>
@@ -319,7 +319,7 @@
 			<territory type="PH">Філіппіни</territory>
 			<territory type="PK">Пакистан</territory>
 			<territory type="PL">Польща</territory>
-			<territory type="PM">Св. П'єр і Мікулон</territory>
+			<territory type="PM">Св. Пʼєр і Мікулон</territory>
 			<territory type="PN">Піткаїрн</territory>
 			<territory type="PR">Пуерто-Ріко</territory>
 			<territory type="PS">Палестина</territory>
@@ -365,7 +365,7 @@
 			<territory type="TT">Тринідад і Табаго</territory>
 			<territory type="TV">Тувалу</territory>
 			<territory type="TW">Тайвань</territory>
-			<territory type="TZ">Танзанія, Об'єднана Республіка</territory>
+			<territory type="TZ">Танзанія, Обʼєднана Республіка</territory>
 			<territory type="UA">Україна</territory>
 			<territory type="UG">Уганда</territory>
 			<territory type="UM">Віддалені Острови США</territory>
@@ -377,7 +377,7 @@
 			<territory type="VE">Венесуела</territory>
 			<territory type="VG">Віргінські острови (Британія)</territory>
 			<territory type="VI">Віргінські острови (США)</territory>
-			<territory type="VN">В'єтнам</territory>
+			<territory type="VN">Вʼєтнам</territory>
 			<territory type="VU">Вануату</territory>
 			<territory type="WF">Валліс і Футуна, острови</territory>
 			<territory type="WS">Самоа</territory>
@@ -393,55 +393,121 @@
 		<exemplarCharacters>[а-щюьяєіїґ]</exemplarCharacters>
 	</characters>
 	<dates>
-		<localizedPatternChars>GanjkHmsSEDFwWxhKzAe</localizedPatternChars>
+		<localizedPatternChars>GanjkHmsSEDFwWxhKzAeugXZ</localizedPatternChars>
 		<calendars>
 			<calendar type="gregorian">
-				<monthNames>
-					<month type="1">січня</month>
-					<month type="2">лютого</month>
-					<month type="3">березня</month>
-					<month type="4">квітня</month>
-					<month type="5">травня</month>
-					<month type="6">червня</month>
-					<month type="7">липня</month>
-					<month type="8">серпня</month>
-					<month type="9">вересня</month>
-					<month type="10">жовтня</month>
-					<month type="11">листопада</month>
-					<month type="12">грудня</month>
-				</monthNames>
-				<monthAbbr>
-					<month type="1">січ</month>
-					<month type="2">лют</month>
-					<month type="3">бер</month>
-					<month type="4">квіт</month>
-					<month type="5">трав</month>
-					<month type="6">черв</month>
-					<month type="7">лип</month>
-					<month type="8">серп</month>
-					<month type="9">вер</month>
-					<month type="10">жовт</month>
-					<month type="11">лист</month>
-					<month type="12">груд</month>
-				</monthAbbr>
-				<dayNames>
-					<day type="sun">Неділя</day>
-					<day type="mon">Понеділок</day>
-					<day type="tue">Вівторок</day>
-					<day type="wed">Середа</day>
-					<day type="thu">Четвер</day>
-					<day type="fri">П'ятниця</day>
-					<day type="sat">Субота</day>
-				</dayNames>
-				<dayAbbr>
-					<day type="sun">Нд</day>
-					<day type="mon">Пн</day>
-					<day type="tue">Вт</day>
-					<day type="wed">Ср</day>
-					<day type="thu">Чт</day>
-					<day type="fri">Пт</day>
-					<day type="sat">Сб</day>
-				</dayAbbr>
+				<months>
+					<monthContext type="format">
+						<monthWidth type="abbreviated">
+							<month type="1">Січ</month>
+							<month type="2">Лют</month>
+							<month type="3">Бер</month>
+							<month type="4">Кві</month>
+							<month type="5">Тра</month>
+							<month type="6">Чер</month>
+							<month type="7">Лип</month>
+							<month type="8">Сер</month>
+							<month type="9">Вер</month>
+							<month type="10">Жов</month>
+							<month type="11">Лис</month>
+							<month type="12">Гру</month>
+						</monthWidth>
+						<monthWidth type="narrow">
+							<month type="1">С</month>
+							<month type="2">Л</month>
+							<month type="3">Б</month>
+							<month type="4">К</month>
+							<month type="5">Т</month>
+							<month type="6">Ч</month>
+							<month type="7">Л</month>
+							<month type="8">С</month>
+							<month type="9">В</month>
+							<month type="10">Ж</month>
+							<month type="11">Л</month>
+							<month type="12">Г</month>
+						</monthWidth>
+						<monthWidth type="wide">
+							<month type="1">січня</month>
+							<month type="2">лютого</month>
+							<month type="3">березня</month>
+							<month type="4">квітня</month>
+							<month type="5">травня</month>
+							<month type="6">червня</month>
+							<month type="7">липня</month>
+							<month type="8">серпня</month>
+							<month type="9">вересня</month>
+							<month type="10">жовтня</month>
+							<month type="11">листопада</month>
+							<month type="12">грудня</month>
+						</monthWidth>
+					</monthContext>
+					<monthContext type="stand-alone">
+						<monthWidth type="abbreviated">
+							<month type="1">Січ</month>
+							<month type="2">Лют</month>
+							<month type="3">Бер</month>
+							<month type="4">Кві</month>
+							<month type="5">Тра</month>
+							<month type="6">Чер</month>
+							<month type="7">Лип</month>
+							<month type="8">Сер</month>
+							<month type="9">Вер</month>
+							<month type="10">Жов</month>
+							<month type="11">Лис</month>
+							<month type="12">Гру</month>
+						</monthWidth>
+						<monthWidth type="narrow">
+							<month type="1">С</month>
+							<month type="2">Л</month>
+							<month type="3">Б</month>
+							<month type="4">К</month>
+							<month type="5">Т</month>
+							<month type="6">Ч</month>
+							<month type="7">Л</month>
+							<month type="8">С</month>
+							<month type="9">В</month>
+							<month type="10">Ж</month>
+							<month type="11">Л</month>
+							<month type="12">Г</month>
+						</monthWidth>
+						<monthWidth type="wide">
+							<month type="1">Січень</month>
+							<month type="2">Лютий</month>
+							<month type="3">Березень</month>
+							<month type="4">Квітень</month>
+							<month type="5">Травень</month>
+							<month type="6">Червень</month>
+							<month type="7">Липень</month>
+							<month type="8">Серпень</month>
+							<month type="9">Вересень</month>
+							<month type="10">Жовтень</month>
+							<month type="11">Листопад</month>
+							<month type="12">Грудень</month>
+						</monthWidth>
+					</monthContext>
+				</months>
+				<days>
+					<dayContext type="format">
+						<dayWidth type="abbreviated">
+							<day type="sun">Нд</day>
+							<day type="mon">Пн</day>
+							<day type="tue">Вт</day>
+							<day type="wed">Ср</day>
+							<day type="thu">Чт</day>
+							<day type="fri">Пт</day>
+							<day type="sat">Сб</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun">Неділя</day>
+							<day type="mon">Понеділок</day>
+							<day type="tue">Вівторок</day>
+							<day type="wed">Середа</day>
+							<day type="thu">Четвер</day>
+							<day type="fri">Пʼятниця</day>
+							<day type="sat">Субота</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<week>
 					<minDays count="1"/>
 					<firstDay day="mon"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.1/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
+		<version number="1.1"/>
+		<generation date="2004-06-04" />
 		<language type="et" /> 
 	</identity>
 	<localeDisplayNames>
@@ -71,7 +71,7 @@
 			<territory type="BR">Brasiilia</territory>
 			<territory type="BS">Bahama saared</territory>
 			<territory type="BT">Bhutan</territory>
-			<territory type="BV">Bouvet' saar</territory>
+			<territory type="BV">Bouvet’ saar</territory>
 			<territory type="BW">Botswana</territory>
 			<territory type="BY">Valgevene</territory>
 			<territory type="BZ">Belize</territory>
@@ -81,7 +81,7 @@
 			<territory type="CF">Kesk-Aafrika Vabariik</territory>
 			<territory type="CG">Kongo</territory>
 			<territory type="CH">Ĩveits</territory>
-			<territory type="CI">Cote d'Ivoire</territory>
+			<territory type="CI">Cote d’Ivoire</territory>
 			<territory type="CK">Cooki saared</territory>
 			<territory type="CL">Tiiili</territory>
 			<territory type="CM">Kamerun</territory>
@@ -287,55 +287,63 @@
 		<exemplarCharacters>[a-z õ ä ö ü š ž]</exemplarCharacters>
 	</characters>
 	<dates>
-		<localizedPatternChars>GanjkHmsSEDFwWxhKzAe</localizedPatternChars>
+		<localizedPatternChars>GanjkHmsSEDFwWxhKzAeugXZ</localizedPatternChars>
 		<calendars>
 			<calendar type="gregorian">
-				<monthNames>
-					<month type="1">jaanuar</month>
-					<month type="2">veebruar</month>
-					<month type="3">märts</month>
-					<month type="4">aprill</month>
-					<month type="5">mai</month>
-					<month type="6">juuni</month>
-					<month type="7">juuli</month>
-					<month type="8">august</month>
-					<month type="9">september</month>
-					<month type="10">oktoober</month>
-					<month type="11">november</month>
-					<month type="12">detsember</month>
-				</monthNames>
-				<monthAbbr>
-					<month type="1">jaan</month>
-					<month type="2">veebr</month>
-					<month type="3">märts</month>
-					<month type="4">apr</month>
-					<month type="5">mai</month>
-					<month type="6">juuni</month>
-					<month type="7">juuli</month>
-					<month type="8">aug</month>
-					<month type="9">sept</month>
-					<month type="10">okt</month>
-					<month type="11">nov</month>
-					<month type="12">dets</month>
-				</monthAbbr>
-				<dayNames>
-					<day type="sun">pühapäev</day>
-					<day type="mon">esmaspäev</day>
-					<day type="tue">teisipäev</day>
-					<day type="wed">kolmapäev</day>
-					<day type="thu">neljapäev</day>
-					<day type="fri">reede</day>
-					<day type="sat">laupäev</day>
-				</dayNames>
-				<dayAbbr>
-					<day type="sun">P</day>
-					<day type="mon">E</day>
-					<day type="tue">T</day>
-					<day type="wed">K</day>
-					<day type="thu">N</day>
-					<day type="fri">R</day>
-					<day type="sat">L</day>
-				</dayAbbr>
+				<months>
+					<monthContext type="format">
+						<monthWidth type="abbreviated">
+							<month type="1">jaan</month>
+							<month type="2">veebr</month>
+							<month type="3">märts</month>
+							<month type="4">apr</month>
+							<month type="5">mai</month>
+							<month type="6">juuni</month>
+							<month type="7">juuli</month>
+							<month type="8">aug</month>
+							<month type="9">sept</month>
+							<month type="10">okt</month>
+							<month type="11">nov</month>
+							<month type="12">dets</month>
+						</monthWidth>
+						<monthWidth type="wide">
+							<month type="1">jaanuar</month>
+							<month type="2">veebruar</month>
+							<month type="3">märts</month>
+							<month type="4">aprill</month>
+							<month type="5">mai</month>
+							<month type="6">juuni</month>
+							<month type="7">juuli</month>
+							<month type="8">august</month>
+							<month type="9">september</month>
+							<month type="10">oktoober</month>
+							<month type="11">november</month>
+							<month type="12">detsember</month>
+						</monthWidth>
+					</monthContext>
+				</months>
+				<days>
+					<dayContext type="format">
+						<dayWidth type="abbreviated">
+							<day type="sun">P</day>
+							<day type="mon">E</day>
+							<day type="tue">T</day>
+							<day type="wed">K</day>
+							<day type="thu">N</day>
+							<day type="fri">R</day>
+							<day type="sat">L</day>
+						</dayWidth>
+						<dayWidth type="wide">
+							<day type="sun">pühapäev</day>
+							<day type="mon">esmaspäev</day>
+							<day type="tue">teisipäev</day>
+							<day type="wed">kolmapäev</day>
+							<day type="thu">neljapäev</day>
+							<day type="fri">reede</day>
+							<day type="sat">laupäev</day>
+						</dayWidth>
+					</dayContext>
+				</days>
 				<week>
 					<minDays count="1"/>
 					<firstDay day="mon"/>

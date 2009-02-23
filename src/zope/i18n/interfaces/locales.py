@@ -595,7 +595,7 @@ class IAttributeInheritance(ILocaleInheritance):
         '__parent__' and '__name__' attribute on the value.
         """
 
-    def __getattributes__(name):
+    def __getattribute__(name):
         """Return the value of the attribute with the specified name.
 
         If an attribute is not found or is None, the next higher up Locale
