@@ -21,7 +21,8 @@ from zope.i18n.locales import Locale, LocaleDisplayNames, LocaleDates
 from zope.i18n.locales import LocaleVersion, LocaleIdentity, LocaleTimeZone
 from zope.i18n.locales import LocaleCalendar, LocaleCurrency, LocaleNumbers
 from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
-from zope.i18n.locales import LocaleOrientation
+from zope.i18n.locales import LocaleOrientation, LocaleDayContext
+from zope.i18n.locales import LocaleMonthContext
 from zope.i18n.locales.inheritance import InheritingDictionary
 
 class LocaleFactory(object):
@@ -298,7 +299,9 @@ class LocaleFactory(object):
           >>> from xml.dom.minidom import parseString
           >>> xml = u'''
           ... <months>
+          ...   <default type="format" />
           ...   <monthContext type="format">
+          ...     <default type="wide" />
           ...     <monthWidth type="wide">
           ...       <month type="1">Januar</month>
           ...       <month type="2">Februar</month>
@@ -332,6 +335,30 @@ class LocaleFactory(object):
           >>> dom = parseString(xml)
           >>> factory._extractMonths(dom.documentElement, calendar)
 
+        The contexts and widths were introduced in CLDR 1.1, the way
+        of getting month names is like this::
+        
+          >>> calendar.defaultMonthContext
+          u'format'
+        
+          >>> ctx = calendar.monthContexts[u'format']
+          >>> ctx.defaultWidth
+          u'wide'
+        
+          >>> names = [ctx.months[u'wide'][type] for type in xrange(1,13)]
+          >>> names[:7]
+          [u'Januar', u'Februar', u'Maerz', u'April', u'Mai', u'Juni', u'Juli']
+          >>> names[7:]
+          [u'August', u'September', u'Oktober', u'November', u'Dezember']
+        
+          >>> abbrs = [ctx.months[u'abbreviated'][type] for type in xrange(1,13)]
+          >>> abbrs[:6]
+          [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
+          >>> abbrs[6:]
+          [u'Jul', u'Aug', u'Sep', u'Okt', u'Nov', u'Dez']
+
+        The old, CLDR 1.0 way of getting month names and abbreviations::
+
           >>> names = [calendar.months.get(type, (None, None))[0]
           ...          for type in range(1, 13)]
           >>> names[:7]
@@ -345,25 +372,46 @@ class LocaleFactory(object):
           [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
           >>> abbrs[6:]
           [u'Jul', u'Aug', u'Sep', u'Okt', u'Nov', u'Dez']
+        
+       
         """
+        
+        defaultMonthContext_node = months_node.getElementsByTagName('default')
+        if defaultMonthContext_node:
+            calendar.defaultMonthContext = defaultMonthContext_node[0].getAttribute('type')
+        
         monthContext_nodes = months_node.getElementsByTagName('monthContext')
         if not monthContext_nodes:
             return
-        format_node = None
-        for node in monthContext_nodes:
-            if node.getAttribute('type') == 'format':
-                format_node = node
-                break
-        if not format_node:
-            return
 
-        names_node = abbrs_node = None
-        for node in format_node.getElementsByTagName('monthWidth'):
-            type = node.getAttribute('type')
-            if type == 'abbreviated':
-                abbrs_node = node
-            elif type == 'wide':
-                names_node = node
+        calendar.monthContexts = InheritingDictionary()
+        names_node = abbrs_node = None # BBB
+        
+        for node in monthContext_nodes:
+            context_type = node.getAttribute('type')
+            mctx = LocaleMonthContext(context_type)
+            calendar.monthContexts[context_type] = mctx
+
+            defaultWidth_node = node.getElementsByTagName('default')
+            if defaultWidth_node:
+                mctx.defaultWidth = defaultWidth_node[0].getAttribute('type')
+
+            widths = InheritingDictionary()
+            mctx.months = widths
+            for width_node in node.getElementsByTagName('monthWidth'):
+                width_type = width_node.getAttribute('type')
+                width = InheritingDictionary()
+                widths[width_type] = width
+                
+                for month_node in width_node.getElementsByTagName('month'):
+                    mtype = int(month_node.getAttribute('type'))
+                    width[mtype] = self._getText(month_node.childNodes)
+                
+                if context_type == 'format':
+                    if width_type == 'abbreviated':
+                        abbrs_node = width_node
+                    elif width_type == 'wide':
+                        names_node = width_node
         
         if not (names_node and abbrs_node):
             return
@@ -400,7 +448,9 @@ class LocaleFactory(object):
           >>> from xml.dom.minidom import parseString
           >>> xml = u'''
           ... <days>
+          ...   <default type="format" />
           ...   <dayContext type="format">
+          ...     <default type="wide" />
           ...     <dayWidth type="wide">
           ...       <day type="sun">Sonntag</day>
           ...       <day type="mon">Montag</day>
@@ -424,37 +474,79 @@ class LocaleFactory(object):
           >>> dom = parseString(xml)
           >>> factory._extractDays(dom.documentElement, calendar)
 
+        Day contexts and widths were introduced in CLDR 1.1, here's
+        how to use them::
+        
+          >>> calendar.defaultDayContext
+          u'format'
+        
+          >>> ctx = calendar.dayContexts[u'format']
+          >>> ctx.defaultWidth
+          u'wide'
+        
+          >>> names = [ctx.days[u'wide'][type] for type in xrange(1,8)]
+          >>> names[:4]
+          [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
+          >>> names[4:]
+          [u'Freitag', u'Samstag', u'Sonntag']
+
+          >>> abbrs = [ctx.days[u'abbreviated'][type] for type in xrange(1,8)]
+          >>> abbrs
+          [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
+        
+        And here's the old CLDR 1.0 way of getting day names and
+        abbreviations::
+
           >>> names = [calendar.days.get(type, (None, None))[0]
-          ...          for type in range(1, 8)]
+          ...          for type in xrange(1, 8)]
           >>> names[:4]
           [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
           >>> names[4:]
           [u'Freitag', u'Samstag', u'Sonntag']
 
           >>> abbrs = [calendar.days.get(type, (None, None))[1]
-          ...          for type in range(1, 8)]
+          ...          for type in xrange(1, 8)]
           >>> abbrs
           [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
         """
+
+        defaultDayContext_node = days_node.getElementsByTagName('default')
+        if defaultDayContext_node:
+            calendar.defaultDayContext = defaultDayContext_node[0].getAttribute('type')
+        
         dayContext_nodes = days_node.getElementsByTagName('dayContext')
         if not dayContext_nodes:
             return
-        format_node = None
-        for node in dayContext_nodes:
-            if node.getAttribute('type') == 'format':
-                format_node = node
-                break
-        if not format_node:
-            return
 
-        names_node = abbrs_node = None
-        for node in format_node.getElementsByTagName('dayWidth'):
-            type = node.getAttribute('type')
-            if type == 'abbreviated':
-                abbrs_node = node
-            elif type == 'wide':
-                names_node = node
+        calendar.dayContexts = InheritingDictionary()
+        names_node = abbrs_node = None # BBB
         
+        for node in dayContext_nodes:
+            context_type = node.getAttribute('type')
+            dctx = LocaleDayContext(context_type)
+            calendar.dayContexts[context_type] = dctx
+
+            defaultWidth_node = node.getElementsByTagName('default')
+            if defaultWidth_node:
+                dctx.defaultWidth = defaultWidth_node[0].getAttribute('type')
+
+            widths = InheritingDictionary()
+            dctx.days = widths
+            for width_node in node.getElementsByTagName('dayWidth'):
+                width_type = width_node.getAttribute('type')
+                width = InheritingDictionary()
+                widths[width_type] = width
+                
+                for day_node in width_node.getElementsByTagName('day'):
+                    dtype = dayMapping[day_node.getAttribute('type')]
+                    width[dtype] = self._getText(day_node.childNodes)
+                
+                if context_type == 'format':
+                    if width_type == 'abbreviated':
+                        abbrs_node = width_node
+                    elif width_type == 'wide':
+                        names_node = width_node
+
         if not (names_node and abbrs_node):
             return
 

@@ -247,6 +247,59 @@ class ILocaleFormatLength(Interface):
         readonly = True)
 
 
+class ILocaleMonthContext(Interface):
+    """Specifices a usage context for month names"""
+
+    type = TextLine(
+        title=u'Month context type',
+        description=u"Name of the month context, format or stand-alone.")
+
+    defaultWidth = TextLine(
+        title=u'Default month name width',
+        default=u'wide')
+
+    months = Dict(
+        title=u'Month Names',
+        description=u'A mapping of month name widths to a mapping of'
+                    u'corresponding month names.',
+        key_type=Choice(
+            title=u'Width type',
+            values=(u'wide', u'abbreviated', u'narrow')),
+        value_type=Dict(
+            title=u'Month name',
+            key_type=Int(title=u'Type', min=1, max=12),
+            value_type=TextLine(title=u'Month Name'))
+        )
+
+
+class ILocaleDayContext(Interface):
+    """Specifices a usage context for days names"""
+
+    type = TextLine(
+        title=u'Day context type',
+        description=u"Name of the day context, format or stand-alone.")
+
+    defaultWidth = TextLine(
+        title=u'Default day name width',
+        default=u'wide')
+
+    days = Dict(
+        title=u'Day Names',
+        description=u'A mapping of day name widths to a mapping of'
+                    u'corresponding day names.',
+        key_type=Choice(
+            title=u'Width type',
+            values=(u'wide', u'abbreviated', u'narrow')),
+        value_type=Dict(
+            title=u'Day name',
+            key_type=Choice(
+                title=u"Type",
+                values=(u'sun', u'mon', u'tue', u'wed',
+                        u'thu', u'fri', u'sat')),
+            value_type=TextLine(title=u'Day Name'))
+        )
+
+
 class ILocaleCalendar(Interface):
     """There is a massive amount of information contained in the calendar,
     which made it attractive to be added."""
@@ -255,6 +308,19 @@ class ILocaleCalendar(Interface):
         title=u"Calendar Type",
         description=u"Name of the calendar, for example 'gregorian'.")
 
+    defaultMonthContext = TextLine(
+        title=u'Default month context',
+        default=u'format')
+    
+    monthContexts = Dict(
+        title=u'Month Contexts',
+        description=u'A mapping of month context types to '
+                    u'ILocaleMonthContext objects',
+        key_type=Choice(title=u'Type',
+                        values=(u'format', u'stand-alone')),
+        value_type=Field(title=u'ILocaleMonthContext object'))
+
+    # BBB: leftover from CLDR 1.0
     months = Dict(
         title = u"Month Names",
         description = u"A mapping of all month names and abbreviations",
@@ -262,6 +328,19 @@ class ILocaleCalendar(Interface):
         value_type = Tuple(title=u"Month Name and Abbreviation",
                            min_length=2, max_length=2))
 
+    defaultDayContext = TextLine(
+        title=u'Default day context',
+        default=u'format')
+    
+    dayContexts = Dict(
+        title=u'Day Contexts',
+        description=u'A mapping of day context types to '
+                    u'ILocaleDayContext objects',
+        key_type=Choice(title=u'Type',
+                        values=(u'format', u'stand-alone')),
+        value_type=Field(title=u'ILocaleDayContext object'))
+
+    # BBB: leftover from CLDR 1.0
     days = Dict(
         title=u"Weekdays Names",
         description = u"A mapping of all month names and abbreviations",

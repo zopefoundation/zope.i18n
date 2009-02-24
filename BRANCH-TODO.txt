@@ -15,12 +15,10 @@ maintain full backward compatibility with earlier locale interfaces.
 CLDR 1.1 (LDML 1.1)
 -------------------
 
-Updated the XML files and fixed incompatibilities.
+- Updated the XML files and fixed incompatibilities.
+- Added support day and month contexts and widths.
 
-Still need to add interface/implementation for day/month context
-and day/month width system.
-
-Review other non-critical changes and implement them.
+Still need to review other not so critical changes and implement them.
 
 CLDR 1.2 (LDML 1.2)
 -------------------
