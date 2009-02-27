@@ -19,7 +19,8 @@ CLDR 1.1 (LDML 1.1)
 - Added support day and month contexts and widths.
 - Added support for calendar aliases.
 
-Still need to review other not so critical changes and implement them.
+This was merged into trunk on 2009-02-27.
+
 
 CLDR 1.2 (LDML 1.2)
 -------------------
