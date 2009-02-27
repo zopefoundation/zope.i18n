@@ -2,15 +2,15 @@
 Locales XML Files
 =================
 
-The XML locale files were produced as part of the ICU I18n and L10n
-framework. They are provided here under the original ICU License - ICU 1.8.1
-and later license. 
+The XML locale files were produced as part of the Unicode Common Locale
+Data Repository (CLDR). They are provided here under the Unicode Terms of
+Use (see http://unicode.org/copyright.html). 
 
 
-ICU Web site
-------------
+CLDR Web site
+-------------
 
-  http://oss.software.ibm.com/icu/
+  http://www.unicode.org/cldr/
 
 
 Locale Data Markup Language
@@ -20,16 +20,13 @@ The XML files follow the now public and completed LDML format.
 
 The DTD can be found at
 
-  http://www.openi18n.org/spec/ldml/1.0/ldml-spec.htm
+  http://www.unicode.org/cldr/dtd/1.1/ldml.dtd
 
 The specification is at
 
-  http://www.openi18n.org/spec/ldml/1.0/ldml.dtd
+  http://www.unicode.org/reports/tr35/tr35-2.html
 
 
 Download::
 
-  $ cvs -d :pserver:anoncvs@oss.software.ibm.com:/usr/cvs/icu login
-  Password: anoncvs
-  $ cvs -d :pserver:anoncvs@oss.software.ibm.com:/usr/cvs/icu co \
-    -d new_locales locale/common/main -d data
+  http://www.unicode.org/cldr/repository_access.html

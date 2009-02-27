@@ -29,6 +29,7 @@ from zope.i18n.interfaces.locales import ILocaleTimeZone, ILocaleCalendar
 from zope.i18n.interfaces.locales import ILocaleCurrency, ILocaleNumbers
 from zope.i18n.interfaces.locales import ILocaleFormat, ILocaleFormatLength
 from zope.i18n.interfaces.locales import ILocaleOrientation
+from zope.i18n.interfaces.locales import ILocaleDayContext, ILocaleMonthContext
 from zope.i18n.format import NumberFormat, DateTimeFormat
 from zope.i18n.locales.inheritance import \
      AttributeInheritance, InheritingDictionary, NoParentException
@@ -69,6 +70,10 @@ dayMapping = {'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4,
 
 BC = 1
 AD = 2
+
+calendarAliases = {'islamic': ('arabic',),
+                   'islamic-civil': ('civil-arabic',),
+                   'buddhist': ('thai-buddhist', )}
 
 class LocaleIdentity(object):
     """Represents a unique identification of the locale
@@ -232,6 +237,26 @@ class LocaleFormatLength(AttributeInheritance):
         """Initialize the object."""
         self.type = type
         self.default = None
+
+
+class LocaleMonthContext(AttributeInheritance):
+
+    implements(ILocaleMonthContext)
+
+    def __init__(self, type=None):
+        """Initialize the object."""
+        self.type = type
+        self.default = u'wide'
+
+
+class LocaleDayContext(AttributeInheritance):
+
+    implements(ILocaleDayContext)
+
+    def __init__(self, type=None):
+        """Initialize the object."""
+        self.type = type
+        self.default = u'wide'
 
 
 class LocaleCalendar(AttributeInheritance):

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE ldml SYSTEM "http://www.openi18n.org/spec/ldml/1.0/ldml.dtd">
+<!DOCTYPE ldml SYSTEM "http://www.unicode.org/cldr/dtd/1.1/ldml.dtd">
 <ldml>
 	<identity>
-		<version number="1.0"/>
-		<generation date="2003-12-19" />
+		<version number="1.1"/>
+		<generation date="2004-06-04" />
 		<language type="de" /> 
 		<territory type="LU" /> 
 	</identity>
@@ -50,6 +50,9 @@
 			<currency type="LUF">
 				<displayName>Luxemburgischer Franc</displayName>
 				<symbol>F</symbol>
+				<pattern>#,##0 ¤;-#,##0 ¤</pattern>
+				<decimal>#,##0 ¤;-#,##0 ¤</decimal>
+				<group>,</group>
 			</currency>
 		</currencies>
 	</numbers>
