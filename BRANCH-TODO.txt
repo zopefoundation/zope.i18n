@@ -17,6 +17,7 @@ CLDR 1.1 (LDML 1.1)
 
 - Updated the XML files and fixed incompatibilities.
 - Added support day and month contexts and widths.
+- Added support for calendar aliases.
 
 Still need to review other not so critical changes and implement them.
 

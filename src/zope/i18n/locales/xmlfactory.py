@@ -22,7 +22,7 @@ from zope.i18n.locales import LocaleVersion, LocaleIdentity, LocaleTimeZone
 from zope.i18n.locales import LocaleCalendar, LocaleCurrency, LocaleNumbers
 from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
 from zope.i18n.locales import LocaleOrientation, LocaleDayContext
-from zope.i18n.locales import LocaleMonthContext
+from zope.i18n.locales import LocaleMonthContext, calendarAliases
 from zope.i18n.locales.inheritance import InheritingDictionary
 
 class LocaleFactory(object):
@@ -825,7 +825,7 @@ class LocaleFactory(object):
           ...         </dateTimeFormatLength>
           ...       </dateTimeFormats>
           ...     </calendar>
-          ...     <calendar type="thai-buddhist">
+          ...     <calendar type="buddhist">
           ...       <eras>
           ...         <era type="0">BE</era>
           ...       </eras>
@@ -838,7 +838,13 @@ class LocaleFactory(object):
           >>> keys = calendars.keys()
           >>> keys.sort()
           >>> keys
-          [u'gregorian', u'thai-buddhist']
+          [u'buddhist', u'gregorian', 'thai-buddhist']
+          
+        Note that "thai-buddhist" are added as an alias to "buddhist".
+        
+          >>> calendars['buddhist'] is calendars['thai-buddhist']
+          True
+          
         """
         cals_nodes = dates_node.getElementsByTagName('calendars')
         # no calendar node
@@ -890,6 +896,9 @@ class LocaleFactory(object):
                     setattr(calendar, formatsName, formats)
 
             calendars[calendar.type] = calendar
+            if calendar.type in calendarAliases:
+                for alias in calendarAliases[calendar.type]:
+                    calendars[alias] = calendar
 
         return calendars
 

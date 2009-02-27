@@ -71,6 +71,10 @@ dayMapping = {'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4,
 BC = 1
 AD = 2
 
+calendarAliases = {'islamic': ('arabic',),
+                   'islamic-civil': ('civil-arabic',),
+                   'buddhist': ('thai-buddhist', )}
+
 class LocaleIdentity(object):
     """Represents a unique identification of the locale
 
