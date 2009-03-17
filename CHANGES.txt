@@ -9,6 +9,10 @@ CHANGES
   and day names and different month/day name widths. More CLDR updates
   are expected, see the "nadako-cldr" branch of zope.i18n.
 
+- Add `configure.zcml` that registers standard negotiator utility and includes
+  ``zope.i18n.locales`` configuration. This was previously done by
+  ``zope.app.i18n``.
+
 
 3.6.0 (2008-10-26)
 ------------------
