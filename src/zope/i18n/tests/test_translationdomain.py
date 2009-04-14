@@ -126,21 +126,19 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
                          translate(u'Color: ${color1}/${color2}', mapping=mapping,
                                    target_language='en'))
 
-
-
     def testMessageIDTranslateForDifferentDomain(self):
-        domain = TranslationDomain('other')
+        domain = TranslationDomain('alt')
         path = testdir()
-        en_catalog = GettextMessageCatalog('en', 'other',
-                                           os.path.join(path, 'en-default.mo'))
+        en_catalog = GettextMessageCatalog('en', 'alt',
+                                           os.path.join(path, 'en-alt.mo'))
         domain.addCatalog(en_catalog)
 
-        zope.component.provideUtility(domain, ITranslationDomain, 'other')
+        zope.component.provideUtility(domain, ITranslationDomain, 'alt')
 
-        factory = MessageFactory('other')
-        msgid = factory(u'short_greeting', 'default')
+        factory = MessageFactory('alt')
+        msgid = factory(u'special', 'default')
         self.assertEqual(
-            self._domain.translate(msgid, target_language='en'), u'Hello!')
+            self._domain.translate(msgid, target_language='en'), u'Wow')
 
     def testSimpleFallbackTranslation(self):
         translate = self._domain.translate

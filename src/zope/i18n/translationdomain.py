@@ -77,16 +77,18 @@ class TranslationDomain(SimpleTranslationDomain):
             target_language = negotiator.getLanguage(langs, context)
 
         return self._recursive_translate(
-            msgid, mapping, target_language, default)
+            msgid, mapping, target_language, default, context)
 
     def _recursive_translate(self, msgid, mapping, target_language, default,
-                             seen=None):
+                             context, seen=None):
         """Recursively translate msg."""
         # MessageID attributes override arguments
         if isinstance(msgid, Message):
             if msgid.domain != self.domain:
                 util = zope.component.getUtility(
                     ITranslationDomain, msgid.domain)
+                return util.translate(msgid, mapping, context,
+                                      target_language, default)
             default = msgid.default
             mapping = msgid.mapping
 
@@ -107,7 +109,7 @@ class TranslationDomain(SimpleTranslationDomain):
                             value)
                     mapping[key] = self._recursive_translate(
                         value, mapping, target_language,
-                        default, seen)
+                        default, context, seen)
 
         if default is None:
             default = unicode(msgid)

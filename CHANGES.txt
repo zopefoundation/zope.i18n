@@ -5,7 +5,10 @@ CHANGES
 3.7.1 (unreleased)
 ------------------
 
-- ...
+- Fix translation domains translating a message for a different domain. In the
+  process, fix testMessageIDTranslateForDifferentDomain which seemed to work by
+  mistake as the "other" and "default" domains used the same catalog. This is
+  basically a reversion of 39991.
 
 
 3.7.0 (2009-03-18)
