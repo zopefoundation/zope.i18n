@@ -17,7 +17,7 @@ $Id$
 """
 import zope.component
 from zope.i18nmessageid import Message
-from zope.i18n import interpolate
+from zope.i18n import translate, interpolate
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 
@@ -85,10 +85,8 @@ class TranslationDomain(SimpleTranslationDomain):
         # MessageID attributes override arguments
         if isinstance(msgid, Message):
             if msgid.domain != self.domain:
-                util = zope.component.getUtility(
-                    ITranslationDomain, msgid.domain)
-                return util.translate(msgid, mapping, context,
-                                      target_language, default)
+                return translate(msgid, msgid.domain, mapping, context,
+                                 target_language, default)
             default = msgid.default
             mapping = msgid.mapping
 

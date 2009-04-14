@@ -126,6 +126,33 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
                          translate(u'Color: ${color1}/${color2}', mapping=mapping,
                                    target_language='en'))
 
+        # If we have mapping with a message id from a different domain, make sure
+        # we use that domain, not ours. If the message domain is not registered yet,
+        # we should return a defualt translation.
+        alt_factory = MessageFactory('alt')
+        msgid_sub = alt_factory(u'special', default=u'oohhh')
+        mapping = {'message': msgid_sub}
+        msgid = factory(u'46-not-there', 'Message: ${message}',
+                                  mapping=mapping)
+        # test we get a default with no domain registerd
+        self.assertEqual(
+            translate(msgid, target_language='en', default="default"),
+            "Message: oohhh")
+        # provide the domain
+        domain = TranslationDomain('alt')
+        path = testdir()
+        en_catalog = GettextMessageCatalog('en', 'alt',
+                                           os.path.join(path, 'en-alt.mo'))
+        domain.addCatalog(en_catalog)
+        # test that we get the right translation
+        zope.component.provideUtility(domain, ITranslationDomain, 'alt')
+        self.assertEqual(
+            translate(msgid, target_language='en', default="default"),
+            "Message: Wow")
+
+
+
+
     def testMessageIDTranslateForDifferentDomain(self):
         domain = TranslationDomain('alt')
         path = testdir()
