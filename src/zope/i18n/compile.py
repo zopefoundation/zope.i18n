@@ -16,6 +16,7 @@ logger = logging.getLogger('zope.i18n')
 def compile_mo_file(domain, lc_messages_path):
     """Creates or updates a mo file in the locales folder."""
     if not HAS_PYTHON_GETTEXT:
+        logger.warn("Unable to compile messages: Python `gettext` library missing.")
         return
 
     base = join(lc_messages_path, domain)
