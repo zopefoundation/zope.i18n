@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-3.7.1 (unreleased)
+3.7.1 (2009-08-07)
 ------------------
 
 - Fixed the interpackage translation domain merging feature to actually work.
