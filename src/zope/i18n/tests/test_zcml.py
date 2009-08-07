@@ -84,7 +84,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     def testRegisterDistributedTranslations(self):
         from zope.configuration import xmlconfig
-        self.assert_(queryUtility(ITranslationDomain) is None)
+        self.assert_(queryUtility(ITranslationDomain, 'zope-i18n') is None)
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">

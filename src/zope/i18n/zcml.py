@@ -20,8 +20,9 @@ __docformat__ = 'restructuredtext'
 
 import os
 
+from zope.component import getGlobalSiteManager
 from zope.component import queryUtility
-from zope.component.zcml import utility
+from zope.component.interface import provideInterface
 from zope.configuration.fields import Path
 from zope.interface import Interface
 
@@ -42,10 +43,26 @@ class IRegisterTranslationsDirective(Interface):
         required=True
         )
 
+
 def allow_language(lang):
     if config.ALLOWED_LANGUAGES is None:
         return True
     return lang in config.ALLOWED_LANGUAGES
+
+
+def handler(catalogs, name):
+    """ special handler handling the merging of two message catalogs """
+    gsm = getGlobalSiteManager()
+    # Try to get an existing domain and add the given catalogs to it
+    domain = queryUtility(ITranslationDomain, name)
+    if domain is None:
+        domain = TranslationDomain(name)
+        gsm.registerUtility(domain, ITranslationDomain, name=name)
+    for catalog in catalogs:
+        domain.addCatalog(catalog)
+    # make sure we have a TEST catalog for each domain:
+    domain.addCatalog(TestMessageCatalog(name))
+
 
 def registerTranslations(_context, directory):
     path = os.path.normpath(directory)
@@ -75,15 +92,20 @@ def registerTranslations(_context, directory):
 
     # Now create TranslationDomain objects and add them as utilities
     for name, langs in domains.items():
-        # Try to get an existing domain and add catalogs to it
-        domain = queryUtility(ITranslationDomain, name)
-        if domain is None:
-            domain = TranslationDomain(name)
-
+        catalogs = []
         for lang, file in langs.items():
-            domain.addCatalog(GettextMessageCatalog(lang, name, file))
+            catalogs.append(GettextMessageCatalog(lang, name, file))
+        # register the necessary actions directly (as opposed to using
+        # `zope.component.zcml.utility`) since we need the actual utilities
+        # in place before the merging can be done...
+        _context.action(
+            discriminator = None,
+            callable = handler,
+            args = (catalogs, name))
 
-        # make sure we have a TEST catalog for each domain:
-        domain.addCatalog(TestMessageCatalog(name))
-
-        utility(_context, ITranslationDomain, domain, name=name)
+    # also register the interface for the translation utilities
+    provides = ITranslationDomain
+    _context.action(
+        discriminator = None,
+        callable = provideInterface,
+        args = (provides.__module__ + '.' + provides.getName(), provides))

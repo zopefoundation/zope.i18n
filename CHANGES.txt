@@ -5,6 +5,12 @@ CHANGES
 3.7.1 (unreleased)
 ------------------
 
+- Fixed the interpackage translation domain merging feature to actually work.
+  We need to defer the merging into the ZCML handler execution phase, as the
+  utilities don't exist yet during the ZCML parsing phase. Thx to Andreas
+  Zeidler for finding and fixing the issue in PlacelessTranslationService in
+  the first place.
+
 - Fix translation domains translating a message for a different domain. In the
   process, fix testMessageIDTranslateForDifferentDomain which seemed to work by
   mistake as the "other" and "default" domains used the same catalog. This is
