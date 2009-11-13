@@ -5,7 +5,8 @@ CHANGES
 3.7.2 (unreleased)
 ------------------
 
-
+- It's a critical error when the ``GetText`` library is unavailable
+  and compilation is required.
 
 3.7.1 (2009-08-07)
 ------------------
