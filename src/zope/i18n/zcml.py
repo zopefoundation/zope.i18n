@@ -20,7 +20,7 @@ __docformat__ = 'restructuredtext'
 
 import os
 
-from zope.component import getGlobalSiteManager
+from zope.component import getSiteManager
 from zope.component import queryUtility
 from zope.component.interface import provideInterface
 from zope.configuration.fields import Path
@@ -52,7 +52,7 @@ def allow_language(lang):
 
 def handler(catalogs, name):
     """ special handler handling the merging of two message catalogs """
-    gsm = getGlobalSiteManager()
+    gsm = getSiteManager()
     # Try to get an existing domain and add the given catalogs to it
     domain = queryUtility(ITranslationDomain, name)
     if domain is None:

@@ -8,6 +8,11 @@ CHANGES
 - It's a critical error when the ``GetText`` library is unavailable
   and compilation is required.
 
+- Use getSiteManager rather than getGlobalSiteManager in ZCML (these
+  should be one in the same in any non-fancy setup, however if you've
+  hooked getSiteManager, you want the ZCML handler to use the hooked
+  version).
+
 3.7.1 (2009-08-07)
 ------------------
 
