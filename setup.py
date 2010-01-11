@@ -29,7 +29,7 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version = '3.7.3dev',
+    version='3.7.3dev',
     author='Zope Corporation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope3 Internationalization Support',
@@ -41,7 +41,7 @@ setup(
     license='ZPL 2.1',
     keywords=('zope3 internationalization localization i18n l10n '
               'gettext ICU locale'),
-    classifiers = [
+    classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
@@ -53,7 +53,7 @@ setup(
         'Framework :: Zope3'],
     url='http://pypi.python.org/pypi/zope.i18n',
     packages=find_packages('src'),
-    package_dir = {'': 'src'},
+    package_dir={'': 'src'},
     namespace_packages=['zope',],
     install_requires=['setuptools',
                       'pytz',
@@ -61,11 +61,11 @@ setup(
                       'zope.i18nmessageid',
                       'zope.component',
                       ],
-    include_package_data = True,
-    zip_safe = False,
-    extras_require = dict(
-        compile = ['python-gettext'],
-        zcml = [
+    include_package_data=True,
+    zip_safe=False,
+    extras_require=dict(
+        compile=['python-gettext'],
+        zcml=[
             'zope.component [zcml]',
             'zope.configuration',
             ],
