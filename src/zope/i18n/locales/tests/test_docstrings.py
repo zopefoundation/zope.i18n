@@ -16,8 +16,9 @@
 $Id$
 """
 import unittest
-from zope.testing.doctestunit import DocTestSuite
-from zope.i18n.locales.inheritance import AttributeInheritance, NoParentException
+from doctest import DocTestSuite
+from zope.i18n.locales.inheritance import AttributeInheritance
+from zope.i18n.locales.inheritance import NoParentException
 
 class LocaleInheritanceStub(AttributeInheritance):
 
