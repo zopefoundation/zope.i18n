@@ -29,10 +29,10 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version='3.7.3dev',
+    version='3.7.3',
     author='Zope Corporation and Contributors',
     author_email='zope-dev@zope.org',
-    description='Zope3 Internationalization Support',
+    description='Zope Internationalization Support',
     long_description=(
         read('README.txt')
         + '\n\n' +

@@ -2,8 +2,8 @@
 CHANGES
 =======
 
-Next release
-------------
+3.7.3 (2010-04-30)
+------------------
 
 - Removed use of 'zope.testing.doctestunit' in favor of stdlib's 'doctest.
 
