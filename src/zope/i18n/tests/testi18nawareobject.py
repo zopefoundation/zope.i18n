@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This is a test for the II18nAware interface.
-
-$Id$
 """
 import unittest
 

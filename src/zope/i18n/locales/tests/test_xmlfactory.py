@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Testing all XML Locale functionality.
-
-$Id$
 """
 import os
 from unittest import TestCase, TestSuite, makeSuite, main

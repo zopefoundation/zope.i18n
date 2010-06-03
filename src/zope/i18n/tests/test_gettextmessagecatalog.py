@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Test a gettext implementation of a Message Catalog.
-
-$Id$
 """
 import unittest, os
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog

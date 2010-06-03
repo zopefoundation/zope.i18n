@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
-
-$Id$
 """
 import os
 import datetime

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """A simple implementation of a Message Catalog.
-
-$Id$
 """
 from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog

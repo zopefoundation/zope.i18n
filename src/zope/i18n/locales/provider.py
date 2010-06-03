@@ -15,8 +15,6 @@
 
 The Locale Provider looks up locales and loads them from the XML data, if
 necessary.
-
-$Id$
 """
 import os
 from zope.interface import implements

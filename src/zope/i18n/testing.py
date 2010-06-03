@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Unit test logic for setting up and tearing down basic infrastructure
-
-$Id$
 """
 import zope.component
 from zope.publisher.browser import BrowserLanguages

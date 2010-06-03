@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Internationalization of content objects.
-
-$Id$
 """
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Dict, Choice, Field

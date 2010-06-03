@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This module tests the regular persistent Translation Domain.
-
-$Id$
 """
 import unittest
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain

@@ -15,8 +15,6 @@
 
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
-
-$Id$
 """
 import re
 import math

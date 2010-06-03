@@ -13,8 +13,6 @@
 #
 ##############################################################################
 """This module handles the 'i18n' namespace directives.
-
-$Id$
 """
 __docformat__ = 'restructuredtext'
 

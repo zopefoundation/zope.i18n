@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
-
-$Id$
 """
 import decimal
 import os

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Fallback collator
-
-$Id$
 """
 
 from unicodedata import normalize
@@ -29,5 +27,3 @@ class FallbackCollator:
 
     def cmp(self, s1, s2):
         return cmp(self.key(s1), self.key(s2))
-
-        

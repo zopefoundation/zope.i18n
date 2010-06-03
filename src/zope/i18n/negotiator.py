@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Language Negotiator
-
-$Id$
 """
 from zope.interface import implements
 

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This is a simple implementation of the ITranslationDomain interface.
-
-$Id$
 """
 from zope.interface import implements
 from zope.component import getUtility

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
-
-$Id$
 """
 import zope.component
 from zope.i18nmessageid import Message

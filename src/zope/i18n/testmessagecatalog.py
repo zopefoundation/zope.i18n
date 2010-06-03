@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Test message catalog
-
-$Id$
 """
 
 from zope import component, interface

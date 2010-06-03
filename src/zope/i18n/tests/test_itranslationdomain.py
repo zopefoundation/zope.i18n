@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This is an 'abstract' test for the ITranslationDomain interface.
-
-$Id$
 """
 import unittest
 from zope.interface.verify import verifyObject

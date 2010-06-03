@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """XML Locale-related objects and functions
-
-$Id$
 """
 from datetime import datetime, date, time
 from xml.dom.minidom import parse as parseXML

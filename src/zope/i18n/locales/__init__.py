@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Locale and LocaleProvider Implementation.
-
-$Id$
 """
 __docformat__ = 'restructuredtext'
 

@@ -17,8 +17,6 @@ This module provides support for locale inheritance.
 
 Note: In many respects this is similar to Zope 2's acquisition model, since
 locale inheritance is not inheritance in the programming sense.
-
-$Id$
 """
 __docformat__ = 'restructuredtext'
 

@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Interfaces related to Locales
-
-$Id$
 """
 import re
 from zope.interface import Interface, Attribute

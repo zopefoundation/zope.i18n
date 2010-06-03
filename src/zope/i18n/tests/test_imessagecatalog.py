@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """This is an 'abstract' test for the IMessageCatalog interface.
-
-$Id$
 """
 import unittest
 from zope.interface.verify import verifyObject

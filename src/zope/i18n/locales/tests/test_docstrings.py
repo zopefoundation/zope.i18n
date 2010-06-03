@@ -12,8 +12,6 @@
 #
 ##############################################################################
 """Tests for the ZCML Documentation Module
-
-$Id$
 """
 import unittest
 from doctest import DocTestSuite
