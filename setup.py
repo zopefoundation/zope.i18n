@@ -62,6 +62,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     extras_require=dict(
+        test=['zope.testing'],
         compile=['python-gettext'],
         zcml=[
             'zope.component [zcml]',
