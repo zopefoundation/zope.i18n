@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-3.7.4 (unreleased)
+3.7.4 (2010-07-08)
 ------------------
 
 - Added missing test dependency on ``zope.testing``.
