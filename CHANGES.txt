@@ -5,7 +5,8 @@ CHANGES
 3.7.5 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Include meta.zcml files in our own zcml configuration as needed, added a
+  test for our configure.zcml.
 
 
 3.7.4 (2010-07-08)

@@ -67,6 +67,7 @@ setup(
         zcml=[
             'zope.component [zcml]',
             'zope.configuration',
+            'zope.security',
             ],
         ),
     )
