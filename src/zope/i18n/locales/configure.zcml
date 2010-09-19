@@ -1,6 +1,8 @@
 <configure
    xmlns="http://namespaces.zope.org/zope">
 
+  <include file="meta.zcml" package="zope.security" />
+
   <class class="zope.i18n.format.NumberFormat">
     <allow interface="zope.i18n.interfaces.INumberFormat" />
   </class>

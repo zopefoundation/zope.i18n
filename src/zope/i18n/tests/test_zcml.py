@@ -13,6 +13,7 @@
 ##############################################################################
 """Test the gts ZCML namespace directives.
 """
+import doctest
 import os
 import shutil
 import stat
@@ -154,4 +155,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
 
 def test_suite():
-    return unittest.makeSuite(DirectivesTest)
+    return unittest.TestSuite((
+            unittest.makeSuite(DirectivesTest),
+            doctest.DocFileSuite('configure.txt'),
+            ))

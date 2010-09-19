@@ -1,5 +1,7 @@
 <configure xmlns="http://namespaces.zope.org/zope">
 
+  <include file="meta.zcml" package="zope.component" />
+
   <utility
       provides="zope.i18n.interfaces.INegotiator"
       component="zope.i18n.negotiator.negotiator"
