@@ -26,7 +26,7 @@ from zope.i18n.interfaces import IFallbackTranslationDomainFactory
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the
 # zope.tal.taldefs module:
-NAME_RE = r"[a-zA-Z][-a-zA-Z0-9_]*"
+NAME_RE = r"[a-zA-Z_][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
     % ({'n': NAME_RE}))

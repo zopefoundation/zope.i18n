@@ -8,6 +8,8 @@ CHANGES
 - Include meta.zcml files in our own zcml configuration as needed, added a
   test for our configure.zcml.
 
+- Update zope.i18n.NAME_RE to be identical to zope.tal as required by the
+  comment next to it. Fixes #611746.
 
 3.7.4 (2010-07-08)
 ------------------
