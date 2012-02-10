@@ -17,12 +17,14 @@
 __docformat__ = 'restructuredtext'
 
 import os
+from glob import glob
 
 from zope.component import getSiteManager
 from zope.component import queryUtility
 from zope.component.interface import provideInterface
 from zope.configuration.fields import Path
 from zope.interface import Interface
+from zope.schema import TextLine
 
 from zope.i18n import config
 from zope.i18n.compile import compile_mo_file
@@ -39,6 +41,13 @@ class IRegisterTranslationsDirective(Interface):
         title=u"Directory",
         description=u"Directory containing the translations",
         required=True
+        )
+
+    domain = TextLine(
+        title=u"Domain",
+        description=u"Translation domain to register.  If not specified, "
+                     "all domains found in the directory are registered",
+        required=False
         )
 
 
@@ -62,7 +71,7 @@ def handler(catalogs, name):
     domain.addCatalog(TestMessageCatalog(name))
 
 
-def registerTranslations(_context, directory):
+def registerTranslations(_context, directory, domain='*'):
     path = os.path.normpath(directory)
     domains = {}
 
@@ -76,17 +85,18 @@ def registerTranslations(_context, directory):
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files
             if config.COMPILE_MO_FILES:
-                for domain_file in os.listdir(lc_messages_path):
-                    if domain_file.endswith('.po'):
-                        domain = domain_file[:-3]
-                        compile_mo_file(domain, lc_messages_path)
-            for domain_file in os.listdir(lc_messages_path):
-                if domain_file.endswith('.mo'):
-                    domain_path = os.path.join(lc_messages_path, domain_file)
-                    domain = domain_file[:-3]
-                    if not domain in domains:
-                        domains[domain] = {}
-                    domains[domain][language] = domain_path
+                for domain_path in glob(os.path.join(lc_messages_path,
+                                                     '%s.po' % domain)):
+                    domain_file = os.path.basename(domain_path)
+                    name = domain_file[:-3]
+                    compile_mo_file(name, lc_messages_path)
+            for domain_path in glob(os.path.join(lc_messages_path,
+                                                 '%s.mo' % domain)):
+                domain_file = os.path.basename(domain_path)
+                name = domain_file[:-3]
+                if not name in domains:
+                    domains[name] = {}
+                domains[name][language] = domain_path
 
     # Now create TranslationDomain objects and add them as utilities
     for name, langs in domains.items():

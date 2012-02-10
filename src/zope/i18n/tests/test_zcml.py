@@ -153,6 +153,24 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         # Reset the mtime of the mo file
         os.utime(path, (path_atime, path_mtime))
 
+    def testRegisterTranslationsForDomain(self):
+        from zope.configuration import xmlconfig
+        self.assert_(queryUtility(ITranslationDomain, 'zope-i18n') is None)
+        self.assert_(queryUtility(ITranslationDomain, 'zope-i18n2') is None)
+        xmlconfig.string(
+            template % '''
+            <configure package="zope.i18n.tests">
+            <i18n:registerTranslations directory="locale3" domain="zope-i18n" />
+            </configure>
+            ''', self.context)
+        path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
+                            'locale3', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
+        util = getUtility(ITranslationDomain, 'zope-i18n')
+        self.assertEquals(util._catalogs,
+                          {'test': ['test'], 'en': [unicode(path)]})
+
+        self.assert_(queryUtility(ITranslationDomain, 'zope-i18n2') is None)
+
 
 def test_suite():
     return unittest.TestSuite((

@@ -2,14 +2,19 @@
 CHANGES
 =======
 
-3.7.5 (unreleased)
+3.8.0 (unreleased)
 ------------------
+
+- Added optional ``domain`` attribute to ``registerTranslations`` directive to
+  only load the specified translation domain. Allows to move catalogs to
+  `/usr/share/locale` and avoid loading hundreds of unrelated domains.
 
 - Include meta.zcml files in our own zcml configuration as needed, added a
   test for our configure.zcml.
 
 - Update zope.i18n.NAME_RE to be identical to zope.tal as required by the
   comment next to it. Fixes #611746.
+
 
 3.7.4 (2010-07-08)
 ------------------
