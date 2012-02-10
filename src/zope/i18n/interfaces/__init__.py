@@ -306,6 +306,8 @@ class INumberFormat(IFormat):
     rules (I modified the rules from ICU a bit, since I think they did not
     agree well with the real world XML formatting strings):
 
+    .. code-block:: none
+
       posNegPattern      := ({subpattern};{subpattern} | {subpattern})
       subpattern         := {padding}{prefix}{padding}{integer}{fraction}
                             {exponential}{padding}{suffix}{padding}
@@ -326,7 +328,8 @@ class INumberFormat(IFormat):
       padding            := * '\u0000'..'\uFFFD'
 
 
-    Possible pattern symbols:
+
+    Possible pattern symbols::
 
       0    A digit. Always show this digit even if the value is zero.
       #    A digit, suppressed if zero
@@ -375,8 +378,9 @@ class IDateTimeFormat(IFormat):
     """DateTime formatting and parsing interface. Here is a list of
     possible characters and their meaning:
 
+      ====== ===================== ================= =====================
       Symbol Meaning               Presentation      Example
-
+      ====== ===================== ================= =====================
       G      era designator        (Text)            AD
       y      year                  (Number)          1996
       M      month in year         (Text and Number) July and 07
@@ -397,6 +401,7 @@ class IDateTimeFormat(IFormat):
       z      time zone             (Text)            Pacific Standard Time
       '      escape for text
       ''     single quote                            '
+      ====== ===================== ================= =====================
 
     Meaning of the amount of characters:
 
