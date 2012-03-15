@@ -10,5 +10,5 @@ localization.
 
 * Locale discovery for Web-based requests.
 
-Please see ``docs/index.rst`` for the documentation.
+.. See ``docs/index.rst`` for the documentation.
 
