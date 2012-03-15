@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-3.8.0 (unreleased)
+3.8.0 (2012-03-15)
 ------------------
 
 - Added optional ``domain`` attribute to ``registerTranslations`` directive to
