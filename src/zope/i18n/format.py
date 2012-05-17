@@ -23,7 +23,7 @@ import pytz
 import pytz.reference
 
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
-from zope.interface import implements
+from zope.interface import implementer
 
 
 def _findFormattingCharacterInPattern(char, pattern):
@@ -33,10 +33,10 @@ def _findFormattingCharacterInPattern(char, pattern):
 class DateTimeParseError(Exception):
     """Error is raised when parsing of datetime failed."""
 
+@implementer(IDateTimeFormat)
 class DateTimeFormat(object):
     __doc__ = IDateTimeFormat.__doc__
 
-    implements(IDateTimeFormat)
 
     _DATETIMECHARS = "aGyMdEDFwWhHmsSkKz"
 
@@ -199,10 +199,10 @@ class NumberParseError(Exception):
     number parsing process."""
 
 
+@implementer(INumberFormat)
 class NumberFormat(object):
     __doc__ = INumberFormat.__doc__
 
-    implements(INumberFormat)
 
     type = None
 

@@ -20,13 +20,14 @@ locale inheritance is not inheritance in the programming sense.
 """
 __docformat__ = 'restructuredtext'
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.i18n.interfaces.locales import \
      ILocaleInheritance, IAttributeInheritance, IDictionaryInheritance
 
 class NoParentException(AttributeError):
     pass
 
+@implementer(ILocaleInheritance)
 class Inheritance(object):
     """A simple base version of locale inheritance.
 
@@ -34,7 +35,6 @@ class Inheritance(object):
     'ILocaleInheritance' implementations.
     """
 
-    implements(ILocaleInheritance)
 
     # See zope.i18n.interfaces.locales.ILocaleInheritance
     __parent__ = None
@@ -52,6 +52,7 @@ class Inheritance(object):
         return getattr(parent, self.__name__)
 
 
+@implementer(IAttributeInheritance)
 class AttributeInheritance(Inheritance):
     r"""Implementation of locale inheritance for attributes.
 
@@ -97,7 +98,6 @@ class AttributeInheritance(Inheritance):
       True
     """
 
-    implements(IAttributeInheritance)
 
     def __setattr__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
@@ -133,6 +133,7 @@ class AttributeInheritance(Inheritance):
 
 
 
+@implementer(IDictionaryInheritance)
 class InheritingDictionary(Inheritance, dict):
     """Implementation of a dictionary that can also inherit values.
 
@@ -179,7 +180,6 @@ class InheritingDictionary(Inheritance, dict):
       [(1, 'eins'), (2, 'two'), (3, 'three')]
     """
 
-    implements(IDictionaryInheritance)
 
     def __setitem__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""

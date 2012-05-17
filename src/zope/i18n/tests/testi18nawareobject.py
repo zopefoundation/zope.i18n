@@ -17,12 +17,11 @@ import unittest
 
 from zope.i18n.interfaces import II18nAware
 from zope.i18n.tests.testii18naware import TestII18nAware
-from zope.interface import implements
+from zope.interface import implementer
 
 
+@implementer(II18nAware)
 class I18nAwareContentObject(object):
-
-    implements(II18nAware)
 
     def __init__(self):
         self.content = {}

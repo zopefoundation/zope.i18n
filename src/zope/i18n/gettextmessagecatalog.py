@@ -15,7 +15,7 @@
 """
 from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
-from zope.interface import implements
+from zope.interface import implementer
 
 
 class _KeyErrorRaisingFallback(object):
@@ -23,10 +23,10 @@ class _KeyErrorRaisingFallback(object):
         raise KeyError(message)
 
 
+@implementer(IGlobalMessageCatalog)
 class GettextMessageCatalog(object):
     """A message catalog based on GNU gettext and Python's gettext module."""
 
-    implements(IGlobalMessageCatalog)
 
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""

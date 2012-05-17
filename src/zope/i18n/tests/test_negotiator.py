@@ -18,10 +18,10 @@ import unittest
 from zope.i18n.negotiator import Negotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component.testing import PlacelessSetup
-from zope.interface import implements
+from zope.interface import implementer
 
+@implementer(IUserPreferredLanguages)
 class Env(object):
-    implements(IUserPreferredLanguages)
 
     def __init__(self, langs=()):
         self.langs = langs

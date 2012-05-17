@@ -53,8 +53,8 @@ def translate(msgid, domain=None, mapping=None, context=None,
     >>> from zope import component, interface
     >>> import zope.i18n.interfaces
 
-    >>> class TestDomain:
-    ...     interface.implements(zope.i18n.interfaces.ITranslationDomain)
+    >>> @interface.implementer(zope.i18n.interfaces.ITranslationDomain)
+    ... class TestDomain:
     ...
     ...     def __init__(self, **catalog):
     ...         self.catalog = catalog

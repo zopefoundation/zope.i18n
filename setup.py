@@ -27,7 +27,7 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version='3.8.1dev',
+    version='4.0.0dev',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Internationalization Support',
@@ -45,6 +45,9 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: Zope Public License',
         'Programming Language :: Python',
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',

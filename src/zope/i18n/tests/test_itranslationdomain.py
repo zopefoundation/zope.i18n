@@ -15,7 +15,7 @@
 """
 import unittest
 from zope.interface.verify import verifyObject
-from zope.interface import implements
+from zope.interface import implementer
 
 import zope.component
 from zope.component.testing import PlacelessSetup
@@ -25,9 +25,9 @@ from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
 
 
+@implementer(IUserPreferredLanguages)
 class Environment(object):
 
-    implements(IUserPreferredLanguages)
 
     def __init__(self, langs=()):
         self.langs = langs

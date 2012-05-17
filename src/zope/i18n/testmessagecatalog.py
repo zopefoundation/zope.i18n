@@ -14,12 +14,12 @@
 """Test message catalog
 """
 
-from zope import component, interface
+from zope import interface
 import zope.i18n.interfaces
 from zope.i18n.translationdomain import TranslationDomain
 
+@interface.implementer(zope.i18n.interfaces.IGlobalMessageCatalog)
 class TestMessageCatalog:
-    interface.implements(zope.i18n.interfaces.IGlobalMessageCatalog)
 
     language = 'test'
 

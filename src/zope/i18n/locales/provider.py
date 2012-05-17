@@ -17,17 +17,17 @@ The Locale Provider looks up locales and loads them from the XML data, if
 necessary.
 """
 import os
-from zope.interface import implements
+from zope.interface import implementer
 from zope.i18n.interfaces.locales import ILocaleProvider
 
 class LoadLocaleError(Exception):
     """This error is raised if a locale cannot be loaded."""
 
 
+@implementer(ILocaleProvider)
 class LocaleProvider(object):
     """A locale provider that get's its data from the XML data."""
 
-    implements(ILocaleProvider)
 
     def __init__(self, locale_dir):
         self._locales = {}

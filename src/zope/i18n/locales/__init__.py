@@ -19,7 +19,7 @@ import os
 from datetime import datetime, date
 from time import strptime
 
-from zope.interface import implements
+from zope.interface import implementer
 from zope.i18n.interfaces.locales import ILocale
 from zope.i18n.interfaces.locales import ILocaleDisplayNames, ILocaleDates
 from zope.i18n.interfaces.locales import ILocaleVersion, ILocaleIdentity
@@ -73,6 +73,7 @@ calendarAliases = {'islamic': ('arabic',),
                    'islamic-civil': ('civil-arabic',),
                    'buddhist': ('thai-buddhist', )}
 
+@implementer(ILocaleIdentity)
 class LocaleIdentity(object):
     """Represents a unique identification of the locale
 
@@ -100,7 +101,6 @@ class LocaleIdentity(object):
       >>> id
       <LocaleIdentity (en, None, US, POSIX)>
     """
-    implements(ILocaleIdentity)
 
     def __init__(self, language=None, script=None, territory=None, variant=None):
         """Initialize object."""
@@ -116,6 +116,7 @@ class LocaleIdentity(object):
             self.language, self.script, self.territory, self.variant)
 
 
+@implementer(ILocaleVersion)
 class LocaleVersion(object):
     """Represents a particular version of a locale
 
@@ -140,7 +141,6 @@ class LocaleVersion(object):
       1
 
     """
-    implements(ILocaleVersion)
 
     def __init__(self, number, generationDate, notes):
         """Initialize object."""
@@ -155,6 +155,7 @@ class LocaleVersion(object):
                    (other.generationDate, other.number))
 
 
+@implementer(ILocaleDisplayNames)
 class LocaleDisplayNames(AttributeInheritance):
     """Locale display names with inheritable data.
 
@@ -178,9 +179,9 @@ class LocaleDisplayNames(AttributeInheritance):
       >>> locale.displayNames.keys
       ['fu', 'bahr']
     """
-    implements(ILocaleDisplayNames)
 
 
+@implementer(ILocaleTimeZone)
 class LocaleTimeZone(object):
     """Specifies one of the timezones of a specific locale.
 
@@ -199,7 +200,6 @@ class LocaleTimeZone(object):
       >>> tz.cities
       ['Berlin']
     """
-    implements(ILocaleTimeZone)
 
     def __init__(self, type):
         """Initialize the object."""
@@ -208,6 +208,7 @@ class LocaleTimeZone(object):
         self.names = {}
 
 
+@implementer(ILocaleFormat)
 class LocaleFormat(object):
     """Specifies one of the format of a specific format length.
 
@@ -216,7 +217,6 @@ class LocaleFormat(object):
     itself is often not useful, since other calendar data is required to use
     the specified pattern for formatting and parsing.
     """
-    implements(ILocaleFormat)
 
     def __init__(self, type=None):
         """Initialize the object."""
@@ -225,11 +225,11 @@ class LocaleFormat(object):
         self.pattern = u''
 
 
+@implementer(ILocaleFormatLength)
 class LocaleFormatLength(AttributeInheritance):
     """Specifies one of the format lengths of a specific quantity, like
     numbers, dates, times and datetimes."""
 
-    implements(ILocaleFormatLength)
 
     def __init__(self, type=None):
         """Initialize the object."""
@@ -237,26 +237,25 @@ class LocaleFormatLength(AttributeInheritance):
         self.default = None
 
 
+@implementer(ILocaleMonthContext)
 class LocaleMonthContext(AttributeInheritance):
 
-    implements(ILocaleMonthContext)
-
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
         self.default = u'wide'
 
 
+@implementer(ILocaleDayContext)
 class LocaleDayContext(AttributeInheritance):
 
-    implements(ILocaleDayContext)
-
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
         self.default = u'wide'
 
 
+@implementer(ILocaleCalendar)
 class LocaleCalendar(AttributeInheritance):
     """Represents locale data for a calendar, like 'gregorian'.
 
@@ -321,7 +320,6 @@ class LocaleCalendar(AttributeInheritance):
       >>> locale.am
       u'AM'
     """
-    implements(ILocaleCalendar)
 
     def __init__(self, type):
         """Initialize the object."""
@@ -379,6 +377,7 @@ class LocaleCalendar(AttributeInheritance):
         return self.days[dayMapping[self.week['firstDay']]][0]
 
 
+@implementer(ILocaleDates)
 class LocaleDates(AttributeInheritance):
     """Simple ILocaleDates implementation that can inherit data from other
     locales.
@@ -476,7 +475,6 @@ class LocaleDates(AttributeInheritance):
       ValueError: Invalid calendar: irish-catholic
 
     """
-    implements(ILocaleDates)
 
     def getFormatter(self, category, length=None, name=None,
                      calendar=u'gregorian'):
@@ -524,10 +522,10 @@ class LocaleDates(AttributeInheritance):
         return DateTimeFormat(pattern, cal)
 
 
+@implementer(ILocaleCurrency)
 class LocaleCurrency(object):
     """Simple implementation of ILocaleCurrency without inheritance support,
     since it is not needed for a single currency."""
-    implements(ILocaleCurrency)
 
     def __init__(self, type):
         """Initialize object."""
@@ -537,6 +535,7 @@ class LocaleCurrency(object):
         self.displayName = None
 
 
+@implementer(ILocaleNumbers)
 class LocaleNumbers(AttributeInheritance):
     """Implementation of ILocaleCurrency including inheritance support.
 
@@ -611,7 +610,6 @@ class LocaleNumbers(AttributeInheritance):
       u'123%'
 
     """
-    implements(ILocaleNumbers)
 
     def getFormatter(self, category, length=None, name=None):
         """See zope.i18n.interfaces.locales.ILocaleNumbers"""
@@ -634,14 +632,14 @@ class LocaleNumbers(AttributeInheritance):
         return NumberFormat(format.pattern, self.symbols)
 
 
+@implementer(ILocaleOrientation)
 class LocaleOrientation(AttributeInheritance):
     """Implementation of ILocaleOrientation
     """
-    implements(ILocaleOrientation)
 
+@implementer(ILocale)
 class Locale(AttributeInheritance):
     """Implementation of the ILocale interface."""
-    implements(ILocale)
 
     def __init__(self, id):
         self.id = id
