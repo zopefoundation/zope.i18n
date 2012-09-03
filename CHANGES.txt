@@ -5,6 +5,8 @@ CHANGES
 4.0.0 (unreleased)
 ------------------
 
+- log DEBUG when loading translations from directories.
+
 - Replaced deprecated ``zope.interface.implements`` usage with equivalent
   ``zope.interface.implementer`` decorator.
 
