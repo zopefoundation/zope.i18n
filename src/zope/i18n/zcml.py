@@ -17,6 +17,7 @@
 __docformat__ = 'restructuredtext'
 
 import os
+import logging
 from glob import glob
 
 from zope.component import getSiteManager
@@ -32,6 +33,9 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
+
+
+logger = logging.getLogger("zope.i18n")
 
 
 class IRegisterTranslationsDirective(Interface):
@@ -75,6 +79,7 @@ def registerTranslations(_context, directory, domain='*'):
     path = os.path.normpath(directory)
     domains = {}
 
+    loaded = False
     # Gettext has the domain-specific catalogs inside the language directory,
     # which is exactly the opposite as we need it. So create a dictionary that
     # reverses the nesting.
@@ -92,11 +97,14 @@ def registerTranslations(_context, directory, domain='*'):
                     compile_mo_file(name, lc_messages_path)
             for domain_path in glob(os.path.join(lc_messages_path,
                                                  '%s.mo' % domain)):
+                loaded = True
                 domain_file = os.path.basename(domain_path)
                 name = domain_file[:-3]
                 if not name in domains:
                     domains[name] = {}
                 domains[name][language] = domain_path
+    if loaded:
+        logger.debug('register directory %s' % directory)
 
     # Now create TranslationDomain objects and add them as utilities
     for name, langs in domains.items():
