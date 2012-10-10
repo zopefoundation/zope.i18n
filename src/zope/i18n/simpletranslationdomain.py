@@ -45,6 +45,13 @@ class SimpleTranslationDomain(object):
             assert isinstance(messages, dict)
             self.messages = messages
 
+    @property
+    def languages(self):
+        langs = set()
+        for (lang, msgid) in self.messages:
+            langs.add(lang)
+
+        return langs
 
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):

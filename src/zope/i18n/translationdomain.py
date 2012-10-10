@@ -17,7 +17,9 @@ import zope.component
 from zope.i18nmessageid import Message
 from zope.i18n import translate, interpolate
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
-from zope.i18n.interfaces import ITranslationDomain, INegotiator
+from zope.i18n.interfaces import INegotiator
+from zope.i18n.compile import compile_mo_file
+from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 
 # The configuration should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
@@ -31,6 +33,7 @@ LANGUAGE_FALLBACKS = ['en']
 
 
 class TranslationDomain(SimpleTranslationDomain):
+    languages = ()
 
     def __init__(self, domain, fallbacks=None):
         self.domain = domain
@@ -43,21 +46,33 @@ class TranslationDomain(SimpleTranslationDomain):
         if fallbacks is None:
             fallbacks = LANGUAGE_FALLBACKS
         self._fallbacks = fallbacks
+        self._pending = {}
+        self.languages = set()
 
     def _registerMessageCatalog(self, language, catalog_name):
         key = language
         mc = self._catalogs.setdefault(key, [])
         mc.append(catalog_name)
+        self.languages.add(language)
 
     def addCatalog(self, catalog):
         self._data[catalog.getIdentifier()] = catalog
         self._registerMessageCatalog(catalog.language,
                                      catalog.getIdentifier())
 
+    def addLanguage(self, lang, path):
+        self._pending.setdefault(lang, []).append(path)
+        self.languages.add(lang)
+
     def setLanguageFallbacks(self, fallbacks=None):
         if fallbacks is None:
             fallbacks = LANGUAGE_FALLBACKS
         self._fallbacks = fallbacks
+
+    def importCatalog(self, lang, lc_messages_path):
+        path = compile_mo_file(self.domain, lc_messages_path)
+        catalog = GettextMessageCatalog(lang, self.domain, path)
+        self.addCatalog(catalog)
 
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):
@@ -73,6 +88,10 @@ class TranslationDomain(SimpleTranslationDomain):
             negotiator = zope.component.getUtility(INegotiator)
             # try to determine target language from negotiator utility
             target_language = negotiator.getLanguage(langs, context)
+
+        paths = self._pending.pop(target_language, ())
+        for path in paths:
+            self.importCatalog(target_language, path)
 
         return self._recursive_translate(
             msgid, mapping, target_language, default, context)
@@ -124,7 +143,7 @@ class TranslationDomain(SimpleTranslationDomain):
                 # this is a slight optimization for the case when there is a
                 # single catalog. More importantly, it is extremely helpful
                 # when testing and the test language is used, because it
-                # allows the test language to get the default. 
+                # allows the test language to get the default.
                 text = self._data[catalog_names[0]].queryMessage(
                     msgid, default)
             else:

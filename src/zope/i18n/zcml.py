@@ -28,8 +28,6 @@ from zope.interface import Interface
 from zope.schema import TextLine
 
 from zope.i18n import config
-from zope.i18n.compile import compile_mo_file
-from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
@@ -61,7 +59,7 @@ def allow_language(lang):
     return lang in config.ALLOWED_LANGUAGES
 
 
-def handler(catalogs, name):
+def handler(name, langs):
     """ special handler handling the merging of two message catalogs """
     gsm = getSiteManager()
     # Try to get an existing domain and add the given catalogs to it
@@ -69,8 +67,8 @@ def handler(catalogs, name):
     if domain is None:
         domain = TranslationDomain(name)
         gsm.registerUtility(domain, ITranslationDomain, name=name)
-    for catalog in catalogs:
-        domain.addCatalog(catalog)
+    for lang, path in langs.items():
+        domain.addLanguage(lang, path)
     # make sure we have a TEST catalog for each domain:
     domain.addCatalog(TestMessageCatalog(name))
 
@@ -86,38 +84,29 @@ def registerTranslations(_context, directory, domain='*'):
     for language in os.listdir(path):
         if not allow_language(language):
             continue
+
         lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
         if os.path.isdir(lc_messages_path):
-            # Preprocess files and update or compile the mo files
-            if config.COMPILE_MO_FILES:
-                for domain_path in glob(os.path.join(lc_messages_path,
-                                                     '%s.po' % domain)):
-                    domain_file = os.path.basename(domain_path)
-                    name = domain_file[:-3]
-                    compile_mo_file(name, lc_messages_path)
-            for domain_path in glob(os.path.join(lc_messages_path,
-                                                 '%s.mo' % domain)):
+            query = os.path.join(lc_messages_path, '%s.[pm]o' % domain)
+            for domain_path in glob(query):
                 loaded = True
-                domain_file = os.path.basename(domain_path)
-                name = domain_file[:-3]
+                base, ext = os.path.splitext(domain_path)
+                name = os.path.basename(base)
                 if not name in domains:
                     domains[name] = {}
-                domains[name][language] = domain_path
+                domains[name][language] = lc_messages_path
     if loaded:
         logger.debug('register directory %s' % directory)
 
     # Now create TranslationDomain objects and add them as utilities
     for name, langs in domains.items():
-        catalogs = []
-        for lang, file in langs.items():
-            catalogs.append(GettextMessageCatalog(lang, name, file))
         # register the necessary actions directly (as opposed to using
         # `zope.component.zcml.utility`) since we need the actual utilities
         # in place before the merging can be done...
         _context.action(
             discriminator = None,
             callable = handler,
-            args = (catalogs, name))
+            args = (name, langs))
 
     # also register the interface for the translation utilities
     provides = ITranslationDomain

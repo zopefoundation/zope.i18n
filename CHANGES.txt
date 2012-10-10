@@ -5,6 +5,16 @@ CHANGES
 4.0.0 (unreleased)
 ------------------
 
+- The ZCML directive handler for a translation domain registration now
+  loads message catalogs lazily.
+
+- If the `zope_i18n_allowed_languages` environment variable is not
+  provided, the allowed languages are determined at runtime. To
+  participate in this, a translation domain implementation must now
+  expose a set of languages in a ``languages`` attribute.
+
+  This has been implemented for the default implementations.
+
 - log DEBUG when loading translations from directories.
 
 - Replaced deprecated ``zope.interface.implements`` usage with equivalent

@@ -132,6 +132,10 @@ class ITranslationDomain(Interface):
         description=u"The name of the domain this object represents.",
         required=True)
 
+    languages = Attribute(
+        """Return the set of languages available in this domain."""
+        )
+
     def translate(msgid, mapping=None, context=None, target_language=None,
                   default=None):
         """Return the translation for the message referred to by msgid.

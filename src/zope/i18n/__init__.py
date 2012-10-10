@@ -15,10 +15,10 @@
 """
 import re
 
-from zope.component import queryUtility
+from zope.component import queryUtility, getAllUtilitiesRegisteredFor
 from zope.i18nmessageid import MessageFactory, Message
 
-from zope.i18n.config import ALLOWED_LANGUAGES
+from zope.i18n import config
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
@@ -33,16 +33,22 @@ _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
 
 
 def negotiate(context):
-    """Negotiate language.
+    """Negotiate language."""
 
-    This only works if the languages are set globally, otherwise each message
-    catalog needs to do the language negotiation.
-    """
-    if ALLOWED_LANGUAGES is not None:
-        negotiator = queryUtility(INegotiator)
-        if negotiator is not None:
-            return negotiator.getLanguage(ALLOWED_LANGUAGES, context)
-    return None
+    negotiator = queryUtility(INegotiator)
+    if negotiator is not None:
+        languages = config.ALLOWED_LANGUAGES
+        if languages is None:
+            languages = set()
+            for domain in getAllUtilitiesRegisteredFor(ITranslationDomain):
+                try:
+                    languages |= domain.languages
+                except AttributeError:
+                    continue
+
+        if languages:
+            return negotiator.getLanguage(languages, context)
+
 
 def translate(msgid, domain=None, mapping=None, context=None,
                target_language=None, default=None):

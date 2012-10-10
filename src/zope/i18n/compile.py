@@ -45,3 +45,5 @@ def compile_mo_file(domain, lc_messages_path):
             fd.close()
         except (IOError, OSError, PoSyntaxError):
             logger.warn('Error while compiling %s' % pofile)
+
+    return mofile

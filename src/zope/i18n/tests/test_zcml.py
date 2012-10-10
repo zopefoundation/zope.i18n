@@ -43,12 +43,6 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         from zope.configuration import xmlconfig
         super(DirectivesTest, self).setUp()
         self.context = xmlconfig.file('meta.zcml', zope.i18n)
-        self.allowed = config.ALLOWED_LANGUAGES
-        config.ALLOWED_LANGUAGES = None
-
-    def tearDown(self):
-        super(DirectivesTest, self).tearDown()
-        config.ALLOWED_LANGUAGES = self.allowed
 
     def testRegisterTranslations(self):
         from zope.configuration import xmlconfig
@@ -59,27 +53,13 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
             <i18n:registerTranslations directory="locale" />
             </configure>
             ''', self.context)
-        path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
-                            'locale', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
         util = getUtility(ITranslationDomain, 'zope-i18n')
-        self.assertEquals(util._catalogs.get('test'), ['test'])
-        self.assertEquals(util._catalogs.get('en'), [unicode(path)])
 
-    def testAllowedTranslations(self):
-        from zope.configuration import xmlconfig
-        self.assert_(queryUtility(ITranslationDomain) is None)
-        config.ALLOWED_LANGUAGES = ('de', 'fr')
-        xmlconfig.string(
-            template % '''
-            <configure package="zope.i18n.tests">
-            <i18n:registerTranslations directory="locale" />
-            </configure>
-            ''', self.context)
-        path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
-                            'locale', 'de', 'LC_MESSAGES', 'zope-i18n.mo')
-        util = getUtility(ITranslationDomain, 'zope-i18n')
-        self.assertEquals(util._catalogs,
-                          {'test': ['test'], 'de': [unicode(path)]})
+        self.assertEquals(util.translate('test', target_language='test'),
+                          u'[[zope-i18n][test]]')
+        self.assertEquals(util.translate('test', target_language='en'), u'test')
+        self.assertEquals(util.translate('New Domain', target_language='en'),
+                          u'New Domain translated')
 
     def testRegisterDistributedTranslations(self):
         from zope.configuration import xmlconfig
@@ -96,14 +76,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
             <i18n:registerTranslations directory="locale2" />
             </configure>
             ''', self.context)
-        path1 = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
-                             'locale', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
-        path2 = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
-                             'locale2', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
         util = getUtility(ITranslationDomain, 'zope-i18n')
-        self.assertEquals(util._catalogs.get('test'), ['test', 'test'])
-        self.assertEquals(util._catalogs.get('en'),
-                          [unicode(path1), unicode(path2)])
 
         msg = util.translate(u'Additional message', target_language='en')
         self.assertEquals(msg, u'Additional message translated')
@@ -140,8 +113,6 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
             </configure>
             ''', self.context)
         util = getUtility(ITranslationDomain, 'zope-i18n')
-        self.assertEquals(util._catalogs,
-                          {'test': ['test'], 'en': [unicode(path)]})
 
         msg = util.translate(u"I'm a newer file", target_language='en')
         self.assertEquals(msg, u"I'm a newer file translated")
@@ -163,12 +134,9 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
             <i18n:registerTranslations directory="locale3" domain="zope-i18n" />
             </configure>
             ''', self.context)
-        path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),
-                            'locale3', 'en', 'LC_MESSAGES', 'zope-i18n.mo')
         util = getUtility(ITranslationDomain, 'zope-i18n')
-        self.assertEquals(util._catalogs,
-                          {'test': ['test'], 'en': [unicode(path)]})
-
+        self.assertEquals(util.translate('test', target_language='test'),
+                          u'[[zope-i18n][test]]')
         self.assert_(queryUtility(ITranslationDomain, 'zope-i18n2') is None)
 
 
