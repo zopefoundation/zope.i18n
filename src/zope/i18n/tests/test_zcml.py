@@ -43,6 +43,15 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         from zope.configuration import xmlconfig
         super(DirectivesTest, self).setUp()
         self.context = xmlconfig.file('meta.zcml', zope.i18n)
+        self.allowed = config.ALLOWED_LANGUAGES
+        self.compiled = config.COMPILE_MO_FILES
+        config.ALLOWED_LANGUAGES = None
+        config.COMPILE_MO_FILES = False
+
+    def tearDown(self):
+        super(DirectivesTest, self).tearDown()
+        config.ALLOWED_LANGUAGES = self.allowed
+        config.COMPILE_MO_FILES = self.compiled
 
     def testRegisterTranslations(self):
         from zope.configuration import xmlconfig

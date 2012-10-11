@@ -13,29 +13,39 @@ except ImportError:
 logger = logging.getLogger('zope.i18n')
 
 
-def compile_mo_file(domain, lc_messages_path):
+def compile_mo_file(domain, lc_messages_path, msgfmt=True):
     """Creates or updates a mo file in the locales folder."""
     if not HAS_PYTHON_GETTEXT:
         logger.critical("Unable to compile messages: Python `gettext` library missing.")
         return
 
     base = join(lc_messages_path, domain)
-    pofile = str(base + '.po')
+
     mofile = str(base + '.mo')
 
-    po_mtime = 0
-    try:
-        po_mtime = os.stat(pofile)[ST_MTIME]
-    except (IOError, OSError):
-        return
-
     mo_mtime = 0
+
     if os.path.exists(mofile):
         # Update mo file?
         try:
             mo_mtime = os.stat(mofile)[ST_MTIME]
         except (IOError, OSError):
-            return
+            pass
+        else:
+            if not msgfmt:
+                return mofile
+    elif not msgfmt:
+        return
+
+    pofile = str(base + '.po')
+    po_mtime = 0
+    try:
+        po_mtime = os.stat(pofile)[ST_MTIME]
+    except (IOError, OSError):
+        if mo_mtime:
+            return mofile
+
+        return
 
     if po_mtime > mo_mtime:
         try:

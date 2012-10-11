@@ -13,12 +13,15 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 """
+import logging
 import zope.component
+
 from zope.i18nmessageid import Message
 from zope.i18n import translate, interpolate
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.compile import compile_mo_file
+from zope.i18n import config
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 
 # The configuration should specify a list of fallback languages for the
@@ -30,6 +33,8 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 # Note that these fallbacks are used only to find a catalog.  If a particular
 # message in a catalog is not translated, tough luck, you get the msgid.
 LANGUAGE_FALLBACKS = ['en']
+
+logger = logging.getLogger("zope.i18n")
 
 
 class TranslationDomain(SimpleTranslationDomain):
@@ -70,9 +75,19 @@ class TranslationDomain(SimpleTranslationDomain):
         self._fallbacks = fallbacks
 
     def importCatalog(self, lang, lc_messages_path):
-        path = compile_mo_file(self.domain, lc_messages_path)
-        catalog = GettextMessageCatalog(lang, self.domain, path)
-        self.addCatalog(catalog)
+        path = compile_mo_file(
+            self.domain, lc_messages_path,
+            config.COMPILE_MO_FILES
+        )
+        if path is None:
+            logger.warn(
+                "could not load or compile message catalog for "
+                "language %r in %r." % (
+                    lang, lc_messages_path
+                ))
+        else:
+            catalog = GettextMessageCatalog(lang, self.domain, path)
+            self.addCatalog(catalog)
 
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):

@@ -87,7 +87,11 @@ def registerTranslations(_context, directory, domain='*'):
 
         lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
         if os.path.isdir(lc_messages_path):
-            query = os.path.join(lc_messages_path, '%s.[pm]o' % domain)
+            if config.COMPILE_MO_FILES:
+                glob_format = '%s.[pm]o'
+            else:
+                glob_format = '%s.mo'
+            query = os.path.join(lc_messages_path, glob_format % domain)
             for domain_path in glob(query):
                 loaded = True
                 base, ext = os.path.splitext(domain_path)
