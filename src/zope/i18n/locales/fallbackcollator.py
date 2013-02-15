@@ -26,4 +26,7 @@ class FallbackCollator:
         return s.lower(), s
 
     def cmp(self, s1, s2):
-        return cmp(self.key(s1), self.key(s2))
+        k1, k2 = self.key(s1), self.key(s2)
+        if k1 == k2:
+            return 0
+        return -1 if k1 < k2 else 1

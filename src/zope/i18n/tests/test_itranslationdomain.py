@@ -13,6 +13,7 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationDomain interface.
 """
+import sys
 import unittest
 from zope.interface.verify import verifyObject
 from zope.interface import implementer
@@ -24,6 +25,9 @@ from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
 
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
 
 @implementer(IUserPreferredLanguages)
 class Environment(object):

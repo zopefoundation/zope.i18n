@@ -176,7 +176,7 @@ class InheritingDictionary(Inheritance, dict):
       True
       >>> locale.data.keys()
       [1, 2, 3]
-      >>> locale.data.items()
+      >>> list(locale.data.items())
       [(1, 'eins'), (2, 'two'), (3, 'three')]
     """
 
@@ -190,7 +190,7 @@ class InheritingDictionary(Inheritance, dict):
 
     def __getitem__(self, name):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
-        if not self.has_key(name):
+        if name not in self:
             try:
                 selfUp = self.getInheritedSelf()
             except NoParentException:

@@ -171,13 +171,13 @@ class TestDateTimePatternParser(TestCase):
         # Quote not closed
         try:
             parseDateTimePattern("HH' Uhr")
-        except DateTimePatternParseError, err:
+        except DateTimePatternParseError as err:
             self.assertEqual(
                 str(err), 'The quote starting at character 2 is not closed.')
         # Test correct length of characters in datetime fields
         try:
             parseDateTimePattern("HHHHH")
-        except DateTimePatternParseError, err:
+        except DateTimePatternParseError as err:
             self.assert_(str(err).endswith('You have: 5'))
 
 
@@ -261,20 +261,20 @@ class TestDateTimeFormat(TestCase):
         # German short
         self.assertEqual(
             self.format.parse('02.01.03 21:48', 'dd.MM.yy HH:mm'),
-            datetime.datetime(2003, 01, 02, 21, 48))
+            datetime.datetime(2003, 1, 2, 21, 48))
 
     def testParseRealDateTime(self):
         # German medium
         self.assertEqual(
             self.format.parse('02.01.2003 21:48:01', 'dd.MM.yyyy HH:mm:ss'),
-            datetime.datetime(2003, 01, 02, 21, 48, 01))
+            datetime.datetime(2003, 1, 2, 21, 48, 1))
 
         # German long
         # TODO: The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             '2. Januar 2003 21:48:01 +100',
             'd. MMMM yyyy HH:mm:ss z'),
-            datetime.datetime(2003, 01, 02, 21, 48, 01,
+            datetime.datetime(2003, 1, 2, 21, 48, 1,
                               tzinfo=pytz.timezone('Europe/Berlin')))
 
         # German full
@@ -282,13 +282,13 @@ class TestDateTimeFormat(TestCase):
         self.assertEqual(self.format.parse(
             'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
             "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
-            datetime.datetime(2003, 01, 02, 21, 48,
+            datetime.datetime(2003, 1, 2, 21, 48,
                               tzinfo=pytz.timezone('Europe/Berlin')))
 
     def testParseAMPMDateTime(self):
         self.assertEqual(
             self.format.parse('02.01.03 09:48 nachm.', 'dd.MM.yy hh:mm a'),
-            datetime.datetime(2003, 01, 02, 21, 48))
+            datetime.datetime(2003, 1, 2, 21, 48))
 
     def testParseTimeZone(self):
         dt = self.format.parse('09:48 -600', 'HH:mm z')
@@ -352,28 +352,28 @@ class TestDateTimeFormat(TestCase):
     def testParse12PM(self):
         self.assertEqual(
             self.format.parse('01.01.03 12:00 nachm.', 'dd.MM.yy hh:mm a'),
-            datetime.datetime(2003, 01, 01, 12, 00, 00, 00))
+            datetime.datetime(2003, 1, 1, 12, 00, 00, 00))
 
     def testParseUnusualFormats(self):
         self.assertEqual(
             self.format.parse('001. Januar 03 0012:00',
                               'ddd. MMMMM yy HHHH:mm'),
-            datetime.datetime(2003, 01, 01, 12, 00, 00, 00))
+            datetime.datetime(2003, 1, 1, 12, 00, 00, 00))
         self.assertEqual(
             self.format.parse('0001. Jan 2003 0012:00 vorm.',
                               'dddd. MMM yyyy hhhh:mm a'),
-            datetime.datetime(2003, 01, 01, 00, 00, 00, 00))
+            datetime.datetime(2003, 1, 1, 00, 00, 00, 00))
 
     def testFormatSimpleDateTime(self):
         # German short
         self.assertEqual(
-            self.format.format(datetime.datetime(2003, 01, 02, 21, 48),
+            self.format.format(datetime.datetime(2003, 1, 2, 21, 48),
                               'dd.MM.yy HH:mm'),
             '02.01.03 21:48')
 
     def testFormatRealDateTime(self):
         tz = pytz.timezone('Europe/Berlin')
-        dt = datetime.datetime(2003, 01, 02, 21, 48, 01, tzinfo=tz)
+        dt = datetime.datetime(2003, 1, 2, 21, 48, 1, tzinfo=tz)
         # German medium
         self.assertEqual(
             self.format.format(dt, 'dd.MM.yyyy HH:mm:ss'),
@@ -391,47 +391,47 @@ class TestDateTimeFormat(TestCase):
 
     def testFormatAMPMDateTime(self):
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 21, 48),
+            datetime.datetime(2003, 1, 2, 21, 48),
             'dd.MM.yy hh:mm a'),
             '02.01.03 09:48 nachm.')
 
     def testFormatAllWeekdays(self):
         for day in range(1, 8):
             self.assertEqual(self.format.format(
-                datetime.datetime(2003, 01, day+5, 21, 48),
+                datetime.datetime(2003, 1, day+5, 21, 48),
                 "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
                 '%s, %i. Januar 2003 21:48 Uhr +000' %(
                 self.format.calendar.days[day][0], day+5))
 
     def testFormatTimeZone(self):
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, 00), 'z'),
+            datetime.datetime(2003, 1, 2, 12, 00), 'z'),
             '+000')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, 00), 'zz'),
+            datetime.datetime(2003, 1, 2, 12, 00), 'zz'),
             '+00:00')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, 00), 'zzz'),
+            datetime.datetime(2003, 1, 2, 12, 00), 'zzz'),
             'UTC')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, 00), 'zzzz'),
+            datetime.datetime(2003, 1, 2, 12, 00), 'zzzz'),
             'UTC')
         tz = pytz.timezone('US/Eastern')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, tzinfo=tz), 'z'),
+            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'z'),
             '-500')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, tzinfo=tz), 'zz'),
+            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'zz'),
             '-05:00')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, tzinfo=tz), 'zzz'),
+            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'zzz'),
             'EST')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 01, 02, 12, tzinfo=tz), 'zzzz'),
+            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'zzzz'),
             'US/Eastern')
 
     def testFormatWeekDay(self):
-        date = datetime.date(2003, 01, 02)
+        date = datetime.date(2003, 1, 2)
         self.assertEqual(self.format.format(date, "E"),
                          '4')
         self.assertEqual(self.format.format(date, "EE"),
@@ -455,7 +455,7 @@ class TestDateTimeFormat(TestCase):
                          '05')
 
     def testFormatDayOfWeekInMonth(self):
-        date = datetime.date(2003, 01, 02)
+        date = datetime.date(2003, 1, 2)
         self.assertEqual(self.format.format(date, "F"),
                          '1')
         self.assertEqual(self.format.format(date, "FF"),
@@ -526,11 +526,11 @@ class TestDateTimeFormat(TestCase):
 
     def testFormatSimpleHourRepresentation(self):
         self.assertEqual(
-            self.format.format(datetime.datetime(2003, 01, 02, 23, 00),
+            self.format.format(datetime.datetime(2003, 1, 2, 23, 00),
                                'dd.MM.yy h:mm:ss a'),
             '02.01.03 11:00:00 nachm.')
         self.assertEqual(
-            self.format.format(datetime.datetime(2003, 01, 02, 02, 00),
+            self.format.format(datetime.datetime(2003, 1, 2, 2, 00),
                                'dd.MM.yy h:mm:ss a'),
             '02.01.03 2:00:00 vorm.')
         self.assertEqual(

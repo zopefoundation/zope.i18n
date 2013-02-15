@@ -13,20 +13,22 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 """
+import sys
 from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implementer
 
+PY2 = sys.version_info[0] == 2
 
 class _KeyErrorRaisingFallback(object):
     def ugettext(self, message):
         raise KeyError(message)
+    gettext = ugettext
 
 
 @implementer(IGlobalMessageCatalog)
 class GettextMessageCatalog(object):
     """A message catalog based on GNU gettext and Python's gettext module."""
-
 
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
@@ -35,6 +37,10 @@ class GettextMessageCatalog(object):
         self._path_to_file = path_to_file
         self.reload()
         self._catalog.add_fallback(_KeyErrorRaisingFallback())
+        if PY2:
+            self._gettext = self._catalog.ugettext
+        else:
+            self._gettext = self._catalog.gettext
 
     def reload(self):
         'See IMessageCatalog'
@@ -46,12 +52,12 @@ class GettextMessageCatalog(object):
 
     def getMessage(self, id):
         'See IMessageCatalog'
-        return self._catalog.ugettext(id)
+        return self._gettext(id)
 
     def queryMessage(self, id, default=None):
         'See IMessageCatalog'
         try:
-            return self._catalog.ugettext(id)
+            return self._gettext(id)
         except KeyError:
             return default
 

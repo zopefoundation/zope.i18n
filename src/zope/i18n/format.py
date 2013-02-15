@@ -16,6 +16,7 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 """
+import sys
 import re
 import math
 import datetime
@@ -25,6 +26,18 @@ import pytz.reference
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implementer
 
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
+
+def roundHalfUp(n):
+    """Works like round() in python2.x
+
+    Implementation of round() was changed in python3 - it rounds halfs to
+    nearest even number, so that round(0.5) == 0. This function is here to
+    unify behaviour between python 2.x and 3.x for the purposes of this module.
+    """
+    return math.floor(n + math.copysign(0.5, n))
 
 def _findFormattingCharacterInPattern(char, pattern):
     return [entry for entry in pattern
@@ -86,7 +99,7 @@ class DateTimeFormat(object):
 
         # Map the parsing results to a datetime object
         ordered = [None, None, None, None, None, None, None]
-        bin_pattern = filter(lambda x: isinstance(x, tuple), bin_pattern)
+        bin_pattern = list(filter(lambda x: isinstance(x, tuple), bin_pattern))
 
         # Handle years; note that only 'yy' and 'yyyy' are allowed
         if ('y', 2) in bin_pattern:
@@ -408,7 +421,7 @@ class NumberFormat(object):
                 fraction = ''
                 roundInt = False
             if roundInt:
-                obj = round(obj)
+                obj = roundHalfUp(obj)
             integer = self._format_integer(str(int(math.fabs(obj))),
                                            bin_pattern[INTEGER])
             # Adding grouping
@@ -599,7 +612,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
     """Create the bits and pieces of the datetime object that can be put
     together."""
     if isinstance(dt, datetime.time):
-        dt = datetime.datetime(1969, 01, 01, dt.hour, dt.minute, dt.second,
+        dt = datetime.datetime(1969, 1, 1, dt.hour, dt.minute, dt.second,
                                dt.microsecond)
     elif (isinstance(dt, datetime.date) and
           not isinstance(dt, datetime.datetime)):

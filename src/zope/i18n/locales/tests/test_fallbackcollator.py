@@ -15,9 +15,11 @@
 import unittest
 import doctest
 
+from zope.i18n.testing import unicode_checker
+
 def test_suite():
     return unittest.TestSuite((
-        doctest.DocFileSuite('../fallbackcollator.txt'),
+        doctest.DocFileSuite('../fallbackcollator.txt', checker=unicode_checker),
         ))
 
 if __name__ == '__main__':

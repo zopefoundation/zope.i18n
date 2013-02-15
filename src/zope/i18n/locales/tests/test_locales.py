@@ -66,7 +66,8 @@ class TestLocaleProvider(TestILocaleProvider):
 
     def test_loadLocale(self):
         self.locales.loadLocale(None, None, None)
-        self.assertEqual(self.locales._locales.keys(), [(None, None, None)])
+        self.assertEqual(list(self.locales._locales.keys()),
+                         [(None, None, None)])
 
         self.locales.loadLocale('en', None, None)
         self.assert_(('en', None, None) in self.locales._locales.keys())
@@ -97,19 +98,19 @@ class TestLocaleAndProvider(TestCase):
     def test_getDateFormatter(self):
         formatter = self.locale.dates.getFormatter('date', 'medium')
         self.assertEqual(formatter.getPattern(), 'MMM d, yyyy')
-        self.assertEqual(formatter.format(datetime.date(2003, 01, 02)),
+        self.assertEqual(formatter.format(datetime.date(2003, 1, 2)),
                          'Jan 2, 2003')
         self.assertEqual(formatter.parse('Jan 2, 2003'),
-                         datetime.date(2003, 01, 02))
+                         datetime.date(2003, 1, 2))
 
     def test_getDateTimeFormatter(self):
         formatter = self.locale.dates.getFormatter('dateTime', 'medium')
         self.assertEqual(formatter.getPattern(), 'MMM d, yyyy h:mm:ss a')
         self.assertEqual(
-            formatter.format(datetime.datetime(2003, 01, 02, 12, 30)),
+            formatter.format(datetime.datetime(2003, 1, 2, 12, 30)),
             'Jan 2, 2003 12:30:00 PM')
         self.assertEqual(formatter.parse('Jan 2, 2003 12:30:00 PM'),
-                         datetime.datetime(2003, 01, 02, 12, 30))
+                         datetime.datetime(2003, 1, 2, 12, 30))
 
     def test_getNumberFormatter(self):
         formatter = self.locale.numbers.getFormatter('decimal')
@@ -124,13 +125,13 @@ class TestGlobalLocaleProvider(TestCase):
 
     def testLoading(self):
         locales.loadLocale(None, None, None)
-        self.assert_(locales._locales.has_key((None, None, None)))
+        self.assert_((None, None, None) in locales._locales)
         locales.loadLocale('en', None, None)
-        self.assert_(locales._locales.has_key(('en', None, None)))
+        self.assert_(('en', None, None) in locales._locales)
         locales.loadLocale('en', 'US', None)
-        self.assert_(locales._locales.has_key(('en', 'US', None)))
+        self.assert_(('en', 'US', None) in locales._locales)
         locales.loadLocale('en', 'US', 'POSIX')
-        self.assert_(locales._locales.has_key(('en', 'US', 'POSIX')))
+        self.assert_(('en', 'US', 'POSIX') in locales._locales)
 
     def test_getLocale(self):
         locale = locales.getLocale('en', 'GB')

@@ -343,13 +343,13 @@ class LocaleFactory(object):
           >>> ctx.defaultWidth
           u'wide'
         
-          >>> names = [ctx.months[u'wide'][type] for type in xrange(1,13)]
+          >>> names = [ctx.months[u'wide'][type] for type in range(1,13)]
           >>> names[:7]
           [u'Januar', u'Februar', u'Maerz', u'April', u'Mai', u'Juni', u'Juli']
           >>> names[7:]
           [u'August', u'September', u'Oktober', u'November', u'Dezember']
         
-          >>> abbrs = [ctx.months[u'abbreviated'][type] for type in xrange(1,13)]
+          >>> abbrs = [ctx.months[u'abbreviated'][type] for type in range(1,13)]
           >>> abbrs[:6]
           [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
           >>> abbrs[6:]
@@ -428,7 +428,7 @@ class LocaleFactory(object):
 
         # Put the info together
         calendar.months = InheritingDictionary()
-        for type in xrange(1, 13):
+        for type in range(1, 13):
             calendar.months[type] = (names.get(type, None),
                                      abbrs.get(type, None))
 
@@ -482,13 +482,13 @@ class LocaleFactory(object):
           >>> ctx.defaultWidth
           u'wide'
         
-          >>> names = [ctx.days[u'wide'][type] for type in xrange(1,8)]
+          >>> names = [ctx.days[u'wide'][type] for type in range(1,8)]
           >>> names[:4]
           [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
           >>> names[4:]
           [u'Freitag', u'Samstag', u'Sonntag']
 
-          >>> abbrs = [ctx.days[u'abbreviated'][type] for type in xrange(1,8)]
+          >>> abbrs = [ctx.days[u'abbreviated'][type] for type in range(1,8)]
           >>> abbrs
           [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
         
@@ -496,14 +496,14 @@ class LocaleFactory(object):
         abbreviations::
 
           >>> names = [calendar.days.get(type, (None, None))[0]
-          ...          for type in xrange(1, 8)]
+          ...          for type in range(1, 8)]
           >>> names[:4]
           [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
           >>> names[4:]
           [u'Freitag', u'Samstag', u'Sonntag']
 
           >>> abbrs = [calendar.days.get(type, (None, None))[1]
-          ...          for type in xrange(1, 8)]
+          ...          for type in range(1, 8)]
           >>> abbrs
           [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
         """
@@ -561,7 +561,7 @@ class LocaleFactory(object):
 
         # Put the info together
         calendar.days = InheritingDictionary()
-        for type in xrange(1, 13):
+        for type in range(1, 13):
             calendar.days[type] = (names.get(type, None),
                                    abbrs.get(type, None))
 

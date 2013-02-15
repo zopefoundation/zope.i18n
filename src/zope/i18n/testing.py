@@ -13,15 +13,15 @@
 ##############################################################################
 """Unit test logic for setting up and tearing down basic infrastructure
 """
-import zope.component
-from zope.publisher.browser import BrowserLanguages
-from zope.publisher.http import HTTPCharsets
+import sys
+import re
 
-def setUp(test=None):
-    zope.component.provideAdapter(HTTPCharsets)
-    zope.component.provideAdapter(BrowserLanguages)
-
-class PlacelessSetup(object):
-
-    def setUp(self):
-        setUp()
+if sys.version_info[0] == 2:
+    import doctest
+    unicode_checker = doctest.OutputChecker()
+else:
+    from zope.testing import renormalizing
+    rules = [(re.compile("u('.*?')"), r"\1"),
+             (re.compile('u(".*?")'), r"\1"),
+            ]
+    unicode_checker = renormalizing.RENormalizing(rules)

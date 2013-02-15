@@ -15,10 +15,6 @@
 """
 import unittest
 
-def sorted(list):
-    list.sort()
-    return list
-
 class TestII18nAware(unittest.TestCase):
 
     def setUp(self):

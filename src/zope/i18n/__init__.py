@@ -13,6 +13,7 @@
 ##############################################################################
 """i18n support.
 """
+import sys
 import re
 
 from zope.component import queryUtility
@@ -22,6 +23,10 @@ from zope.i18n.config import ALLOWED_LANGUAGES
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
+
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
 
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the

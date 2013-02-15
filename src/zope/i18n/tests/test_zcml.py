@@ -13,6 +13,7 @@
 ##############################################################################
 """Test the gts ZCML namespace directives.
 """
+import sys
 import doctest
 import os
 import shutil
@@ -26,6 +27,10 @@ from zope.component.testing import PlacelessSetup
 import zope.i18n.tests
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n import config
+
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
 
 template = """\
 <configure

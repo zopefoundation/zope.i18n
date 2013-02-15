@@ -124,21 +124,21 @@ class LocaleVersion(object):
 
     Examples::
 
-      >>> cmp(LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes'),
+      >>> (LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes') ==
       ...     LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes again'))
-      0
+      True
 
-      >>> cmp(LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes'),
+      >>> (LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes') <
       ...     LocaleVersion('1.0', datetime(2004, 1, 2), 'no notes again'))
-      -1
+      True
 
-      >>> cmp(LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes'),
+      >>> (LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes') <
       ...     LocaleVersion('0.9', datetime(2004, 1, 2), 'no notes again'))
-      -1
+      True
 
-      >>> cmp(LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes'),
+      >>> (LocaleVersion('1.0', datetime(2004, 1, 1), 'no notes') >
       ...     LocaleVersion('0.9', datetime(2004, 1, 1), 'no notes again'))
-      1
+      True
 
     """
 
@@ -149,11 +149,13 @@ class LocaleVersion(object):
         self.generationDate = generationDate
         self.notes = notes
 
-    def __cmp__(self, other):
-        "See zope.i18n.interfaces.ILocaleVersion"
-        return cmp((self.generationDate, self.number),
-                   (other.generationDate, other.number))
+    def __lt__(self, other):
+        return ((self.generationDate, self.number) <
+                (other.generationDate, other.number))
 
+    def __eq__(self, other):
+        return ((self.generationDate, self.number) ==
+                (other.generationDate, other.number))
 
 @implementer(ILocaleDisplayNames)
 class LocaleDisplayNames(AttributeInheritance):
@@ -413,11 +415,11 @@ class LocaleDates(AttributeInheritance):
       >>> cal.defaultDateFormat = 'medium'
 
       >>> formatter = dates.getFormatter('date')
-      >>> formatter.format(date(2004, 02, 04))
+      >>> formatter.format(date(2004, 2, 4))
       u'04.02.2004'
 
       >>> formatter = dates.getFormatter('date', length='full')
-      >>> formatter.format(date(2004, 02, 04))
+      >>> formatter.format(date(2004, 2, 4))
       u'Mittwoch, 4. Februar 2004'
 
     Let's also test the time formatter::
@@ -453,11 +455,11 @@ class LocaleDates(AttributeInheritance):
       >>> cal.dateTimeFormats = {None: length}
 
       >>> formatter = dates.getFormatter('dateTime')
-      >>> formatter.format(datetime(2004, 02, 04, 12, 15, 00))
+      >>> formatter.format(datetime(2004, 2, 4, 12, 15, 00))
       u'04.02.2004 12:15:00'
 
       >>> formatter = dates.getFormatter('dateTime', length='full')
-      >>> formatter.format(datetime(2004, 02, 04, 12, 15, 00))
+      >>> formatter.format(datetime(2004, 2, 4, 12, 15, 00))
       u'Mittwoch, 4. Februar 2004 12:15 Uhr +000'
 
     Finally, we'll test some invalid input::
@@ -495,7 +497,7 @@ class LocaleDates(AttributeInheritance):
             length = getattr(
                 cal,
                 'default'+category[0].upper()+category[1:]+'Format',
-                formats.keys()[0])
+                list(formats.keys())[0])
 
         # 'datetime' is always a bit special; we often do not have a length
         # specification, but we need it for looking up the date and time
@@ -621,7 +623,7 @@ class LocaleNumbers(AttributeInheritance):
             length = getattr(
                 self,
                 'default'+category[0].upper()+category[1:]+'Format',
-                formats.keys()[0])
+                list(formats.keys())[0])
         formatLength = formats[length]
 
         if name is None:

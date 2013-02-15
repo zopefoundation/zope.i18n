@@ -72,6 +72,6 @@ class LocaleProvider(object):
             country = country.upper()
         if variant:
             variant = variant.upper()
-        if not self._locales.has_key((language, country, variant)):
+        if (language, country, variant) not in self._locales:
             self.loadLocale(language, country, variant)
         return self._locales[(language, country, variant)]

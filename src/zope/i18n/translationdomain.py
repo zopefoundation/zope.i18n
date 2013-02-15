@@ -13,6 +13,8 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 """
+import sys
+
 import zope.component
 from zope.i18nmessageid import Message
 from zope.i18n import translate, interpolate
@@ -29,6 +31,9 @@ from zope.i18n.interfaces import ITranslationDomain, INegotiator
 # message in a catalog is not translated, tough luck, you get the msgid.
 LANGUAGE_FALLBACKS = ['en']
 
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
 
 class TranslationDomain(SimpleTranslationDomain):
 

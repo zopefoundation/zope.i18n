@@ -17,10 +17,12 @@ import unittest
 
 import doctest
 from zope.component.testing import setUp, tearDown
+from zope.i18n.testing import unicode_checker
 
 
 def test_suite():
-    return doctest.DocTestSuite("zope.i18n", setUp=setUp, tearDown=tearDown)
+    return doctest.DocTestSuite("zope.i18n", setUp=setUp, tearDown=tearDown,
+                                checker=unicode_checker)
 
 
 if __name__ == '__main__':

@@ -13,11 +13,16 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationDomain interface.
 """
+import sys
+
 from zope.interface import implementer
 from zope.component import getUtility
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 from zope.i18n import interpolate
 
+PY3 = sys.version_info[0] == 3
+if PY3:
+    unicode = str
 
 @implementer(ITranslationDomain)
 class SimpleTranslationDomain(object):
