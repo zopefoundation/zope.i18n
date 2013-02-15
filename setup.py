@@ -27,7 +27,7 @@ def read(*rnames):
 
 setup(
     name='zope.i18n',
-    version='4.0.0a3',
+    version='4.0.1dev',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Internationalization Support',
