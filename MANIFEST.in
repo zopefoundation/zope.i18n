@@ -1,0 +1,2 @@
+include *.txt
+recursive-include src *.txt *.py *.dtd *.xml *.html *.po *.mo *.in *.zcml
