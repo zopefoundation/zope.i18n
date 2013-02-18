@@ -16,6 +16,7 @@
 import sys
 import re
 
+
 if sys.version_info[0] == 2:
     import doctest
     unicode_checker = doctest.OutputChecker()
@@ -25,3 +26,18 @@ else:
              (re.compile('u(".*?")'), r"\1"),
             ]
     unicode_checker = renormalizing.RENormalizing(rules)
+
+
+def setUp(test=None):
+    import zope.component
+    from zope.publisher.browser import BrowserLanguages
+    from zope.publisher.http import HTTPCharsets
+    zope.component.provideAdapter(HTTPCharsets)
+    zope.component.provideAdapter(BrowserLanguages)
+
+
+class PlacelessSetup(object):
+
+    def setUp(self):
+        setUp()
+

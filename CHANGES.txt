@@ -2,18 +2,20 @@
 CHANGES
 =======
 
-4.0.1 (unreleased)
+4.0.0a4 (unreleased)
 ------------------
 
-- 
+- Restore zope.i18n.testing.{setUp,PlacelessSetup} that got lost in 4.0.0a3.
+  These require zope.publisher, which is not ported to Python 3 yet, so I
+  haven't added it back to install_requires in setup.py.  User beware.
 
 
 4.0.0a3 (2013-02-15)
 --------------------
 
-- Support for python-3.3 added
+- Added support for Python 3.3.
 
-- log DEBUG when loading translations from directories.
+- Log DEBUG when loading translations from directories.
 
 - Replaced deprecated ``zope.interface.implements`` usage with equivalent
   ``zope.interface.implementer`` decorator.
