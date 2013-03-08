@@ -93,7 +93,7 @@ class TestITranslationDomain(PlacelessSetup):
         translate = self._domain.translate
         translated = translate('no way', target_language='en')
         self.assertEqual(translated, "no way")
-        self.assert_(type(translated) is unicode)
+        self.assertTrue(type(translated) is unicode)
 
     def testNoTargetLanguage(self):
         translate = self._domain.translate

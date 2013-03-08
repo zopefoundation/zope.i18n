@@ -178,7 +178,7 @@ class TestDateTimePatternParser(TestCase):
         try:
             parseDateTimePattern("HHHHH")
         except DateTimePatternParseError as err:
-            self.assert_(str(err).endswith('You have: 5'))
+            self.assertTrue(str(err).endswith('You have: 5'))
 
 
 class TestBuildDateTimeParseInfo(TestCase):
@@ -255,7 +255,7 @@ class TestDateTimeFormat(TestCase):
     format = DateTimeFormat(calendar=LocaleCalendarStub())
 
     def testInterfaceConformity(self):
-        self.assert_(IDateTimeFormat.providedBy(self.format))
+        self.assertTrue(IDateTimeFormat.providedBy(self.format))
 
     def testParseSimpleDateTime(self):
         # German short
@@ -828,7 +828,7 @@ class TestNumberFormat(TestCase):
         'infinity': 'oo', 'nan': 'N/A'})
 
     def testInterfaceConformity(self):
-        self.assert_(INumberFormat.providedBy(self.format))
+        self.assertTrue(INumberFormat.providedBy(self.format))
 
     def testParseSimpleInteger(self):
         self.assertEqual(self.format.parse('23341', '###0'),
