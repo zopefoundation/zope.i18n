@@ -35,7 +35,7 @@ class TestILocaleProvider(TestCase):
         self.locales = self._makeNewProvider()
 
     def testInterfaceConformity(self):
-        self.assert_(ILocaleProvider.providedBy(self.locales))
+        self.assertTrue(ILocaleProvider.providedBy(self.locales))
 
     def test_getLocale(self):
         locale = self.locales.getLocale(None, None, None)
@@ -70,7 +70,7 @@ class TestLocaleProvider(TestILocaleProvider):
                          [(None, None, None)])
 
         self.locales.loadLocale('en', None, None)
-        self.assert_(('en', None, None) in self.locales._locales.keys())
+        self.assertTrue(('en', None, None) in self.locales._locales.keys())
 
     def test_loadLocaleFailure(self):
         self.assertRaises(LoadLocaleError, self.locales.loadLocale, 'zzz')
@@ -125,13 +125,13 @@ class TestGlobalLocaleProvider(TestCase):
 
     def testLoading(self):
         locales.loadLocale(None, None, None)
-        self.assert_((None, None, None) in locales._locales)
+        self.assertTrue((None, None, None) in locales._locales)
         locales.loadLocale('en', None, None)
-        self.assert_(('en', None, None) in locales._locales)
+        self.assertTrue(('en', None, None) in locales._locales)
         locales.loadLocale('en', 'US', None)
-        self.assert_(('en', 'US', None) in locales._locales)
+        self.assertTrue(('en', 'US', None) in locales._locales)
         locales.loadLocale('en', 'US', 'POSIX')
-        self.assert_(('en', 'US', 'POSIX') in locales._locales)
+        self.assertTrue(('en', 'US', 'POSIX') in locales._locales)
 
     def test_getLocale(self):
         locale = locales.getLocale('en', 'GB')
