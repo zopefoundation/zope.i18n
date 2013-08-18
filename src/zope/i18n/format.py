@@ -422,7 +422,7 @@ class NumberFormat(object):
                 roundInt = False
             if roundInt:
                 obj = roundHalfUp(obj)
-            integer = self._format_integer(str(int(math.fabs(obj))),
+            integer = self._format_integer(str(int(math.fabs(float(obj)))),
                                            bin_pattern[INTEGER])
             # Adding grouping
             if bin_pattern[GROUPING] == 1:
