@@ -1176,6 +1176,11 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(41.02, '(0.0##E0##* )* '),
                          '(4.102E1 )  ')
 
+    def testFormatSmallNumbers(self):
+        self.assertEqual(self.format.format(
+            -1e-7, '(#0.00#####);(-#0.00#####)'), '(-0.0000001)')
+        self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
+
 
 def test_suite():
     return TestSuite((

@@ -9,6 +9,10 @@ CHANGES
 
 - Drop support for Python 2.6 and 3.2.
 
+- Support for formatting really small numbers, e.g. 1e-9. These numbers needs
+  special treatment, because standard str(x) collapses them to scientific
+  representation.
+
 
 4.1.0 (2015-11-06)
 ------------------
