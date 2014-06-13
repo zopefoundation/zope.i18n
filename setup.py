@@ -42,14 +42,14 @@ def alltests():
 
 setup(
     name='zope.i18n',
-    version='4.2.0.dev0',
+    version='4.0.0a5.dev2',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Internationalization Support',
     long_description=(
-        read('README.rst')
+        read('README.txt')
         + '\n\n' +
-        read('CHANGES.rst')
+        read('CHANGES.txt')
         ),
     license='ZPL 2.1',
     keywords=('zope3 internationalization localization i18n l10n '
@@ -61,18 +61,17 @@ setup(
         'License :: OSI Approved :: Zope Public License',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope3'],
-    url='https://github.com/zopefoundation/zope.i18n',
+    url='http://pypi.python.org/pypi/zope.i18n',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     namespace_packages=['zope',],
@@ -88,8 +87,7 @@ setup(
             'zope.component [zcml]',
             'zope.configuration',
             'zope.security',
-            'zope.testing',
-            'zope.testrunner',
+            'zope.testing'
             ],
         compile=['python-gettext'],
         zcml=[
