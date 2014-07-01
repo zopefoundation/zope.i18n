@@ -274,16 +274,16 @@ class TestDateTimeFormat(TestCase):
         self.assertEqual(self.format.parse(
             '2. Januar 2003 21:48:01 +100',
             'd. MMMM yyyy HH:mm:ss z'),
-            datetime.datetime(2003, 1, 2, 21, 48, 1,
-                              tzinfo=pytz.timezone('Europe/Berlin')))
+            pytz.timezone('Europe/Berlin').localize(
+                datetime.datetime(2003, 1, 2, 21, 48, 1)))
 
         # German full
         # TODO: The parser does not support timezones yet.
         self.assertEqual(self.format.parse(
             'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
             "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
-            datetime.datetime(2003, 1, 2, 21, 48,
-                              tzinfo=pytz.timezone('Europe/Berlin')))
+            pytz.timezone('Europe/Berlin').localize(
+                datetime.datetime(2003, 1, 2, 21, 48)))
 
     def testParseAMPMDateTime(self):
         self.assertEqual(
@@ -373,7 +373,7 @@ class TestDateTimeFormat(TestCase):
 
     def testFormatRealDateTime(self):
         tz = pytz.timezone('Europe/Berlin')
-        dt = datetime.datetime(2003, 1, 2, 21, 48, 1, tzinfo=tz)
+        dt = tz.localize(datetime.datetime(2003, 1, 2, 21, 48, 1))
         # German medium
         self.assertEqual(
             self.format.format(dt, 'dd.MM.yyyy HH:mm:ss'),
@@ -418,16 +418,16 @@ class TestDateTimeFormat(TestCase):
             'UTC')
         tz = pytz.timezone('US/Eastern')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'z'),
+            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'z'),
             '-500')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'zz'),
+            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zz'),
             '-05:00')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'zzz'),
+            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zzz'),
             'EST')
         self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, tzinfo=tz), 'zzzz'),
+            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zzzz'),
             'US/Eastern')
 
     def testFormatWeekDay(self):
