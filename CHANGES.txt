@@ -5,7 +5,7 @@ CHANGES
 4.0.0a5 (unreleased)
 --------------------
 
-- Nothing changed yet.
+- Added explicit support for Python 3.4 and PyPy.
 
 
 4.0.0a4 (2013-02-18)
