@@ -320,10 +320,10 @@ class TestDateTimeFormat(TestCase):
         self.assertEqual(dt.tzinfo.zone, 'US/Eastern')
         self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
 
-        dt = self.format.parse('01.01.2003 09:48 Australia/Sydney',
+        dt = self.format.parse('01.01.2003 09:48 Canada/Eastern',
                                'dd.MM.yyyy HH:mm zzzz')
-        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=11))
-        self.assertEqual(dt.tzinfo.zone, 'Australia/Sydney')
+        self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-5))
+        self.assertEqual(dt.tzinfo.zone, 'Canada/Eastern')
         self.assertEqual(dt.tzinfo.tzname(dt), 'EST')
 
         # Note that historical and future (as far as known)
@@ -339,7 +339,6 @@ class TestDateTimeFormat(TestCase):
         self.assertEqual(dt.tzinfo.zone, 'US/Eastern')
         self.assertEqual(dt.tzinfo.tzname(dt), 'EDT')
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-4))
-
 
     def testDateTimeParseError(self):
         self.assertRaises(DateTimeParseError,
