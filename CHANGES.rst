@@ -2,8 +2,10 @@
 CHANGES
 =======
 
-4.0.0a5 (unreleased)
+4.0.0 (unreleased)
 --------------------
+
+- Added support for testing with Travis.
 
 - Added explicit support for Python 3.4 and PyPy.
 
