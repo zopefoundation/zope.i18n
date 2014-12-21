@@ -88,7 +88,8 @@ setup(
             'zope.component [zcml]',
             'zope.configuration',
             'zope.security',
-            'zope.testing'
+            'zope.testing',
+            'zope.testrunner',
             ],
         compile=['python-gettext'],
         zcml=[
