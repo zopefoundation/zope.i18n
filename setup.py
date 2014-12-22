@@ -72,7 +72,7 @@ setup(
         'Operating System :: OS Independent',
         'Topic :: Internet :: WWW/HTTP',
         'Framework :: Zope3'],
-    url='http://pypi.python.org/pypi/zope.i18n',
+    url='https://github.com/zopefoundation/zope.i18n',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     namespace_packages=['zope',],
