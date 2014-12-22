@@ -1,2 +1,4 @@
-include *.txt
+include *.txt *.rst *.py *.ini buildout.cfg .travis.yml
 recursive-include src *.txt *.py *.dtd *.xml *.html *.po *.mo *.in *.zcml
+recursive-include src/zope/i18n/tests/ *.mo
+recursive-include docs *.rst *.py *.bat Makefile
