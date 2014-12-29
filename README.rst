@@ -1,5 +1,8 @@
-Zope Internationalization Support
-=================================
+``zope.i18n``
+=============
+
+.. image:: https://travis-ci.org/zopefoundation/zope.i18n.png?branch=master
+        :target: https://travis-ci.org/zopefoundation/zope.i18n
 
 This package implements several APIs related to internationalization and
 localization.
