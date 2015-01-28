@@ -1,6 +1,11 @@
 :mod:`zope.i18n` API Reference
 ===============================
 
+.. testsetup::
+
+   from zope.i18n import interpolate
+   from zope.i18n import translate
+
 zope.i18n
 ---------
 
