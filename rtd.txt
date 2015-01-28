@@ -1,0 +1,11 @@
+python-gettext
+pytz
+zope.component
+zope.configuration
+zope.i18nmessageid
+zope.location
+zope.proxy
+zope.schema
+zope.security
+zope.testing
+zope.testrunner
