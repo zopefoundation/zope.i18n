@@ -12,3 +12,6 @@ build
 develop-eggs
 parts
 docs/_build/
+.coverage
+coverage.xml
+nosetests.xml
