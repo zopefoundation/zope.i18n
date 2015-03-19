@@ -327,8 +327,11 @@ class NumberFormat(object):
             integer = self.symbols['nativeZeroDigit']*(min_size-size) + integer
         return integer
 
-    def _format_fraction(self, fraction, pattern):
-        max_precision = len(pattern)
+    def _format_fraction(self, fraction, pattern, rounding=True):
+        if rounding:
+            max_precision = len(pattern)
+        else:
+            max_precision = sys.maxint
         min_precision = pattern.count('0')
         precision = len(fraction)
         roundInt = False
@@ -356,7 +359,7 @@ class NumberFormat(object):
             fraction = self.symbols['decimal'] + fraction
         return fraction, roundInt
 
-    def format(self, obj, pattern=None):
+    def format(self, obj, pattern=None, rounding=True):
         "See zope.i18n.interfaces.IFormat"
         # Make or get binary form of datetime pattern
         if pattern is not None:
@@ -410,7 +413,8 @@ class NumberFormat(object):
                 number = ''.join(obj_int_frac)
 
             fraction, roundInt = self._format_fraction(number[1:],
-                                                       bin_pattern[FRACTION])
+                                                       bin_pattern[FRACTION],
+                                                       rounding=rounding)
             if roundInt:
                 number = str(int(number[0]) + 1) + fraction
             else:
@@ -426,8 +430,8 @@ class NumberFormat(object):
 
         else:
             if len(obj_int_frac) > 1:
-                fraction, roundInt = self._format_fraction(obj_int_frac[1],
-                                                 bin_pattern[FRACTION])
+                fraction, roundInt = self._format_fraction(
+                    obj_int_frac[1], bin_pattern[FRACTION], rounding=rounding)
             else:
                 fraction = ''
                 roundInt = False

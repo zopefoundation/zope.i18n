@@ -1181,6 +1181,11 @@ class TestNumberFormat(TestCase):
             -1e-7, '(#0.00#####);(-#0.00#####)'), '(-0.0000001)')
         self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
 
+    def testNoRounding(self):
+        # Witout Rounding
+        self.assertEqual(self.format.format(
+            decimal.Decimal('0.99999'), '0.###', rounding=False), '0.99999')
+
 
 def test_suite():
     return TestSuite((

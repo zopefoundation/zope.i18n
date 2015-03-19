@@ -13,6 +13,10 @@ CHANGES
   special treatment, because standard str(x) collapses them to scientific
   representation.
 
+- Support for specifying rounding in NumberFormatter. This is required in some
+  cases, e.g. when you format a Decimal('0.9999') that sould not be rounded.
+  Currently, formatting Decimal('0.99999') will raise a TypeError if rounding
+  is not set to False
 
 4.1.0 (2015-11-06)
 ------------------
