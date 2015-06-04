@@ -33,7 +33,7 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
-
+from ._compat import _u
 
 logger = logging.getLogger("zope.i18n")
 
@@ -42,15 +42,15 @@ class IRegisterTranslationsDirective(Interface):
     """Register translations with the global site manager."""
 
     directory = Path(
-        title=u"Directory",
-        description=u"Directory containing the translations",
+        title=_u("Directory"),
+        description=_u("Directory containing the translations"),
         required=True
         )
 
     domain = TextLine(
-        title=u"Domain",
-        description=u"Translation domain to register.  If not specified, "
-                     "all domains found in the directory are registered",
+        title=_u("Domain"),
+        description=_u("Translation domain to register.  If not specified, "
+                     "all domains found in the directory are registered"),
         required=False
         )
 

@@ -10,7 +10,7 @@ true for English. :)
 
 Text collation is a fairly involved process.  Systems that need this,
 will likely use something like ICU
-(http://www-306.ibm.com/software/globalization/icu, 
+(http://www-306.ibm.com/software/globalization/icu,
 http://pyicu.osafoundation.org/).  We don't want to introduce a
 dependency on ICU and this time, so we are providing a fallback
 collator that:
@@ -31,7 +31,8 @@ application code should certainly *not* count on this.
 Now, we can pass the collator's key method to sort functions to sort
 strings in a slightly friendly way:
 
-    >>> sorted([u'Sam', u'sally', u'Abe', u'alice', u'Terry', u'tim'],
+    >>> from zope.i18n._compat import _u
+    >>> sorted([_u("Sam"), _u("sally"), _u("Abe"), _u("alice"), _u("Terry"), _u("tim")],
     ...        key=collator.key)
     [u'Abe', u'alice', u'sally', u'Sam', u'Terry', u'tim']
 
@@ -41,23 +42,23 @@ then returns a tuple with the result of lower-casing the normalized
 string and the normalized string.  We can see this by calling the key
 method, which converts unicode strings to collation keys:
 
-    >>> collator.key(u'Sam')
+    >>> collator.key(_u("Sam"))
     (u'sam', u'Sam')
 
-    >>> collator.key(u'\xc6\xf8a\u030a')
+    >>> collator.key(_u("\xc6\xf8a\u030a"))
     (u'\xe6\xf8\xe5', u'\xc6\xf8\xe5')
 
 There is also a cmp function for comparing strings:
 
-    >>> collator.cmp(u'Terry', u'sally')
+    >>> collator.cmp(_u("Terry"), _u("sally"))
     1
 
 
-    >>> collator.cmp(u'sally', u'Terry')
+    >>> collator.cmp(_u("sally"), _u("Terry"))
     -1
 
-    >>> collator.cmp(u'terry', u'Terry')
+    >>> collator.cmp(_u("terry"), _u("Terry"))
     1
 
-    >>> collator.cmp(u'terry', u'terry')
+    >>> collator.cmp(_u("terry"), _u("terry"))
     0

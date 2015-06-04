@@ -32,6 +32,7 @@ from zope.i18n.format import NumberFormat, DateTimeFormat
 from zope.i18n.locales.inheritance import \
      AttributeInheritance, InheritingDictionary, NoParentException
 from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
+from .._compat import _u
 
 # Setup the locale directory
 from zope import i18n
@@ -223,8 +224,8 @@ class LocaleFormat(object):
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
-        self.displayName = u''
-        self.pattern = u''
+        self.displayName = _u("")
+        self.pattern = _u("")
 
 
 @implementer(ILocaleFormatLength)
@@ -245,7 +246,7 @@ class LocaleMonthContext(AttributeInheritance):
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
-        self.default = u'wide'
+        self.default = _u("wide")
 
 
 @implementer(ILocaleDayContext)
@@ -254,7 +255,7 @@ class LocaleDayContext(AttributeInheritance):
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
-        self.default = u'wide'
+        self.default = _u("wide")
 
 
 @implementer(ILocaleCalendar)
@@ -279,44 +280,44 @@ class LocaleCalendar(AttributeInheritance):
       >>> locale.calendar = LocaleCalendar('gregorian')
 
       >>> root.calendar.months = InheritingDictionary(
-      ...     {1: (u'January', u'Jan'), 2: (u'February', u'Feb')})
+      ...     {1: (_u("January"), _u("Jan")), 2: (_u("February"), _u("Feb"))})
       >>> locale.calendar.months = InheritingDictionary(
-      ...     {2: (u'Februar', u'Feb'), 3: (u'Maerz', u'Mrz')})
+      ...     {2: (_u("Februar"), _u("Feb")), 3: (_u("Maerz"), _u("Mrz"))})
       >>> locale.calendar.getMonthNames()[:4]
       [u'January', u'Februar', u'Maerz', None]
-      >>> locale.calendar.getMonthTypeFromName(u'January')
+      >>> locale.calendar.getMonthTypeFromName(_u("January"))
       1
-      >>> locale.calendar.getMonthTypeFromName(u'Februar')
+      >>> locale.calendar.getMonthTypeFromName(_u("Februar"))
       2
       >>> locale.calendar.getMonthAbbreviations()[:4]
       [u'Jan', u'Feb', u'Mrz', None]
-      >>> locale.calendar.getMonthTypeFromAbbreviation(u'Jan')
+      >>> locale.calendar.getMonthTypeFromAbbreviation(_u("Jan"))
       1
-      >>> locale.calendar.getMonthTypeFromAbbreviation(u'Mrz')
+      >>> locale.calendar.getMonthTypeFromAbbreviation(_u("Mrz"))
       3
 
       >>> root.calendar.days = InheritingDictionary(
-      ...     {1: (u'Monday', u'Mon'), 2: (u'Tuesday', u'Tue')})
+      ...     {1: (_u("Monday"), _u("Mon")), 2: (_u("Tuesday"), _u("Tue"))})
       >>> locale.calendar.days = InheritingDictionary(
-      ...     {2: (u'Dienstag', u'Die'), 3: (u'Mittwoch', u'Mit')})
+      ...     {2: (_u("Dienstag"), _u("Die")), 3: (_u("Mittwoch"), _u("Mit"))})
       >>> locale.calendar.getDayNames()[:4]
       [u'Monday', u'Dienstag', u'Mittwoch', None]
-      >>> locale.calendar.getDayTypeFromName(u'Monday')
+      >>> locale.calendar.getDayTypeFromName(_u("Monday"))
       1
-      >>> locale.calendar.getDayTypeFromName(u'Dienstag')
+      >>> locale.calendar.getDayTypeFromName(_u("Dienstag"))
       2
       >>> locale.calendar.getDayAbbreviations()[:4]
       [u'Mon', u'Die', u'Mit', None]
-      >>> locale.calendar.getDayTypeFromAbbreviation(u'Mon')
+      >>> locale.calendar.getDayTypeFromAbbreviation(_u("Mon"))
       1
-      >>> locale.calendar.getDayTypeFromAbbreviation(u'Die')
+      >>> locale.calendar.getDayTypeFromAbbreviation(_u("Die"))
       2
 
     Let's test the direct attribute access as well.
 
-      >>> root.am = u'AM'
-      >>> root.pm = u'PM'
-      >>> locale.pm = u'nachm.'
+      >>> root.am = _u("AM")
+      >>> root.pm = _u("PM")
+      >>> locale.pm = _u("nachm.")
       >>> locale.pm
       u'nachm.'
       >>> locale.am
@@ -403,12 +404,12 @@ class LocaleDates(AttributeInheritance):
 
       >>> fulllength = LocaleFormatLength()
       >>> format = LocaleFormat()
-      >>> format.pattern = u'EEEE, d. MMMM yyyy'
+      >>> format.pattern = _u("EEEE, d. MMMM yyyy")
       >>> fulllength.formats = {None: format}
 
       >>> mediumlength = LocaleFormatLength()
       >>> format = LocaleFormat()
-      >>> format.pattern = u'dd.MM.yyyy'
+      >>> format.pattern = _u("dd.MM.yyyy")
       >>> mediumlength.formats = {None: format}
 
       >>> cal.dateFormats = {'full': fulllength, 'medium': mediumlength}
@@ -426,12 +427,12 @@ class LocaleDates(AttributeInheritance):
 
       >>> fulllength = LocaleFormatLength()
       >>> format = LocaleFormat()
-      >>> format.pattern = u"H:mm' Uhr 'z"
+      >>> format.pattern = _u("H:mm' Uhr 'z")
       >>> fulllength.formats = {None: format}
 
       >>> mediumlength = LocaleFormatLength()
       >>> format = LocaleFormat()
-      >>> format.pattern = u'HH:mm:ss'
+      >>> format.pattern = _u("HH:mm:ss")
       >>> mediumlength.formats = {None: format}
 
       >>> cal.timeFormats = {'full': fulllength, 'medium': mediumlength}
@@ -450,7 +451,7 @@ class LocaleDates(AttributeInheritance):
 
       >>> length = LocaleFormatLength()
       >>> format = LocaleFormat()
-      >>> format.pattern = u'{1} {0}'
+      >>> format.pattern = _u("{1} {0}")
       >>> length.formats = {None: format}
       >>> cal.dateTimeFormats = {None: length}
 
@@ -479,15 +480,15 @@ class LocaleDates(AttributeInheritance):
     """
 
     def getFormatter(self, category, length=None, name=None,
-                     calendar=u'gregorian'):
+                     calendar=_u("gregorian")):
         """See zope.i18n.interfaces.locales.ILocaleDates"""
-        if category not in (u'date', u'time', u'dateTime'):
+        if category not in (_u("date"), _u("time"), _u("dateTime")):
             raise ValueError('Invalid category: %s' % category)
-        if calendar not in (u'gregorian', u'arabic', u'chinese',
-                            u'civil-arabic', u'hebrew', u'japanese',
-                            u'thai-buddhist'):
+        if calendar not in (_u("gregorian"), _u("arabic"), _u("chinese"),
+                            _u("civil-arabic"), _u("hebrew"), _u("japanese"),
+                            _u("thai-buddhist")):
             raise ValueError('Invalid calendar: %s' % calendar)
-        if length not in (u'short', u'medium', u'long', u'full', None):
+        if length not in (_u("short"), _u("medium"), _u("long"), _u("full"), None):
             raise ValueError('Invalid format length: %s' % length)
 
         cal = self.calendars[calendar]
@@ -555,7 +556,7 @@ class LocaleNumbers(AttributeInheritance):
 
       >>> length = LocaleFormatLength()
       >>> format = LocaleFormat()
-      >>> format.pattern = u'#,##0.###;-#,##0.###'
+      >>> format.pattern = _u("#,##0.###;-#,##0.###")
       >>> length.formats = {None: format}
       >>> numbers.decimalFormats = {None: length}
       >>> formatter = numbers.getFormatter('decimal')
@@ -570,11 +571,11 @@ class LocaleNumbers(AttributeInheritance):
 
       >>> longlength = LocaleFormatLength('long')
       >>> format = LocaleFormat()
-      >>> format.pattern = u'0.000###E+00'
+      >>> format.pattern = _u("0.000###E+00")
       >>> longlength.formats = {None: format}
       >>> mediumlength = LocaleFormatLength('long')
       >>> format = LocaleFormat()
-      >>> format.pattern = u'0.00##E+00'
+      >>> format.pattern = _u("0.00##E+00")
       >>> mediumlength.formats = {None: format}
       >>> numbers.scientificFormats = {'long': longlength,
       ...                              'medium': mediumlength}
@@ -591,9 +592,9 @@ class LocaleNumbers(AttributeInheritance):
 
       >>> longlength = LocaleFormatLength('long')
       >>> fooformat = LocaleFormat()
-      >>> fooformat.pattern = u'0.##0%'
+      >>> fooformat.pattern = _u("0.##0%")
       >>> barformat = LocaleFormat()
-      >>> barformat.pattern = u'0%'
+      >>> barformat.pattern = _u("0%")
       >>> longlength.formats = {None: fooformat, 'bar': barformat}
       >>> numbers.percentFormats = {'long': longlength}
       >>> numbers.defaultPercentFormat = 'long'
@@ -615,8 +616,8 @@ class LocaleNumbers(AttributeInheritance):
 
     def getFormatter(self, category, length=None, name=None):
         """See zope.i18n.interfaces.locales.ILocaleNumbers"""
-        assert category in (u'decimal', u'percent', u'scientific', u'currency')
-        assert length in (u'short', u'medium', u'long', u'full', None)
+        assert category in (_u("decimal"), _u("percent"), _u("scientific"), _u("currency"))
+        assert length in (_u("short"), _u("medium"), _u("long"), _u("full"), None)
 
         formats = getattr(self, category+'Formats')
         if length is None:

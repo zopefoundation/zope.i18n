@@ -17,6 +17,7 @@
 from zope import interface
 import zope.i18n.interfaces
 from zope.i18n.translationdomain import TranslationDomain
+from ._compat import _u
 
 @interface.implementer(zope.i18n.interfaces.IGlobalMessageCatalog)
 class TestMessageCatalog:
@@ -29,11 +30,11 @@ class TestMessageCatalog:
     def queryMessage(self, msgid, default=None):
         default = getattr(msgid, 'default', default)
         if default != None and default != msgid:
-            msg = u"%s (%s)" % (msgid, default)
+            msg = _u("%s (%s)") % (msgid, default)
         else:
             msg = msgid
-            
-        return u'[[%s][%s]]' % (self.domain, msg)
+
+        return _u("[[%s][%s]]") % (self.domain, msg)
 
     getMessage = queryMessage
 
@@ -44,7 +45,7 @@ class TestMessageCatalog:
         pass
 
 @interface.implementer(zope.i18n.interfaces.ITranslationDomain)
-def TestMessageFallbackDomain(domain_id=u''):
+def TestMessageFallbackDomain(domain_id=_u("")):
     domain = TranslationDomain(domain_id)
     domain.addCatalog(TestMessageCatalog(domain_id))
     return domain

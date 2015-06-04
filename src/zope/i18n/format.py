@@ -26,6 +26,8 @@ import pytz.reference
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implementer
 
+from ._compat import _u
+
 PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str
@@ -199,7 +201,7 @@ class DateTimeFormat(object):
         else:
             bin_pattern = self._bin_pattern
 
-        text = u''
+        text = _u("")
         info = buildDateTimeInfo(obj, self.calendar, bin_pattern)
         for elem in bin_pattern:
             text += info.get(elem, elem)
@@ -222,18 +224,18 @@ class NumberFormat(object):
     def __init__(self, pattern=None, symbols={}):
         # setup default symbols
         self.symbols = {
-            u'decimal': u'.',
-            u'group': u',',
-            u'list':  u';',
-            u'percentSign': u'%',
-            u'nativeZeroDigit': u'0',
-            u'patternDigit': u'#',
-            u'plusSign': u'+',
-            u'minusSign': u'-',
-            u'exponential': u'E',
-            u'perMille': u'\xe2\x88\x9e',
-            u'infinity': u'\xef\xbf\xbd',
-            u'nan': '' }
+            _u("decimal"): _u("."),
+            _u("group"): _u(","),
+            _u("list"):  _u(";"),
+            _u("percentSign"): _u("%"),
+            _u("nativeZeroDigit"): _u("0"),
+            _u("patternDigit"): _u("#"),
+            _u("plusSign"): _u("+"),
+            _u("minusSign"): _u("-"),
+            _u("exponential"): _u("E"),
+            _u("perMille"): _u("\xe2\x88\x9e"),
+            _u("infinity"): _u("\xef\xbf\xbd"),
+            _u("nan"): '' }
         self.symbols.update(symbols)
         self._pattern = pattern
         self._bin_pattern = None
@@ -373,7 +375,7 @@ class NumberFormat(object):
             # The exponential might have a mandatory sign; remove it from the
             # bin_pattern and remember the setting
             exp_bin_pattern = bin_pattern[EXPONENTIAL]
-            plus_sign = u''
+            plus_sign = _u("")
             if exp_bin_pattern.startswith('+'):
                 plus_sign = self.symbols['plusSign']
                 exp_bin_pattern = exp_bin_pattern[1:]
@@ -656,7 +658,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
                          ('S', dt.microsecond), ('w', int(dt.strftime('%W'))),
                          ('W', week_in_month)):
         for entry in _findFormattingCharacterInPattern(field, pattern):
-            info[entry] = (u'%%.%ii' %entry[1]) %value
+            info[entry] = (_u("%%.%ii") %entry[1]) %value
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
@@ -670,9 +672,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # time zone (Text)
     for entry in _findFormattingCharacterInPattern('z', pattern):
         if entry[1] == 1:
-            info[entry] = u"%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
+            info[entry] = _u("%s%i%.2i") %(tz_sign, tz_hours, tz_mins)
         elif entry[1] == 2:
-            info[entry] = u"%s%.2i:%.2i" %(tz_sign, tz_hours, tz_mins)
+            info[entry] = _u("%s%.2i:%.2i") %(tz_sign, tz_hours, tz_mins)
         elif entry[1] == 3:
             info[entry] = tz_name
         else:
@@ -681,9 +683,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # month in year (Text and Number)
     for entry in _findFormattingCharacterInPattern('M', pattern):
         if entry[1] == 1:
-            info[entry] = u'%i' %dt.month
+            info[entry] = _u("%i") %dt.month
         elif entry[1] == 2:
-            info[entry] = u'%.2i' %dt.month
+            info[entry] = _u("%.2i") %dt.month
         elif entry[1] == 3:
             info[entry] = calendar.months[dt.month][1]
         else:
@@ -692,9 +694,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # day in week (Text and Number)
     for entry in _findFormattingCharacterInPattern('E', pattern):
         if entry[1] == 1:
-            info[entry] = u'%i' %weekday
+            info[entry] = _u("%i") %weekday
         elif entry[1] == 2:
-            info[entry] = u'%.2i' %weekday
+            info[entry] = _u("%.2i") %weekday
         elif entry[1] == 3:
             info[entry] = calendar.days[dt.weekday() + 1][1]
         else:
