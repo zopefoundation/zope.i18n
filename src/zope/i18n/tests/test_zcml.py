@@ -27,6 +27,7 @@ from zope.component.testing import PlacelessSetup
 import zope.i18n.tests
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n import config
+from .._compat import _u
 
 PY3 = sys.version_info[0] == 3
 if PY3:
@@ -110,14 +111,14 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         self.assertEqual(util._catalogs.get('en'),
                           [unicode(path1), unicode(path2)])
 
-        msg = util.translate(u'Additional message', target_language='en')
-        self.assertEqual(msg, u'Additional message translated')
+        msg = util.translate(_u("Additional message"), target_language='en')
+        self.assertEqual(msg, _u("Additional message translated"))
 
-        msg = util.translate(u'New Domain', target_language='en')
-        self.assertEqual(msg, u'New Domain translated')
+        msg = util.translate(_u("New Domain"), target_language='en')
+        self.assertEqual(msg, _u("New Domain translated"))
 
-        msg = util.translate(u'New Language', target_language='en')
-        self.assertEqual(msg, u'New Language translated')
+        msg = util.translate(_u("New Language"), target_language='en')
+        self.assertEqual(msg, _u("New Language translated"))
 
     def testRegisterAndCompileTranslations(self):
         from zope.configuration import xmlconfig
@@ -148,12 +149,12 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         self.assertEqual(util._catalogs,
                           {'test': ['test'], 'en': [unicode(path)]})
 
-        msg = util.translate(u"I'm a newer file", target_language='en')
-        self.assertEqual(msg, u"I'm a newer file translated")
+        msg = util.translate(_u("I'm a newer file"), target_language='en')
+        self.assertEqual(msg, _u("I'm a newer file translated"))
 
         util = getUtility(ITranslationDomain, 'zope-i18n2')
-        msg = util.translate(u"I'm a new file", target_language='en')
-        self.assertEqual(msg, u"I'm a new file translated")
+        msg = util.translate(_u("I'm a new file"), target_language='en')
+        self.assertEqual(msg, _u("I'm a new file translated"))
 
         # Reset the mtime of the mo file
         os.utime(path, (path_atime, path_mtime))

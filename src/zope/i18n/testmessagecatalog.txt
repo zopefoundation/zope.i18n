@@ -51,16 +51,16 @@ that has the test catalog as it's only catalog:
     >>> zope.i18n.interfaces.IFallbackTranslationDomainFactory.providedBy(
     ...     factory)
     True
-    
+
     >>> domain = factory('foo.bar')
-    >>> domain.translate(u'eek')
+    >>> domain.translate('eek')
     u'eek'
 
-    >>> domain.translate(u'eek', target_language='test')
+    >>> domain.translate('eek', target_language='test')
     u'[[foo.bar][eek]]'
 
 Note that if a default is padded in, it will be included in test
 output:
 
-    >>> domain.translate(u'eek', target_language='test', default=u'Eek')
+    >>> domain.translate('eek', target_language='test', default='Eek')
     u'[[foo.bar][eek (Eek)]]'

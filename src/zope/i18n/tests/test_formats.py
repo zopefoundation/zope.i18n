@@ -29,12 +29,14 @@ from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat, NumberParseError
 from zope.i18n.format import parseNumberPattern
 
+from .._compat import _u
+
 class LocaleStub(object):
     pass
 
 class LocaleCalendarStub(object):
 
-    type = u'gregorian'
+    type = _u("gregorian")
 
     months = { 1: ('Januar', 'Jan'),     2: ('Februar', 'Feb'),
                3: ('Maerz', 'Mrz'),      4: ('April', 'Apr'),
@@ -222,9 +224,9 @@ class TestBuildDateTimeParseInfo(TestCase):
         self.assertEqual(self.info(('M', 2)), '([0-9]{2})')
 
     def testMonthNames(self):
-        names = [u'Januar', u'Februar', u'Maerz', u'April',
-                 u'Mai', u'Juni', u'Juli', u'August', u'September', u'Oktober',
-                 u'November', u'Dezember']
+        names = [_u("Januar"), _u("Februar"), _u("Maerz"), _u("April"),
+                 _u("Mai"), _u("Juni"), _u("Juli"), _u("August"), _u("September"), _u("Oktober"),
+                 _u("November"), _u("Dezember")]
         self.assertEqual(self.info(('M', 4)), '('+'|'.join(names)+')')
 
     def testMonthAbbr(self):
@@ -548,54 +550,54 @@ class TestDateTimeFormat(TestCase):
     def testFormatDayInYear(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'D'),
-            u'3')
+            _u("3"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DD'),
-            u'03')
+            _u("03"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DDD'),
-            u'003')
+            _u("003"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'D'),
-            u'365')
+            _u("365"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'DD'),
-            u'365')
+            _u("365"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'DDD'),
-            u'365')
+            _u("365"))
         self.assertEqual(
             self.format.format(datetime.date(2004, 12, 31), 'DDD'),
-            u'366')
+            _u("366"))
 
     def testFormatDayOfWeekInMOnth(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'F'),
-            u'1')
+            _u("1"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10), 'F'),
-            u'2')
+            _u("2"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 17), 'F'),
-            u'3')
+            _u("3"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 24), 'F'),
-            u'4')
+            _u("4"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 31), 'F'),
-            u'5')
+            _u("5"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 6), 'F'),
-            u'1')
+            _u("1"))
 
     def testFormatUnusualFormats(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DDD-yyyy'),
-            u'003-2003')
+            _u("003-2003"))
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10),
                                "F. EEEE 'im' MMMM, yyyy"),
-            u'2. Freitag im Januar, 2003')
+            _u("2. Freitag im Januar, 2003"))
 
 
 

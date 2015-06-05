@@ -20,6 +20,7 @@ from zope.i18nmessageid import Message
 from zope.i18n import translate, interpolate
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
+from ._compat import _u
 
 # The configuration should specify a list of fallback languages for the
 # site.  If a particular catalog for a negotiated language is not available,
@@ -34,6 +35,8 @@ LANGUAGE_FALLBACKS = ['en']
 PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str
+
+_EMPTY = _u("")
 
 class TranslationDomain(SimpleTranslationDomain):
 
@@ -69,8 +72,8 @@ class TranslationDomain(SimpleTranslationDomain):
         """See zope.i18n.interfaces.ITranslationDomain"""
         # if the msgid is empty, let's save a lot of calculations and return
         # an empty string.
-        if msgid == u'':
-            return u''
+        if msgid == _EMPTY:
+            return _EMPTY
 
         if target_language is None and context is not None:
             langs = self._catalogs.keys()
@@ -129,7 +132,7 @@ class TranslationDomain(SimpleTranslationDomain):
                 # this is a slight optimization for the case when there is a
                 # single catalog. More importantly, it is extremely helpful
                 # when testing and the test language is used, because it
-                # allows the test language to get the default. 
+                # allows the test language to get the default.
                 text = self._data[catalog_names[0]].queryMessage(
                     msgid, default)
             else:
