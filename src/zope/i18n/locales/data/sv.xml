@@ -902,12 +902,12 @@
 					</dateFormatLength >
 					<dateFormatLength type="medium">
 						<dateFormat >
-							<pattern>yyyy-MM-dd</pattern>
+							<pattern>dd-MMM-yy</pattern>
 						</dateFormat>
 					</dateFormatLength >
 					<dateFormatLength type="short">
 						<dateFormat >
-							<pattern>yyyy-MM-dd</pattern>
+							<pattern>d/MM/yy</pattern>
 						</dateFormat>
 					</dateFormatLength >
 				</dateFormats>
