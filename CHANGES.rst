@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-4.1.0 (unreleased)
+4.1.0 (2015-11-06)
 ------------------
 
 - ``interpolate()`` now works recursively, if the mapping has a value which is
