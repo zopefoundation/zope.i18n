@@ -160,11 +160,22 @@ def interpolate(text, mapping=None):
 
     >>> interpolate(_u("This is ${name}"))
     u'This is ${name}'
+
+    If a mapping value is a message id itself it is interpolated, too:
+
+    >>> from zope.i18nmessageid import Message
+    >>> interpolate(_u("This is $meta."),
+    ...             mapping={'meta': Message(_u("$name $version"),
+    ...                                      mapping=mapping)})
+    u'This is Zope 3.'
     """
 
     def replace(match):
         whole, param1, param2 = match.groups()
-        return unicode(mapping.get(param1 or param2, whole))
+        value = mapping.get(param1 or param2, whole)
+        if isinstance(value, Message):
+            value = interpolate(value, value.mapping)
+        return unicode(value)
 
     if not text or not mapping:
         return text

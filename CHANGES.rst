@@ -2,11 +2,11 @@
 CHANGES
 =======
 
-4.0.2 (unreleased)
---------------------
+4.1.0 (unreleased)
+------------------
 
-- TBD
-
+- ``interpolate()`` now works recursively, if the mapping has a value which is
+  a ``zope.i18nmessageid.Message`` itself.
 
 4.0.1 (2015-06-05)
 --------------------
