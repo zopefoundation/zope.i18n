@@ -2,10 +2,10 @@
 CHANGES
 =======
 
-4.1.1 (unreleased)
+4.2.0 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Drop support for Python 2.6 and 3.2.
 
 
 4.1.0 (2015-11-06)
@@ -17,15 +17,15 @@ CHANGES
 4.0.1 (2015-06-05)
 --------------------
 
-- Added support for Python 3.2 and PyPy3.
+- Add support for Python 3.2 and PyPy3.
 
 
 4.0.0 (2014-12-20)
 --------------------
 
-- Added support for testing with Travis.
+- Add support for testing with Travis.
 
-- Added explicit support for Python 3.4 and PyPy.
+- Add explicit support for Python 3.4 and PyPy.
 
 
 4.0.0a4 (2013-02-18)
@@ -39,20 +39,20 @@ CHANGES
 4.0.0a3 (2013-02-15)
 --------------------
 
-- Added support for Python 3.3.
+- Add support for Python 3.3.
 
 - Log DEBUG when loading translations from directories.
 
-- Replaced deprecated ``zope.interface.implements`` usage with equivalent
+- Replace ``zope.interface.implements`` usage with equivalent
   ``zope.interface.implementer`` decorator.
 
-- Dropped support for Python 2.4 and 2.5.
+- Drop support for Python 2.4 and 2.5.
 
 
 3.8.0 (2012-03-15)
 ------------------
 
-- Added optional ``domain`` attribute to ``registerTranslations`` directive to
+- Add optional ``domain`` attribute to ``registerTranslations`` directive to
   only load the specified translation domain. Allows to move catalogs to
   `/usr/share/locale` and avoid loading hundreds of unrelated domains.
 
@@ -66,13 +66,13 @@ CHANGES
 3.7.4 (2010-07-08)
 ------------------
 
-- Added missing test dependency on ``zope.testing``.
+- Add missing test dependency on ``zope.testing``.
 
 
 3.7.3 (2010-04-30)
 ------------------
 
-- Removed use of 'zope.testing.doctestunit' in favor of stdlib's 'doctest.
+- Remove of 'zope.testing.doctestunit' in favor of stdlib's 'doctest.
 
 3.7.2 (2009-12-14)
 ------------------
@@ -88,7 +88,7 @@ CHANGES
 3.7.1 (2009-08-07)
 ------------------
 
-- Fixed the interpackage translation domain merging feature to actually work.
+- Fix the interpackage translation domain merging feature to actually work.
   We need to defer the merging into the ZCML handler execution phase, as the
   utilities don't exist yet during the ZCML parsing phase. Thx to Andreas
   Zeidler for finding and fixing the issue in PlacelessTranslationService in
@@ -103,7 +103,7 @@ CHANGES
 3.7.0 (2009-03-18)
 ------------------
 
-- Updated locale data to CLDR 1.1. This introduces contextual month
+- Update data to CLDR 1.1. This introduces contextual month
   and day names and different month/day name widths. More CLDR updates
   are expected, see the "nadako-cldr" branch of zope.i18n.
 
@@ -115,7 +115,7 @@ CHANGES
 3.6.0 (2008-10-26)
 ------------------
 
-- Fixed a test failure in the compile mo file support.
+- Fix a test failure in the compile mo file support.
 
 - Move the zcml support into an extra. This reduces the dependencies of a
   standard zope.i18n install by half a dozen packages.
@@ -124,17 +124,17 @@ CHANGES
 3.5.0 (2008-07-10)
 ------------------
 
-- Feature: Added new top-level negotiate function, which can be used to
+- Feature: Add new top-level negotiate function, which can be used to
   negotiate the language when the available languages are set globally via
   `zope_i18n_allowed_languages`.
 
-- Feature: Added support for restricting the available languages. We support
+- Feature: Add support for restricting the available languages. We support
   an environment variable called `zope_i18n_allowed_languages` now, which is
   a list of comma or space separated language codes. If the environment
   variable is set, the ZCML registration will only process those folders
   which are in the allowed languages list.
 
-- Feature: Added optional automatic compilation of mo files from po files.
+- Feature: Add optional automatic compilation of mo files from po files.
   You need to depend on the `zope.i18n [compile]` extra and set an environment
   variable called `zope_i18n_compile_mo_files` to any True value to enable
   this option.
@@ -155,13 +155,13 @@ CHANGES
 3.4.0 (2007-10-02)
 ------------------
 
-- Updated meta-data. No code changes.
+- Update meta-data. No code changes.
 
 
 3.4.0b5 (2007-08-15)
 --------------------
 
-- Bug: Fixed dependency on ``zope.component`` to require it with the 'zcml'
+- Bug: Fix dependency on ``zope.component`` to require it with the 'zcml'
   extra instead of requiring ``zope.security`` directly.
 
 
@@ -184,14 +184,14 @@ CHANGES
 3.4.0b2 (2007-06-25)
 --------------------
 
-- Feature: Added ability to change the output type when parsing a
+- Feature: Add ability to change the output type when parsing a
   number.
 
 
 3.4.0b1 (?)
 -----------
 
-- Bug: Fixed dependency on ``zope.security`` to require a version that
+- Bug: Fix dependency on ``zope.security`` to require a version that
   does not have the hidden dependency on ``zope.testing``.
 
 
@@ -205,14 +205,14 @@ packages. The changes can be reconstructed from the Zope 3 changelog.
 - Corresponds to the verison of the zope.i18n package shipped as part of the
   Zope 3.2.0 release.
 
-- Added a picklable offset-based timezone to 'pytz', a la
+- Add a picklable offset-based timezone to 'pytz', a la
   zope.app.datetimeutils'.  Added tests in 'zope.i18n' to show that we need
   something like it, and then actually use it in 'zope.18n.format'.
 
-- Added support for parsing / formatting timezones using 'pytz' (new external
+- Add support for parsing / formatting timezones using 'pytz' (new external
   dependency).
 
-- Implemented remaining date/time formatters, including adding week
+- Implement remaining date/time formatters, including adding week
   information to the calendar.
 
 
