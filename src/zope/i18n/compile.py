@@ -43,5 +43,5 @@ def compile_mo_file(domain, lc_messages_path):
             fd = open(mofile, 'wb')
             fd.write(mo.read())
             fd.close()
-        except (IOError, OSError, PoSyntaxError):
-            logger.warn('Error while compiling %s' % pofile)
+        except (IOError, OSError, PoSyntaxError) as err:
+            logger.warn('Error while compiling %s (%s).' % (pofile, err.msg))
