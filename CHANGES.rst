@@ -21,6 +21,9 @@ CHANGES
 4.2.0.sbx1 (2017-05-17)
 -----------------------
 
+- Better errot message on PO-File Syntax Errors.
+  [SyZn]
+
 - Add support for Python 3.5.
 
 - Drop support for Python 2.6, 3.2 and 3.3.
