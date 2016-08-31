@@ -5,7 +5,7 @@ CHANGES
 4.2.0 (unreleased)
 ------------------
 
-- Better errot message on PO-File Syntax Errors.
+- Better error message on PO-File Syntax Errors.
   [SyZn]
 
 - Add support for Python 3.5.
