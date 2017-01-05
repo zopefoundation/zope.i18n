@@ -7,7 +7,7 @@ CHANGES
 
 - Add support for Python 3.5.
 
-- Drop support for Python 2.6 and 3.2.
+- Drop support for Python 2.6, 3.2 and 3.3.
 
 - Support for formatting really small numbers, e.g. 1e-9. These numbers needs
   special treatment, because standard str(x) collapses them to scientific
