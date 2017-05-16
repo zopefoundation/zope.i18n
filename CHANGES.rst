@@ -2,27 +2,10 @@
 CHANGES
 =======
 
-4.2.0.post4 (unreleased)
-------------------------
+sbx.4.2.0 (unreleased)
+----------------------
 
-- Nothing changed yet.
-
-
-4.2.0.post3 (2017-05-17)
-------------------------
-
-- No, versions cannot have letters anymore. Seriously?
-
-4.2.0.sbx2 (2017-05-17)
------------------------
-
-- Dealing with packaging issues.
-
-4.2.0.sbx1 (2017-05-17)
------------------------
-
-- Better error message on PO-File Syntax Errors.
-  [SyZn]
+- Better error message on PO-File Syntax Errors. [SyZn]
 
 - Add support for Python 3.5.
 
@@ -37,11 +20,13 @@ CHANGES
   Currently, formatting Decimal('0.99999') will raise a TypeError if rounding
   is not set to False
 
+
 4.1.0 (2015-11-06)
 ------------------
 
 - ``interpolate()`` now works recursively, if the mapping has a value which is
   a ``zope.i18nmessageid.Message`` itself.
+
 
 4.0.1 (2015-06-05)
 --------------------
