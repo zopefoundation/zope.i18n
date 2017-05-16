@@ -2,8 +2,8 @@
 CHANGES
 =======
 
-4.2.0 (unreleased)
-------------------
+sbx.4.2.0 (unreleased)
+----------------------
 
 - Add support for Python 3.5.
 
