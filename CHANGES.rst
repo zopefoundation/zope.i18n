@@ -2,8 +2,8 @@
 CHANGES
 =======
 
-4.2.0-3 (unreleased)
---------------------
+4.2.0.post3 (2017-05-17)
+------------------------
 
 - No, versions cannot have letters anymore. Seriously?
 
