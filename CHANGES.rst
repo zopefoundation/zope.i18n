@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-4.2.0.sbx1 (unreleased)
+4.2.0.sbx1 (2017-05-17)
 -----------------------
 
 - Better error message on PO-File Syntax Errors. [SyZn]
