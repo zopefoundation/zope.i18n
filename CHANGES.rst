@@ -2,11 +2,10 @@
 CHANGES
 =======
 
-4.2.0.sbx3 (unreleased)
------------------------
+4.2.0-3 (unreleased)
+--------------------
 
-- Nothing changed yet.
-
+- No, versions cannot have letters anymore. Seriously?
 
 4.2.0.sbx2 (2017-05-17)
 -----------------------
