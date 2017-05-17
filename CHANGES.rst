@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-4.2.0.sbx1 (unreleased)
+4.2.0.sbx1 (2017-05-17)
 -----------------------
 
 - Add support for Python 3.5.
