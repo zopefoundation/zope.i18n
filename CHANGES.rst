@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-4.2.0.sbx2 (unreleased)
+4.2.0.sbx2 (2017-05-17)
 -----------------------
 
 - Dealing with packaging issues.
