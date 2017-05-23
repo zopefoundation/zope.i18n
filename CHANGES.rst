@@ -7,7 +7,7 @@ CHANGES
 
 - Better error message on PO-File Syntax Errors. [SyZn]
 
-- Add support for Python 3.5.
+- Add support for Python 3.5 and 3.6.
 
 - Drop support for Python 2.6, 3.2 and 3.3.
 
