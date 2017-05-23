@@ -85,6 +85,7 @@ setup(
         ],
     extras_require=dict(
         test=[
+            'python-gettext',
             'zope.component [zcml]',
             'zope.configuration',
             'zope.security',
@@ -99,6 +100,7 @@ setup(
             ],
         ),
     tests_require = [
+        'python-gettext',
         'zope.component [zcml]',
         'zope.configuration',
         'zope.security',
