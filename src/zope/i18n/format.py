@@ -331,7 +331,7 @@ class NumberFormat(object):
         if rounding:
             max_precision = len(pattern)
         else:
-            max_precision = sys.maxint
+            max_precision = sys.maxsize
         min_precision = pattern.count('0')
         precision = len(fraction)
         roundInt = False
