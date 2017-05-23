@@ -2,7 +2,7 @@
 CHANGES
 =======
 
-4.2.0 (unreleased)
+4.2.0 (2017-05-23)
 ------------------
 
 - Better error message on PO-File Syntax Errors. [SyZn]
