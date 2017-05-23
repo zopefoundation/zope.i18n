@@ -1180,6 +1180,22 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(
             -1e-7, '(#0.00#####);(-#0.00#####)'), '(-0.0000001)')
         self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
+        self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
+
+    def testFormatHighPrecisionNumbers(self):
+        self.assertEqual(self.format.format(
+            1+1e-7, '(#0.00#####);(-#0.00#####)'), '(1.0000001)')
+        self.assertEqual(self.format.format(
+            1+1e-7, '(#0.00###)'), '(1.00000)')
+        self.assertEqual(self.format.format(
+            1+1e-9, '(#0.00#######);(-#0.00#######)'), '(1.000000001)')
+        self.assertEqual(self.format.format(
+            1+1e-9, '(#0.00###)'), '(1.00000)')
+        self.assertEqual(self.format.format(
+            1+1e-12, '(#0.00##########);(-#0.00##########)'),
+            '(1.000000000001)')
+        self.assertEqual(self.format.format(
+            1+1e-12, '(#0.00###)'), '(1.00000)')
 
     def testNoRounding(self):
         # Witout Rounding

@@ -31,6 +31,9 @@ from ._compat import _u
 PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str
+    NATIVE_NUMBER_TYPES = (int, float)
+else:
+    NATIVE_NUMBER_TYPES = (int, float, long)
 
 def roundHalfUp(n):
     """Works like round() in python2.x
@@ -372,7 +375,12 @@ class NumberFormat(object):
         else:
             bin_pattern = bin_pattern[1]
 
-        strobj = str(obj)
+        if isinstance(obj, NATIVE_NUMBER_TYPES):
+            # repr() handles high-precision numbers correctly in
+            # Python 2 and 3. str() is only correct in Python 3.
+            strobj = repr(obj)
+        else:
+            strobj = str(obj)
         if 'e' in strobj:
             # Str(obj) # returned scientific representation of a number (e.g.
             # 1e-7). We can't rely on str() to format fraction.
