@@ -5,12 +5,20 @@ CHANGES
 4.2.0 (unreleased)
 ------------------
 
-- Better error message on PO-File Syntax Errors.
-  [SyZn]
+- Better error message on PO-File Syntax Errors. [SyZn]
 
-- Add support for Python 3.5.
+- Add support for Python 3.5 and 3.6.
 
-- Drop support for Python 2.6 and 3.2.
+- Drop support for Python 2.6, 3.2 and 3.3.
+
+- Support for formatting really small numbers, e.g. 1e-9. These numbers needs
+  special treatment, because standard str(x) collapses them to scientific
+  representation.
+
+- Support for specifying rounding in NumberFormatter. This is required in some
+  cases, e.g. when you format a Decimal('0.9999') that sould not be rounded.
+  Currently, formatting Decimal('0.99999') will raise a TypeError if rounding
+  is not set to False
 
 
 4.1.0 (2015-11-06)
@@ -18,6 +26,7 @@ CHANGES
 
 - ``interpolate()`` now works recursively, if the mapping has a value which is
   a ``zope.i18nmessageid.Message`` itself.
+
 
 4.0.1 (2015-06-05)
 --------------------

@@ -31,6 +31,9 @@ from ._compat import _u
 PY3 = sys.version_info[0] == 3
 if PY3:
     unicode = str
+    NATIVE_NUMBER_TYPES = (int, float)
+else:
+    NATIVE_NUMBER_TYPES = (int, float, long)
 
 def roundHalfUp(n):
     """Works like round() in python2.x
@@ -327,8 +330,11 @@ class NumberFormat(object):
             integer = self.symbols['nativeZeroDigit']*(min_size-size) + integer
         return integer
 
-    def _format_fraction(self, fraction, pattern):
-        max_precision = len(pattern)
+    def _format_fraction(self, fraction, pattern, rounding=True):
+        if rounding:
+            max_precision = len(pattern)
+        else:
+            max_precision = sys.maxsize
         min_precision = pattern.count('0')
         precision = len(fraction)
         roundInt = False
@@ -356,7 +362,7 @@ class NumberFormat(object):
             fraction = self.symbols['decimal'] + fraction
         return fraction, roundInt
 
-    def format(self, obj, pattern=None):
+    def format(self, obj, pattern=None, rounding=True):
         "See zope.i18n.interfaces.IFormat"
         # Make or get binary form of datetime pattern
         if pattern is not None:
@@ -369,9 +375,24 @@ class NumberFormat(object):
         else:
             bin_pattern = bin_pattern[1]
 
+        if isinstance(obj, NATIVE_NUMBER_TYPES):
+            # repr() handles high-precision numbers correctly in
+            # Python 2 and 3. str() is only correct in Python 3.
+            strobj = repr(obj)
+        else:
+            strobj = str(obj)
+        if 'e' in strobj:
+            # Str(obj) # returned scientific representation of a number (e.g.
+            # 1e-7). We can't rely on str() to format fraction.
+            decimalprec = len(bin_pattern[FRACTION]) or 1
+            obj_int, obj_frac = ("%.*f" % (decimalprec, obj)).split('.')
+            # Remove trailing 0, but leave at least one
+            obj_frac = obj_frac.rstrip("0") or "0"
+            obj_int_frac = [obj_int, obj_frac]
+        else:
+            obj_int_frac = strobj.split('.')
 
         if bin_pattern[EXPONENTIAL] != '':
-            obj_int_frac = str(obj).split('.')
             # The exponential might have a mandatory sign; remove it from the
             # bin_pattern and remember the setting
             exp_bin_pattern = bin_pattern[EXPONENTIAL]
@@ -400,7 +421,8 @@ class NumberFormat(object):
                 number = ''.join(obj_int_frac)
 
             fraction, roundInt = self._format_fraction(number[1:],
-                                                       bin_pattern[FRACTION])
+                                                       bin_pattern[FRACTION],
+                                                       rounding=rounding)
             if roundInt:
                 number = str(int(number[0]) + 1) + fraction
             else:
@@ -415,10 +437,9 @@ class NumberFormat(object):
             number += self.symbols['exponential'] + exponent
 
         else:
-            obj_int_frac = str(obj).split('.')
             if len(obj_int_frac) > 1:
-                fraction, roundInt = self._format_fraction(obj_int_frac[1],
-                                                 bin_pattern[FRACTION])
+                fraction, roundInt = self._format_fraction(
+                    obj_int_frac[1], bin_pattern[FRACTION], rounding=rounding)
             else:
                 fraction = ''
                 roundInt = False

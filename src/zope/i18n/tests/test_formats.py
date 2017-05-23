@@ -1176,6 +1176,32 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(41.02, '(0.0##E0##* )* '),
                          '(4.102E1 )  ')
 
+    def testFormatSmallNumbers(self):
+        self.assertEqual(self.format.format(
+            -1e-7, '(#0.00#####);(-#0.00#####)'), '(-0.0000001)')
+        self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
+        self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
+
+    def testFormatHighPrecisionNumbers(self):
+        self.assertEqual(self.format.format(
+            1+1e-7, '(#0.00#####);(-#0.00#####)'), '(1.0000001)')
+        self.assertEqual(self.format.format(
+            1+1e-7, '(#0.00###)'), '(1.00000)')
+        self.assertEqual(self.format.format(
+            1+1e-9, '(#0.00#######);(-#0.00#######)'), '(1.000000001)')
+        self.assertEqual(self.format.format(
+            1+1e-9, '(#0.00###)'), '(1.00000)')
+        self.assertEqual(self.format.format(
+            1+1e-12, '(#0.00##########);(-#0.00##########)'),
+            '(1.000000000001)')
+        self.assertEqual(self.format.format(
+            1+1e-12, '(#0.00###)'), '(1.00000)')
+
+    def testNoRounding(self):
+        # Witout Rounding
+        self.assertEqual(self.format.format(
+            decimal.Decimal('0.99999'), '0.###', rounding=False), '0.99999')
+
 
 def test_suite():
     return TestSuite((
