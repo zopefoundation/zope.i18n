@@ -5,7 +5,8 @@ CHANGES
 4.2.1 (unreleased)
 ------------------
 
-- Nothing changed yet.
+- Ensure that all files are properly closed when compiling .mo files,
+  such as when the ``registerTranslations`` ZCML directive is used.
 
 
 4.2.0 (2017-05-23)
