@@ -1,3 +1,4 @@
+from contextlib import closing
 import logging
 import os
 from os.path import join
@@ -39,11 +40,15 @@ def compile_mo_file(domain, lc_messages_path):
 
     if po_mtime > mo_mtime:
         try:
-            mo = Msgfmt(pofile, domain).getAsFile()
-            fd = open(mofile, 'wb')
-            fd.write(mo.read())
-            fd.close()
+            # Msgfmt.getAsFile returns io.BytesIO on Python 3, and cStringIO.StringIO
+            # on Python 2; sadly StringIO isn't a proper context manager, so we have to
+            # wrap it with `closing`. Also, Msgfmt doesn't properly close a file
+            # it opens for reading if you pass the path, but it does if you pass
+            # the file.
+            with closing(Msgfmt(open(pofile, 'rb'), domain).getAsFile()) as mo:
+                with open(mofile, 'wb') as fd:
+                    fd.write(mo.read())
         except PoSyntaxError as err:
-            logger.warn('Syntax error while compiling %s (%s).' % (pofile, err.msg))
+            logger.warning('Syntax error while compiling %s (%s).', pofile, err.msg)
         except (IOError, OSError) as err:
-            logger.warn('Error while compiling %s (%s).' % (pofile, err))
+            logger.warning('Error while compiling %s (%s).', pofile, err)
