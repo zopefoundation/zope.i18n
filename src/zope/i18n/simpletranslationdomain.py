@@ -13,16 +13,12 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationDomain interface.
 """
-import sys
-
 from zope.interface import implementer
 from zope.component import getUtility
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 from zope.i18n import interpolate
 
-PY3 = sys.version_info[0] == 3
-if PY3:
-    unicode = str
+text_type = str if bytes is not str else unicode
 
 @implementer(ITranslationDomain)
 class SimpleTranslationDomain(object):
@@ -64,7 +60,7 @@ class SimpleTranslationDomain(object):
         # Find a translation; if nothing is found, use the default
         # value
         if default is None:
-            default = unicode(msgid)
+            default = text_type(msgid)
         text = self.messages.get((target_language, msgid))
         if text is None:
             text = default

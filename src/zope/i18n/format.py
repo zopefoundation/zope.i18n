@@ -26,14 +26,12 @@ import pytz.reference
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implementer
 
-from ._compat import _u
-
-PY3 = sys.version_info[0] == 3
-if PY3:
-    unicode = str
-    NATIVE_NUMBER_TYPES = (int, float)
-else:
-    NATIVE_NUMBER_TYPES = (int, float, long)
+text_type = str if bytes is not str else unicode
+NATIVE_NUMBER_TYPES = (int, float)
+try:
+    NATIVE_NUMBER_TYPES += (long,)
+except NameError:
+    pass # Py3
 
 def roundHalfUp(n):
     """Works like round() in python2.x
@@ -134,7 +132,7 @@ class DateTimeFormat(object):
             ampm_entry = _findFormattingCharacterInPattern('a', bin_pattern)
             if not ampm_entry:
                 raise DateTimeParseError(
-                      'Cannot handle 12-hour format without am/pm marker.')
+                    'Cannot handle 12-hour format without am/pm marker.')
             ampm = self.calendar.pm == results[bin_pattern.index(ampm_entry[0])]
             if hour == 12:
                 ampm = not ampm
@@ -142,9 +140,10 @@ class DateTimeFormat(object):
 
         # Shortcut for the simple int functions
         dt_fields_map = {'d': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
-        for field in dt_fields_map.keys():
+        for field in dt_fields_map:
             entry = _findFormattingCharacterInPattern(field, bin_pattern)
-            if not entry: continue
+            if not entry:
+                continue
             pos = dt_fields_map[field]
             ordered[pos] = int(results[bin_pattern.index(entry[0])])
 
@@ -204,7 +203,7 @@ class DateTimeFormat(object):
         else:
             bin_pattern = self._bin_pattern
 
-        text = _u("")
+        text = u""
         info = buildDateTimeInfo(obj, self.calendar, bin_pattern)
         for elem in bin_pattern:
             text += info.get(elem, elem)
@@ -227,18 +226,19 @@ class NumberFormat(object):
     def __init__(self, pattern=None, symbols={}):
         # setup default symbols
         self.symbols = {
-            _u("decimal"): _u("."),
-            _u("group"): _u(","),
-            _u("list"):  _u(";"),
-            _u("percentSign"): _u("%"),
-            _u("nativeZeroDigit"): _u("0"),
-            _u("patternDigit"): _u("#"),
-            _u("plusSign"): _u("+"),
-            _u("minusSign"): _u("-"),
-            _u("exponential"): _u("E"),
-            _u("perMille"): _u("\xe2\x88\x9e"),
-            _u("infinity"): _u("\xef\xbf\xbd"),
-            _u("nan"): '' }
+            u"decimal": u".",
+            u"group": u",",
+            u"list":  u";",
+            u"percentSign": u"%",
+            u"nativeZeroDigit": u"0",
+            u"patternDigit": u"#",
+            u"plusSign": u"+",
+            u"minusSign": u"-",
+            u"exponential": u"E",
+            u"perMille": u"\xe2\x88\x9e",
+            u"infinity": u"\xef\xbf\xbd",
+            u"nan": u''
+        }
         self.symbols.update(symbols)
         self._pattern = pattern
         self._bin_pattern = None
@@ -396,7 +396,7 @@ class NumberFormat(object):
             # The exponential might have a mandatory sign; remove it from the
             # bin_pattern and remember the setting
             exp_bin_pattern = bin_pattern[EXPONENTIAL]
-            plus_sign = _u("")
+            plus_sign = u""
             if exp_bin_pattern.startswith('+'):
                 plus_sign = self.symbols['plusSign']
                 exp_bin_pattern = exp_bin_pattern[1:]
@@ -480,7 +480,7 @@ class NumberFormat(object):
             text += bin_pattern[PADDING4]*post_padding
 
         # TODO: Need to make sure unicode is everywhere
-        return unicode(text)
+        return text_type(text)
 
 
 
@@ -667,8 +667,8 @@ def buildDateTimeInfo(dt, calendar, pattern):
     tz_name = tzinfo.tzname(dt) or tz_defaultname
     tz_fullname = getattr(tzinfo, 'zone', None) or tz_name
 
-    info = {('y', 2): unicode(dt.year)[2:],
-            ('y', 4): unicode(dt.year),
+    info = {('y', 2): text_type(dt.year)[2:],
+            ('y', 4): text_type(dt.year),
             }
 
     # Generic Numbers
@@ -679,7 +679,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
                          ('S', dt.microsecond), ('w', int(dt.strftime('%W'))),
                          ('W', week_in_month)):
         for entry in _findFormattingCharacterInPattern(field, pattern):
-            info[entry] = (_u("%%.%ii") %entry[1]) %value
+            info[entry] = (u"%%.%ii" %entry[1]) %value
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
@@ -693,9 +693,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # time zone (Text)
     for entry in _findFormattingCharacterInPattern('z', pattern):
         if entry[1] == 1:
-            info[entry] = _u("%s%i%.2i") %(tz_sign, tz_hours, tz_mins)
+            info[entry] = u"%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
         elif entry[1] == 2:
-            info[entry] = _u("%s%.2i:%.2i") %(tz_sign, tz_hours, tz_mins)
+            info[entry] = u"%s%.2i:%.2i" %(tz_sign, tz_hours, tz_mins)
         elif entry[1] == 3:
             info[entry] = tz_name
         else:
@@ -704,9 +704,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # month in year (Text and Number)
     for entry in _findFormattingCharacterInPattern('M', pattern):
         if entry[1] == 1:
-            info[entry] = _u("%i") %dt.month
+            info[entry] = u"%i" %dt.month
         elif entry[1] == 2:
-            info[entry] = _u("%.2i") %dt.month
+            info[entry] = u"%.2i" %dt.month
         elif entry[1] == 3:
             info[entry] = calendar.months[dt.month][1]
         else:
@@ -715,9 +715,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # day in week (Text and Number)
     for entry in _findFormattingCharacterInPattern('E', pattern):
         if entry[1] == 1:
-            info[entry] = _u("%i") %weekday
+            info[entry] = u"%i" % weekday
         elif entry[1] == 2:
-            info[entry] = _u("%.2i") %weekday
+            info[entry] = u"%.2i" % weekday
         elif entry[1] == 3:
             info[entry] = calendar.days[dt.weekday() + 1][1]
         else:

@@ -24,11 +24,7 @@ from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
 
-from ._compat import _u
-
-PY3 = sys.version_info[0] == 3
-if PY3:
-    unicode = str
+text_type = str if bytes is not str else unicode
 
 # Set up regular expressions for finding interpolation variables in text.
 # NAME_RE must exactly match the expression of the same name in the
@@ -36,7 +32,7 @@ if PY3:
 NAME_RE = r"[a-zA-Z_][-a-zA-Z0-9_]*"
 
 _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
-    % ({'n': NAME_RE}))
+                           % ({'n': NAME_RE}))
 
 
 def negotiate(context):
@@ -52,7 +48,7 @@ def negotiate(context):
     return None
 
 def translate(msgid, domain=None, mapping=None, context=None,
-               target_language=None, default=None):
+              target_language=None, default=None):
     """Translate text.
 
     First setup some test components:
@@ -71,26 +67,26 @@ def translate(msgid, domain=None, mapping=None, context=None,
 
     Normally, the translation system will use a domain utility:
 
-    >>> component.provideUtility(TestDomain(eek=_u("ook")), name='my.domain')
-    >>> translate(_u("eek"), 'my.domain')
-    u'ook'
+    >>> component.provideUtility(TestDomain(eek=u"ook"), name='my.domain')
+    >>> print(translate(u"eek", 'my.domain'))
+    ook
 
     Normally, if no domain is given, or if there is no domain utility
     for the given domain, then the text isn't translated:
 
-    >>> translate(_u("eek"))
-    u'eek'
+    >>> print(translate(u"eek"))
+    eek
 
     Moreover the text will be converted to unicode:
 
-    >>> translate('eek', 'your.domain')
-    u'eek'
+    >>> print(translate('eek', 'your.domain'))
+    eek
 
     A fallback domain factory can be provided. This is normally used
     for testing:
 
-    >>> def fallback(domain=_u("")):
-    ...     return TestDomain(eek=_u("test-from-") + domain)
+    >>> def fallback(domain=u""):
+    ...     return TestDomain(eek=u"test-from-" + domain)
     >>> interface.directlyProvides(
     ...     fallback,
     ...     zope.i18n.interfaces.IFallbackTranslationDomainFactory,
@@ -98,11 +94,11 @@ def translate(msgid, domain=None, mapping=None, context=None,
 
     >>> component.provideUtility(fallback)
 
-    >>> translate(_u("eek"))
-    u'test-from-'
+    >>> print(translate(u"eek"))
+    test-from-
 
-    >>> translate(_u("eek"), 'your.domain')
-    u'test-from-your.domain'
+    >>> print(translate(u"eek", 'your.domain'))
+    test-from-your.domain
     """
 
     if isinstance(msgid, Message):
@@ -111,7 +107,7 @@ def translate(msgid, domain=None, mapping=None, context=None,
         mapping = msgid.mapping
 
     if default is None:
-        default = unicode(msgid)
+        default = text_type(msgid)
 
     if domain:
         util = queryUtility(ITranslationDomain, domain)
@@ -141,33 +137,32 @@ def interpolate(text, mapping=None):
 
     In the text we can use substitution slots like $varname or ${varname}:
 
-    >>> from zope.i18n._compat import _u
-    >>> interpolate(_u("This is $name version ${version}."), mapping)
-    u'This is Zope version 3.'
+    >>> print(interpolate(u"This is $name version ${version}.", mapping))
+    This is Zope version 3.
 
     Interpolation variables can be used more than once in the text:
 
-    >>> interpolate(_u("This is $name version ${version}. ${name} $version!"),
-    ...             mapping)
-    u'This is Zope version 3. Zope 3!'
+    >>> print(interpolate(u"This is $name version ${version}. ${name} $version!",
+    ...             mapping))
+    This is Zope version 3. Zope 3!
 
     In case if the variable wasn't found in the mapping or '$$' form
     was used no substitution will happens:
 
-    >>> interpolate(_u("This is $name $version. $unknown $$name $${version}."),
-    ...             mapping)
-    u'This is Zope 3. $unknown $$name $${version}.'
+    >>> print(interpolate(u"This is $name $version. $unknown $$name $${version}.",
+    ...             mapping))
+    This is Zope 3. $unknown $$name $${version}.
 
-    >>> interpolate(_u("This is ${name}"))
-    u'This is ${name}'
+    >>> print(interpolate(u"This is ${name}"))
+    This is ${name}
 
     If a mapping value is a message id itself it is interpolated, too:
 
     >>> from zope.i18nmessageid import Message
-    >>> interpolate(_u("This is $meta."),
-    ...             mapping={'meta': Message(_u("$name $version"),
-    ...                                      mapping=mapping)})
-    u'This is Zope 3.'
+    >>> print(interpolate(u"This is $meta.",
+    ...             mapping={'meta': Message(u"$name $version",
+    ...                                      mapping=mapping)}))
+    This is Zope 3.
     """
 
     def replace(match):
@@ -175,7 +170,7 @@ def interpolate(text, mapping=None):
         value = mapping.get(param1 or param2, whole)
         if isinstance(value, Message):
             value = interpolate(value, value.mapping)
-        return unicode(value)
+        return text_type(value)
 
     if not text or not mapping:
         return text

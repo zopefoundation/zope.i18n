@@ -14,29 +14,25 @@
 """Testing all XML Locale functionality.
 """
 import os
-from unittest import TestCase, TestSuite, makeSuite, main
+from unittest import TestCase, TestSuite
 
 from zope.i18n.locales.xmlfactory import LocaleFactory
-from zope.i18n.format import parseDateTimePattern, parseNumberPattern
 import zope.i18n
 
 class LocaleXMLFileTestCase(TestCase):
     """This test verifies that every locale XML file can be loaded."""
 
-    # only run when running tests of level 2
-    level = 2
-
     def __init__(self, path):
         self.__path = path
         TestCase.__init__(self)
-        
+
     def runTest(self):
         # Loading Locale object
-        locale = LocaleFactory(self.__path)()
+        LocaleFactory(self.__path)()
 
         # XXX: The tests below are commented out because it's not
         # necessary for the xml files to have all format definitions.
-        
+
         ## Making sure all number format patterns parse
         #for category in (u'decimal', u'scientific', u'percent', u'currency'):
         #    for length in getattr(locale.numbers, category+'Formats').values():
@@ -50,20 +46,17 @@ class LocaleXMLFileTestCase(TestCase):
         #            for format in length.formats.values():
         #                self.assert_(
         #                    parseDateTimePattern(format.pattern) is not None)
-                
-                    
+
+
 
 def test_suite():
-   suite = TestSuite()
-   locale_dir = os.path.join(os.path.dirname(zope.i18n.__file__),
-                             'locales', 'data')
-   for path in os.listdir(locale_dir):
-       if not path.endswith(".xml"):
-           continue
-       path = os.path.join(locale_dir, path)
-       case = LocaleXMLFileTestCase(path)
-       suite.addTest(case)
-   return suite
-
-if __name__ == '__main__':
-    main(defaultTest='test_suite')
+    suite = TestSuite()
+    locale_dir = os.path.join(os.path.dirname(zope.i18n.__file__),
+                              'locales', 'data')
+    for path in os.listdir(locale_dir):
+        if not path.endswith(".xml"):
+            continue
+        path = os.path.join(locale_dir, path)
+        case = LocaleXMLFileTestCase(path)
+        suite.addTest(case)
+    return suite

@@ -44,11 +44,8 @@ class GettextMessageCatalog(object):
 
     def reload(self):
         'See IMessageCatalog'
-        fp = open(self._path_to_file, 'rb')
-        try:
+        with open(self._path_to_file, 'rb') as fp:
             self._catalog = GNUTranslations(fp)
-        finally:
-            fp.close()
 
     def getMessage(self, id):
         'See IMessageCatalog'

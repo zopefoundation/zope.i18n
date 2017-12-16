@@ -13,7 +13,6 @@
 ##############################################################################
 """This is an 'abstract' test for the ITranslationDomain interface.
 """
-import sys
 import unittest
 from zope.interface.verify import verifyObject
 from zope.interface import implementer
@@ -25,9 +24,7 @@ from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
 
-PY3 = sys.version_info[0] == 3
-if PY3:
-    unicode = str
+text_type = str if bytes is not str else unicode
 
 @implementer(IUserPreferredLanguages)
 class Environment(object):
@@ -43,7 +40,7 @@ class TestITranslationDomain(PlacelessSetup):
 
     # This should be overwritten by every class that inherits this test
     def _getTranslationDomain(self):
-        pass
+        raise NotImplementedError()
 
     def setUp(self):
         super(TestITranslationDomain, self).setUp()
@@ -93,7 +90,7 @@ class TestITranslationDomain(PlacelessSetup):
         translate = self._domain.translate
         translated = translate('no way', target_language='en')
         self.assertEqual(translated, "no way")
-        self.assertTrue(type(translated) is unicode)
+        self.assertIsInstance(translated, text_type)
 
     def testNoTargetLanguage(self):
         translate = self._domain.translate

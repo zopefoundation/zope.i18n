@@ -13,12 +13,12 @@
 ##############################################################################
 """Test a gettext implementation of a Message Catalog.
 """
-import unittest, os
+import os
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
-from zope.i18n.tests.test_imessagecatalog import TestIMessageCatalog
+from zope.i18n.tests import test_imessagecatalog
 
 
-class GettextMessageCatalogTest(TestIMessageCatalog):
+class GettextMessageCatalogTest(test_imessagecatalog.TestIMessageCatalog):
 
     def _getMessageCatalog(self):
         from zope.i18n import tests
@@ -30,14 +30,3 @@ class GettextMessageCatalogTest(TestIMessageCatalog):
 
     def _getUniqueIndentifier(self):
         return self._path
-
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(GettextMessageCatalogTest))
-    return suite
-
-
-if __name__=='__main__':
-    unittest.TextTestRunner().run(test_suite())
