@@ -18,8 +18,6 @@ from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implementer
 
-PY2 = sys.version_info[0] == 2
-
 class _KeyErrorRaisingFallback(object):
     def ugettext(self, message):
         raise KeyError(message)
@@ -30,17 +28,17 @@ class _KeyErrorRaisingFallback(object):
 class GettextMessageCatalog(object):
     """A message catalog based on GNU gettext and Python's gettext module."""
 
+    _catalog = None
+
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
         self.language = language
         self.domain = domain
         self._path_to_file = path_to_file
         self.reload()
-        self._catalog.add_fallback(_KeyErrorRaisingFallback())
-        if PY2:
-            self._gettext = self._catalog.ugettext
-        else:
-            self._gettext = self._catalog.gettext
+        catalog = self._catalog
+        catalog.add_fallback(_KeyErrorRaisingFallback())
+        self._gettext = catalog.gettext if str is not bytes else catalog.ugettext
 
     def reload(self):
         'See IMessageCatalog'
