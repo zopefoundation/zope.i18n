@@ -1,16 +1,22 @@
-``zope.i18n``
-=============
+zope.i18n
+=========
 
-.. image:: https://pypip.in/version/zope.i18n/badge.svg?style=flat
-    :target: https://pypi.python.org/pypi/zope.i18n/
-    :alt: Latest Version
+
+.. image:: https://img.shields.io/pypi/v/zope.i18n.svg
+        :target: https://pypi.org/project/zope.i18n/
+        :alt: Latest release
+
+.. image:: https://img.shields.io/pypi/pyversions/zope.i18n.svg
+        :target: https://pypi.org/project/zope.i18n/
+        :alt: Supported Python versions
 
 .. image:: https://travis-ci.org/zopefoundation/zope.i18n.svg?branch=master
         :target: https://travis-ci.org/zopefoundation/zope.i18n
 
-.. image:: https://readthedocs.org/projects/zopei18n/badge/?version=latest
-        :target: http://zopei18n.readthedocs.org/en/latest/
-        :alt: Documentation Status
+.. image:: https://readthedocs.org/projects/zopeintid/badge/?version=latest
+         :target: http://zopeintid.readthedocs.io/en/latest/?badge=latest
+         :alt: Documentation Status
+
 
 This package implements several APIs related to internationalization and
 localization.
@@ -22,4 +28,3 @@ localization.
 * Locale discovery for Web-based requests.
 
 .. See ``docs/index.rst`` for the documentation.
-
