@@ -104,7 +104,7 @@ class AttributeInheritance(Inheritance):
         # If we have a value that can also inherit data from other locales, we
         # set its parent and name, so that we know how to get to it.
         if (ILocaleInheritance.providedBy(value) and
-            not name.startswith('__')):
+                not name.startswith('__')):
             value.__parent__ = self
             value.__name__ = name
         super(AttributeInheritance, self).__setattr__(name, value)
@@ -178,6 +178,12 @@ class InheritingDictionary(Inheritance, dict):
       [1, 2, 3]
       >>> list(locale.data.items())
       [(1, 'eins'), (2, 'two'), (3, 'three')]
+
+    We currently fail to override ``values``, but instead inherited
+    data can be seen in the ``value`` method::
+
+      >>> sorted(locale.data.value())
+      ['eins', 'three', 'two']
     """
 
 
@@ -206,18 +212,20 @@ class InheritingDictionary(Inheritance, dict):
         except KeyError:
             return default
 
-    def items(self):
+    def _make_reified_inherited_dict(self):
         try:
             d = dict(self.getInheritedSelf())
         except NoParentException:
             d = {}
         d.update(self)
-        return d.items()
+        return d
+
+    def items(self):
+        return self._make_reified_inherited_dict().items()
 
     def keys(self):
-        return [item[0] for item in self.items()]
+        return list(self._make_reified_inherited_dict().keys())
 
     def value(self):
-        return [item[1] for item in self.items()]
-
-
+        # XXX: Was this meant to override values() and is just a typo?
+        return list(self._make_reified_inherited_dict().values())
