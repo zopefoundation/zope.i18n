@@ -16,7 +16,7 @@
 import decimal
 import datetime
 import pickle
-from unittest import TestCase, TestSuite
+from unittest import TestCase
 
 import pytz
 
@@ -38,17 +38,29 @@ class LocaleCalendarStub(object):
     type = u"gregorian"
 
     months = {
-        1: ('Januar', 'Jan'),     2: ('Februar', 'Feb'),
-        3: ('Maerz', 'Mrz'),      4: ('April', 'Apr'),
-        5: ('Mai', 'Mai'),        6: ('Juni', 'Jun'),
-        7: ('Juli', 'Jul'),       8: ('August', 'Aug'),
-        9: ('September', 'Sep'), 10: ('Oktober', 'Okt'),
-        11: ('November', 'Nov'),  12: ('Dezember', 'Dez')}
+        1: ('Januar', 'Jan'),
+        2: ('Februar', 'Feb'),
+        3: ('Maerz', 'Mrz'),
+        4: ('April', 'Apr'),
+        5: ('Mai', 'Mai'),
+        6: ('Juni', 'Jun'),
+        7: ('Juli', 'Jul'),
+        8: ('August', 'Aug'),
+        9: ('September', 'Sep'),
+        10: ('Oktober', 'Okt'),
+        11: ('November', 'Nov'),
+        12: ('Dezember', 'Dez')
+    }
 
-    days = {1: ('Montag', 'Mo'), 2: ('Dienstag', 'Di'),
-            3: ('Mittwoch', 'Mi'), 4: ('Donnerstag', 'Do'),
-            5: ('Freitag', 'Fr'), 6: ('Samstag', 'Sa'),
-            7: ('Sonntag', 'So')}
+    days = {
+        1: ('Montag', 'Mo'),
+        2: ('Dienstag', 'Di'),
+        3: ('Mittwoch', 'Mi'),
+        4: ('Donnerstag', 'Do'),
+        5: ('Freitag', 'Fr'),
+        6: ('Samstag', 'Sa'),
+        7: ('Sonntag', 'So')
+    }
 
     am = 'vorm.'
     pm = 'nachm.'
@@ -77,17 +89,13 @@ class LocaleCalendarStub(object):
         return [self.days.get(type, (None, None))[0] for type in range(1, 8)]
 
     def getDayTypeFromName(self, name):
-        for item in self.days.items():
-            if item[1][0] == name:
-                return item[0]
+        raise NotImplementedError()
 
     def getDayAbbreviations(self):
         return [self.days.get(type, (None, None))[1] for type in range(1, 8)]
 
     def getDayTypeFromAbbreviation(self, abbr):
-        for item in self.days.items():
-            if item[1][1] == abbr:
-                return item[0]
+        raise NotImplementedError()
 
 
 class TestDateTimePatternParser(TestCase):
@@ -171,16 +179,13 @@ class TestDateTimePatternParser(TestCase):
 
     def testParseDateTimePatternError(self):
         # Quote not closed
-        try:
+        with self.assertRaisesRegexp(
+                DateTimePatternParseError,
+                'The quote starting at character 2 is not closed.'):
             parseDateTimePattern("HH' Uhr")
-        except DateTimePatternParseError as err:
-            self.assertEqual(
-                str(err), 'The quote starting at character 2 is not closed.')
+
         # Test correct length of characters in datetime fields
-        try:
-            parseDateTimePattern("HHHHH")
-        except DateTimePatternParseError as err:
-            self.assertTrue(str(err).endswith('You have: 5'))
+        parseDateTimePattern("HHHHH")
 
 
 class TestBuildDateTimeParseInfo(TestCase):
@@ -273,17 +278,19 @@ class TestDateTimeFormat(TestCase):
 
         # German long
         # TODO: The parser does not support timezones yet.
-        self.assertEqual(self.format.parse(
-            '2. Januar 2003 21:48:01 +100',
-            'd. MMMM yyyy HH:mm:ss z'),
+        self.assertEqual(
+            self.format.parse(
+                '2. Januar 2003 21:48:01 +100',
+                'd. MMMM yyyy HH:mm:ss z'),
             pytz.timezone('Europe/Berlin').localize(
                 datetime.datetime(2003, 1, 2, 21, 48, 1)))
 
         # German full
         # TODO: The parser does not support timezones yet.
-        self.assertEqual(self.format.parse(
-            'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
-            "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
+        self.assertEqual(
+            self.format.parse(
+                'Donnerstag, 2. Januar 2003 21:48 Uhr +100',
+                "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
             pytz.timezone('Europe/Berlin').localize(
                 datetime.datetime(2003, 1, 2, 21, 48)))
 
@@ -343,12 +350,12 @@ class TestDateTimeFormat(TestCase):
         self.assertEqual(dt.tzinfo.utcoffset(dt), datetime.timedelta(hours=-4))
 
     def testDateTimeParseError(self):
-        self.assertRaises(DateTimeParseError,
-            self.format.parse, '02.01.03 21:48', 'dd.MM.yyyy HH:mm')
-        self.assertRaises(DateTimeParseError,
-            self.format.parse, '02.01.2003', 'dd.MM.yy')
-        self.assertRaises(DateTimeParseError,
-            self.format.parse, 'ff02.01.03', 'dd.MM.yy')
+        with self.assertRaises(DateTimeParseError):
+            self.format.parse('02.01.03 21:48', 'dd.MM.yyyy HH:mm')
+        with self.assertRaises(DateTimeParseError):
+            self.format.parse('02.01.2003', 'dd.MM.yy')
+        with self.assertRaises(DateTimeParseError):
+            self.format.parse('ff02.01.03', 'dd.MM.yy')
 
     def testParse12PM(self):
         self.assertEqual(
@@ -369,7 +376,7 @@ class TestDateTimeFormat(TestCase):
         # German short
         self.assertEqual(
             self.format.format(datetime.datetime(2003, 1, 2, 21, 48),
-                              'dd.MM.yy HH:mm'),
+                               'dd.MM.yy HH:mm'),
             '02.01.03 21:48')
 
     def testFormatRealDateTime(self):
@@ -386,49 +393,60 @@ class TestDateTimeFormat(TestCase):
             '2. Januar 2003 21:48:01 +100')
 
         # German full
-        self.assertEqual(self.format.format(
-            dt, "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
+        self.assertEqual(
+            self.format.format(
+                dt, "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
             'Donnerstag, 2. Januar 2003 21:48 Uhr +100')
 
     def testFormatAMPMDateTime(self):
-        self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 21, 48),
-            'dd.MM.yy hh:mm a'),
+        self.assertEqual(
+            self.format.format(
+                datetime.datetime(2003, 1, 2, 21, 48),
+                'dd.MM.yy hh:mm a'),
             '02.01.03 09:48 nachm.')
 
     def testFormatAllWeekdays(self):
         for day in range(1, 8):
-            self.assertEqual(self.format.format(
-                datetime.datetime(2003, 1, day+5, 21, 48),
-                "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
-                '%s, %i. Januar 2003 21:48 Uhr +000' %(
-                self.format.calendar.days[day][0], day+5))
+            self.assertEqual(
+                self.format.format(
+                    datetime.datetime(2003, 1, day+5, 21, 48),
+                    "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
+                '%s, %i. Januar 2003 21:48 Uhr +000' % (
+                    self.format.calendar.days[day][0], day+5))
 
     def testFormatTimeZone(self):
-        self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, 00), 'z'),
+        self.assertEqual(
+            self.format.format(
+                datetime.datetime(2003, 1, 2, 12, 00), 'z'),
             '+000')
-        self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, 00), 'zz'),
+        self.assertEqual(
+            self.format.format(
+                datetime.datetime(2003, 1, 2, 12, 00), 'zz'),
             '+00:00')
-        self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, 00), 'zzz'),
+        self.assertEqual(
+            self.format.format(
+                datetime.datetime(2003, 1, 2, 12, 00), 'zzz'),
             'UTC')
-        self.assertEqual(self.format.format(
-            datetime.datetime(2003, 1, 2, 12, 00), 'zzzz'),
+        self.assertEqual(
+            self.format.format(
+                datetime.datetime(2003, 1, 2, 12, 00), 'zzzz'),
             'UTC')
         tz = pytz.timezone('US/Eastern')
-        self.assertEqual(self.format.format(
-            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'z'),
+        self.assertEqual(
+            self.format.format(
+                tz.localize(datetime.datetime(2003, 1, 2, 12)), 'z'),
             '-500')
-        self.assertEqual(self.format.format(
-            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zz'),
+        self.assertEqual(
+            self.format.format(
+                tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zz'),
             '-05:00')
-        self.assertEqual(self.format.format(
-            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zzz'),
+        self.assertEqual(
+            self.format.format(
+                tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zzz'),
             'EST')
-        self.assertEqual(self.format.format(
-            tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zzzz'),
+        self.assertEqual(
+            self.format.format(
+                tz.localize(datetime.datetime(2003, 1, 2, 12)), 'zzzz'),
             'US/Eastern')
 
     def testFormatWeekDay(self):
@@ -774,7 +792,7 @@ class TestNumberPatternParser(TestCase):
         self.assertEqual(
             parseNumberPattern('###0* /* '),
             ((None, '', None, '###0', '', '', ' ', '/', ' ', 0),
-              (None, '', None, '###0', '', '', ' ', '/', ' ', 0)))
+             (None, '', None, '###0', '', '', ' ', '/', ' ', 0)))
         self.assertEqual(
             parseNumberPattern('###0* /* ;###0*_/*_'),
             ((None, '', None, '###0', '', '', ' ', '/', ' ', 0),
@@ -937,10 +955,10 @@ class TestNumberFormat(TestCase):
 
     def testParsePadding1Scientific(self):
         self.assertEqual(self.format.parse('  4.102E1',
-                                            '* 0.0####E0;*_0.0####E0'),
+                                           '* 0.0####E0;*_0.0####E0'),
                          41.02)
         self.assertEqual(self.format.parse('__4.102E1',
-                                            '* 0.0####E0;*_0.0####E0'),
+                                           '* 0.0####E0;*_0.0####E0'),
                          -41.02)
         self.assertEqual(self.format.parse(' +4.102E1',
                                            '* +0.0###E0;*_-0.0###E0'),
@@ -993,20 +1011,20 @@ class TestNumberFormat(TestCase):
         self.assertEqual(format.parse('1.2X11', '#.#E0'), 1.2e11)
 
     def testParseFailWithInvalidCharacters(self):
-        self.assertRaises(
-            NumberParseError,self.format.parse, '123xx', '###0.0#')
-        self.assertRaises(
-            NumberParseError, self.format.parse, 'xx123', '###0.0#')
-        self.assertRaises(
-            NumberParseError, self.format.parse, '1xx23', '###0.0#')
+        with self.assertRaises(NumberParseError):
+            self.format.parse('123xx', '###0.0#')
+        with self.assertRaises(NumberParseError):
+            self.format.parse('xx123', '###0.0#')
+        with self.assertRaises(NumberParseError):
+            self.format.parse('1xx23', '###0.0#')
 
     def testParseFailWithInvalidGroupCharacterPosition(self):
-        self.assertRaises(
-            NumberParseError,self.format.parse, '123,00', '###0.0#')
-        self.assertRaises(
-            NumberParseError, self.format.parse, ',123', '###0.0#')
-        self.assertRaises(
-            NumberParseError, self.format.parse, '1,23.00', '###0.0#')
+        with self.assertRaises(NumberParseError):
+            self.format.parse('123,00', '###0.0#')
+        with self.assertRaises(NumberParseError):
+            self.format.parse(',123', '###0.0#')
+        with self.assertRaises(NumberParseError):
+            self.format.parse('1,23.00', '###0.0#')
 
     def testChangeOutputType(self):
         format = NumberFormat()
@@ -1183,21 +1201,34 @@ class TestNumberFormat(TestCase):
         self.assertEqual(self.format.format(1e-9, '(#0.00###)'), '(0.00)')
 
     def testFormatHighPrecisionNumbers(self):
-        self.assertEqual(self.format.format(
-            1+1e-7, '(#0.00#####);(-#0.00#####)'), '(1.0000001)')
-        self.assertEqual(self.format.format(
-            1+1e-7, '(#0.00###)'), '(1.00000)')
-        self.assertEqual(self.format.format(
-            1+1e-9, '(#0.00#######);(-#0.00#######)'), '(1.000000001)')
-        self.assertEqual(self.format.format(
-            1+1e-9, '(#0.00###)'), '(1.00000)')
-        self.assertEqual(self.format.format(
-            1+1e-12, '(#0.00##########);(-#0.00##########)'),
+        self.assertEqual(
+            self.format.format(
+                1+1e-7, '(#0.00#####);(-#0.00#####)'),
+            '(1.0000001)')
+        self.assertEqual(
+            self.format.format(
+                1+1e-7, '(#0.00###)'),
+            '(1.00000)')
+        self.assertEqual(
+            self.format.format(
+                1+1e-9, '(#0.00#######);(-#0.00#######)'),
+            '(1.000000001)')
+        self.assertEqual(
+            self.format.format(
+                1+1e-9, '(#0.00###)'),
+            '(1.00000)')
+        self.assertEqual(
+            self.format.format(
+                1+1e-12, '(#0.00##########);(-#0.00##########)'),
             '(1.000000000001)')
-        self.assertEqual(self.format.format(
-            1+1e-12, '(#0.00###)'), '(1.00000)')
+        self.assertEqual(
+            self.format.format(
+                1+1e-12, '(#0.00###)'),
+            '(1.00000)')
 
     def testNoRounding(self):
         # Witout Rounding
-        self.assertEqual(self.format.format(
-            decimal.Decimal('0.99999'), '0.###', rounding=False), '0.99999')
+        self.assertEqual(
+            self.format.format(
+                decimal.Decimal('0.99999'), '0.###', rounding=False),
+            '0.99999')
