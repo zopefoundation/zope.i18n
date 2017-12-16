@@ -372,6 +372,14 @@ class LocaleFactory(object):
           >>> abbrs[6:]
           [u'Jul', u'Aug', u'Sep', u'Okt', u'Nov', u'Dez']
 
+        If there are no months, nothing happens:
+
+          >>> calendar = CalendarStub()
+          >>> factory = LocaleFactory(None)
+          >>> xml = u'''<months><default type="format" /></months>'''
+          >>> dom = parseString(xml)
+          >>> factory._extractMonths(dom.documentElement, calendar)
+          >>> calendar.months
 
         """
 
@@ -507,6 +515,16 @@ class LocaleFactory(object):
           ...          for type in range(1, 8)]
           >>> abbrs
           [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
+
+        If there are no days, nothing happens:
+
+          >>> calendar = CalendarStub()
+          >>> factory = LocaleFactory(None)
+          >>> xml = u'''<days><default type="format" /></days>'''
+          >>> dom = parseString(xml)
+          >>> factory._extractDays(dom.documentElement, calendar)
+          >>> calendar.days
+
         """
 
         defaultDayContext_node = days_node.getElementsByTagName('default')
@@ -844,11 +862,17 @@ class LocaleFactory(object):
           >>> calendars['buddhist'] is calendars['thai-buddhist']
           True
 
+        If there are no calendars, nothing happens:
+
+           >>> xml = u'''<dates />'''
+           >>> dom = parseString(xml)
+           >>> factory._extractCalendars(dom.documentElement)
+
         """
         cals_nodes = dates_node.getElementsByTagName('calendars')
         # no calendar node
         if cals_nodes == []:
-            return
+            return None
 
         calendars = InheritingDictionary()
         for cal_node in cals_nodes[0].getElementsByTagName('calendar'):
@@ -1251,6 +1275,15 @@ class LocaleFactory(object):
           ...     <alternateQuotationStart>`</alternateQuotationStart>
           ...     <alternateQuotationEnd>'</alternateQuotationEnd>
           ...   </delimiters>
+          ...   <identity>
+          ...     <version number="1.0"/>
+          ...     <generation date="2003-12-19" />
+          ...     <language type="en" />
+          ...     <territory type="US" />
+          ...     <variant type="POSIX" />
+          ...   </identity>
+          ... </ldml>'''
+
           ... </ldml>'''
           >>> dom = parseString(xml)
           >>> factory._data = parseString(xml).documentElement
@@ -1266,6 +1299,9 @@ class LocaleFactory(object):
           u"'"
 
           Escape: "'"
+
+          >>> factory().delimiters == delimiters
+          True
         """
         # See whether we have symbols entries
         delimiters_nodes = self._data.getElementsByTagName('delimiters')
