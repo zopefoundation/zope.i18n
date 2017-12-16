@@ -13,7 +13,6 @@
 ##############################################################################
 """Global Translation Service for providing I18n to file-based code.
 """
-import sys
 
 import zope.component
 from zope.i18nmessageid import Message
@@ -33,7 +32,7 @@ from zope.i18n.interfaces import ITranslationDomain, INegotiator
 LANGUAGE_FALLBACKS = ['en']
 
 text_type = str if bytes is not str else unicode
-_EMPTY = u""
+
 
 class TranslationDomain(SimpleTranslationDomain):
 
@@ -69,8 +68,8 @@ class TranslationDomain(SimpleTranslationDomain):
         """See zope.i18n.interfaces.ITranslationDomain"""
         # if the msgid is empty, let's save a lot of calculations and return
         # an empty string.
-        if msgid == _EMPTY:
-            return _EMPTY
+        if msgid == u'':
+            return u''
 
         if target_language is None and context is not None:
             langs = self._catalogs.keys()
