@@ -56,14 +56,17 @@ class DateTimeFormat(object):
 
     _DATETIMECHARS = "aGyMdEDFwWhHmsSkKz"
 
+    calendar = None
+    _pattern = None
+    _bin_pattern = None
+
     def __init__(self, pattern=None, calendar=None):
         if calendar is not None:
             self.calendar = calendar
         self._pattern = pattern
         self._bin_pattern = None
-        if self._pattern is not None:
-            self._bin_pattern = parseDateTimePattern(self._pattern,
-                                                     self._DATETIMECHARS)
+        if pattern is not None:
+            self.setPattern(pattern)
 
     def setPattern(self, pattern):
         "See zope.i18n.interfaces.IFormat"
@@ -94,15 +97,15 @@ class DateTimeFormat(object):
             results = re.match(regex, text).groups()
         except AttributeError:
             raise DateTimeParseError(
-                  'The datetime string did not match the pattern %r.'
-                  % pattern)
+                'The datetime string did not match the pattern %r.'
+                % pattern)
         # Sometimes you only want the parse results
         if not asObject:
             return results
 
         # Map the parsing results to a datetime object
         ordered = [None, None, None, None, None, None, None]
-        bin_pattern = list(filter(lambda x: isinstance(x, tuple), bin_pattern))
+        bin_pattern = [x for x in bin_pattern if isinstance(x, tuple)]
 
         # Handle years; note that only 'yy' and 'yyyy' are allowed
         if ('y', 2) in bin_pattern:
@@ -176,24 +179,25 @@ class DateTimeFormat(object):
         # paid for dealing with localtimes.
         if ordered[3:] == [None, None, None, None]:
             return datetime.date(*[e or 0 for e in ordered[:3]])
-        elif ordered[:3] == [None, None, None]:
+        if ordered[:3] == [None, None, None]:
             if pytz_tzinfo:
+                # XXX: This raises a TypeError:
+                # unsupported operator + for datetime.time and datetime.timedelta
                 return tzinfo.localize(
                     datetime.time(*[e or 0 for e in ordered[3:]])
                     )
-            else:
-                return datetime.time(
-                    *[e or 0 for e in ordered[3:]], **{'tzinfo' :tzinfo}
-                    )
-        else:
-            if pytz_tzinfo:
-                return tzinfo.localize(datetime.datetime(
-                    *[e or 0 for e in ordered]
-                    ))
-            else:
-                return datetime.datetime(
-                    *[e or 0 for e in ordered], **{'tzinfo' :tzinfo}
-                    )
+            return datetime.time(
+                *[e or 0 for e in ordered[3:]], **{'tzinfo' :tzinfo}
+            )
+
+        if pytz_tzinfo:
+            return tzinfo.localize(datetime.datetime(
+                *[e or 0 for e in ordered]
+            ))
+
+        return datetime.datetime(
+            *[e or 0 for e in ordered], **{'tzinfo' :tzinfo}
+        )
 
     def format(self, obj, pattern=None):
         "See zope.i18n.interfaces.IFormat"
@@ -222,8 +226,10 @@ class NumberFormat(object):
 
 
     type = None
+    _pattern = None
+    _bin_pattern = None
 
-    def __init__(self, pattern=None, symbols={}):
+    def __init__(self, pattern=None, symbols=()):
         # setup default symbols
         self.symbols = {
             u"decimal": u".",
@@ -240,10 +246,8 @@ class NumberFormat(object):
             u"nan": u''
         }
         self.symbols.update(symbols)
-        self._pattern = pattern
-        self._bin_pattern = None
-        if self._pattern is not None:
-            self._bin_pattern = parseNumberPattern(self._pattern)
+        if pattern is not None:
+            self.setPattern(pattern)
 
     def setPattern(self, pattern):
         "See zope.i18n.interfaces.IFormat"
@@ -290,7 +294,7 @@ class NumberFormat(object):
                 if bin_pattern[sign][EXPONENTIAL][0] == '+':
                     pre_symbols += self.symbols['plusSign']
                 regex += '[%s]?[0-9]{%i,100}' %(pre_symbols, min_exp_size)
-            regex +=')'
+            regex += ')'
             if bin_pattern[sign][PADDING3] is not None:
                 regex += '[' + bin_pattern[sign][PADDING3] + ']+'
             if bin_pattern[sign][SUFFIX] != '':
@@ -308,7 +312,7 @@ class NumberFormat(object):
             sign = -1
         else:
             raise NumberParseError('Not a valid number for this pattern %r.'
-                                    % pattern)
+                                   % pattern)
         # Remove possible grouping separators
         num_str = num_str.replace(self.symbols['group'], '')
         # Extract number
@@ -500,9 +504,9 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
     char = ''
     quote_start = -2
 
-    for pos in range(len(pattern)):
+    for pos, next_char in enumerate(pattern):
         prev_char = char
-        char = pattern[pos]
+        char = next_char
         # Handle quotations
         if char == "'":
             if state == DEFAULT:
@@ -553,11 +557,11 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
     if state == IN_QUOTE:
         if quote_start == -1:
             raise DateTimePatternParseError(
-                  'Waaa: state = IN_QUOTE and quote_start = -1!')
+                'Waaa: state = IN_QUOTE and quote_start = -1!')
         else:
             raise DateTimePatternParseError(
-                  'The quote starting at character %i is not closed.' %
-                   quote_start)
+                'The quote starting at character %i is not closed.' %
+                quote_start)
     elif state == IN_DATETIMEFIELD:
         result.append((helper[0], len(helper)))
     elif state == DEFAULT:
@@ -584,7 +588,7 @@ def buildDateTimeParseInfo(calendar, pattern):
         elif entry[1] == 4:
             info[entry] = r'([0-9]{4})'
         else:
-            raise DateTimePatternParseError("Only 'yy' and 'yyyy' allowed." )
+            raise DateTimePatternParseError("Only 'yy' and 'yyyy' allowed.")
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
@@ -659,17 +663,18 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # Getting the timezone right
     tzinfo = dt.tzinfo or pytz.utc
     tz_secs = tzinfo.utcoffset(dt).seconds
-    tz_secs = (tz_secs > 12*3600) and tz_secs-24*3600 or tz_secs
+    tz_secs = tz_secs - 24 * 3600 if tz_secs > 12 * 3600 else tz_secs
     tz_mins = int(math.fabs(tz_secs % 3600 / 60))
     tz_hours = int(math.fabs(tz_secs / 3600))
-    tz_sign = (tz_secs < 0) and '-' or '+'
+    tz_sign = '-' if tz_secs < 0 else '+'
     tz_defaultname = "%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
     tz_name = tzinfo.tzname(dt) or tz_defaultname
     tz_fullname = getattr(tzinfo, 'zone', None) or tz_name
 
-    info = {('y', 2): text_type(dt.year)[2:],
-            ('y', 4): text_type(dt.year),
-            }
+    info = {
+        ('y', 2): text_type(dt.year)[2:],
+        ('y', 4): text_type(dt.year),
+    }
 
     # Generic Numbers
     for field, value in (('d', dt.day), ('D', int(dt.strftime('%j'))),
@@ -791,7 +796,7 @@ def parseNumberPattern(pattern):
                 helper += char
             else:
                 raise NumberPatternParseError(
-                      'Wrong syntax at beginning of pattern.')
+                    'Wrong syntax at beginning of pattern.')
 
         elif state == READ_PADDING_1:
             padding_1 = char

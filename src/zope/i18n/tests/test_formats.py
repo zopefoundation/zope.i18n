@@ -98,8 +98,15 @@ class LocaleCalendarStub(object):
         raise NotImplementedError()
 
 
-class TestDateTimePatternParser(TestCase):
+class _TestCase(TestCase):
+    if not hasattr(TestCase, 'assertRaisesRegex'):
+        # Avoid deprecation warnings in Python 3
+        assertRaisesRegex = TestCase.assertRaisesRegexp
+
+
+class TestDateTimePatternParser(_TestCase):
     """Extensive tests for the ICU-based-syntax datetime pattern parser."""
+
 
     def testParseSimpleTimePattern(self):
         self.assertEqual(parseDateTimePattern('HH'),
@@ -179,7 +186,7 @@ class TestDateTimePatternParser(TestCase):
 
     def testParseDateTimePatternError(self):
         # Quote not closed
-        with self.assertRaisesRegexp(
+        with self.assertRaisesRegex(
                 DateTimePatternParseError,
                 'The quote starting at character 2 is not closed.'):
             parseDateTimePattern("HH' Uhr")
@@ -188,7 +195,7 @@ class TestDateTimePatternParser(TestCase):
         parseDateTimePattern("HHHHH")
 
 
-class TestBuildDateTimeParseInfo(TestCase):
+class TestBuildDateTimeParseInfo(_TestCase):
     """This class tests the functionality of the buildDateTimeParseInfo()
     method with the German locale.
     """
@@ -255,7 +262,7 @@ class TestBuildDateTimeParseInfo(TestCase):
         self.assertEqual(self.info(('E', 3)), '('+'|'.join(names)+')')
 
 
-class TestDateTimeFormat(TestCase):
+class TestDateTimeFormat(_TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
 
@@ -371,6 +378,49 @@ class TestDateTimeFormat(TestCase):
             self.format.parse('0001. Jan 2003 0012:00 vorm.',
                               'dddd. MMM yyyy hhhh:mm a'),
             datetime.datetime(2003, 1, 1, 00, 00, 00, 00))
+
+    def testParseNotObject(self):
+        self.assertEqual(
+            ('2017', '01', '01'),
+            self.format.parse('2017-01-01', 'yyyy-MM-dd', asObject=False))
+
+    def testParseTwoDigitYearIs20thCentury(self):
+        self.assertEqual(
+            datetime.date(1952, 1, 1),
+            self.format.parse('52-01-01', 'yy-MM-dd'))
+
+        # 30 is the cut off
+        self.assertEqual(
+            datetime.date(1931, 1, 1),
+            self.format.parse('31-01-01', 'yy-MM-dd'))
+
+        self.assertEqual(
+            datetime.date(2030, 1, 1),
+            self.format.parse('30-01-01', 'yy-MM-dd'))
+
+    def testParseAMPMMissing(self):
+        with self.assertRaisesRegex(
+                DateTimeParseError,
+                'Cannot handle 12-hour format without am/pm marker.'):
+            self.format.parse('02.01.03 09:48', 'dd.MM.yy hh:mm')
+
+    def testParseBadTimezone(self):
+        # Produces an object without pytz info
+        self.assertEqual(
+            datetime.time(21, 48, 1),
+            self.format.parse(
+                '21:48:01 Bad/Timezone',
+                'HH:mm:ss zzzz'))
+
+    def testParsePyTzTimezone(self):
+        # XXX: Bug: This raises
+        # TypeError:  unsupported operand type(s) for +: 'datetime.time' and 'datetime.timedelta'
+        # at pytz/tzinfo.py:309
+        tzinfo = pytz.timezone("US/Central")
+        with self.assertRaisesRegex(TypeError, 'datetime.timedelta'):
+            self.format.parse(
+                '21:48:01 US/Central',
+                'HH:mm:ss zzzz')
 
     def testFormatSimpleDateTime(self):
         # German short
@@ -619,7 +669,7 @@ class TestDateTimeFormat(TestCase):
 
 
 
-class TestNumberPatternParser(TestCase):
+class TestNumberPatternParser(_TestCase):
     """Extensive tests for the ICU-based-syntax number pattern parser."""
 
     def testParseSimpleIntegerPattern(self):
@@ -837,7 +887,7 @@ class TestNumberPatternParser(TestCase):
              (None, '', None, '###0', '', '', None, 'DEM', None, 0)))
 
 
-class TestNumberFormat(TestCase):
+class TestNumberFormat(_TestCase):
     """Test the functionality of an implmentation of the NumberFormat."""
 
     format = NumberFormat(symbols={
