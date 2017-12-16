@@ -26,33 +26,36 @@ class LoadLocaleError(Exception):
 
 @implementer(ILocaleProvider)
 class LocaleProvider(object):
-    """A locale provider that get's its data from the XML data."""
+    """A locale provider that gets its data from the XML data."""
 
 
     def __init__(self, locale_dir):
         self._locales = {}
         self._locale_dir = locale_dir
 
-    def loadLocale(self, language=None, country=None, variant=None):
-        """See zope.i18n.interfaces.locales.ILocaleProvider"""
+    def _compute_filename(self, language, country, variant):
         # Creating the filename
-        if language == None and country == None and variant == None:
+        if language is None and country is None and variant is None:
             filename = 'root.xml'
         else:
             filename = language
             if country is not None:
-                filename += '_'+country
+                filename += '_' + country
             if variant is not None:
                 if '_' not in filename:
                     filename += '_'
-                filename += '_'+variant
+                filename += '_' + variant
             filename += '.xml'
+        return filename
 
+    def loadLocale(self, language=None, country=None, variant=None):
+        """See zope.i18n.interfaces.locales.ILocaleProvider"""
+        filename = self._compute_filename(language, country, variant)
         # Making sure we have this locale
         path = os.path.join(self._locale_dir, filename)
         if not os.path.exists(path):
             raise LoadLocaleError(
-                  'The desired locale is not available.\nPath: %s' % path)
+                'The desired locale is not available.\nPath: %s' % path)
 
         # Import here to avoid circular imports
         from zope.i18n.locales.xmlfactory import LocaleFactory

@@ -59,7 +59,7 @@ class AbstractTestILocaleProviderMixin(object):
         self.assertEqual(locale.id.variant, 'POSIX')
 
 
-class TestLocaleProvider(AbstractTestILocaleProvider, TestCase):
+class TestLocaleProvider(AbstractTestILocaleProviderMixin, TestCase):
 
     def _makeNewProvider(self):
         return LocaleProvider(datadir)
@@ -74,6 +74,10 @@ class TestLocaleProvider(AbstractTestILocaleProvider, TestCase):
 
     def test_loadLocaleFailure(self):
         self.assertRaises(LoadLocaleError, self.locales.loadLocale, 'zzz')
+
+    def test_compute_filename_with_variant_no_country(self):
+        filename = self.locales._compute_filename('en', None, 'variant')
+        self.assertEqual('en__variant.xml', filename)
 
 
 class TestLocaleAndProvider(TestCase):
