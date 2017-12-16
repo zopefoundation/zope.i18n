@@ -15,7 +15,7 @@
 """
 import os
 import datetime
-from unittest import TestCase, TestSuite, makeSuite, main
+from unittest import TestCase
 
 from zope.i18n.interfaces.locales import ILocaleProvider
 from zope.i18n.locales import locales
@@ -24,12 +24,12 @@ from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
 import zope.i18n
 datadir = os.path.join(os.path.dirname(zope.i18n.__file__), 'locales', 'data')
 
-class TestILocaleProvider(TestCase):
+class AbstractTestILocaleProviderMixin(object):
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
 
     def _makeNewProvider(self):
-        raise NotImplemented
+        raise NotImplementedError()
 
     def setUp(self):
         self.locales = self._makeNewProvider()
@@ -59,7 +59,7 @@ class TestILocaleProvider(TestCase):
         self.assertEqual(locale.id.variant, 'POSIX')
 
 
-class TestLocaleProvider(TestILocaleProvider):
+class TestLocaleProvider(AbstractTestILocaleProvider, TestCase):
 
     def _makeNewProvider(self):
         return LocaleProvider(datadir)
@@ -70,7 +70,7 @@ class TestLocaleProvider(TestILocaleProvider):
                          [(None, None, None)])
 
         self.locales.loadLocale('en', None, None)
-        self.assertTrue(('en', None, None) in self.locales._locales.keys())
+        self.assertIn(('en', None, None), self.locales._locales.keys())
 
     def test_loadLocaleFailure(self):
         self.assertRaises(LoadLocaleError, self.locales.loadLocale, 'zzz')
@@ -125,13 +125,13 @@ class TestGlobalLocaleProvider(TestCase):
 
     def testLoading(self):
         locales.loadLocale(None, None, None)
-        self.assertTrue((None, None, None) in locales._locales)
+        self.assertIn((None, None, None), locales._locales)
         locales.loadLocale('en', None, None)
-        self.assertTrue(('en', None, None) in locales._locales)
+        self.assertIn(('en', None, None), locales._locales)
         locales.loadLocale('en', 'US', None)
-        self.assertTrue(('en', 'US', None) in locales._locales)
+        self.assertIn(('en', 'US', None), locales._locales)
         locales.loadLocale('en', 'US', 'POSIX')
-        self.assertTrue(('en', 'US', 'POSIX') in locales._locales)
+        self.assertIn(('en', 'US', 'POSIX'), locales._locales)
 
     def test_getLocale(self):
         locale = locales.getLocale('en', 'GB')
@@ -156,15 +156,3 @@ class TestRootLocale(TestCase):
             formatter.format(datetime.date(2004, 10, 31), 'EEE'), '1')
         self.assertEqual(
             formatter.format(datetime.date(2004, 10, 31), 'EEEE'), '1')
-    
-
-def test_suite():
-    return TestSuite((
-        makeSuite(TestLocaleProvider),
-        makeSuite(TestLocaleAndProvider),
-        makeSuite(TestGlobalLocaleProvider),
-        makeSuite(TestRootLocale),
-        ))
-
-if __name__ == "__main__":
-    main(defaultTest='test_suite')
