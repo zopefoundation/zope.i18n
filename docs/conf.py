@@ -11,7 +11,9 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os, pkg_resources
+import sys
+import os
+import pkg_resources
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -29,6 +31,8 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
     'sphinx.ext.coverage',
+    'sphinx.ext.viewcode',
+    'repoze.sphinx.autointerface',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -45,7 +49,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'zope.i18n'
-copyright = u'2010, Zope Foundation and Contributors'
+copyright = u'2010-2017, Zope Foundation and Contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -74,7 +78,7 @@ release = rqmt.version
 exclude_trees = ['_build']
 
 # The reST default role (used for this markup: `text`) to use for all documents.
-#default_role = None
+default_role = 'obj'
 
 # If true, '()' will be appended to :func: etc. cross-reference text.
 #add_function_parentheses = True
@@ -203,3 +207,7 @@ latex_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {'http://docs.python.org/': None}
+
+autodoc_default_flags = ['members', 'show-inheritance']
+autoclass_content = 'both'
+autodoc_member_order = 'bysource'

@@ -1,16 +1,19 @@
-=======
-CHANGES
-=======
+=========
+ CHANGES
+=========
 
 4.2.1 (unreleased)
-------------------
+==================
 
 - Ensure that all files are properly closed when compiling .mo files,
   such as when the ``registerTranslations`` ZCML directive is used.
 
+- Remove the private ``_compat`` module and its utility function ``_u``
+  in favor of Unicode literals.
+
 
 4.2.0 (2017-05-23)
-------------------
+==================
 
 - Better error message on PO-File Syntax Errors. [SyZn]
 
@@ -29,20 +32,20 @@ CHANGES
 
 
 4.1.0 (2015-11-06)
-------------------
+==================
 
 - ``interpolate()`` now works recursively, if the mapping has a value which is
   a ``zope.i18nmessageid.Message`` itself.
 
 
 4.0.1 (2015-06-05)
---------------------
+==================
 
 - Add support for Python 3.2 and PyPy3.
 
 
 4.0.0 (2014-12-20)
---------------------
+==================
 
 - Add support for testing with Travis.
 
@@ -50,7 +53,7 @@ CHANGES
 
 
 4.0.0a4 (2013-02-18)
---------------------
+====================
 
 - Restore zope.i18n.testing.{setUp,PlacelessSetup} that got lost in 4.0.0a3.
   These require zope.publisher, which is not ported to Python 3 yet, so I
@@ -58,7 +61,7 @@ CHANGES
 
 
 4.0.0a3 (2013-02-15)
---------------------
+====================
 
 - Add support for Python 3.3.
 
@@ -71,7 +74,7 @@ CHANGES
 
 
 3.8.0 (2012-03-15)
-------------------
+==================
 
 - Add optional ``domain`` attribute to ``registerTranslations`` directive to
   only load the specified translation domain. Allows to move catalogs to
@@ -85,18 +88,18 @@ CHANGES
 
 
 3.7.4 (2010-07-08)
-------------------
+==================
 
 - Add missing test dependency on ``zope.testing``.
 
 
 3.7.3 (2010-04-30)
-------------------
+==================
 
 - Remove of 'zope.testing.doctestunit' in favor of stdlib's 'doctest.
 
 3.7.2 (2009-12-14)
-------------------
+==================
 
 - It's a critical error when the ``GetText`` library is unavailable
   and compilation is required.
@@ -107,7 +110,7 @@ CHANGES
   version).
 
 3.7.1 (2009-08-07)
-------------------
+==================
 
 - Fix the interpackage translation domain merging feature to actually work.
   We need to defer the merging into the ZCML handler execution phase, as the
@@ -122,7 +125,7 @@ CHANGES
 
 
 3.7.0 (2009-03-18)
-------------------
+==================
 
 - Update data to CLDR 1.1. This introduces contextual month
   and day names and different month/day name widths. More CLDR updates
@@ -134,7 +137,7 @@ CHANGES
 
 
 3.6.0 (2008-10-26)
-------------------
+==================
 
 - Fix a test failure in the compile mo file support.
 
@@ -143,7 +146,7 @@ CHANGES
 
 
 3.5.0 (2008-07-10)
-------------------
+==================
 
 - Feature: Add new top-level negotiate function, which can be used to
   negotiate the language when the available languages are set globally via
@@ -174,20 +177,20 @@ CHANGES
   '1/1/20' for example.
 
 3.4.0 (2007-10-02)
-------------------
+==================
 
 - Update meta-data. No code changes.
 
 
 3.4.0b5 (2007-08-15)
---------------------
+====================
 
 - Bug: Fix dependency on ``zope.component`` to require it with the 'zcml'
   extra instead of requiring ``zope.security`` directly.
 
 
 3.4.0b4 (2007-07-19)
---------------------
+====================
 
 - Bug: Number parsing was too forgiving, allowing non-numerical and/or
   formatting characters before, after and within the number. The parsing is
@@ -195,7 +198,7 @@ CHANGES
 
 
 3.4.0b3 (2007-06-28)
---------------------
+====================
 
 - Bug: There was a bug in the parser that if no decimal place is given
   you still had to type the decimal symbol. Corrected this problem (one
@@ -203,14 +206,14 @@ CHANGES
 
 
 3.4.0b2 (2007-06-25)
---------------------
+====================
 
 - Feature: Add ability to change the output type when parsing a
   number.
 
 
 3.4.0b1 (?)
------------
+===========
 
 - Bug: Fix dependency on ``zope.security`` to require a version that
   does not have the hidden dependency on ``zope.testing``.
@@ -221,7 +224,7 @@ packages. The changes can be reconstructed from the Zope 3 changelog.
 
 
 3.2.0 (2006-01-05)
-------------------
+==================
 
 - Corresponds to the verison of the zope.i18n package shipped as part of the
   Zope 3.2.0 release.
@@ -238,7 +241,7 @@ packages. The changes can be reconstructed from the Zope 3 changelog.
 
 
 3.0.0 (2004-11-07)
-------------------
+==================
 
 - Corresponds to the version of the zope.i18n package shipped as part of
   the Zope X3.0.0 release.

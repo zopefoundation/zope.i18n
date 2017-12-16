@@ -1,14 +1,5 @@
-:mod:`zope.18n` Documentation
-===============================
 
-This package implements several APIs related to internationalization and
-localization.
-
-* Locale objects for all locales maintained by the ICU project.
-
-* Gettext-based message catalogs for message strings.
-
-* Locale discovery for Web-based requests.
+.. include:: ../README.rst
 
 Contents:
 
@@ -16,9 +7,11 @@ Contents:
    :maxdepth: 2
 
    api
+   changelog
 
-Indices and tables
-==================
+====================
+ Indices and tables
+====================
 
 * :ref:`genindex`
 * :ref:`modindex`

@@ -33,7 +33,7 @@ from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.interfaces import ITranslationDomain
-from ._compat import _u
+
 
 logger = logging.getLogger("zope.i18n")
 
@@ -42,15 +42,15 @@ class IRegisterTranslationsDirective(Interface):
     """Register translations with the global site manager."""
 
     directory = Path(
-        title=_u("Directory"),
-        description=_u("Directory containing the translations"),
+        title=u"Directory",
+        description=u"Directory containing the translations",
         required=True
         )
 
     domain = TextLine(
-        title=_u("Domain"),
-        description=_u("Translation domain to register.  If not specified, "
-                     "all domains found in the directory are registered"),
+        title=u"Domain",
+        description=(u"Translation domain to register.  If not specified, "
+                     u"all domains found in the directory are registered"),
         required=False
         )
 
@@ -104,7 +104,7 @@ def registerTranslations(_context, directory, domain='*'):
                     domains[name] = {}
                 domains[name][language] = domain_path
     if loaded:
-        logger.debug('register directory %s' % directory)
+        logger.debug('register directory %s', directory)
 
     # Now create TranslationDomain objects and add them as utilities
     for name, langs in domains.items():
@@ -115,13 +115,13 @@ def registerTranslations(_context, directory, domain='*'):
         # `zope.component.zcml.utility`) since we need the actual utilities
         # in place before the merging can be done...
         _context.action(
-            discriminator = None,
-            callable = handler,
-            args = (catalogs, name))
+            discriminator=None,
+            callable=handler,
+            args=(catalogs, name))
 
     # also register the interface for the translation utilities
     provides = ITranslationDomain
     _context.action(
-        discriminator = None,
-        callable = provideInterface,
-        args = (provides.__module__ + '.' + provides.getName(), provides))
+        discriminator=None,
+        callable=provideInterface,
+        args=(provides.__module__ + '.' + provides.getName(), provides))

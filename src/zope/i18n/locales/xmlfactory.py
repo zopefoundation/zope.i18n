@@ -13,7 +13,7 @@
 ##############################################################################
 """XML Locale-related objects and functions
 """
-from datetime import datetime, date, time
+from datetime import date, time
 from xml.dom.minidom import parse as parseXML
 from zope.i18n.locales import Locale, LocaleDisplayNames, LocaleDates
 from zope.i18n.locales import LocaleVersion, LocaleIdentity, LocaleTimeZone
@@ -22,9 +22,7 @@ from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
 from zope.i18n.locales import LocaleOrientation, LocaleDayContext
 from zope.i18n.locales import LocaleMonthContext, calendarAliases
 from zope.i18n.locales.inheritance import InheritingDictionary
-from .._compat import _u
 
-_BLANK = _u('')
 
 class LocaleFactory(object):
     """This class creates a Locale object from an ICU XML file."""
@@ -37,7 +35,7 @@ class LocaleFactory(object):
             self._data = parseXML(path).documentElement
 
     def _getText(self, nodelist):
-        rc = _BLANK
+        rc = u''
         for node in nodelist:
             if node.nodeType == node.TEXT_NODE:
                 rc = rc + node.data
@@ -52,13 +50,13 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <identity>
           ...   <version number="1.0">Some notes</version>
           ...   <generation date="2003-12-19" />
           ...   <language type="de" />
           ...   <territory type="DE" />
-          ... </identity>''')
+          ... </identity>'''
           >>> dom = parseString(xml)
 
           >>> version = factory._extractVersion(dom.documentElement)
@@ -91,7 +89,7 @@ class LocaleFactory(object):
         Example::
 
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <ldml>
           ...   <identity>
           ...     <version number="1.0"/>
@@ -100,7 +98,7 @@ class LocaleFactory(object):
           ...     <territory type="US" />
           ...     <variant type="POSIX" />
           ...   </identity>
-          ... </ldml>''')
+          ... </ldml>'''
           >>> factory = LocaleFactory(None)
           >>> factory._data = parseString(xml).documentElement
 
@@ -142,7 +140,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <displayNames>
           ...   <types>
           ...     <type type="Fallback" key="calendar"></type>
@@ -152,7 +150,7 @@ class LocaleFactory(object):
           ...     <type type="stroke" key="collation">STROKE</type>
           ...     <type type="traditional" key="collation">TRADITIONAL</type>
           ...   </types>
-          ... </displayNames>''')
+          ... </displayNames>'''
           >>> dom = parseString(xml)
 
           >>> types = factory._extractTypes(dom.documentElement)
@@ -164,9 +162,9 @@ class LocaleFactory(object):
           [(u'chinese', u'calendar'), (u'gregorian', u'calendar')]
           >>> keys[4:]
           [(u'stroke', u'collation'), (u'traditional', u'collation')]
-          >>> types[(_u('chinese'), _u('calendar'))]
+          >>> types[(u'chinese', u'calendar')]
           u'CHINESE'
-          >>> types[(_u('stroke'), _u('collation'))]
+          >>> types[(u'stroke', u'collation')]
           u'STROKE'
         """
         # 'types' node has not to exist
@@ -188,7 +186,7 @@ class LocaleFactory(object):
         Example::
 
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <ldml>
           ...   <localeDisplayNames>
           ...     <languages>
@@ -217,7 +215,7 @@ class LocaleFactory(object):
           ...       <type type="stroke" key="collation">STROKE</type>
           ...     </types>
           ...   </localeDisplayNames>
-          ... </ldml>''')
+          ... </ldml>'''
           >>> factory = LocaleFactory(None)
           >>> factory._data = parseString(xml).documentElement
 
@@ -227,38 +225,38 @@ class LocaleFactory(object):
           >>> keys.sort()
           >>> keys
           [u'Fallback', u'aa', u'ab']
-          >>> names.languages[_u("aa")]
+          >>> names.languages[u"aa"]
           u'aa'
 
           >>> keys = names.scripts.keys()
           >>> keys.sort()
           >>> keys
           [u'Arab', u'Armn']
-          >>> names.scripts[_u("Arab")]
+          >>> names.scripts[u"Arab"]
           u'Arab'
 
           >>> keys = names.territories.keys()
           >>> keys.sort()
           >>> keys
           [u'AD', u'AE']
-          >>> names.territories[_u("AD")]
+          >>> names.territories[u"AD"]
           u'AD'
 
           >>> keys = names.variants.keys()
           >>> keys.sort()
           >>> keys
           [u'Fallback', u'POSIX']
-          >>> names.variants[_u("Fallback")]
+          >>> names.variants[u"Fallback"]
           u''
 
           >>> keys = names.keys.keys()
           >>> keys.sort()
           >>> keys
           [u'calendar', u'collation']
-          >>> names.keys[_u("calendar")]
+          >>> names.keys[u"calendar"]
           u'CALENDAR'
 
-          >>> names.types[(_u("stroke"), _u("collation"))]
+          >>> names.types[(u"stroke", u"collation")]
           u'STROKE'
         """
         displayNames = LocaleDisplayNames()
@@ -298,7 +296,7 @@ class LocaleFactory(object):
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <months>
           ...   <default type="format" />
           ...   <monthContext type="format">
@@ -332,7 +330,7 @@ class LocaleFactory(object):
           ...       <month type="12">Dez</month>
           ...     </monthWidth>
           ...   </monthContext>
-          ... </months>''')
+          ... </months>'''
           >>> dom = parseString(xml)
           >>> factory._extractMonths(dom.documentElement, calendar)
 
@@ -342,17 +340,17 @@ class LocaleFactory(object):
           >>> calendar.defaultMonthContext
           u'format'
 
-          >>> ctx = calendar.monthContexts[_u("format")]
+          >>> ctx = calendar.monthContexts[u"format"]
           >>> ctx.defaultWidth
           u'wide'
 
-          >>> names = [ctx.months[_u("wide")][type] for type in range(1,13)]
+          >>> names = [ctx.months[u"wide"][type] for type in range(1,13)]
           >>> names[:7]
           [u'Januar', u'Februar', u'Maerz', u'April', u'Mai', u'Juni', u'Juli']
           >>> names[7:]
           [u'August', u'September', u'Oktober', u'November', u'Dezember']
 
-          >>> abbrs = [ctx.months[_u("abbreviated")][type] for type in range(1,13)]
+          >>> abbrs = [ctx.months[u"abbreviated"][type] for type in range(1,13)]
           >>> abbrs[:6]
           [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
           >>> abbrs[6:]
@@ -447,7 +445,7 @@ class LocaleFactory(object):
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <days>
           ...   <default type="format" />
           ...   <dayContext type="format">
@@ -471,7 +469,7 @@ class LocaleFactory(object):
           ...       <day type="sat">Sa</day>
           ...     </dayWidth>
           ...   </dayContext>
-          ... </days>''')
+          ... </days>'''
           >>> dom = parseString(xml)
           >>> factory._extractDays(dom.documentElement, calendar)
 
@@ -481,17 +479,17 @@ class LocaleFactory(object):
           >>> calendar.defaultDayContext
           u'format'
 
-          >>> ctx = calendar.dayContexts[_u("format")]
+          >>> ctx = calendar.dayContexts[u"format"]
           >>> ctx.defaultWidth
           u'wide'
 
-          >>> names = [ctx.days[_u("wide")][type] for type in range(1,8)]
+          >>> names = [ctx.days[u"wide"][type] for type in range(1,8)]
           >>> names[:4]
           [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
           >>> names[4:]
           [u'Freitag', u'Samstag', u'Sonntag']
 
-          >>> abbrs = [ctx.days[_u("abbreviated")][type] for type in range(1,8)]
+          >>> abbrs = [ctx.days[u"abbreviated"][type] for type in range(1,8)]
           >>> abbrs
           [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
 
@@ -580,7 +578,7 @@ class LocaleFactory(object):
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <calendar type="gregorian">
           ...   <week>
           ...     <minDays count="1"/>
@@ -588,7 +586,7 @@ class LocaleFactory(object):
           ...     <weekendStart day="fri" time="18:00"/>
           ...     <weekendEnd day="sun" time="18:00"/>
           ...   </week>
-          ... </calendar>''')
+          ... </calendar>'''
           >>> dom = parseString(xml)
           >>> factory._extractWeek(dom.documentElement, calendar)
 
@@ -640,7 +638,7 @@ class LocaleFactory(object):
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <calendar type="gregorian">
           ...   <eras>
           ...      <eraAbbr>
@@ -651,7 +649,7 @@ class LocaleFactory(object):
           ...       <era type="0">Before Christ</era>
           ...      </eraName>
           ...   </eras>
-          ... </calendar>''')
+          ... </calendar>'''
           >>> dom = parseString(xml)
           >>> factory._extractEras(dom.documentElement, calendar)
 
@@ -698,7 +696,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <dateFormats>
           ...   <default type="medium"/>
           ...   <dateFormatLength type="full">
@@ -716,20 +714,20 @@ class LocaleFactory(object):
           ...       <pattern>MMM dd, yyyy</pattern>
           ...     </dateFormat>
           ...   </dateFormatLength>
-          ... </dateFormats>''')
+          ... </dateFormats>'''
           >>> dom = parseString(xml)
 
           >>> default, lengths = factory._extractFormats(
           ...     dom.documentElement, 'dateFormatLength', 'dateFormat')
           >>> default
           u'medium'
-          >>> lengths[_u("full")].formats[None].pattern
+          >>> lengths[u"full"].formats[None].pattern
           u'EEEE, MMMM d, yyyy'
-          >>> lengths[_u("medium")].default
+          >>> lengths[u"medium"].default
           u'DateFormatsKey2'
-          >>> lengths[_u("medium")].formats['DateFormatsKey3'].pattern
+          >>> lengths[u"medium"].formats['DateFormatsKey3'].pattern
           u'MMM dd, yyyy'
-          >>> lengths[_u("medium")].formats['DateFormatsKey2'].displayName
+          >>> lengths[u"medium"].formats['DateFormatsKey2'].displayName
           u'Standard Date'
         """
         formats_default = None
@@ -771,7 +769,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <dates>
           ...   <calendars>
           ...     <calendar type="gregorian">
@@ -832,7 +830,7 @@ class LocaleFactory(object):
           ...       </eras>
           ...     </calendar>
           ...   </calendars>
-          ... </dates>''')
+          ... </dates>'''
           >>> dom = parseString(xml)
 
           >>> calendars = factory._extractCalendars(dom.documentElement)
@@ -883,9 +881,9 @@ class LocaleFactory(object):
             self._extractEras(cal_node, calendar)
 
             for formatsName, lengthName, formatName in (
-                ('dateFormats', 'dateFormatLength', 'dateFormat'),
-                ('timeFormats', 'timeFormatLength', 'timeFormat'),
-                ('dateTimeFormats', 'dateTimeFormatLength', 'dateTimeFormat')):
+                    ('dateFormats', 'dateFormatLength', 'dateFormat'),
+                    ('timeFormats', 'timeFormatLength', 'timeFormat'),
+                    ('dateTimeFormats', 'dateTimeFormatLength', 'dateTimeFormat')):
 
                 formats_nodes = cal_node.getElementsByTagName(formatsName)
                 if formats_nodes:
@@ -912,7 +910,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <dates>
           ...   <timeZoneNames>
           ...     <zone type="America/Los_Angeles" >
@@ -937,7 +935,7 @@ class LocaleFactory(object):
           ...       <exemplarCity>York</exemplarCity>
           ...     </zone>
           ...   </timeZoneNames>
-          ... </dates>''')
+          ... </dates>'''
           >>> dom = parseString(xml)
           >>> zones = factory._extractTimeZones(dom.documentElement)
 
@@ -945,11 +943,11 @@ class LocaleFactory(object):
           >>> keys.sort()
           >>> keys
           [u'America/Los_Angeles', u'Europe/London']
-          >>> zones[_u("Europe/London")].names[_u("generic")]
+          >>> zones[u"Europe/London"].names[u"generic"]
           (u'British Time', None)
-          >>> zones[_u("Europe/London")].cities
+          >>> zones[u"Europe/London"].cities
           [u'York']
-          >>> zones[_u("America/Los_Angeles")].names[_u("generic")]
+          >>> zones[u"America/Los_Angeles"].names[u"generic"]
           (u'Pacific Time', u'PT')
         """
         tz_names = dates_node.getElementsByTagName('timeZoneNames')
@@ -964,7 +962,7 @@ class LocaleFactory(object):
             # get the short and long name node
             long = node.getElementsByTagName('long')
             short = node.getElementsByTagName('short')
-            for type in (_u("generic"), _u("standard"), _u("daylight")):
+            for type in (u"generic", u"standard", u"daylight"):
                 # get long name
                 long_desc = None
                 if long:
@@ -1012,7 +1010,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <numbers>
           ...   <symbols>
           ...     <decimal>.</decimal>
@@ -1028,7 +1026,7 @@ class LocaleFactory(object):
           ...     <infinity>oo</infinity>
           ...     <nan>NaN</nan>
           ...   </symbols>
-          ... </numbers>''')
+          ... </numbers>'''
           >>> dom = parseString(xml)
           >>> symbols = factory._extractSymbols(dom.documentElement)
 
@@ -1049,10 +1047,10 @@ class LocaleFactory(object):
             return
 
         symbols = InheritingDictionary()
-        for name in (_u("decimal"), _u("group"), _u("list"), _u("percentSign"),
-                     _u("nativeZeroDigit"), _u("patternDigit"), _u("plusSign"),
-                     _u("minusSign"), _u("exponential"), _u("perMille"),
-                     _u("infinity"), _u("nan")):
+        for name in (u"decimal", u"group", u"list", u"percentSign",
+                     u"nativeZeroDigit", u"patternDigit", u"plusSign",
+                     u"minusSign", u"exponential", u"perMille",
+                     u"infinity", u"nan"):
             nodes = symbols_nodes[0].getElementsByTagName(name)
             if nodes:
                 symbols[name] = self._getText(nodes[0].childNodes)
@@ -1078,7 +1076,7 @@ class LocaleFactory(object):
           >>> numbers = Numbers()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <numbers>
           ...   <decimalFormats>
           ...     <decimalFormatLength type="long">
@@ -1114,28 +1112,28 @@ class LocaleFactory(object):
           ...       </currencyFormat>
           ...     </currencyFormatLength>
           ...   </currencyFormats>
-          ... </numbers>''')
+          ... </numbers>'''
           >>> dom = parseString(xml)
           >>> factory._extractNumberFormats(dom.documentElement, numbers)
 
-          >>> numbers.decimalFormats[_u("long")].formats[None].pattern
+          >>> numbers.decimalFormats[u"long"].formats[None].pattern
           u'#,##0.###'
 
           >>> numbers.defaultScientificFormat
           u'long'
-          >>> numbers.scientificFormats[_u("long")].formats[None].pattern
+          >>> numbers.scientificFormats[u"long"].formats[None].pattern
           u'0.000###E+00'
-          >>> numbers.scientificFormats[_u("medium")].formats[None].pattern
+          >>> numbers.scientificFormats[u"medium"].formats[None].pattern
           u'0.00##E+00'
 
-          >>> numbers.percentFormats[_u("long")].formats[None].pattern
+          >>> numbers.percentFormats[u"long"].formats[None].pattern
           u'#,##0%'
-          >>> numbers.percentFormats.get(_u("medium"), None) is None
+          >>> numbers.percentFormats.get(u"medium", None) is None
           True
 
-          >>> numbers.currencyFormats[_u("long")].formats[None].pattern
+          >>> numbers.currencyFormats[u"long"].formats[None].pattern
           u'$ #,##0.00;($ #,##0.00)'
-          >>> numbers.currencyFormats.get(_u("medium"), None) is None
+          >>> numbers.currencyFormats.get(u"medium", None) is None
           True
         """
 
@@ -1161,7 +1159,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <numbers>
           ...   <currencies>
           ...     <currency type="USD">
@@ -1181,7 +1179,7 @@ class LocaleFactory(object):
           ...       <symbol>$</symbol>
           ...     </currency>
           ...   </currencies>
-          ... </numbers>''')
+          ... </numbers>'''
           >>> dom = parseString(xml)
           >>> currencies = factory._extractCurrencies(dom.documentElement)
 
@@ -1210,7 +1208,7 @@ class LocaleFactory(object):
             if nodes:
                 currency.symbol = self._getText(nodes[0].childNodes)
                 currency.symbolChoice = \
-                                      nodes[0].getAttribute('choice') == _u("true")
+                                      nodes[0].getAttribute('choice') == u"true"
 
             nodes = curr_node.getElementsByTagName('displayName')
             if nodes:
@@ -1245,7 +1243,7 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <ldml>
           ...   <delimiters>
           ...     <quotationStart>``</quotationStart>
@@ -1253,18 +1251,18 @@ class LocaleFactory(object):
           ...     <alternateQuotationStart>`</alternateQuotationStart>
           ...     <alternateQuotationEnd>'</alternateQuotationEnd>
           ...   </delimiters>
-          ... </ldml>''')
+          ... </ldml>'''
           >>> dom = parseString(xml)
           >>> factory._data = parseString(xml).documentElement
           >>> delimiters = factory._extractDelimiters()
 
-          >>> delimiters[_u("quotationStart")]
+          >>> delimiters[u"quotationStart"]
           u'``'
-          >>> delimiters[_u("quotationEnd")]
+          >>> delimiters[u"quotationEnd"]
           u"''"
-          >>> delimiters[_u("alternateQuotationStart")]
+          >>> delimiters[u"alternateQuotationStart"]
           u'`'
-          >>> delimiters[_u("alternateQuotationEnd")]
+          >>> delimiters[u"alternateQuotationEnd"]
           u"'"
 
           Escape: "'"
@@ -1275,8 +1273,8 @@ class LocaleFactory(object):
             return
 
         delimiters = InheritingDictionary()
-        for name in (_u('quotationStart'), _u("quotationEnd"),
-                     _u("alternateQuotationStart"), _u("alternateQuotationEnd")):
+        for name in (u'quotationStart', u"quotationEnd",
+                     u"alternateQuotationStart", u"alternateQuotationEnd"):
             nodes = delimiters_nodes[0].getElementsByTagName(name)
             if nodes:
                 delimiters[name] = self._getText(nodes[0].childNodes)
@@ -1289,12 +1287,12 @@ class LocaleFactory(object):
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = _u('''
+          >>> xml = u'''
           ... <ldml>
           ...   <layout>
           ...     <orientation lines="bottom-to-top" characters="right-to-left" />
           ...   </layout>
-          ... </ldml>''')
+          ... </ldml>'''
           >>> dom = parseString(xml)
           >>> factory._data = parseString(xml).documentElement
           >>> orientation = factory._extractOrientation()
@@ -1307,7 +1305,7 @@ class LocaleFactory(object):
         if not orientation_nodes:
             return
         orientation = LocaleOrientation()
-        for name in (_u("characters"), _u("lines")):
+        for name in (u"characters", u"lines"):
             value = orientation_nodes[0].getAttribute(name)
             if value:
                 setattr(orientation, name, value)

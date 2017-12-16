@@ -23,10 +23,10 @@ class TestIMessageCatalog(unittest.TestCase):
 
     # This should be overwritten by every class that inherits this test
     def _getMessageCatalog(self):
-        pass
+        raise NotImplementedError()
 
     def _getUniqueIndentifier(self):
-        pass
+        raise NotImplementedError()
 
 
     def setUp(self):
@@ -64,4 +64,4 @@ class TestIMessageCatalog(unittest.TestCase):
 
 
 def test_suite():
-    return unittest.TestSuite() # Deliberatly empty
+    return unittest.TestSuite() # Deliberately empty

@@ -16,7 +16,6 @@
 from zope.interface import Interface, Attribute
 from zope.schema import TextLine, Dict, Choice, Field
 
-from .._compat import _u
 
 class II18nAware(Interface):
     """Internationalization aware content object."""
@@ -69,13 +68,13 @@ class IMessageCatalog(Interface):
         """
 
     language = TextLine(
-        title=_u("Language"),
-        description=_u("The language the catalog translates to."),
+        title=u"Language",
+        description=u"The language the catalog translates to.",
         required=True)
 
     domain = TextLine(
-        title=_u("Domain"),
-        description=_u("The domain the catalog is registered for."),
+        title=u"Domain",
+        description=u"The domain the catalog is registered for.",
         required=True)
 
     def getIdentifier():
@@ -129,8 +128,8 @@ class ITranslationDomain(Interface):
     """
 
     domain = TextLine(
-        title=_u("Domain Name"),
-        description=_u("The name of the domain this object represents."),
+        title=u"Domain Name",
+        description=u"The name of the domain this object represents.",
         required=True)
 
     def translate(msgid, mapping=None, context=None, target_language=None,
@@ -155,7 +154,7 @@ class IFallbackTranslationDomainFactory(Interface):
     debugging i18n.
     """
 
-    def __call__(domain_id=_u("")):
+    def __call__(domain_id=u""):
         """Return a fallback translation domain for the given domain id.
         """
 
@@ -357,22 +356,22 @@ class INumberFormat(IFormat):
     """
 
     type = Field(
-        title=_u("Type"),
-        description=(_u("The type into which a string is parsed. If ``None``, "
-                        "then ``int`` will be used for whole numbers and "
-                        "``float`` for decimals.")),
+        title=u"Type",
+        description=((u"The type into which a string is parsed. If ``None``, "
+                      u"then ``int`` will be used for whole numbers and "
+                      u"``float`` for decimals.")),
         default=None,
         required=False)
 
     symbols = Dict(
-        title=_u("Number Symbols"),
+        title=u"Number Symbols",
         key_type=Choice(
-            title=_u("Dictionary Class"),
-            values=(_u("decimal"), _u("group"), _u("list"), _u("percentSign"),
-                    _u("nativeZeroDigit"), _u("patternDigit"), _u("plusSign"),
-                    _u("minusSign"), _u("exponential"), _u("perMille"),
-                    _u("infinity"), _u("nan"))),
-        value_type=TextLine(title=_u("Symbol")))
+            title=u"Dictionary Class",
+            values=(u"decimal", u"group", u"list", u"percentSign",
+                    u"nativeZeroDigit", u"patternDigit", u"plusSign",
+                    u"minusSign", u"exponential", u"perMille",
+                    u"infinity", u"nan")),
+        value_type=TextLine(title=u"Symbol"))
 
 
 class IDateTimeFormat(IFormat):

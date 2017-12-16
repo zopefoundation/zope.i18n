@@ -1,4 +1,23 @@
-include *.txt *.rst *.py *.ini buildout.cfg .travis.yml
+include *.txt
+include *.rst
+include *.py
+include *.ini
+include buildout.cfg
+include .travis.yml
+include tox.ini
+include .coveragerc
 recursive-include src *.txt *.py *.dtd *.xml *.html *.po *.mo *.in *.zcml
+recursive-include src *.py
+recursive-include src *.dtd
+recursive-include src *.xml
+recursive-include src *.html
+recursive-include src *.po
+recursive-include src *.mo
+recursive-include src *.in
+recursive-include src *.zcml
+
 recursive-include src/zope/i18n/tests *.mo
-recursive-include docs *.rst *.py *.bat Makefile
+recursive-include docs *.rst
+recursive-include docs *.py
+recursive-include docs *.bat
+recursive-include docs Makefile

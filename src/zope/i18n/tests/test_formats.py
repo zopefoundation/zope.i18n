@@ -14,11 +14,11 @@
 """This module tests the Formats and everything that goes with it.
 """
 import decimal
-import os
 import datetime
-import pytz
 import pickle
-from unittest import TestCase, TestSuite, makeSuite
+from unittest import TestCase, TestSuite
+
+import pytz
 
 from zope.i18n.interfaces import IDateTimeFormat
 from zope.i18n.format import DateTimeFormat
@@ -29,21 +29,21 @@ from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat, NumberParseError
 from zope.i18n.format import parseNumberPattern
 
-from .._compat import _u
 
 class LocaleStub(object):
     pass
 
 class LocaleCalendarStub(object):
 
-    type = _u("gregorian")
+    type = u"gregorian"
 
-    months = { 1: ('Januar', 'Jan'),     2: ('Februar', 'Feb'),
-               3: ('Maerz', 'Mrz'),      4: ('April', 'Apr'),
-               5: ('Mai', 'Mai'),        6: ('Juni', 'Jun'),
-               7: ('Juli', 'Jul'),       8: ('August', 'Aug'),
-               9: ('September', 'Sep'), 10: ('Oktober', 'Okt'),
-              11: ('November', 'Nov'),  12: ('Dezember', 'Dez')}
+    months = {
+        1: ('Januar', 'Jan'),     2: ('Februar', 'Feb'),
+        3: ('Maerz', 'Mrz'),      4: ('April', 'Apr'),
+        5: ('Mai', 'Mai'),        6: ('Juni', 'Jun'),
+        7: ('Juli', 'Jul'),       8: ('August', 'Aug'),
+        9: ('September', 'Sep'), 10: ('Oktober', 'Okt'),
+        11: ('November', 'Nov'),  12: ('Dezember', 'Dez')}
 
     days = {1: ('Montag', 'Mo'), 2: ('Dienstag', 'Di'),
             3: ('Mittwoch', 'Mi'), 4: ('Donnerstag', 'Do'),
@@ -224,9 +224,9 @@ class TestBuildDateTimeParseInfo(TestCase):
         self.assertEqual(self.info(('M', 2)), '([0-9]{2})')
 
     def testMonthNames(self):
-        names = [_u("Januar"), _u("Februar"), _u("Maerz"), _u("April"),
-                 _u("Mai"), _u("Juni"), _u("Juli"), _u("August"), _u("September"), _u("Oktober"),
-                 _u("November"), _u("Dezember")]
+        names = [u"Januar", u"Februar", u"Maerz", u"April",
+                 u"Mai", u"Juni", u"Juli", u"August", u"September", u"Oktober",
+                 u"November", u"Dezember"]
         self.assertEqual(self.info(('M', 4)), '('+'|'.join(names)+')')
 
     def testMonthAbbr(self):
@@ -550,54 +550,54 @@ class TestDateTimeFormat(TestCase):
     def testFormatDayInYear(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'D'),
-            _u("3"))
+            u"3")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DD'),
-            _u("03"))
+            u"03")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DDD'),
-            _u("003"))
+            u"003")
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'D'),
-            _u("365"))
+            u"365")
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'DD'),
-            _u("365"))
+            u"365")
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'DDD'),
-            _u("365"))
+            u"365")
         self.assertEqual(
             self.format.format(datetime.date(2004, 12, 31), 'DDD'),
-            _u("366"))
+            u"366")
 
     def testFormatDayOfWeekInMOnth(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'F'),
-            _u("1"))
+            u"1")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10), 'F'),
-            _u("2"))
+            u"2")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 17), 'F'),
-            _u("3"))
+            u"3")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 24), 'F'),
-            _u("4"))
+            u"4")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 31), 'F'),
-            _u("5"))
+            u"5")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 6), 'F'),
-            _u("1"))
+            u"1")
 
     def testFormatUnusualFormats(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DDD-yyyy'),
-            _u("003-2003"))
+            u"003-2003")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10),
                                "F. EEEE 'im' MMMM, yyyy"),
-            _u("2. Freitag im Januar, 2003"))
+            u"2. Freitag im Januar, 2003")
 
 
 
@@ -1201,13 +1201,3 @@ class TestNumberFormat(TestCase):
         # Witout Rounding
         self.assertEqual(self.format.format(
             decimal.Decimal('0.99999'), '0.###', rounding=False), '0.99999')
-
-
-def test_suite():
-    return TestSuite((
-        makeSuite(TestDateTimePatternParser),
-        makeSuite(TestBuildDateTimeParseInfo),
-        makeSuite(TestDateTimeFormat),
-        makeSuite(TestNumberPatternParser),
-        makeSuite(TestNumberFormat),
-       ))
