@@ -40,12 +40,8 @@ class SimpleTranslationDomain(object):
     def __init__(self, domain, messages=None):
         """Initializes the object. No arguments are needed."""
         self.domain = domain
-        if messages is None:
-            self.messages = {}
-        else:
-            assert isinstance(messages, dict)
-            self.messages = messages
-
+        self.messages = messages if messages is not None else {}
+        assert self.messages is not None
 
     def translate(self, msgid, mapping=None, context=None,
                   target_language=None, default=None):

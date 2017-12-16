@@ -13,7 +13,7 @@
 ##############################################################################
 """A simple implementation of a Message Catalog.
 """
-import sys
+
 from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implementer
