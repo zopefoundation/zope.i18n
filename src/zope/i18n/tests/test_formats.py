@@ -99,9 +99,9 @@ class LocaleCalendarStub(object):
 
 
 class _TestCase(TestCase):
-    if not hasattr(TestCase, 'assertRaisesRegex'):
-        # Avoid deprecation warnings in Python 3
-        assertRaisesRegex = TestCase.assertRaisesRegexp
+    # Avoid deprecation warnings in Python 3 by making the preferred
+    # method name available for Python 2.
+    assertRaisesRegex = getattr(TestCase, 'assertRaisesRegex', TestCase.assertRaisesRegexp)
 
 
 class TestDateTimePatternParser(_TestCase):

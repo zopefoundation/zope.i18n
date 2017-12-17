@@ -15,6 +15,11 @@
   It overrode every method and didn't properly initialize the super
   class. ``TranslationDomain`` continues to implement ``ITranslationDomain``.
 
+- ``TranslationDomain`` and ``GettextMessageCatalog`` now ensure that
+  their ``domain`` and ``language`` attributes are text in order to
+  match their respective interfaces. Byte strings (such as native
+  string literals on Python 2) are decoded using UTF-8.
+
 
 4.2.0 (2017-05-23)
 ==================

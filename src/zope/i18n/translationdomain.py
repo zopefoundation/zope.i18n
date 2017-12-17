@@ -38,7 +38,7 @@ text_type = str if bytes is not str else unicode
 class TranslationDomain(object):
 
     def __init__(self, domain, fallbacks=None):
-        self.domain = domain
+        self.domain = domain.decode("utf-8") if isinstance(domain, bytes) else domain
         # _catalogs maps (language, domain) to IMessageCatalog instances
         self._catalogs = {}
         # _data maps IMessageCatalog.getIdentifier() to IMessageCatalog

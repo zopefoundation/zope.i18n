@@ -39,7 +39,7 @@ class SimpleTranslationDomain(object):
 
     def __init__(self, domain, messages=None):
         """Initializes the object. No arguments are needed."""
-        self.domain = domain
+        self.domain = domain.decode("utf-8") if isinstance(domain, bytes) else domain
         self.messages = messages if messages is not None else {}
         assert self.messages is not None
 

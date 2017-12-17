@@ -18,6 +18,7 @@ from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implementer
 
+
 class _KeyErrorRaisingFallback(object):
     def ugettext(self, message):
         raise KeyError(message)
@@ -32,8 +33,8 @@ class GettextMessageCatalog(object):
 
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
-        self.language = language
-        self.domain = domain
+        self.language = language.decode('utf-8') if isinstance(language, bytes) else language
+        self.domain = domain.decode("utf-8") if isinstance(domain, bytes) else domain
         self._path_to_file = path_to_file
         self.reload()
         catalog = self._catalog

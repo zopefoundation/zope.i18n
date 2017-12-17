@@ -16,12 +16,13 @@
 import unittest
 from zope.interface.verify import verifyObject
 from zope.i18n.interfaces import IMessageCatalog
+from zope.schema import getValidationErrors
 
 
 class TestIMessageCatalog(unittest.TestCase):
 
 
-    # This should be overwritten by every class that inherits this test
+    # This should be overridden by every class that inherits this test
     def _getMessageCatalog(self):
         raise NotImplementedError()
 
@@ -34,6 +35,8 @@ class TestIMessageCatalog(unittest.TestCase):
 
     def testInterface(self):
         verifyObject(IMessageCatalog, self._catalog)
+        errors = getValidationErrors(IMessageCatalog, self._catalog)
+        self.assertFalse(errors)
 
     def testGetMessage(self):
         catalog = self._catalog
