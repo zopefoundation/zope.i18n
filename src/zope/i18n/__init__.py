@@ -13,7 +13,6 @@
 ##############################################################################
 """i18n support.
 """
-import sys
 import re
 
 from zope.component import queryUtility
@@ -35,17 +34,50 @@ _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
                            % ({'n': NAME_RE}))
 
 
-def negotiate(context):
-    """Negotiate language.
+class _FallbackNegotiator(object):
 
-    This only works if the languages are set globally, otherwise each message
-    catalog needs to do the language negotiation.
+    def getLanguage(self, _allowed, _context):
+        return None
+
+_fallback_negotiator = _FallbackNegotiator()
+
+
+def negotiate(context):
     """
-    if ALLOWED_LANGUAGES is not None:
-        negotiator = queryUtility(INegotiator)
-        if negotiator is not None:
-            return negotiator.getLanguage(ALLOWED_LANGUAGES, context)
-    return None
+    Negotiate language.
+
+    This only works if the languages are set globally, otherwise each
+    message catalog needs to do the language negotiation.
+
+    If no languages are set, this always returns None:
+
+      >>> import zope.i18n as i18n
+      >>> from zope.component import queryUtility
+      >>> old_allowed_languages = i18n.ALLOWED_LANGUAGES
+      >>> i18n.ALLOWED_LANGUAGES = None
+      >>> i18n.negotiate('anything') is None
+      True
+
+    If languages are set, but there is no ``INegotiator`` utility,
+    this returns None:
+
+      >>> i18n.ALLOWED_LANGUAGES = ('en',)
+      >>> queryUtility(i18n.INegotiator) is None
+      True
+      >>> i18n.negotiate('anything') is None
+      True
+
+    .. doctest::
+        :hide:
+
+        >>> i18n.ALLOWED_LANGUAGES = old_allowed_languages
+
+    """
+    if ALLOWED_LANGUAGES is None:
+        return None
+
+    negotiator = queryUtility(INegotiator, default=_fallback_negotiator)
+    return negotiator.getLanguage(ALLOWED_LANGUAGES, context)
 
 def translate(msgid, domain=None, mapping=None, context=None,
               target_language=None, default=None):
@@ -71,7 +103,7 @@ def translate(msgid, domain=None, mapping=None, context=None,
     >>> print(translate(u"eek", 'my.domain'))
     ook
 
-    Normally, if no domain is given, or if there is no domain utility
+    If no domain is given, or if there is no domain utility
     for the given domain, then the text isn't translated:
 
     >>> print(translate(u"eek"))
@@ -79,8 +111,8 @@ def translate(msgid, domain=None, mapping=None, context=None,
 
     Moreover the text will be converted to unicode:
 
-    >>> print(translate('eek', 'your.domain'))
-    eek
+    >>> not isinstance(translate('eek', 'your.domain'), bytes)
+    True
 
     A fallback domain factory can be provided. This is normally used
     for testing:
@@ -99,6 +131,29 @@ def translate(msgid, domain=None, mapping=None, context=None,
 
     >>> print(translate(u"eek", 'your.domain'))
     test-from-your.domain
+
+    If no target language is provided, but a context is and we were able to
+    find a translation domain, we will use the `negotiate` function to
+    attempt to determine the language to translate to:
+
+    .. doctest::
+        :hide:
+
+        >>> from zope import i18n
+        >>> old_negatiate = i18n
+
+    >>> def test_negatiate(context):
+    ...     print("Negatiating for %r" % (context,))
+    ...     return 'en'
+    >>> i18n.negotiate = test_negatiate
+    >>> print(translate('eek', 'your.domain', context='context'))
+    Negatiating for 'context'
+    test-from-your.domain
+
+    .. doctest::
+        :hide:
+
+        >>> i18n.negotiate = old_negatiate
     """
 
     if isinstance(msgid, Message):

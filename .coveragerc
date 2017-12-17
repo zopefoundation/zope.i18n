@@ -1,5 +1,7 @@
 [run]
 source = zope.i18n
+omit =
+    */flycheck_*py
 
 [report]
 precision = 2
