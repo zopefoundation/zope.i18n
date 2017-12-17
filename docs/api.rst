@@ -12,6 +12,12 @@ zope.i18n
 
 .. automodule:: zope.i18n
 
+zope.i18n.config
+================
+
+.. automodule:: zope.i18n.config
+
+
 zope.i18n.compile
 =================
 
