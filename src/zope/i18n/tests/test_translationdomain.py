@@ -24,27 +24,20 @@ from zope.i18n.interfaces import ITranslationDomain
 
 import zope.component
 
-def testdir():
-    from zope.i18n import tests
-    return os.path.dirname(tests.__file__)
+testdir = os.path.dirname(__file__)
+
+en_file = os.path.join(testdir, 'en-default.mo')
+de_file = os.path.join(testdir, 'de-default.mo')
 
 
-class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
-
-    def setUp(self):
-        TestITranslationDomain.setUp(self)
-
-    def tearDown(self):
-        TestITranslationDomain.tearDown(self)
+class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
 
     def _getTranslationDomain(self):
         domain = TranslationDomain('default')
-        path = testdir()
         en_catalog = GettextMessageCatalog('en', 'default',
-                                           os.path.join(path, 'en-default.mo'))
+                                           en_file)
         de_catalog = GettextMessageCatalog('de', 'default',
-                                           os.path.join(path, 'de-default.mo'))
-
+                                           de_file)
         domain.addCatalog(en_catalog)
         domain.addCatalog(de_catalog)
         return domain
@@ -140,7 +133,7 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
             "Message: oohhh")
         # provide the domain
         domain = TranslationDomain('alt')
-        path = testdir()
+        path = testdir
         en_catalog = GettextMessageCatalog('en', 'alt',
                                            os.path.join(path, 'en-alt.mo'))
         domain.addCatalog(en_catalog)
@@ -150,12 +143,9 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
             translate(msgid, target_language='en', default="default"),
             "Message: Wow")
 
-
-
-
     def testMessageIDTranslateForDifferentDomain(self):
         domain = TranslationDomain('alt')
-        path = testdir()
+        path = testdir
         en_catalog = GettextMessageCatalog('en', 'alt',
                                            os.path.join(path, 'en-alt.mo'))
         domain.addCatalog(en_catalog)
@@ -186,3 +176,22 @@ class TestGlobalTranslationDomain(unittest.TestCase, TestITranslationDomain):
                       default="this ${that} the other",
                       mapping={"that": "THAT"}),
             "this THAT the other")
+
+    def test_getCatalogInfos(self):
+        cats = self._domain.getCatalogsInfo()
+        self.assertEqual(
+            cats,
+            {'en': [en_file],
+             'de': [de_file]})
+
+    def test_releoadCatalogs(self):
+        # It uses the keys we pass
+        # so this does nothing
+        self._domain.reloadCatalogs(())
+
+        # The catalogNames, somewhat confusingly, are
+        # the paths to the files.
+        self._domain.reloadCatalogs((en_file, de_file))
+
+        with self.assertRaises(KeyError):
+            self._domain.reloadCatalogs(('dne',))

@@ -15,9 +15,10 @@
 """
 
 import zope.component
+import zope.interface
+
 from zope.i18nmessageid import Message
 from zope.i18n import translate, interpolate
-from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 
 
@@ -33,8 +34,8 @@ LANGUAGE_FALLBACKS = ['en']
 
 text_type = str if bytes is not str else unicode
 
-
-class TranslationDomain(SimpleTranslationDomain):
+@zope.interface.implementer(ITranslationDomain)
+class TranslationDomain(object):
 
     def __init__(self, domain, fallbacks=None):
         self.domain = domain
@@ -44,9 +45,7 @@ class TranslationDomain(SimpleTranslationDomain):
         self._data = {}
         # What languages to fallback to, if there is no catalog for the
         # requested language (no fallback on individual messages)
-        if fallbacks is None:
-            fallbacks = LANGUAGE_FALLBACKS
-        self._fallbacks = fallbacks
+        self.setLanguageFallbacks(fallbacks)
 
     def _registerMessageCatalog(self, language, catalog_name):
         key = language

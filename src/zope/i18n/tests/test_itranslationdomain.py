@@ -20,6 +20,8 @@ from zope.interface import implementer
 import zope.component
 from zope.component.testing import PlacelessSetup
 
+from zope.schema import getValidationErrors
+
 from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
@@ -51,6 +53,8 @@ class TestITranslationDomain(PlacelessSetup):
 
     def testInterface(self):
         verifyObject(ITranslationDomain, self._domain)
+        errors = getValidationErrors(ITranslationDomain, self._domain)
+        self.assertFalse(errors)
 
     def testSimpleTranslate(self):
         translate = self._domain.translate

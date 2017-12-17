@@ -11,6 +11,10 @@
 - Remove the private ``_compat`` module and its utility function ``_u``
   in favor of Unicode literals.
 
+- ``TranslationDomain`` no longer extends ``SimpleTranslationDomain``.
+  It overrode every method and didn't properly initialize the super
+  class. ``TranslationDomain`` continues to implement ``ITranslationDomain``.
+
 
 4.2.0 (2017-05-23)
 ==================
