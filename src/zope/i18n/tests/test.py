@@ -21,13 +21,18 @@ from zope.i18n.testing import unicode_checker
 
 
 def test_suite():
+    options = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
+    def suite(name):
+        return doctest.DocTestSuite(
+            name,
+            setUp=setUp, tearDown=tearDown,
+            optionflags=options,
+            checker=unicode_checker)
+
     return unittest.TestSuite([
-        doctest.DocTestSuite(
-            "zope.i18n", setUp=setUp, tearDown=tearDown,
-            checker=unicode_checker),
-        doctest.DocTestSuite(
-            "zope.i18n.config", setUp=setUp, tearDown=tearDown,
-            checker=unicode_checker),
+        suite('zope.i18n'),
+        suite("zope.i18n.config"),
+        suite("zope.i18n.testing"),
     ])
 
 

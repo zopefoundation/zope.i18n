@@ -11,21 +11,24 @@
 # FOR A PARTICULAR PURPOSE.
 #
 ##############################################################################
-"""Unit test logic for setting up and tearing down basic infrastructure
 """
-import sys
+Unit test logic for setting up and tearing down basic infrastructure.
+
+This relies on :mod:`zope.publisher` being available.
+"""
+
 import re
 
+from zope.testing.cleanup import CleanUp
+from zope.testing import renormalizing
 
-if sys.version_info[0] == 2:
-    import doctest
-    unicode_checker = doctest.OutputChecker()
-else:
-    from zope.testing import renormalizing
-    rules = [(re.compile("u('.*?')"), r"\1"),
-             (re.compile('u(".*?")'), r"\1"),
-            ]
-    unicode_checker = renormalizing.RENormalizing(rules)
+rules = []
+if bytes is not str:
+    rules = [
+        (re.compile("u('.*?')"), r"\1"),
+        (re.compile('u(".*?")'), r"\1"),
+    ]
+unicode_checker = renormalizing.RENormalizing(rules)
 
 
 def setUp(test=None):
@@ -36,8 +39,22 @@ def setUp(test=None):
     zope.component.provideAdapter(BrowserLanguages)
 
 
-class PlacelessSetup(object):
+class PlacelessSetup(CleanUp):
 
     def setUp(self):
-        setUp()
+        """
+        Install the language and charset negotiators.
 
+        >>> PlacelessSetup().setUp()
+        >>> from zope.publisher.browser import TestRequest
+        >>> from zope.i18n.interfaces import IUserPreferredCharsets
+        >>> from zope.i18n.interfaces import IUserPreferredLanguages
+        >>> from zope.component import getAdapter
+        >>> getAdapter(TestRequest(), IUserPreferredCharsets)
+        <zope.publisher.http.HTTPCharsets ...>
+        >>> getAdapter(TestRequest(), IUserPreferredLanguages)
+        <zope.publisher.browser.BrowserLanguages ...>
+
+        """
+        super(PlacelessSetup, self).setUp()
+        setUp()

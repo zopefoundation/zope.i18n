@@ -23,11 +23,6 @@ zope.i18n.compile
 
 .. automodule:: zope.i18n.compile
 
-zope.i18n.config
-================
-
-.. automodule:: zope.i18n.config
-
 zope.i18n.format
 ================
 

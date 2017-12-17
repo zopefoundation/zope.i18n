@@ -50,6 +50,7 @@ ZCML_REQUIRES = [
 ]
 
 TESTS_REQUIRE = COMPILE_REQUIRES + ZCML_REQUIRES + [
+    'zope.publisher',
     'zope.testing',
     'zope.testrunner',
 ]
