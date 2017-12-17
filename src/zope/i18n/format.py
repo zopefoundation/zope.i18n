@@ -471,8 +471,8 @@ class NumberFormat(object):
         if bin_pattern[PADDING2] is not None and pre_padding > 0:
             if bin_pattern[PADDING1] is not None:
                 text += bin_pattern[PADDING2]
-            else:
-                text += bin_pattern[PADDING2]*pre_padding
+            else: # pragma: no cover
+                text += bin_pattern[PADDING2] * pre_padding
         text += number
         if bin_pattern[PADDING3] is not None and post_padding > 0:
             if bin_pattern[PADDING4] is not None:
@@ -555,7 +555,10 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
 
     # Some cleaning up
     if state == IN_QUOTE:
-        if quote_start == -1:
+        if quote_start == -1: # pragma: no cover
+            # It should not be possible to get into this state.
+            # The only time we set quote_start to -1 we also set the state
+            # to DEFAULT.
             raise DateTimePatternParseError(
                 'Waaa: state = IN_QUOTE and quote_start = -1!')
         else:
@@ -709,9 +712,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # month in year (Text and Number)
     for entry in _findFormattingCharacterInPattern('M', pattern):
         if entry[1] == 1:
-            info[entry] = u"%i" %dt.month
+            info[entry] = u"%i" % dt.month
         elif entry[1] == 2:
-            info[entry] = u"%.2i" %dt.month
+            info[entry] = u"%.2i" % dt.month
         elif entry[1] == 3:
             info[entry] = calendar.months[dt.month][1]
         else:
@@ -781,8 +784,7 @@ def parseNumberPattern(pattern):
     length = len(pattern)
     state = BEGIN
     helper = ''
-    for pos in range(length):
-        char = pattern[pos]
+    for pos, char in enumerate(pattern):
         if state == BEGIN:
             if char == '*':
                 state = READ_PADDING_1

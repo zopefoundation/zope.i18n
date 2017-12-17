@@ -24,6 +24,8 @@
   KeyError when the ``week`` mapping contained an integer for
   ``firstDay`` as documented.
 
+- Reach 100% test coverage and maintain in through tox.ini and coveralls.io.
+
 4.2.0 (2017-05-23)
 ==================
 

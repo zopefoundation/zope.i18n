@@ -28,6 +28,7 @@ from zope.i18n.format import DateTimePatternParseError, DateTimeParseError
 from zope.i18n.interfaces import INumberFormat
 from zope.i18n.format import NumberFormat, NumberParseError
 from zope.i18n.format import parseNumberPattern
+from zope.i18n.format import NumberPatternParseError
 
 
 class LocaleStub(object):
@@ -193,6 +194,13 @@ class TestDateTimePatternParser(_TestCase):
 
         # Test correct length of characters in datetime fields
         parseDateTimePattern("HHHHH")
+
+    def testParseDateTimePatternRepeatDateTimeChars(self):
+        result = parseDateTimePattern('aG')
+        self.assertEqual(
+            result,
+            [('a', 1), ('G', 1)]
+        )
 
 
 class TestBuildDateTimeParseInfo(_TestCase):
@@ -668,6 +676,18 @@ class TestDateTimeFormat(_TestCase):
             u"2. Freitag im Januar, 2003")
 
 
+    def testFormatGregorianEra(self):
+        self.assertEqual(
+            self.format.format(datetime.date(2017, 12, 17), 'G'),
+            u'n. Chr.'
+        )
+
+    def testFormateMonthLengthOne(self):
+        self.assertEqual(
+            self.format.format(datetime.date(2017, 12, 17), 'M'),
+            u'12'
+        )
+
 
 class TestNumberPatternParser(_TestCase):
     """Extensive tests for the ICU-based-syntax number pattern parser."""
@@ -886,6 +906,37 @@ class TestNumberPatternParser(_TestCase):
             ((None, '', None, '###0', '', '', None, 'DEM', None, 0),
              (None, '', None, '###0', '', '', None, 'DEM', None, 0)))
 
+    def testParseInvalidBegin(self):
+        with self.assertRaisesRegex(NumberPatternParseError,
+                                    "Wrong syntax at beginning"):
+            parseNumberPattern(".")
+
+    def testParseFractionQuate(self):
+        pattern, neg_pattern = parseNumberPattern("0.'")
+        self.assertEqual(
+            (None, '', None, '0', '', '', None, '', None, 0),
+            pattern)
+        self.assertEqual(
+            (None, '', None, '0', '', '', None, '', None, 0),
+            neg_pattern)
+
+    def testParseExponentialQuote(self):
+        pattern, neg_pattern = parseNumberPattern("0E'")
+        self.assertEqual(
+            (None, '', None, '0', '', '', None, '', None, 0),
+            pattern)
+        self.assertEqual(
+            (None, '', None, '0', '', '', None, '', None, 0),
+            neg_pattern)
+
+    def testParseExponentialNumber(self):
+        pattern, neg_pattern = parseNumberPattern("0E1")
+        self.assertEqual(
+            (None, '', None, '0', '', '', None, '1', None, 0),
+            pattern)
+        self.assertEqual(
+            (None, '', None, '0', '', '', None, '1', None, 0),
+            neg_pattern)
 
 class TestNumberFormat(_TestCase):
     """Test the functionality of an implmentation of the NumberFormat."""
