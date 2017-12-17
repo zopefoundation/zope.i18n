@@ -15,13 +15,10 @@
 import unittest
 import doctest
 
-from zope.i18n.testing import unicode_checker
-
 def test_suite():
     return unittest.TestSuite((
-        doctest.DocFileSuite('../testmessagecatalog.txt', checker=unicode_checker),
-        ))
+        doctest.DocFileSuite('../testmessagecatalog.rst')
+    ))
 
 if __name__ == '__main__':
     unittest.main(defaultTest='test_suite')
-

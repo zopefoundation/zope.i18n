@@ -1,8 +1,9 @@
-Test Message Catalog
-====================
+======================
+ Test Message Catalog
+======================
 
-The test message catalog "translates" test by simply outputing the
-domain and message id in square-bracket markers:
+The test message catalog "translates" test by simply outputing (in
+unicode) the domain and message id in square-bracket markers:
 
     >>> import zope.i18n.testmessagecatalog
     >>> cat = zope.i18n.testmessagecatalog.TestMessageCatalog('foo.bar')
@@ -10,11 +11,14 @@ domain and message id in square-bracket markers:
     >>> cat.language, cat.domain
     ('test', 'foo.bar')
 
-    >>> cat.queryMessage('eek')
-    u'[[foo.bar][eek]]'
+    >>> print(cat.queryMessage('eek'))
+    [[foo.bar][eek]]
 
-    >>> cat.getMessage('eek')
-    u'[[foo.bar][eek]]'
+    >>> print(cat.getMessage('eek'))
+    [[foo.bar][eek]]
+
+    >>> isinstance(cat.getMessage('eek'), str if bytes is not str else unicode)
+    True
 
     >>> cat.getIdentifier()
     'test'
@@ -25,23 +29,23 @@ If a message id has a default, it will be included in the output:
 
     >>> id = zope.i18nmessageid.MessageFactory('foo.bar')('eek', default='Eek')
 
-    >>> cat.queryMessage(id)
-    u'[[foo.bar][eek (Eek)]]'
+    >>> print(cat.queryMessage(id))
+    [[foo.bar][eek (Eek)]]
 
-    >>> cat.getMessage(id)
-    u'[[foo.bar][eek (Eek)]]'
+    >>> print(cat.getMessage(id))
+    [[foo.bar][eek (Eek)]]
 
 If a message doesn't have a default, but a default is passed in to
 queryMessage, the default will be used used:
 
-    >>> cat.queryMessage('eek', default='Eek')
-    u'[[foo.bar][eek (Eek)]]'
+    >>> print(cat.queryMessage('eek', default='Eek'))
+    [[foo.bar][eek (Eek)]]
 
-    >>> cat.getMessage(id, default='Waaa')
-    u'[[foo.bar][eek (Eek)]]'
+    >>> print(cat.getMessage(id, default='Waaa'))
+    [[foo.bar][eek (Eek)]]
 
 Fallback domains
-----------------
+================
 
 The testmessagecatalog module also provide a fallback domain factory
 that has the test catalog as it's only catalog:
@@ -53,14 +57,14 @@ that has the test catalog as it's only catalog:
     True
 
     >>> domain = factory('foo.bar')
-    >>> domain.translate('eek')
-    u'eek'
+    >>> print(domain.translate('eek'))
+    eek
 
-    >>> domain.translate('eek', target_language='test')
-    u'[[foo.bar][eek]]'
+    >>> print(domain.translate('eek', target_language='test'))
+    [[foo.bar][eek]]
 
 Note that if a default is padded in, it will be included in test
 output:
 
-    >>> domain.translate('eek', target_language='test', default='Eek')
-    u'[[foo.bar][eek (Eek)]]'
+    >>> print(domain.translate('eek', target_language='test', default='Eek'))
+    [[foo.bar][eek (Eek)]]

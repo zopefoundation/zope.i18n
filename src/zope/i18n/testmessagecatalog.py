@@ -19,7 +19,7 @@ import zope.i18n.interfaces
 from zope.i18n.translationdomain import TranslationDomain
 
 @interface.implementer(zope.i18n.interfaces.IGlobalMessageCatalog)
-class TestMessageCatalog:
+class TestMessageCatalog(object):
 
     language = 'test'
 
