@@ -16,7 +16,6 @@
 import unittest
 
 from zope.i18n.interfaces import II18nAware
-from zope.i18n.tests.testii18naware import TestII18nAware
 from zope.interface import implementer
 
 
@@ -55,8 +54,29 @@ class I18nAwareContentObject(object):
     #
     ############################################################
 
+class AbstractTestII18nAwareMixin(object):
 
-class TestI18nAwareObject(TestII18nAware):
+    def setUp(self):
+        self.object = self._createObject()
+        self.object.setDefaultLanguage('fr')
+
+    def _createObject(self):
+        # Should create an object that has lt, en and fr as available
+        # languages
+        raise NotImplementedError()
+
+    def testGetDefaultLanguage(self):
+        self.assertEqual(self.object.getDefaultLanguage(), 'fr')
+
+    def testSetDefaultLanguage(self):
+        self.object.setDefaultLanguage('lt')
+        self.assertEqual(self.object.getDefaultLanguage(), 'lt')
+
+    def testGetAvailableLanguages(self):
+        self.assertEqual(sorted(self.object.getAvailableLanguages()), ['en', 'fr', 'lt'])
+
+
+class TestI18nAwareObject(AbstractTestII18nAwareMixin, unittest.TestCase):
 
     def _createObject(self):
         object = I18nAwareContentObject()
@@ -71,17 +91,9 @@ class TestI18nAwareObject(TestII18nAware):
 
     def testGetContent(self):
         self.assertEqual(self.object.getContent('en'), 'English')
-        self.assertRaises(KeyError, self.object.getContent, 'es')
+        with self.assertRaises(KeyError):
+            self.object.getContent('es')
 
     def testQueryContent(self):
         self.assertEqual(self.object.queryContent('en'), 'English')
         self.assertEqual(self.object.queryContent('es', 'N/A'), 'N/A')
-
-
-def test_suite():
-    loader = unittest.TestLoader()
-    return loader.loadTestsFromTestCase(TestI18nAwareObject)
-
-
-if __name__ == '__main__':
-    unittest.TextTestRunner().run(test_suite())
