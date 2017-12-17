@@ -20,6 +20,9 @@
   match their respective interfaces. Byte strings (such as native
   string literals on Python 2) are decoded using UTF-8.
 
+- Fix ``LocaleCalendar.getFirstWeekDayName``. Previously it raised a
+  KeyError when the ``week`` mapping contained an integer for
+  ``firstDay`` as documented.
 
 4.2.0 (2017-05-23)
 ==================

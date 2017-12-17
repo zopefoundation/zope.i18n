@@ -313,6 +313,10 @@ class LocaleCalendar(AttributeInheritance):
       >>> locale.calendar.getDayTypeFromAbbreviation(u"Die")
       2
 
+      >>> root.calendar.week = {'firstDay': 1}
+      >>> locale.calendar.getFirstWeekDayName()
+      u'Monday'
+
     Let's test the direct attribute access as well.
 
       >>> root.am = u"AM"
@@ -322,6 +326,15 @@ class LocaleCalendar(AttributeInheritance):
       u'nachm.'
       >>> locale.am
       u'AM'
+
+    Note that ``isWeekend`` is not implemented:
+
+      >>> locale.calendar.isWeekend(object())
+      False
+      >>> locale.calendar.isWeekend(None)
+      False
+      >>> locale.calendar.isWeekend('anything')
+      False
     """
 
     def __init__(self, type):
@@ -375,7 +388,8 @@ class LocaleCalendar(AttributeInheritance):
 
     def getFirstWeekDayName(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
-        return self.days[dayMapping[self.week['firstDay']]][0]
+        firstDayNumber = self.week['firstDay']
+        return self.days[firstDayNumber][0]
 
 
 @implementer(ILocaleDates)
@@ -617,11 +631,11 @@ class LocaleNumbers(AttributeInheritance):
         assert category in (u"decimal", u"percent", u"scientific", u"currency")
         assert length in (u"short", u"medium", u"long", u"full", None)
 
-        formats = getattr(self, category+'Formats')
+        formats = getattr(self, category + 'Formats')
         if length is None:
             length = getattr(
                 self,
-                'default'+category[0].upper()+category[1:]+'Format',
+                'default' + category[0].upper() + category[1:] + 'Format',
                 list(formats.keys())[0])
         formatLength = formats[length]
 
@@ -646,14 +660,37 @@ class Locale(AttributeInheritance):
         self.id = id
 
     def getLocaleID(self):
-        """Return the locale id."""
+        """
+        Return the locale id.
+
+        Example::
+
+            >>> lid = LocaleIdentity('en', 'latin', 'US', 'POSIX')
+            >>> locale = Locale(lid)
+            >>> locale.getLocaleID()
+            'en_latin_US_POSIX'
+
+            >>> lid = LocaleIdentity('en', 'latin')
+            >>> locale = Locale(lid)
+            >>> locale.getLocaleID()
+            'en_latin'
+
+            >>> lid = LocaleIdentity()
+            >>> locale = Locale(lid)
+            >>> locale.getLocaleID()
+            ''
+
+        """
         id = self.id
-        pieces = filter(None,
-                        (id.language, id.script, id.territory, id.variant))
+        pieces = [x for x in
+                  (id.language, id.script, id.territory, id.variant)
+                  if x]
         id_string = '_'.join(pieces)
         # TODO: What about keys??? Where do I get this info from?
-        pieces = [key+'='+type for key, type in ()]
-        if pieces:
+        # Notice that 'pieces' is always empty.
+        pieces = [key + '=' + type for (key, type) in ()]
+        assert not pieces
+        if pieces: # pragma: no cover
             id_string += '@' + ','.join(pieces)
         return id_string
 
