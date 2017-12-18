@@ -28,8 +28,8 @@ def compile_mo_file(domain, lc_messages_path):
     mo_mtime = _safe_mtime(mofile) or 0
 
     if po_mtime is None:
-        logger.debug("Unable to access either %s (%s) or %s (%s)",
-                     pofile, po_mtime, mofile, mo_mtime)
+        logger.debug("Unable to access %s (%s)",
+                     pofile, po_mtime)
         return
 
     if po_mtime > mo_mtime:
