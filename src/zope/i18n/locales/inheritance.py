@@ -174,9 +174,9 @@ class InheritingDictionary(Inheritance, dict):
       'ii'
       >>> locale.data2.dict.get(4) is None
       True
-      >>> locale.data.keys()
+      >>> sorted(locale.data.keys())
       [1, 2, 3]
-      >>> list(locale.data.items())
+      >>> sorted(locale.data.items())
       [(1, 'eins'), (2, 'two'), (3, 'three')]
 
     We also override ``values``::
