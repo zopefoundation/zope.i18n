@@ -98,6 +98,7 @@ setup(
         'setuptools',
         'python-gettext',
         'pytz',
+        'zope.deprecation',
         'zope.schema',
         'zope.i18nmessageid',
         'zope.component',

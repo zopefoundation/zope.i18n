@@ -20,6 +20,8 @@ locale inheritance is not inheritance in the programming sense.
 """
 __docformat__ = 'restructuredtext'
 
+from zope.deprecation import deprecate
+
 from zope.interface import implementer
 from zope.i18n.interfaces.locales import \
      ILocaleInheritance, IAttributeInheritance, IDictionaryInheritance
@@ -183,6 +185,14 @@ class InheritingDictionary(Inheritance, dict):
 
       >>> sorted(locale.data.values())
       ['eins', 'three', 'two']
+
+    Historically, ``value`` was a synonym of this method; it is still
+    available, but is deprecated::
+
+      >>> from zope.deprecation import Suppressor
+      >>> with Suppressor():
+      ...     sorted(locale.data.value())
+      ['eins', 'three', 'two']
     """
 
 
@@ -228,5 +238,4 @@ class InheritingDictionary(Inheritance, dict):
     def values(self):
         return list(self._make_reified_inherited_dict().values())
 
-    # Preserve the old name for compatibility
-    value = values
+    value = deprecate("`value` is an old synonym for `values`")(values)
