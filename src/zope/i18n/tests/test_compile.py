@@ -14,6 +14,8 @@
 
 import unittest
 
+from zope.testing.loggingsupport import InstalledHandler
+
 from zope.i18n import compile
 
 
@@ -21,8 +23,11 @@ from zope.i18n import compile
                      "Need python-gettext")
 class TestCompile(unittest.TestCase):
 
-    def test_non_existant_path(self):
+    def setUp(self):
+        self.handler = InstalledHandler('zope.i18n')
+        self.addCleanup(self.handler.uninstall)
 
+    def test_non_existant_path(self):
         self.assertIsNone(compile.compile_mo_file('no_such_domain', ''))
 
     def test_po_exists_but_invalid(self):
@@ -30,15 +35,16 @@ class TestCompile(unittest.TestCase):
         import shutil
         import os.path
 
-        td = tempfile.mkdtemp()
+        td = tempfile.mkdtemp(suffix=".zopei18n_test_compile")
         self.addCleanup(shutil.rmtree, td)
 
         with open(os.path.join(td, "foo.po"), 'w') as f:
             f.write("this should not compile")
 
-        self.assertEqual(
-            0,
-            compile.compile_mo_file('foo', td))
+        compile.compile_mo_file('foo', td)
+
+        self.assertIn("Syntax error while compiling",
+                      str(self.handler))
 
     def test_po_exists_cannot_write_mo(self):
         import tempfile
@@ -60,6 +66,7 @@ class TestCompile(unittest.TestCase):
         with open(os.path.join(td, "foo.po"), 'w') as f:
             f.write("# A comment")
 
-        self.assertIs(
-            False,
-            compile.compile_mo_file('foo', td))
+        compile.compile_mo_file('foo', td)
+
+        self.assertIn("Error while compiling",
+                      str(self.handler))

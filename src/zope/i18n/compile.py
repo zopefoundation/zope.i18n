@@ -25,9 +25,9 @@ def compile_mo_file(domain, lc_messages_path):
     mofile = str(base + '.mo')
 
     po_mtime = _safe_mtime(pofile)
-    mo_mtime = _safe_mtime(mofile) if os.path.exists(mofile) else 0
+    mo_mtime = _safe_mtime(mofile) or 0
 
-    if po_mtime is None or mo_mtime is None:
+    if po_mtime is None:
         logger.debug("Unable to access either %s (%s) or %s (%s)",
                      pofile, po_mtime, mofile, mo_mtime)
         return
@@ -43,11 +43,7 @@ def compile_mo_file(domain, lc_messages_path):
                 with closing(Msgfmt(pofd, domain).getAsFile()) as mo:
                     with open(mofile, 'wb') as fd:
                         fd.write(mo.read())
-            # For testing we return distinct values for each scenario
-            return True
         except PoSyntaxError as err:
             logger.warning('Syntax error while compiling %s (%s).', pofile, err.msg)
-            return 0
         except (IOError, OSError) as err:
             logger.warning('Error while compiling %s (%s).', pofile, err)
-            return False
