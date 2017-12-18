@@ -20,6 +20,8 @@ locale inheritance is not inheritance in the programming sense.
 """
 __docformat__ = 'restructuredtext'
 
+from zope.deprecation import deprecate
+
 from zope.interface import implementer
 from zope.i18n.interfaces.locales import \
      ILocaleInheritance, IAttributeInheritance, IDictionaryInheritance
@@ -166,7 +168,7 @@ class InheritingDictionary(Inheritance, dict):
       >>> locale.data2.dict[2]
       'ii'
 
-    We also have to overwrite 'get()', 'keys()' and 'items()' since we want
+    We also have to overwrite `get`, `keys` and `items` since we want
     to make sure that all upper locales are consulted before returning the
     default or to construct the list of elements, respectively::
 
@@ -174,16 +176,25 @@ class InheritingDictionary(Inheritance, dict):
       'ii'
       >>> locale.data2.dict.get(4) is None
       True
-      >>> locale.data.keys()
+      >>> sorted(locale.data.keys())
       [1, 2, 3]
-      >>> list(locale.data.items())
+      >>> sorted(locale.data.items())
       [(1, 'eins'), (2, 'two'), (3, 'three')]
 
-    We currently fail to override ``values``, but instead inherited
-    data can be seen in the ``value`` method::
+    We also override `values`::
 
-      >>> sorted(locale.data.value())
+      >>> sorted(locale.data.values())
       ['eins', 'three', 'two']
+
+    Historically, `value` was a synonym of this method; it is still
+    available, but is deprecated::
+
+      >>> import warnings
+      >>> with warnings.catch_warnings(record=True) as w:
+      ...     sorted(locale.data.value())
+      ['eins', 'three', 'two']
+      >>> print(w[0].message)
+      `value` is a deprecated synonym for `values`
     """
 
 
@@ -226,6 +237,7 @@ class InheritingDictionary(Inheritance, dict):
     def keys(self):
         return list(self._make_reified_inherited_dict().keys())
 
-    def value(self):
-        # XXX: Was this meant to override values() and is just a typo?
+    def values(self):
         return list(self._make_reified_inherited_dict().values())
+
+    value = deprecate("`value` is a deprecated synonym for `values`")(values)

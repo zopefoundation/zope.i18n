@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.2.1 (unreleased)
+4.3.0 (unreleased)
 ==================
 
 - Ensure that all files are properly closed when compiling .mo files,
@@ -24,7 +24,11 @@
   KeyError when the ``week`` mapping contained an integer for
   ``firstDay`` as documented.
 
-- Reach 100% test coverage and maintain in through tox.ini and coveralls.io.
+- Reach 100% test coverage and maintain in through tox.ini and
+  coveralls.io.
+
+- Override ``values`` in ``InheritingDictionary``. Previously it
+  implemented a separate ``value`` method by mistake.
 
 - Fix parsing times with a timezone. Previously it could raise a
   ``TypeError``.

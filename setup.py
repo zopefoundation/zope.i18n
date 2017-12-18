@@ -59,7 +59,7 @@ TESTS_REQUIRE = COMPILE_REQUIRES + ZCML_REQUIRES + [
 
 setup(
     name='zope.i18n',
-    version='4.2.1.dev0',
+    version='4.3.0.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Internationalization Support',
@@ -98,6 +98,7 @@ setup(
         'setuptools',
         'python-gettext',
         'pytz',
+        'zope.deprecation',
         'zope.schema',
         'zope.i18nmessageid',
         'zope.component',
