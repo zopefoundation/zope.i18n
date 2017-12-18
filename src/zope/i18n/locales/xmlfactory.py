@@ -1283,8 +1283,6 @@ class LocaleFactory(object):
           ...     <variant type="POSIX" />
           ...   </identity>
           ... </ldml>'''
-
-          ... </ldml>'''
           >>> dom = parseString(xml)
           >>> factory._data = parseString(xml).documentElement
           >>> delimiters = factory._extractDelimiters()

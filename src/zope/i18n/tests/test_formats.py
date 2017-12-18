@@ -193,6 +193,7 @@ class TestDateTimePatternParser(_TestCase):
             parseDateTimePattern("HH' Uhr")
 
         # Test correct length of characters in datetime fields
+        # XXX: This should actually fail, but it doesn't. Why not?
         parseDateTimePattern("HHHHH")
 
     def testParseDateTimePatternRepeatDateTimeChars(self):
