@@ -18,15 +18,26 @@ def _parse_languages(value):
     """
     Utility function to parse languages.
 
-    >>> _parse_languages(None) is None
-    True
-    >>> _parse_languages("en") == frozenset(('en',))
-    True
-    >>> _parse_languages("en,es") == frozenset(('en', 'es'))
-    True
+        >>> _parse_languages(None) is None
+        True
+        >>> _parse_languages("en") == frozenset(('en',))
+        True
+        >>> _parse_languages('')
+        ''
+        >>> _parse_languages("en,es") == frozenset(('en', 'es'))
+        True
+
+    Leading, trailing and internal whitespace is ignored:
+
+        >>> _parse_languages('en, es') == frozenset(('en', 'es'))
+        True
+        >>> _parse_languages(" en,es") == frozenset(('en', 'es'))
+        True
+        >>> _parse_languages("en,es ") == frozenset(('en', 'es'))
+        True
     """
     if value:
-        value = value.strip().replace(",", " ")
+        value = value.replace(",", " ")
         value = frozenset(value.split())
     return value
 
