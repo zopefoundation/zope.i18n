@@ -168,7 +168,7 @@ class InheritingDictionary(Inheritance, dict):
       >>> locale.data2.dict[2]
       'ii'
 
-    We also have to overwrite 'get()', 'keys()' and 'items()' since we want
+    We also have to overwrite `get`, `keys` and `items` since we want
     to make sure that all upper locales are consulted before returning the
     default or to construct the list of elements, respectively::
 
@@ -181,18 +181,20 @@ class InheritingDictionary(Inheritance, dict):
       >>> sorted(locale.data.items())
       [(1, 'eins'), (2, 'two'), (3, 'three')]
 
-    We also override ``values``::
+    We also override `values`::
 
       >>> sorted(locale.data.values())
       ['eins', 'three', 'two']
 
-    Historically, ``value`` was a synonym of this method; it is still
+    Historically, `value` was a synonym of this method; it is still
     available, but is deprecated::
 
-      >>> from zope.deprecation import Suppressor
-      >>> with Suppressor():
+      >>> import warnings
+      >>> with warnings.catch_warnings(record=True) as w:
       ...     sorted(locale.data.value())
       ['eins', 'three', 'two']
+      >>> print(w[0].message)
+      `value` is a deprecated synonym for `values`
     """
 
 
@@ -238,4 +240,4 @@ class InheritingDictionary(Inheritance, dict):
     def values(self):
         return list(self._make_reified_inherited_dict().values())
 
-    value = deprecate("`value` is an old synonym for `values`")(values)
+    value = deprecate("`value` is a deprecated synonym for `values`")(values)
