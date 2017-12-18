@@ -40,7 +40,9 @@ def alltests():
     return unittest.TestSuite(suites)
 
 COMPILE_REQUIRES = [
-    'python-gettext'
+    # python-gettext used to be here, but it's now
+    # a fixed requirement. Keep the extra to avoid
+    # breaking downstream installs.
 ]
 
 ZCML_REQUIRES = [
@@ -94,6 +96,7 @@ setup(
     namespace_packages=['zope',],
     install_requires=[
         'setuptools',
+        'python-gettext',
         'pytz',
         'zope.schema',
         'zope.i18nmessageid',

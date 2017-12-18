@@ -140,20 +140,20 @@ def translate(msgid, domain=None, mapping=None, context=None,
         :hide:
 
         >>> from zope import i18n
-        >>> old_negatiate = i18n
+        >>> old_negotiate = i18n.negotiate
 
-    >>> def test_negatiate(context):
-    ...     print("Negatiating for %r" % (context,))
+    >>> def test_negotiate(context):
+    ...     print("Negotiating for %r" % (context,))
     ...     return 'en'
-    >>> i18n.negotiate = test_negatiate
+    >>> i18n.negotiate = test_negotiate
     >>> print(translate('eek', 'your.domain', context='context'))
-    Negatiating for 'context'
+    Negotiating for 'context'
     test-from-your.domain
 
     .. doctest::
         :hide:
 
-        >>> i18n.negotiate = old_negatiate
+        >>> i18n.negotiate = old_negotiate
     """
 
     if isinstance(msgid, Message):

@@ -63,6 +63,3 @@ class TestCompile(unittest.TestCase):
         self.assertIs(
             False,
             compile.compile_mo_file('foo', td))
-
-    def test_cannot_compile(self):
-        self.assertIsNone(compile._cannot_compile_mo_file(None, None))
