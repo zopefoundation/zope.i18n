@@ -179,10 +179,9 @@ class InheritingDictionary(Inheritance, dict):
       >>> list(locale.data.items())
       [(1, 'eins'), (2, 'two'), (3, 'three')]
 
-    We currently fail to override ``values``, but instead inherited
-    data can be seen in the ``value`` method::
+    We also override ``values``::
 
-      >>> sorted(locale.data.value())
+      >>> sorted(locale.data.values())
       ['eins', 'three', 'two']
     """
 
@@ -226,6 +225,8 @@ class InheritingDictionary(Inheritance, dict):
     def keys(self):
         return list(self._make_reified_inherited_dict().keys())
 
-    def value(self):
-        # XXX: Was this meant to override values() and is just a typo?
+    def values(self):
         return list(self._make_reified_inherited_dict().values())
+
+    # Preserve the old name for compatibility
+    value = values
