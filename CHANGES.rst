@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.3.0 (unreleased)
+4.3.0 (2017-12-18)
 ==================
 
 - Ensure that all files are properly closed when compiling .mo files,
