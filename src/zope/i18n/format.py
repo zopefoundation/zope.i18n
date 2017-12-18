@@ -181,11 +181,10 @@ class DateTimeFormat(object):
             return datetime.date(*[e or 0 for e in ordered[:3]])
         if ordered[:3] == [None, None, None]:
             if pytz_tzinfo:
-                # XXX: This raises a TypeError:
-                # unsupported operator + for datetime.time and datetime.timedelta
                 return tzinfo.localize(
-                    datetime.time(*[e or 0 for e in ordered[3:]])
-                    )
+                    datetime.datetime.combine(
+                        datetime.date.today(),
+                        datetime.time(*[e or 0 for e in ordered[3:]]))).timetz()
             return datetime.time(
                 *[e or 0 for e in ordered[3:]], **{'tzinfo' :tzinfo}
             )
