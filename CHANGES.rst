@@ -26,6 +26,9 @@
 
 - Reach 100% test coverage and maintain in through tox.ini and coveralls.io.
 
+- Fix parsing times with a timezone. Previously it could raise a
+  ``TypeError``.
+
 4.2.0 (2017-05-23)
 ==================
 

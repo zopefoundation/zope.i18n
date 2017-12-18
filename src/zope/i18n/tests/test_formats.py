@@ -422,16 +422,12 @@ class TestDateTimeFormat(_TestCase):
                 'HH:mm:ss zzzz'))
 
     def testParsePyTzTimezone(self):
-        # XXX: Bug: This raises
-        # TypeError:  unsupported operand type(s) for +: 'datetime.time' and 'datetime.timedelta'
-        # at pytz/tzinfo.py:309
-        # (PyPy and CPython produce slightly different error messages;
-        # PyPy doesn't include the modulename)
         tzinfo = pytz.timezone("US/Central")
-        with self.assertRaisesRegex(TypeError, 'timedelta'):
+        self.assertEqual(
+            datetime.time(21, 48, 1, tzinfo=tzinfo),
             self.format.parse(
                 '21:48:01 US/Central',
-                'HH:mm:ss zzzz')
+                'HH:mm:ss zzzz'))
 
     def testFormatSimpleDateTime(self):
         # German short
