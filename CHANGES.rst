@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.3.1 (unreleased)
+4.3.1 (2017-12-19)
 ==================
 
 - Make ``PlacelessSetup`` not extend ``zope.testing.cleanup.CleanUp``.
