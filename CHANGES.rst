@@ -5,7 +5,10 @@
 4.3.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Make ``PlacelessSetup`` not extend ``zope.testing.cleanup.CleanUp``.
+  Extending ``CleanUp`` was introduced in 4.3.0 but turned out to have
+  unexpected consequences. See `issue 30
+  <https://github.com/zopefoundation/zope.i18n/issues/30>`_.
 
 
 4.3.0 (2017-12-18)
