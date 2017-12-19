@@ -19,7 +19,6 @@ This relies on :mod:`zope.publisher` being available.
 
 import re
 
-from zope.testing.cleanup import CleanUp
 from zope.testing import renormalizing
 
 rules = []
@@ -39,7 +38,7 @@ def setUp(test=None):
     zope.component.provideAdapter(BrowserLanguages)
 
 
-class PlacelessSetup(CleanUp):
+class PlacelessSetup(object):
 
     def setUp(self):
         """
@@ -56,5 +55,4 @@ class PlacelessSetup(CleanUp):
         <zope.publisher.browser.BrowserLanguages ...>
 
         """
-        super(PlacelessSetup, self).setUp()
         setUp()
