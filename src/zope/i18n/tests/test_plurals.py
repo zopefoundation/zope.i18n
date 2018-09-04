@@ -28,7 +28,10 @@ class TestPlurals(unittest.TestCase):
         catalog = GettextMessageCatalog(locale, variant, self._path)
         return catalog
 
-    def test_GermanMessages(self):
+    def test_GermanPlurals(self):
+        """Germanic languages such as english and german share the plural
+        rule. We test the german here.
+        """
         catalog = self._getMessageCatalog('de')
         self.assertEqual(catalog.language, 'de')
 
@@ -64,6 +67,37 @@ class TestPlurals(unittest.TestCase):
                          'There are %d files.', 'There is one file.', 3,
                          'Es gibt 1 Datei.', 'Es gibt %d Dateien !', ),
                          'Es gibt 3 Dateien !')
+
+    def test_PolishPlurals(self):
+        """Polish has a complex rule for plurals. It makes for a good
+        test subject.
+        """
+        catalog = self._getMessageCatalog('pl')
+        self.assertEqual(catalog.language, 'pl')
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 0),
+                         "Istnieją 0 pliko'w.")
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 1),
+                         "Istnieje 1 plik.")
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 3),
+                         "Istnieją 3 pliki.")
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 17),
+                         "Istnieją 17 pliko'w.")
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 23),
+                         "Istnieją 23 pliki.")
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 28),
+                         "Istnieją 28 pliko'w.")
 
 
 def test_suite():
