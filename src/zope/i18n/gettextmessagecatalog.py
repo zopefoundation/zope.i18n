@@ -14,6 +14,7 @@
 """A simple implementation of a Message Catalog.
 """
 
+from functools import wraps
 from gettext import GNUTranslations
 from zope.i18n.interfaces import IGlobalMessageCatalog
 from zope.interface import implementer
@@ -28,6 +29,18 @@ class _KeyErrorRaisingFallback(object):
     
     gettext = ugettext
     ngettext = ungettext
+
+
+def plural_formatting(func):
+    @wraps(func)
+    def pformat(catalog, singular, plural, n, *args, **kwargs):
+        msg = func(catalog, singular, plural, n, *args, **kwargs)
+        try:
+            return msg % n
+        except TypeError:
+            # The message cannot be formatted : return it "raw".
+            return msg
+    return pformat
 
 
 @implementer(IGlobalMessageCatalog)
@@ -62,27 +75,22 @@ class GettextMessageCatalog(object):
         'See IMessageCatalog'
         return self._gettext(id)
 
+    @plural_formatting
     def getPluralMessage(self, singular, plural, n):
         'See IMessageCatalog'
-        msg = self._ngettext(singular, plural, n)
-        try:
-            return msg % n
-        except TypeError:
-            return msg  
+        return self._ngettext(singular, plural, n)
 
+    @plural_formatting
     def queryPluralMessage(self, singular, plural, n, dft1=None, dft2=None):
         'See IMessageCatalog'
         try:
-            msg = self._ngettext(singular, plural, n)
+            return self._ngettext(singular, plural, n)
         except KeyError:
-            if n == 1:  # Please FIX using the language rule.
-                msg = dft1
-            else:
-                msg = dft2
-        try:
-            return msg % n
-        except TypeError:
-            return msg  
+            # Here, we use the catalog plural function to determine
+            # if `n` triggers a plural form or not.
+            if self._catalog.plural(n):
+                return dft2
+            return dft1
     
     def queryMessage(self, id, default=None):
         'See IMessageCatalog'
