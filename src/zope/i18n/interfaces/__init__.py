@@ -60,13 +60,16 @@ class IMessageCatalog(Interface):
 
         An exception is raised if the message id is not found.
         """
-
+        
     def queryMessage(msgid, default=None):
         """Look for the appropriate text for the given message id.
 
         If the message id is not found, default is returned.
         """
 
+    # FIX ME ADD PLURAL METHODS IF WE DECIDE TO KEEP THEM SEPARATED FROM
+    # THE SINGULAR METHODS.
+        
     language = TextLine(
         title=u"Language",
         description=u"The language the catalog translates to.",
