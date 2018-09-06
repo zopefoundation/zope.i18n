@@ -77,7 +77,7 @@ class TestPlurals(unittest.TestCase):
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 0),
-                         "Istnieją 0 pliko'w.")
+                         "Istnieją 0 plików.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 1),
@@ -89,7 +89,7 @@ class TestPlurals(unittest.TestCase):
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 17),
-                         "Istnieją 17 pliko'w.")
+                         "Istnieją 17 plików.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 23),
@@ -97,7 +97,7 @@ class TestPlurals(unittest.TestCase):
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 28),
-                         "Istnieją 28 pliko'w.")
+                         "Istnieją 28 plików.")
 
 
 def test_suite():

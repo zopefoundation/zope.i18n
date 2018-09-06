@@ -26,7 +26,7 @@ class _KeyErrorRaisingFallback(object):
 
     def ungettext(self, singular, plural, n):
         raise KeyError(singular)
-    
+
     gettext = ugettext
     ngettext = ungettext
 
@@ -91,14 +91,14 @@ class GettextMessageCatalog(object):
             if self._catalog.plural(n):
                 return dft2
             return dft1
-    
+
     def queryMessage(self, id, default=None):
         'See IMessageCatalog'
         try:
             return self._gettext(id)
         except KeyError:
             return default
-        
+
     def getIdentifier(self):
         'See IMessageCatalog'
         return self._path_to_file

@@ -100,7 +100,7 @@ def registerTranslations(_context, directory, domain='*'):
                 loaded = True
                 domain_file = os.path.basename(domain_path)
                 name = domain_file[:-3]
-                if not name in domains:
+                if name not in domains:
                     domains[name] = {}
                 domains[name][language] = domain_path
     if loaded:

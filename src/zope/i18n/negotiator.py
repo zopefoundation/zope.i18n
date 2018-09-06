@@ -14,15 +14,16 @@
 """Language Negotiator
 """
 from zope.interface import implementer
-
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
+
 
 def normalize_lang(lang):
     lang = lang.strip().lower()
     lang = lang.replace('_', '-')
     lang = lang.replace(' ', '')
     return lang
+
 
 def normalize_langs(langs):
     # Make a mapping from normalized->original so we keep can match
@@ -31,6 +32,7 @@ def normalize_langs(langs):
     for l in langs:
         n_langs[normalize_lang(l)] = l
     return n_langs
+
 
 @implementer(INegotiator)
 class Negotiator(object):
