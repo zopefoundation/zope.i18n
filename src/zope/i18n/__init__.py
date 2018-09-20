@@ -187,7 +187,6 @@ def translate(msgid, domain=None, mapping=None, context=None,
     if target_language is None and context is not None:
         target_language = negotiate(context)
 
-    print(util.translate)
     return util.translate(
         msgid, mapping, context, target_language, default,
         msgid_plural, default_plural, number)
