@@ -2,12 +2,18 @@
  CHANGES
 =========
 
-4.3.2 (unreleased)
-==================
+4.5 (unreleased)
+================
 
 - Add support for pluralization. ``translate()`` now takes the
   additional optional arguments ``msgid_plural``, ``default_plural``
   and ``number`` in order to support it.
+
+
+4.4 (2018-10-05)
+================
+
+- Add support for Python 3.7.
 
 
 4.3.1 (2017-12-19)
