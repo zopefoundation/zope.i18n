@@ -101,7 +101,7 @@ setup(
         'pytz',
         'zope.deprecation',
         'zope.schema',
-        'zope.i18nmessageid',
+        'zope.i18nmessageid >= 4.3',
         'zope.component',
     ],
     extras_require={

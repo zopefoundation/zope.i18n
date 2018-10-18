@@ -16,7 +16,6 @@ install:
     - pip install -U pip setuptools
     - pip install -U coverage coveralls
     - pip install -U -e .[test,docs]
-    - pip install -e git+https://github.com/minddistrict/zope.i18nmessageid.git@CB-556-FR-translation-with-C#egg=zope.i18nmessageid
 script:
     - coverage run -m zope.testrunner --test-path=src
     - coverage run -a -m sphinx -b doctest -d docs/_build/doctrees docs docs/_build/doctest

@@ -28,3 +28,18 @@ msgid "There is %d chance."
 msgid_plural "There are %f chances."
 msgstr[0] "There is %d chance."
 msgstr[1] "There are %f chances."
+
+msgid "There is %d ${type}."
+msgid_plural "There are %d ${type}."
+msgstr[0] "There is %d ${type}."
+msgstr[1] "There are %d ${type}."
+
+msgid "apple"
+msgid_plural "apples"
+msgstr[0] "apple"
+msgstr[1] "apples"
+
+msgid "banana"
+msgid_plural "bananas"
+msgstr[0] "banana"
+msgstr[1] "bananas"
