@@ -18,3 +18,13 @@ msgid "There is one file."
 msgid_plural "There are %d files."
 msgstr[0] "There is one file."
 msgstr[1] "There are %d files."
+
+msgid "The item is rated 1/5 star."
+msgid_plural "The item is rated %s/5 stars."
+msgstr[0] "The item is rated 1/5 star."
+msgstr[1] "The item is rated %s/5 stars."
+
+msgid "There is %d chance."
+msgid_plural "There are %f chances."
+msgstr[0] "There is %d chance."
+msgstr[1] "There are %f chances."

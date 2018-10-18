@@ -98,3 +98,37 @@ class TestPlurals(unittest.TestCase):
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 28),
                          "Istnieją 28 plików.")
+
+    def test_floater(self):
+        """Test with the number being a float.
+        We can use %f or %s to make sure it works.
+        """
+        catalog = self._getMessageCatalog('en')
+        self.assertEqual(catalog.language, 'en')
+
+        # It's cast to integer because of the %d in the translation string.
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 1.0),
+                         'There is one file.')
+
+        self.assertEqual(catalog.getPluralMessage(
+                         'There is one file.', 'There are %d files.', 3.5),
+                         'There are 3 files.')
+
+        # It's cast to a string because of the %s in the translation string.
+        self.assertEqual(catalog.getPluralMessage(
+            'The item is rated 1/5 star.',
+            'The item is rated %s/5 stars.', 3.5),
+                         'The item is rated 3.5/5 stars.')
+
+         # It's cast either to an int or a float because of the %s in
+         # the translation string.
+        self.assertEqual(catalog.getPluralMessage(
+            'There is %d chance.',
+            'There are %f chances.', 1.5),
+                         'There are 1.500000 chances.')
+
+        self.assertEqual(catalog.getPluralMessage(
+            'There is %d chance.',
+            'There are %f chances.', 3.5),
+                         'There are 3.500000 chances.')

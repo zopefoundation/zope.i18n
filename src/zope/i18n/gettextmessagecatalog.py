@@ -32,9 +32,9 @@ class _KeyErrorRaisingFallback(object):
 
 
 def plural_formatting(func):
-    """This decorator interpolates the `%d` possibly present in the string.
+    """This decorator interpolates the possible formatting marker.
     This interpolation marker is usally present for plurals.
-    Example: `There are %d apples`.
+    Example: `There are %d apples` or `They have %s pies.'
 
     Please note that the interpolation can be done, alternatively,
     using the mapping. This is only present as a conveniance.
