@@ -67,9 +67,23 @@ class IMessageCatalog(Interface):
         If the message id is not found, default is returned.
         """
 
-    # FIX ME ADD PLURAL METHODS IF WE DECIDE TO KEEP THEM SEPARATED FROM
-    # THE SINGULAR METHODS.
-        
+    def getPluralMessage(self, singular, plural, n):
+        """Get the appropriate text for the given message id and the
+        plural id.
+
+        An exception is raised if nothing was found.
+        """
+
+    def queryPluralMessage(singular, plural, n, dft1=None, dft2=None):
+        """Look for the appropriate text for the given message id and the
+        plural id.
+
+        If `n` is evaluated as a singular and the id is not found,
+        `dft1` is returned.
+        If `n` is evaluated as a plural and the plural id is not found,
+        `dft2` is returned.
+        """
+
     language = TextLine(
         title=u"Language",
         description=u"The language the catalog translates to.",

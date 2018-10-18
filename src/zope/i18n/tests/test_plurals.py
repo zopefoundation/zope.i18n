@@ -98,12 +98,3 @@ class TestPlurals(unittest.TestCase):
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 28),
                          "Istnieją 28 plików.")
-
-
-def test_suite():
-    return unittest.TestSuite((
-        unittest.makeSuite(TestPlurals),
-    ))
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')

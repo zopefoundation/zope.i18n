@@ -32,6 +32,13 @@ class _KeyErrorRaisingFallback(object):
 
 
 def plural_formatting(func):
+    """This decorator interpolates the `%d` possibly present in the string.
+    This interpolation marker is usally present for plurals.
+    Example: `There are %d apples`.
+
+    Please note that the interpolation can be done, alternatively,
+    using the mapping. This is only present as a conveniance.
+    """
     @wraps(func)
     def pformat(catalog, singular, plural, n, *args, **kwargs):
         msg = func(catalog, singular, plural, n, *args, **kwargs)

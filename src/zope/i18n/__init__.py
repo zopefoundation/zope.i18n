@@ -215,7 +215,6 @@ def interpolate(text, mapping=None):
 
     >>> print(interpolate(
     ...     u"This is $name $version. $unknown $$name $${version}.", mapping))
-
     This is Zope 3. $unknown $$name $${version}.
 
     >>> print(interpolate(u"This is ${name}"))
