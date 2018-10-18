@@ -78,27 +78,27 @@ class TestPlurals(unittest.TestCase):
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 0),
-                         "Istnieją 0 plików.")
+                         u"Istnieją 0 plików.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 1),
-                         "Istnieje 1 plik.")
+                         u"Istnieje 1 plik.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 3),
-                         "Istnieją 3 pliki.")
+                         u"Istnieją 3 pliki.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 17),
-                         "Istnieją 17 plików.")
+                         u"Istnieją 17 plików.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 23),
-                         "Istnieją 23 pliki.")
+                         u"Istnieją 23 pliki.")
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 28),
-                         "Istnieją 28 plików.")
+                         u"Istnieją 28 plików.")
 
     def test_floater(self):
         """Test with the number being a float.
