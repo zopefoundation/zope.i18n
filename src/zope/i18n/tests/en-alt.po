@@ -12,3 +12,8 @@ msgstr "Hey!"
 
 msgid "special"
 msgstr "Wow"
+
+msgid "apple"
+msgid_plural "apple"
+msgstr[0] "orange"
+msgstr[1] "oranges"

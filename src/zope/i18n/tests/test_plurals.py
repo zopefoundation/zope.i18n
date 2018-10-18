@@ -166,3 +166,18 @@ class TestPlurals(unittest.TestCase):
                       mapping={'type': apple},
                       target_language="en", number=75),
             'There are 75 apples.')
+
+        # Add another catalog, to test the domain's catalogs iteration
+        # We add this catalog in first position, to resolve the translations
+        # there first.
+        alt_en = self._getMessageCatalog('en', variant="alt")
+        domain._data[alt_en.getIdentifier()] = alt_en
+        domain._catalogs[alt_en.language].insert(0, alt_en.getIdentifier())
+
+        apple = factory('apple', msgid_plural='apples', number=42)
+        self.assertEqual(
+            translate(msgid='There is %d ${type}.',
+                      msgid_plural='There are %d ${type}.',
+                      mapping={'type': apple},
+                      target_language="de", number=42),
+            'There are 42 oranges.')
