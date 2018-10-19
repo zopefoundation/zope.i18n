@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.5 (unreleased)
+4.5 (2018-10-19)
 ================
 
 - Add support for pluralization. ``translate()`` now takes the
