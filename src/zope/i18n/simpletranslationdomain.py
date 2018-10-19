@@ -18,7 +18,9 @@ from zope.component import getUtility
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 from zope.i18n import interpolate
 
+
 text_type = str if bytes is not str else unicode
+
 
 @implementer(ITranslationDomain)
 class SimpleTranslationDomain(object):
@@ -39,12 +41,14 @@ class SimpleTranslationDomain(object):
 
     def __init__(self, domain, messages=None):
         """Initializes the object. No arguments are needed."""
-        self.domain = domain.decode("utf-8") if isinstance(domain, bytes) else domain
+        self.domain = (
+            domain.decode("utf-8") if isinstance(domain, bytes) else domain)
         self.messages = messages if messages is not None else {}
         assert self.messages is not None
 
     def translate(self, msgid, mapping=None, context=None,
-                  target_language=None, default=None):
+                  target_language=None, default=None, msgid_plural=None,
+                  default_plural=None, number=None):
         '''See interface ITranslationDomain'''
         # Find out what the target language should be
         if target_language is None and context is not None:

@@ -39,6 +39,7 @@ class _FallbackNegotiator(object):
     def getLanguage(self, _allowed, _context):
         return None
 
+
 _fallback_negotiator = _FallbackNegotiator()
 
 
@@ -79,8 +80,10 @@ def negotiate(context):
     negotiator = queryUtility(INegotiator, default=_fallback_negotiator)
     return negotiator.getLanguage(ALLOWED_LANGUAGES, context)
 
+
 def translate(msgid, domain=None, mapping=None, context=None,
-              target_language=None, default=None):
+              target_language=None, default=None, msgid_plural=None,
+              default_plural=None, number=None):
     """Translate text.
 
     First setup some test components:
@@ -160,6 +163,9 @@ def translate(msgid, domain=None, mapping=None, context=None,
         domain = msgid.domain
         default = msgid.default
         mapping = msgid.mapping
+        msgid_plural = msgid.msgid_plural
+        default_plural = msgid.default_plural
+        number = msgid.number
 
     if default is None:
         default = text_type(msgid)
@@ -181,7 +187,10 @@ def translate(msgid, domain=None, mapping=None, context=None,
     if target_language is None and context is not None:
         target_language = negotiate(context)
 
-    return util.translate(msgid, mapping, context, target_language, default)
+    return util.translate(
+        msgid, mapping, context, target_language, default,
+        msgid_plural, default_plural, number)
+
 
 def interpolate(text, mapping=None):
     """Insert the data passed from mapping into the text.
@@ -197,15 +206,15 @@ def interpolate(text, mapping=None):
 
     Interpolation variables can be used more than once in the text:
 
-    >>> print(interpolate(u"This is $name version ${version}. ${name} $version!",
-    ...             mapping))
+    >>> print(interpolate(
+    ...     u"This is $name version ${version}. ${name} $version!", mapping))
     This is Zope version 3. Zope 3!
 
     In case if the variable wasn't found in the mapping or '$$' form
     was used no substitution will happens:
 
-    >>> print(interpolate(u"This is $name $version. $unknown $$name $${version}.",
-    ...             mapping))
+    >>> print(interpolate(
+    ...     u"This is $name $version. $unknown $$name $${version}.", mapping))
     This is Zope 3. $unknown $$name $${version}.
 
     >>> print(interpolate(u"This is ${name}"))

@@ -60,11 +60,28 @@ class IMessageCatalog(Interface):
 
         An exception is raised if the message id is not found.
         """
-
+        
     def queryMessage(msgid, default=None):
         """Look for the appropriate text for the given message id.
 
         If the message id is not found, default is returned.
+        """
+
+    def getPluralMessage(self, singular, plural, n):
+        """Get the appropriate text for the given message id and the
+        plural id.
+
+        An exception is raised if nothing was found.
+        """
+
+    def queryPluralMessage(singular, plural, n, dft1=None, dft2=None):
+        """Look for the appropriate text for the given message id and the
+        plural id.
+
+        If `n` is evaluated as a singular and the id is not found,
+        `dft1` is returned.
+        If `n` is evaluated as a plural and the plural id is not found,
+        `dft2` is returned.
         """
 
     language = TextLine(
@@ -118,6 +135,10 @@ class ITranslationDomain(Interface):
 
         target_language -- The language to translate to.
 
+        msgid_plural -- The id of the plural message that should be translated.
+
+        number -- The number of items linked to the plural of the message.
+
         context -- An object that provides contextual information for
                    determining client language preferences.  It must implement
                    or have an adapter that implements IUserPreferredLanguages.
@@ -133,7 +154,8 @@ class ITranslationDomain(Interface):
         required=True)
 
     def translate(msgid, mapping=None, context=None, target_language=None,
-                  default=None):
+                  default=None, msgid_plural=None, default_plural=None,
+                  number=None):
         """Return the translation for the message referred to by msgid.
 
         Return the default if no translation is found.
@@ -147,6 +169,7 @@ class ITranslationDomain(Interface):
 
         """
 
+
 class IFallbackTranslationDomainFactory(Interface):
     """Factory for creating fallback translation domains
 
@@ -158,6 +181,7 @@ class IFallbackTranslationDomainFactory(Interface):
         """Return a fallback translation domain for the given domain id.
         """
 
+
 class ITranslator(Interface):
     """A collaborative object which contains the domain, context, and locale.
 
@@ -165,7 +189,8 @@ class ITranslator(Interface):
     the domain, context, and target language.
     """
 
-    def translate(msgid, mapping=None, default=None):
+    def translate(msgid, mapping=None, default=None,
+                  msgid_plural=None, default_plural=None, number=None):
         """Translate the source msgid using the given mapping.
 
         See ITranslationService for details.
@@ -211,6 +236,7 @@ class IUserPreferredLanguages(Interface):
         The sequence is sorted in order of quality, with the most preferred
         languages first.
         """
+
 
 class IModifiableUserPreferredLanguages(IUserPreferredLanguages):
 

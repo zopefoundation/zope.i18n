@@ -33,6 +33,7 @@ try:
 except NameError:
     pass # Py3
 
+
 def roundHalfUp(n):
     """Works like round() in python2.x
 
@@ -42,17 +43,19 @@ def roundHalfUp(n):
     """
     return math.floor(n + math.copysign(0.5, n))
 
+
 def _findFormattingCharacterInPattern(char, pattern):
     return [entry for entry in pattern
             if isinstance(entry, tuple) and entry[0] == char]
 
+
 class DateTimeParseError(Exception):
     """Error is raised when parsing of datetime failed."""
+
 
 @implementer(IDateTimeFormat)
 class DateTimeFormat(object):
     __doc__ = IDateTimeFormat.__doc__
-
 
     _DATETIMECHARS = "aGyMdEDFwWhHmsSkKz"
 
@@ -486,10 +489,10 @@ class NumberFormat(object):
         return text_type(text)
 
 
-
 DEFAULT = 0
 IN_QUOTE = 1
 IN_DATETIMEFIELD = 2
+
 
 class DateTimePatternParseError(Exception):
     """DateTime Pattern Parse Error"""
@@ -759,6 +762,7 @@ PADDING3 = 6
 SUFFIX = 7
 PADDING4 = 8
 GROUPING = 9
+
 
 class NumberPatternParseError(Exception):
     """Number Pattern Parse Error"""

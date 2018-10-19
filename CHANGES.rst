@@ -5,7 +5,9 @@
 4.5 (unreleased)
 ================
 
-- Nothing changed yet.
+- Add support for pluralization. ``translate()`` now takes the
+  additional optional arguments ``msgid_plural``, ``default_plural``
+  and ``number`` in order to support it.
 
 
 4.4 (2018-10-05)

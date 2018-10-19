@@ -43,23 +43,19 @@ class TestIMessageCatalog(unittest.TestCase):
         self.assertEqual(catalog.getMessage('short_greeting'), 'Hello!')
         self.assertRaises(KeyError, catalog.getMessage, 'foo')
 
-
     def testQueryMessage(self):
         catalog = self._catalog
         self.assertEqual(catalog.queryMessage('short_greeting'), 'Hello!')
         self.assertEqual(catalog.queryMessage('foo'), None)
         self.assertEqual(catalog.queryMessage('foo', 'bar'), 'bar')
 
-
     def testGetLanguage(self):
         catalog = self._catalog
         self.assertEqual(catalog.language, 'en')
 
-
     def testGetDomain(self):
         catalog = self._catalog
         self.assertEqual(catalog.domain, 'default')
-
 
     def testGetIdentifier(self):
         catalog = self._catalog
