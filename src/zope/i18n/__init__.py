@@ -169,6 +169,8 @@ def translate(msgid, domain=None, mapping=None, context=None,
 
     if default is None:
         default = text_type(msgid)
+    if msgid_plural is not None and default_plural is None:
+        default_plural = text_type(msgid_plural)
 
     if domain:
         util = queryUtility(ITranslationDomain, domain)

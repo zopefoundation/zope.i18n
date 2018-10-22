@@ -113,21 +113,23 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         msgid2.mapping['msg1'] = msgid1
         self.assertRaises(ValueError,
                           translate, msgid1, None, None, 'en', "default")
-        # Recusrive translations also work if the original message id wasn't a
-        # message id but a unicode with a directly passed mapping
-        self.assertEqual("Color: BLUE/YELLOW",
-                         translate(u"Color: ${color1}/${color2}", mapping=mapping,
-                                   target_language='en'))
+        # Recursive translations also work if the original message id wasn't a
+        # message id but a Unicode with a directly passed mapping
+        self.assertEqual(
+            "Color: BLUE/YELLOW",
+            translate(u"Color: ${color1}/${color2}", mapping=mapping,
+                      target_language='en'))
 
-        # If we have mapping with a message id from a different domain, make sure
-        # we use that domain, not ours. If the message domain is not registered yet,
-        # we should return a defualt translation.
+        # If we have mapping with a message id from a different
+        # domain, make sure we use that domain, not ours. If the
+        # message domain is not registered yet, we should return a
+        # default translation.
         alt_factory = MessageFactory('alt')
         msgid_sub = alt_factory(u"special", default=u"oohhh")
         mapping = {'message': msgid_sub}
         msgid = factory(u"46-not-there", 'Message: ${message}',
                         mapping=mapping)
-        # test we get a default with no domain registerd
+        # test we get a default with no domain registered
         self.assertEqual(
             translate(msgid, target_language='en', default="default"),
             "Message: oohhh")

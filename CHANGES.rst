@@ -5,7 +5,8 @@
 4.6 (unreleased)
 ================
 
-- Nothing changed yet.
+- Use ``msgid_plural`` as ``default_plural`` if not provided in
+  ``translate()``.
 
 
 4.5 (2018-10-19)
