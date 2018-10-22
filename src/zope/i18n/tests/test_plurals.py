@@ -41,7 +41,7 @@ class TestPlurals(unittest.TestCase):
         domain.addCatalog(catalog)
         return domain
 
-    def test_defaults(self):
+    def test_translate_without_defaults(self):
         domain = self._getTranslationDomain('en')
         zope.component.provideUtility(domain, ITranslationDomain, 'default')
         self.assertEqual(
@@ -56,6 +56,25 @@ class TestPlurals(unittest.TestCase):
             translate('One apple', domain='default',
                       msgid_plural='%d apples', number=2),
             '2 apples')
+
+    def test_translate_with_defaults(self):
+        domain = self._getTranslationDomain('en')
+        zope.component.provideUtility(domain, ITranslationDomain, 'default')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=0,
+                      default='One fruit', default_plural='%d fruits'),
+            '0 fruits')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=1,
+                      default='One fruit', default_plural='%d fruits'),
+            'One fruit')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=2,
+                      default='One fruit', default_plural='%d fruits'),
+            '2 fruits')
 
     def test_missing_queryPluralMessage(self):
         catalog = self._getMessageCatalog('en')
