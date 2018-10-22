@@ -16,10 +16,13 @@
 """
 import os
 import unittest
-from zope.i18n import tests
+
+import zope.component
+from zope.i18n import tests, translate
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18nmessageid import MessageFactory
+from zope.i18n.interfaces import ITranslationDomain
 
 
 class TestPlurals(unittest.TestCase):
@@ -37,6 +40,57 @@ class TestPlurals(unittest.TestCase):
         domain = TranslationDomain('default')
         domain.addCatalog(catalog)
         return domain
+
+    def test_defaults(self):
+        domain = self._getTranslationDomain('en')
+        zope.component.provideUtility(domain, ITranslationDomain, 'default')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=0),
+            '0 apples')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=1),
+            'One apple')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=2),
+            '2 apples')
+
+    def test_missing_queryPluralMessage(self):
+        catalog = self._getMessageCatalog('en')
+        self.assertEqual(catalog.language, 'en')
+
+        self.assertEqual(
+            catalog.queryPluralMessage(
+                'One apple', '%d apples', 0,
+                dft1='One fruit', dft2='%d fruits'),
+            '0 fruits')
+
+        self.assertEqual(
+            catalog.queryPluralMessage(
+                'One apple.', '%d apples.', 1,
+                dft1='One fruit', dft2='%d fruits'),
+            'One fruit')
+
+        self.assertEqual(
+            catalog.queryPluralMessage(
+                'One apple.', '%d apples.', 2,
+                dft1='One fruit', dft2='%d fruits'),
+            '2 fruits')
+
+    def test_missing_getPluralMessage(self):
+        catalog = self._getMessageCatalog('en')
+        self.assertEqual(catalog.language, 'en')
+
+        with self.assertRaises(KeyError):
+            catalog.getPluralMessage('One apple', '%d fruits', 0)
+
+        with self.assertRaises(KeyError):
+            catalog.getPluralMessage('One apple', '%d fruits', 1)
+
+        with self.assertRaises(KeyError):
+            catalog.getPluralMessage('One apple', '%d fruits', 2)
 
     def test_GermanPlurals(self):
         """Germanic languages such as english and german share the plural
