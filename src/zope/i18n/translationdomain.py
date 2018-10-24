@@ -102,7 +102,7 @@ class TranslationDomain(object):
 
         # Recursively translate mappings, if they are translatable
         if (mapping is not None
-            and Message in (type(m) for m in mapping.values())):
+                and Message in (type(m) for m in mapping.values())):
             if seen is None:
                 seen = set()
             seen.add((msgid, msgid_plural))
@@ -121,6 +121,8 @@ class TranslationDomain(object):
 
         if default is None:
             default = text_type(msgid)
+        if msgid_plural is not None and default_plural is None:
+            default_plural = text_type(msgid_plural)
 
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get(target_language)

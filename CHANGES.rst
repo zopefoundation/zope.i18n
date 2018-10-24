@@ -5,7 +5,8 @@
 4.6.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Fix ``default_plural`` again if a ``zope.i18n.messageid.Message`` is
+  used with ``translate()``.
 
 
 4.6.0 (2018-10-22)
