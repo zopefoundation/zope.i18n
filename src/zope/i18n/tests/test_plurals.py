@@ -41,41 +41,6 @@ class TestPlurals(unittest.TestCase):
         domain.addCatalog(catalog)
         return domain
 
-    def test_translate_without_defaults(self):
-        domain = self._getTranslationDomain('en')
-        zope.component.provideUtility(domain, ITranslationDomain, 'default')
-        self.assertEqual(
-            translate('One apple', domain='default',
-                      msgid_plural='%d apples', number=0),
-            '0 apples')
-        self.assertEqual(
-            translate('One apple', domain='default',
-                      msgid_plural='%d apples', number=1),
-            'One apple')
-        self.assertEqual(
-            translate('One apple', domain='default',
-                      msgid_plural='%d apples', number=2),
-            '2 apples')
-
-    def test_translate_with_defaults(self):
-        domain = self._getTranslationDomain('en')
-        zope.component.provideUtility(domain, ITranslationDomain, 'default')
-        self.assertEqual(
-            translate('One apple', domain='default',
-                      msgid_plural='%d apples', number=0,
-                      default='One fruit', default_plural='%d fruits'),
-            '0 fruits')
-        self.assertEqual(
-            translate('One apple', domain='default',
-                      msgid_plural='%d apples', number=1,
-                      default='One fruit', default_plural='%d fruits'),
-            'One fruit')
-        self.assertEqual(
-            translate('One apple', domain='default',
-                      msgid_plural='%d apples', number=2,
-                      default='One fruit', default_plural='%d fruits'),
-            '2 fruits')
-
     def test_missing_queryPluralMessage(self):
         catalog = self._getMessageCatalog('en')
         self.assertEqual(catalog.language, 'en')
@@ -208,10 +173,81 @@ class TestPlurals(unittest.TestCase):
             'There are %f chances.', 3.5),
                          'There are 3.500000 chances.')
 
-    def test_recursive_translation(self):
+    def test_translate_without_defaults(self):
+        domain = self._getTranslationDomain('en')
+        zope.component.provideUtility(domain, ITranslationDomain, 'default')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=0),
+            '0 apples')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=1),
+            'One apple')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=2),
+            '2 apples')
+
+    def test_translate_with_defaults(self):
+        domain = self._getTranslationDomain('en')
+        zope.component.provideUtility(domain, ITranslationDomain, 'default')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=0,
+                      default='One fruit', default_plural='%d fruits'),
+            '0 fruits')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=1,
+                      default='One fruit', default_plural='%d fruits'),
+            'One fruit')
+        self.assertEqual(
+            translate('One apple', domain='default',
+                      msgid_plural='%d apples', number=2,
+                      default='One fruit', default_plural='%d fruits'),
+            '2 fruits')
+
+    def test_translate_message_without_defaults(self):
         domain = self._getTranslationDomain('en')
         factory = MessageFactory('default')
-        translate = domain.translate
+        zope.component.provideUtility(domain, ITranslationDomain, 'default')
+        self.assertEqual(
+            translate(factory('One apple', msgid_plural='%d apples',
+                              number=0)),
+            '0 apples')
+        self.assertEqual(
+            translate(factory('One apple', msgid_plural='%d apples',
+                              number=1)),
+            'One apple')
+        self.assertEqual(
+            translate(factory('One apple', msgid_plural='%d apples',
+                              number=2)),
+            '2 apples')
+
+    def test_translate_message_with_defaults(self):
+        domain = self._getTranslationDomain('en')
+        factory = MessageFactory('default')
+        zope.component.provideUtility(domain, ITranslationDomain, 'default')
+        self.assertEqual(
+            translate(factory('One apple', msgid_plural='%d apples', number=0,
+                              default='One fruit',
+                              default_plural='%d fruits')),
+            '0 fruits')
+        self.assertEqual(
+            translate(factory('One apple', msgid_plural='%d apples', number=1,
+                              default='One fruit',
+                              default_plural='%d fruits')),
+            'One fruit')
+        self.assertEqual(
+            translate(factory('One apple', msgid_plural='%d apples', number=2,
+                              default='One fruit',
+                              default_plural='%d fruits')),
+            '2 fruits')
+
+    def test_translate_recursive(self):
+        domain = self._getTranslationDomain('en')
+        factory = MessageFactory('default')
 
         # Singular
         banana = factory('banana', msgid_plural='bananas', number=1)
@@ -219,7 +255,7 @@ class TestPlurals(unittest.TestCase):
                          msgid_plural='There are %d ${type}.',
                          number=1, mapping={'type': banana})
         self.assertEqual(
-            translate(phrase, target_language="en"),
+            domain.translate(phrase, target_language="en"),
             'There is 1 banana.')
 
         # Plural
@@ -228,16 +264,16 @@ class TestPlurals(unittest.TestCase):
                          msgid_plural='There are %d ${type}.',
                          number=10, mapping={'type': apple})
         self.assertEqual(
-            translate(phrase, target_language="en"),
+            domain.translate(phrase, target_language="en"),
             'There are 10 apples.')
 
         # Straight translation with translatable mapping
         apple = factory('apple', msgid_plural='apples', number=75)
         self.assertEqual(
-            translate(msgid='There is %d ${type}.',
-                      msgid_plural='There are %d ${type}.',
-                      mapping={'type': apple},
-                      target_language="en", number=75),
+            domain.translate(msgid='There is %d ${type}.',
+                             msgid_plural='There are %d ${type}.',
+                             mapping={'type': apple},
+                             target_language="en", number=75),
             'There are 75 apples.')
 
         # Add another catalog, to test the domain's catalogs iteration
@@ -249,8 +285,8 @@ class TestPlurals(unittest.TestCase):
 
         apple = factory('apple', msgid_plural='apples', number=42)
         self.assertEqual(
-            translate(msgid='There is %d ${type}.',
-                      msgid_plural='There are %d ${type}.',
-                      mapping={'type': apple},
-                      target_language="de", number=42),
+            domain.translate(msgid='There is %d ${type}.',
+                             msgid_plural='There are %d ${type}.',
+                             mapping={'type': apple},
+                             target_language="de", number=42),
             'There are 42 oranges.')
