@@ -6,7 +6,8 @@
 ==================
 
 - Fix ``default_plural`` again if a ``zope.i18n.messageid.Message`` is
-  used with ``translate()``.
+  used with ``translate()``. See `issue 36
+  <https://github.com/zopefoundation/zope.i18n/pull/36>`_.
 
 
 4.6.0 (2018-10-22)
