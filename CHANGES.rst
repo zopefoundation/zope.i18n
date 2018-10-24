@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.6.1 (unreleased)
+4.6.1 (2018-10-24)
 ==================
 
 - Fix ``default_plural`` again if a ``zope.i18n.messageid.Message`` is
