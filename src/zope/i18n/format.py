@@ -226,7 +226,6 @@ class NumberParseError(Exception):
 class NumberFormat(object):
     __doc__ = INumberFormat.__doc__
 
-
     type = None
     _pattern = None
     _bin_pattern = None
@@ -368,6 +367,33 @@ class NumberFormat(object):
             fraction = self.symbols['decimal'] + fraction
         return fraction, roundInt
 
+    # taken from cpython lib/Locale.py
+    def _grouping_intervals(self, grouping):
+        last_interval = None
+        for interval in grouping:
+            # 0: re-use last group ad infinitum
+            if interval == 0:
+                if last_interval is None:
+                    raise ValueError("invalid grouping")
+                while True:
+                    yield last_interval
+            yield interval
+            last_interval = interval
+
+    def _group(self, integer, grouping):
+        # take a given chunk of digits and insert the group symbol
+        # grouping is usually: (3, 0) or (3, 2, 0)
+        digits = list(reversed(integer))
+        last_idx = 0
+        for group_length in self._grouping_intervals(grouping):
+            pos = last_idx + group_length
+            if pos >= len(digits):
+                break
+            digits.insert(pos, self.symbols['group'])
+            last_idx = pos + 1
+        res = ''.join(reversed(digits))
+        return res
+
     def format(self, obj, pattern=None, rounding=True):
         "See zope.i18n.interfaces.IFormat"
         # Make or get binary form of datetime pattern
@@ -454,13 +480,8 @@ class NumberFormat(object):
             integer = self._format_integer(str(int(math.fabs(obj))),
                                            bin_pattern[INTEGER])
             # Adding grouping
-            if bin_pattern[GROUPING] == 1:
-                help = ''
-                for pos in range(1, len(integer)+1):
-                    if (pos-1)%3 == 0 and pos != 1:
-                        help = self.symbols['group'] + help
-                    help = integer[-pos] + help
-                integer = help
+            if bin_pattern[GROUPING]:
+                integer = self._group(integer, bin_pattern[GROUPING])
             pre_padding = len(bin_pattern[INTEGER]) - len(integer)
             post_padding = len(bin_pattern[FRACTION]) - len(fraction)+1
             number = integer + fraction
@@ -779,12 +800,10 @@ def parseNumberPattern(pattern):
     fraction = ''
     exponential = ''
     suffix = ''
-    grouping = 0
     neg_pattern = None
 
     SPECIALCHARS = "*.,#0;E'"
 
-    length = len(pattern)
     state = BEGIN
     helper = ''
     for pos, char in enumerate(pattern):
@@ -832,7 +851,8 @@ def parseNumberPattern(pattern):
             if char == "#" or char == "0":
                 helper += char
             elif char == ",":
-                grouping = 1
+                # just add grouping markers to the integer pattern
+                helper += char
             elif char == ".":
                 integer = helper
                 helper = ''
@@ -933,6 +953,23 @@ def parseNumberPattern(pattern):
         fraction = helper
     if state == READ_EXPONENTIAL:
         exponential = helper
+
+    # the integer pattern can have the grouping delimiters too, let's take care
+    # about those here and now
+    # convert to a tuple of length of groups, from right to left
+    # example: (3, 0) for the usual triple separated, (3, 2, 0) for Hindi
+    # practically trying to return the same as locale.localeconv()['grouping']
+    grouping = ()
+    if "," in integer:
+        last_index = -1
+        for index, char in enumerate(reversed(integer)):
+            if char == ",":
+                grouping += (index-last_index-1,)
+                last_index = index
+        # use last group ad infinitum
+        grouping += (0,)
+        # remove grouping markers from integer pattern
+        integer = integer.replace(",", "")
 
     pattern = (padding_1, prefix, padding_2, integer, fraction, exponential,
                padding_3, suffix, padding_4, grouping)

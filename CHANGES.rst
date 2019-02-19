@@ -5,7 +5,8 @@
 4.6.2 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Fix `NumberFormat` to respect the thousand grouping given by the pattern.
+  Triple grouping was hardcoded, which is not true for all locales.
 
 
 4.6.1 (2018-10-24)
