@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.6.2 (unreleased)
+4.6.2 (2019-02-19)
 ==================
 
 - Fix `NumberFormat` to respect the thousand grouping given by the pattern.
