@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.7.0 (unreleased)
+4.7.0 (2019-07-10)
 ==================
 
 - Drop Python 3.4 support.
