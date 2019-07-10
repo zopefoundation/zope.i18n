@@ -7,6 +7,9 @@
 
 - Drop Python 3.4 support.
 
+- Fix the signature of ``IMessageCatalog.getPluralMessage()``.  See `issue 41
+  <https://zopefoundation/zope.i18n/issue/41>`_.
+
 
 4.6.2 (2019-02-19)
 ==================
