@@ -1039,6 +1039,7 @@ class TestNumberPatternParser(_TestCase):
             (None, '', None, '0', '', '', None, '1', None, ()),
             neg_pattern)
 
+
 class TestNumberFormat(_TestCase):
     """Test the functionality of an implmentation of the NumberFormat."""
 
@@ -1325,6 +1326,10 @@ class TestNumberFormat(_TestCase):
         self.assertEqual(
             self.format.format(-987654321, '+#,##,#0,000;-#,##,#0,000'),
             '-98,76,54,321')
+
+    def testFormatBadThousandSeparator(self):
+        self.assertRaises(ValueError,
+            self.format.format, 23341, '0,')
 
     def testFormatDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '###0.0#'),
