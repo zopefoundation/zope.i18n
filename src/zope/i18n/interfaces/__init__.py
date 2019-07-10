@@ -60,14 +60,14 @@ class IMessageCatalog(Interface):
 
         An exception is raised if the message id is not found.
         """
-        
+
     def queryMessage(msgid, default=None):
         """Look for the appropriate text for the given message id.
 
         If the message id is not found, default is returned.
         """
 
-    def getPluralMessage(self, singular, plural, n):
+    def getPluralMessage(singular, plural, n):
         """Get the appropriate text for the given message id and the
         plural id.
 
@@ -328,7 +328,7 @@ class IFormat(Interface):
 
 
 class INumberFormat(IFormat):
-    """Specific number formatting interface. Here are the formatting
+    r"""Specific number formatting interface. Here are the formatting
     rules (I modified the rules from ICU a bit, since I think they did not
     agree well with the real world XML formatting strings):
 
