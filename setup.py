@@ -59,7 +59,7 @@ TESTS_REQUIRE = COMPILE_REQUIRES + ZCML_REQUIRES + [
 
 setup(
     name='zope.i18n',
-    version='4.6.3.dev0',
+    version='4.7.0.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Internationalization Support',
@@ -80,7 +80,6 @@ setup(
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',

@@ -2,10 +2,10 @@
  CHANGES
 =========
 
-4.6.3 (unreleased)
+4.7.0 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Drop Python 3.4 support.
 
 
 4.6.2 (2019-02-19)
