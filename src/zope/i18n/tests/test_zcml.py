@@ -157,7 +157,8 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
-            <i18n:registerTranslations directory="locale3" domain="zope-i18n" />
+            <i18n:registerTranslations directory="locale3"
+                domain="zope-i18n" />
             </configure>
             ''', self.context)
         path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),

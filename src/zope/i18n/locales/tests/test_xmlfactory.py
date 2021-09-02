@@ -42,11 +42,14 @@ class LocaleXMLFileTestCase(TestCase):
 
         # Making sure all datetime patterns parse
         # for calendar in locale.dates.calendars.values():
-        #    for category in ('date', 'time', 'dateTime'):
-        #        for length in getattr(calendar, category+'Formats').values():
-        #            for format in length.formats.values():
-        #                self.assert_(
-        #                    parseDateTimePattern(format.pattern) is not None)
+        #     for category in ('date', 'time', 'dateTime'):
+        #         for length in getattr(
+        #             calendar, category + 'Formats'
+        #         ).values():
+        #             for format in length.formats.values():
+        #                 self.assert_(
+        #                     parseDateTimePattern(format.pattern) is not None
+        #                 )
 
 
 def test_suite():
