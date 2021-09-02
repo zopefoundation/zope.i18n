@@ -39,7 +39,3 @@ def test_suite():
             suite("zope.i18n.testing"),
         ]
     )
-
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
