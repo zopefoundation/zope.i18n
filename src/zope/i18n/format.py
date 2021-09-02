@@ -23,10 +23,11 @@ import datetime
 import pytz
 import pytz.reference
 
+from zope.i18n._compat import text_type
 from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
 from zope.interface import implementer
 
-text_type = str if bytes is not str else unicode
+
 NATIVE_NUMBER_TYPES = (int, float)
 try:
     NATIVE_NUMBER_TYPES += (long,)
