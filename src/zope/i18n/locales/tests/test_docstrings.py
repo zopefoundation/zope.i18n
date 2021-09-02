@@ -38,7 +38,3 @@ def test_suite():
         DocTestSuite('zope.i18n.locales.inheritance', checker=unicode_checker),
         DocTestSuite('zope.i18n.locales.xmlfactory', checker=unicode_checker),
     ))
-
-
-if __name__ == '__main__':
-    unittest.main()
