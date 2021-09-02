@@ -33,7 +33,9 @@ from zope.i18n.locales.inheritance import (
     InheritingDictionary,
     NoParentException,
 )
-from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
+# LoadLocaleError is not used, but might be imported from here by others.
+from zope.i18n.locales.provider import LoadLocaleError  # noqa
+from zope.i18n.locales.provider import LocaleProvider
 
 
 # Setup the locale directory

@@ -456,7 +456,7 @@ class NumberFormat(object):
                         str(len(res) + 1), exp_bin_pattern
                     )
                     exponent = self.symbols['minusSign'] + exponent
-                    number = obj_int_frac[1][len(res) :]
+                    number = obj_int_frac[1][len(res):]
                 else:
                     # We have exactly 0
                     exponent = self._format_integer('0', exp_bin_pattern)

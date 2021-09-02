@@ -34,19 +34,26 @@ class LocaleXMLFileTestCase(TestCase):
         # XXX: The tests below are commented out because it's not
         # necessary for the xml files to have all format definitions.
 
-        ## Making sure all number format patterns parse
-        # for category in (u'decimal', u'scientific', u'percent', u'currency'):
-        #    for length in getattr(locale.numbers, category+'Formats').values():
-        #        for format in length.formats.values():
-        #            self.assert_(parseNumberPattern(format.pattern) is not None)
+        # # Making sure all number format patterns parse
+        # for category in (u"decimal", u"scientific", u"percent", u"currency"):
+        #     for length in getattr(
+        #         locale.numbers, category + "Formats"
+        #     ).values():
+        #         for format in length.formats.values():
+        #             self.assert_(
+        #                 parseNumberPattern(format.pattern) is not None
+        #             )
 
-        ## Making sure all datetime patterns parse
+        # # Making sure all datetime patterns parse
         # for calendar in locale.dates.calendars.values():
-        #    for category in ('date', 'time', 'dateTime'):
-        #        for length in getattr(calendar, category+'Formats').values():
-        #            for format in length.formats.values():
-        #                self.assert_(
-        #                    parseDateTimePattern(format.pattern) is not None)
+        #     for category in ("date", "time", "dateTime"):
+        #         for length in getattr(
+        #             calendar, category + "Formats"
+        #         ).values():
+        #             for format in length.formats.values():
+        #                 self.assert_(
+        #                     parseDateTimePattern(format.pattern) is not None
+        #                 )
 
 
 def test_suite():

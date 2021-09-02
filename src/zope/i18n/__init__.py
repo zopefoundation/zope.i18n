@@ -16,7 +16,9 @@
 import re
 
 from zope.component import queryUtility
-from zope.i18nmessageid import MessageFactory, Message
+from zope.i18nmessageid import Message
+# I expect that MessageFactory might be there for BBB reasons, but not sure.
+from zope.i18nmessageid import MessageFactory  # noqa
 
 from zope.i18n.config import ALLOWED_LANGUAGES
 from zope.i18n.interfaces import INegotiator

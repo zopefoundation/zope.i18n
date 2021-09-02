@@ -347,7 +347,8 @@ class LocaleFactory(object):
           >>> names[7:]
           [u'August', u'September', u'Oktober', u'November', u'Dezember']
 
-          >>> abbrs = [ctx.months[u"abbreviated"][type] for type in range(1,13)]
+          >>> abbrs = [ctx.months[u"abbreviated"][type]
+          ...     for type in range(1,13)]
           >>> abbrs[:6]
           [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
           >>> abbrs[6:]
@@ -1344,7 +1345,8 @@ class LocaleFactory(object):
         >>> xml = u'''
         ... <ldml>
         ...   <layout>
-        ...     <orientation lines="bottom-to-top" characters="right-to-left" />
+        ...     <orientation lines="bottom-to-top"
+        ...                  characters="right-to-left" />
         ...   </layout>
         ... </ldml>'''
         >>> dom = parseString(xml)

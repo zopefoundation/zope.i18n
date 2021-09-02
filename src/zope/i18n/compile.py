@@ -35,11 +35,12 @@ def compile_mo_file(domain, lc_messages_path):
 
     if po_mtime > mo_mtime:
         try:
-            # Msgfmt.getAsFile returns io.BytesIO on Python 3, and cStringIO.StringIO
-            # on Python 2; sadly StringIO isn't a proper context manager, so we have to
-            # wrap it with `closing`. Also, Msgfmt doesn't properly close a file
-            # it opens for reading if you pass the path, but it does if you pass
-            # the file.
+            # Msgfmt.getAsFile returns io.BytesIO on Python 3,
+            # and cStringIO.StringIO on Python 2;
+            # sadly StringIO isn't a proper context manager, so we have to
+            # wrap it with `closing`. Also, Msgfmt doesn't properly close a
+            # file it opens for reading if you pass the path,
+            # but it does if you pass the file.
             with open(pofile, 'rb') as pofd:
                 with closing(Msgfmt(pofd, domain).getAsFile()) as mo:
                     with open(mofile, 'wb') as fd:

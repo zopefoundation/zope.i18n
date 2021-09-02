@@ -196,7 +196,8 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
             template
             % '''
             <configure package="zope.i18n.tests">
-            <i18n:registerTranslations directory="locale3" domain="zope-i18n" />
+            <i18n:registerTranslations directory="locale3"
+                domain="zope-i18n" />
             </configure>
             ''',
             self.context,
