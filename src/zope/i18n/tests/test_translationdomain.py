@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001-2008 Zope Foundation and Contributors.
@@ -226,3 +227,73 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
 
         with self.assertRaises(KeyError):
             self._domain.reloadCatalogs(('dne',))
+
+    def test_character_sets(self):
+        """Test two character sets for the same language.
+
+        Serbian can be written in Latin or Cyrillic,
+        where Latin is currently most used.
+        Interestingly, every Latin character can actually be mapped to
+        one Cyrillic character, and the other way around,
+        so you could write a script to turn one po-file into the other.
+
+        But most practical is to have two locales with names
+        sr@Latn and sr@Cyrl.  These are then two character sets
+        for the same language.  So they should end up together
+        under the same language in a translation domain.
+
+        The best way for an integrator to choose which one to use,
+        is to add an environment variable 'zope_i18n_allowed_languages'
+        and let this contain either sr@Latn or sr@Cyrl.
+
+        See https://github.com/collective/plone.app.locales/issues/326
+        """
+        standard_file = os.path.join(testdir, 'sr-default.mo')
+        latin_file = os.path.join(testdir, 'sr@Latn-default.mo')
+        cyrillic_file = os.path.join(testdir, 'sr@Cyrl-default.mo')
+        standard_catalog = GettextMessageCatalog('sr', 'char', standard_file)
+        latin_catalog = GettextMessageCatalog('sr@Latn', 'char', latin_file)
+        cyrillic_catalog = GettextMessageCatalog(
+            'sr@Cyrl', 'char', cyrillic_file
+        )
+
+        # Test the standard file.
+        domain = TranslationDomain('char')
+        domain.addCatalog(standard_catalog)
+        self.assertEqual(
+            domain.translate('short_greeting', target_language='sr'),
+            u"Hello in Serbian Standard!",
+        )
+
+        # Test the Latin file.
+        domain = TranslationDomain('char')
+        domain.addCatalog(latin_catalog)
+        self.assertEqual(
+            domain.translate('short_greeting', target_language='sr'),
+            u"Hello in Serbian Latin!",
+        )
+        # Note that sr@Latn is not recognizes as language id.
+        self.assertEqual(
+            domain.translate('short_greeting', target_language='sr@Latn'),
+            u"short_greeting",
+        )
+
+        # Test the Cyrillic file.
+        domain = TranslationDomain('char')
+        domain.addCatalog(cyrillic_catalog)
+        self.assertEqual(
+            domain.translate('short_greeting', target_language='sr'),
+            u"Hello in српски!",
+        )
+
+        # When I have all three locales, this is the order that
+        # os.listdir gives them in:
+        domain = TranslationDomain('char')
+        domain.addCatalog(latin_catalog)
+        domain.addCatalog(cyrillic_catalog)
+        domain.addCatalog(standard_catalog)
+        # The Latin one is first, so it wins.
+        self.assertEqual(
+            domain.translate('short_greeting', target_language='sr'),
+            u"Hello in Serbian Latin!",
+        )
