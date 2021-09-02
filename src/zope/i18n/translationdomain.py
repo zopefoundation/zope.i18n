@@ -50,6 +50,11 @@ class TranslationDomain(object):
 
     def _registerMessageCatalog(self, language, catalog_name):
         key = language
+        if "@" in key:
+            # sr@Latn and sr@Cyrl are two character set variants of
+            # the same Serbian language.
+            # See https://github.com/collective/plone.app.locales/issues/326
+            key = key.split("@")[0]
         mc = self._catalogs.setdefault(key, [])
         mc.append(catalog_name)
 
