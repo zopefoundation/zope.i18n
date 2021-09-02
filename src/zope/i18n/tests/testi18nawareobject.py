@@ -21,7 +21,6 @@ from zope.interface import implementer
 
 @implementer(II18nAware)
 class I18nAwareContentObject(object):
-
     def __init__(self):
         self.content = {}
         self.defaultLanguage = 'en'
@@ -54,8 +53,8 @@ class I18nAwareContentObject(object):
     #
     ############################################################
 
-class AbstractTestII18nAwareMixin(object):
 
+class AbstractTestII18nAwareMixin(object):
     def setUp(self):
         self.object = self._createObject()
         self.object.setDefaultLanguage('fr')
@@ -73,11 +72,12 @@ class AbstractTestII18nAwareMixin(object):
         self.assertEqual(self.object.getDefaultLanguage(), 'lt')
 
     def testGetAvailableLanguages(self):
-        self.assertEqual(sorted(self.object.getAvailableLanguages()), ['en', 'fr', 'lt'])
+        self.assertEqual(
+            sorted(self.object.getAvailableLanguages()), ['en', 'fr', 'lt']
+        )
 
 
 class TestI18nAwareObject(AbstractTestII18nAwareMixin, unittest.TestCase):
-
     def _createObject(self):
         object = I18nAwareContentObject()
         object.setContent('English', 'en')

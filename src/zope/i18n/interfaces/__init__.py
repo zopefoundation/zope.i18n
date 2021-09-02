@@ -87,12 +87,14 @@ class IMessageCatalog(Interface):
     language = TextLine(
         title=u"Language",
         description=u"The language the catalog translates to.",
-        required=True)
+        required=True,
+    )
 
     domain = TextLine(
         title=u"Domain",
         description=u"The domain the catalog is registered for.",
-        required=True)
+        required=True,
+    )
 
     def getIdentifier():
         """Return a identifier for this message catalog. Note that this
@@ -104,7 +106,6 @@ class IMessageCatalog(Interface):
 
 
 class IGlobalMessageCatalog(IMessageCatalog):
-
     def reload():
         """Reload and parse .po file"""
 
@@ -151,11 +152,19 @@ class ITranslationDomain(Interface):
     domain = TextLine(
         title=u"Domain Name",
         description=u"The name of the domain this object represents.",
-        required=True)
+        required=True,
+    )
 
-    def translate(msgid, mapping=None, context=None, target_language=None,
-                  default=None, msgid_plural=None, default_plural=None,
-                  number=None):
+    def translate(
+        msgid,
+        mapping=None,
+        context=None,
+        target_language=None,
+        default=None,
+        msgid_plural=None,
+        default_plural=None,
+        number=None,
+    ):
         """Return the translation for the message referred to by msgid.
 
         Return the default if no translation is found.
@@ -178,8 +187,7 @@ class IFallbackTranslationDomainFactory(Interface):
     """
 
     def __call__(domain_id=u""):
-        """Return a fallback translation domain for the given domain id.
-        """
+        """Return a fallback translation domain for the given domain id."""
 
 
 class ITranslator(Interface):
@@ -189,8 +197,14 @@ class ITranslator(Interface):
     the domain, context, and target language.
     """
 
-    def translate(msgid, mapping=None, default=None,
-                  msgid_plural=None, default_plural=None, number=None):
+    def translate(
+        msgid,
+        mapping=None,
+        default=None,
+        msgid_plural=None,
+        default_plural=None,
+        number=None,
+    ):
         """Translate the source msgid using the given mapping.
 
         See ITranslationService for details.
@@ -200,21 +214,19 @@ class ITranslator(Interface):
 class IMessageImportFilter(Interface):
     """The Import Filter for Translation Service Messages.
 
-       Classes implementing this interface should usually be Adaptors, as
-       they adapt the IEditableTranslationService interface."""
-
+    Classes implementing this interface should usually be Adaptors, as
+    they adapt the IEditableTranslationService interface."""
 
     def importMessages(domains, languages, file):
         """Import all messages that are defined in the specified domains and
-           languages.
+        languages.
 
-           Note that some implementations might limit to only one domain and
-           one language. A good example for that is a GettextFile.
+        Note that some implementations might limit to only one domain and
+        one language. A good example for that is a GettextFile.
         """
 
 
 class ILanguageAvailability(Interface):
-
     def getAvailableLanguages():
         """Return a sequence of 3-tuples for available languages
 
@@ -239,7 +251,6 @@ class IUserPreferredLanguages(Interface):
 
 
 class IModifiableUserPreferredLanguages(IUserPreferredLanguages):
-
     def setPreferredLanguages(languages):
         """Set a sequence of user preferred languages.
 
@@ -251,22 +262,20 @@ class IModifiableUserPreferredLanguages(IUserPreferredLanguages):
 class IMessageExportFilter(Interface):
     """The Export Filter for Translation Service Messages.
 
-       Classes implementing this interface should usually be Adaptors, as
-       they adapt the IEditableTranslationService interface."""
-
+    Classes implementing this interface should usually be Adaptors, as
+    they adapt the IEditableTranslationService interface."""
 
     def exportMessages(domains, languages):
         """Export all messages that are defined in the specified domains and
-           languages.
+        languages.
 
-           Note that some implementations might limit to only one domain and
-           one language. A good example for that is a GettextFile.
+        Note that some implementations might limit to only one domain and
+        one language. A good example for that is a GettextFile.
         """
 
 
 class INegotiator(Interface):
-    """A language negotiation service.
-    """
+    """A language negotiation service."""
 
     def getLanguage(langs, env):
         """Return the matching language to use.
@@ -295,13 +304,12 @@ class INegotiator(Interface):
 
 
 class IUserPreferredCharsets(Interface):
-    """This interface provides charset negotiation based on user preferences.
-    """
+    """This interface provides charset negotiation based on user preferences."""
 
     def getPreferredCharsets():
         """Return a sequence of user preferred charsets. Note that the order
-           should describe the order of preference. Therefore the first
-           character set in the list is the most preferred one.
+        should describe the order of preference. Therefore the first
+        character set in the list is the most preferred one.
         """
 
 
@@ -324,7 +332,6 @@ class IFormat(Interface):
 
     def format(obj, pattern=None):
         """Format an object to a string using the pattern as a rule."""
-
 
 
 class INumberFormat(IFormat):
@@ -383,21 +390,38 @@ class INumberFormat(IFormat):
 
     type = Field(
         title=u"Type",
-        description=((u"The type into which a string is parsed. If ``None``, "
-                      u"then ``int`` will be used for whole numbers and "
-                      u"``float`` for decimals.")),
+        description=(
+            (
+                u"The type into which a string is parsed. If ``None``, "
+                u"then ``int`` will be used for whole numbers and "
+                u"``float`` for decimals."
+            )
+        ),
         default=None,
-        required=False)
+        required=False,
+    )
 
     symbols = Dict(
         title=u"Number Symbols",
         key_type=Choice(
             title=u"Dictionary Class",
-            values=(u"decimal", u"group", u"list", u"percentSign",
-                    u"nativeZeroDigit", u"patternDigit", u"plusSign",
-                    u"minusSign", u"exponential", u"perMille",
-                    u"infinity", u"nan")),
-        value_type=TextLine(title=u"Symbol"))
+            values=(
+                u"decimal",
+                u"group",
+                u"list",
+                u"percentSign",
+                u"nativeZeroDigit",
+                u"patternDigit",
+                u"plusSign",
+                u"minusSign",
+                u"exponential",
+                u"perMille",
+                u"infinity",
+                u"nan",
+            ),
+        ),
+        value_type=TextLine(title=u"Symbol"),
+    )
 
 
 class IDateTimeFormat(IFormat):
@@ -448,7 +472,9 @@ class IDateTimeFormat(IFormat):
 
         Three or over, use text, otherwise use number. (for example, "M"
         produces "1", "MM" produces "01", "MMM" produces "Jan", and "MMMM"
-        produces "January".)  """
+        produces "January".)"""
 
-    calendar = Attribute("""This object must implement ILocaleCalendar. See
-                            this interface's documentation for details.""")
+    calendar = Attribute(
+        """This object must implement ILocaleCalendar. See
+                            this interface's documentation for details."""
+    )

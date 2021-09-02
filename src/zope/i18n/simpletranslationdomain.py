@@ -25,15 +25,15 @@ text_type = str if bytes is not str else unicode
 @implementer(ITranslationDomain)
 class SimpleTranslationDomain(object):
     """This is the simplest implementation of the ITranslationDomain I
-       could come up with.
+    could come up with.
 
-       The constructor takes one optional argument 'messages', which will be
-       used to do the translation. The 'messages' attribute has to have the
-       following structure:
+    The constructor takes one optional argument 'messages', which will be
+    used to do the translation. The 'messages' attribute has to have the
+    following structure:
 
-       {('language', 'msg_id'): 'message', ...}
+    {('language', 'msg_id'): 'message', ...}
 
-       Note: This Translation Domain does not use message catalogs.
+    Note: This Translation Domain does not use message catalogs.
     """
 
     # See zope.i18n.interfaces.ITranslationDomain
@@ -42,13 +42,22 @@ class SimpleTranslationDomain(object):
     def __init__(self, domain, messages=None):
         """Initializes the object. No arguments are needed."""
         self.domain = (
-            domain.decode("utf-8") if isinstance(domain, bytes) else domain)
+            domain.decode("utf-8") if isinstance(domain, bytes) else domain
+        )
         self.messages = messages if messages is not None else {}
         assert self.messages is not None
 
-    def translate(self, msgid, mapping=None, context=None,
-                  target_language=None, default=None, msgid_plural=None,
-                  default_plural=None, number=None):
+    def translate(
+        self,
+        msgid,
+        mapping=None,
+        context=None,
+        target_language=None,
+        default=None,
+        msgid_plural=None,
+        default_plural=None,
+        number=None,
+    ):
         '''See interface ITranslationDomain'''
         # Find out what the target language should be
         if target_language is None and context is not None:

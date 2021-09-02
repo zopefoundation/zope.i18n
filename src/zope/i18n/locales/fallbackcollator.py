@@ -16,8 +16,8 @@
 
 from unicodedata import normalize
 
-class FallbackCollator:
 
+class FallbackCollator:
     def __init__(self, locale):
         pass
 

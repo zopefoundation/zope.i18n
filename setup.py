@@ -21,23 +21,28 @@
 import os
 from setuptools import setup, find_packages
 
+
 def read(*rnames):
     with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
         return f.read()
 
+
 def alltests():
     import sys
     import unittest
+
     # use the zope.testrunner machinery to find all the
     # test suites we've put under ourselves
     import zope.testrunner.find
     import zope.testrunner.options
+
     here = os.path.abspath(os.path.join(os.path.dirname(__file__), 'src'))
     args = sys.argv[:]
     defaults = ["--test-path", here]
     options = zope.testrunner.options.get_options(args, defaults)
     suites = list(zope.testrunner.find.find_suites(options))
     return unittest.TestSuite(suites)
+
 
 COMPILE_REQUIRES = [
     # python-gettext used to be here, but it's now
@@ -51,11 +56,15 @@ ZCML_REQUIRES = [
     'zope.security',
 ]
 
-TESTS_REQUIRE = COMPILE_REQUIRES + ZCML_REQUIRES + [
-    'zope.publisher',
-    'zope.testing',
-    'zope.testrunner',
-]
+TESTS_REQUIRE = (
+    COMPILE_REQUIRES
+    + ZCML_REQUIRES
+    + [
+        'zope.publisher',
+        'zope.testing',
+        'zope.testrunner',
+    ]
+)
 
 setup(
     name='zope.i18n',
@@ -63,14 +72,12 @@ setup(
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     description='Zope Internationalization Support',
-    long_description=(
-        read('README.rst')
-        + '\n\n' +
-        read('CHANGES.rst')
-    ),
+    long_description=(read('README.rst') + '\n\n' + read('CHANGES.rst')),
     license='ZPL 2.1',
-    keywords=('zope3 internationalization localization i18n l10n '
-              'gettext ICU locale'),
+    keywords=(
+        'zope3 internationalization localization i18n l10n '
+        'gettext ICU locale'
+    ),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',
@@ -93,7 +100,9 @@ setup(
     url='https://github.com/zopefoundation/zope.i18n',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    namespace_packages=['zope',],
+    namespace_packages=[
+        'zope',
+    ],
     install_requires=[
         'setuptools',
         'python-gettext',
@@ -116,4 +125,4 @@ setup(
     test_suite='__main__.alltests',
     include_package_data=True,
     zip_safe=False,
-    )
+)

@@ -28,15 +28,15 @@ from zope.i18n.interfaces import ITranslationDomain
 
 text_type = str if bytes is not str else unicode
 
+
 @implementer(IUserPreferredLanguages)
 class Environment(object):
-
-
     def __init__(self, langs=()):
         self.langs = langs
 
     def getPreferredLanguages(self):
         return self.langs
+
 
 class TestITranslationDomain(PlacelessSetup):
 
@@ -70,25 +70,40 @@ class TestITranslationDomain(PlacelessSetup):
         translate = self._domain.translate
         eq = self.assertEqual
         # Testing both translation and interpolation
-        eq(translate('greeting', mapping={'name': 'Stephan'},
-                     target_language='de'),
-           'Hallo Stephan, wie geht es Dir?')
+        eq(
+            translate(
+                'greeting', mapping={'name': 'Stephan'}, target_language='de'
+            ),
+            'Hallo Stephan, wie geht es Dir?',
+        )
         # Testing default value interpolation
-        eq(translate('greeting', mapping={'name': 'Philipp'},
-                     target_language='fr',
-                     default="Hello $name, how are you?"),
-           'Hello Philipp, how are you?')
+        eq(
+            translate(
+                'greeting',
+                mapping={'name': 'Philipp'},
+                target_language='fr',
+                default="Hello $name, how are you?",
+            ),
+            'Hello Philipp, how are you?',
+        )
 
     def testNoTranslation(self):
         translate = self._domain.translate
         eq = self.assertEqual
         # Verify that an unknown message id will end up not being translated
-        eq(translate('glorp_smurf_hmpf', target_language='en'),
-           'glorp_smurf_hmpf')
+        eq(
+            translate('glorp_smurf_hmpf', target_language='en'),
+            'glorp_smurf_hmpf',
+        )
         # Test default value behaviour
-        eq(translate('glorp_smurf_hmpf', target_language='en',
-                     default='Glorp Smurf Hmpf'),
-           'Glorp Smurf Hmpf')
+        eq(
+            translate(
+                'glorp_smurf_hmpf',
+                target_language='en',
+                default='Glorp Smurf Hmpf',
+            ),
+            'Glorp Smurf Hmpf',
+        )
 
     def testUnicodeDefaultValue(self):
         translate = self._domain.translate
@@ -100,7 +115,7 @@ class TestITranslationDomain(PlacelessSetup):
         translate = self._domain.translate
         eq = self.assertEqual
         # Test that default is returned when no language can be negotiated
-        context = Environment(('xx', ))
+        context = Environment(('xx',))
         eq(translate('short_greeting', context=context, default=42), 42)
 
         # Test that default is returned when there's no destination language
@@ -108,4 +123,4 @@ class TestITranslationDomain(PlacelessSetup):
 
 
 def test_suite():
-    return unittest.TestSuite() # Deliberately empty
+    return unittest.TestSuite()  # Deliberately empty

@@ -22,11 +22,11 @@ data = {
     ('en', 'short_greeting'): 'Hello!',
     ('de', 'short_greeting'): 'Hallo!',
     ('en', 'greeting'): 'Hello $name, how are you?',
-    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?'}
+    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?',
+}
 
 
 class TestSimpleTranslationDomain(unittest.TestCase, TestITranslationDomain):
-
     def setUp(self):
         TestITranslationDomain.setUp(self)
 

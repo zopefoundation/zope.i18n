@@ -30,12 +30,12 @@ text_type = str if bytes is not str else unicode
 # zope.tal.taldefs module:
 NAME_RE = r"[a-zA-Z_][-a-zA-Z0-9_]*"
 
-_interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
-                           % ({'n': NAME_RE}))
+_interp_regex = re.compile(
+    r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))' % ({'n': NAME_RE})
+)
 
 
 class _FallbackNegotiator(object):
-
     def getLanguage(self, _allowed, _context):
         return None
 
@@ -81,9 +81,17 @@ def negotiate(context):
     return negotiator.getLanguage(ALLOWED_LANGUAGES, context)
 
 
-def translate(msgid, domain=None, mapping=None, context=None,
-              target_language=None, default=None, msgid_plural=None,
-              default_plural=None, number=None):
+def translate(
+    msgid,
+    domain=None,
+    mapping=None,
+    context=None,
+    target_language=None,
+    default=None,
+    msgid_plural=None,
+    default_plural=None,
+    number=None,
+):
     """Translate text.
 
     First setup some test components:
@@ -190,8 +198,15 @@ def translate(msgid, domain=None, mapping=None, context=None,
         target_language = negotiate(context)
 
     return util.translate(
-        msgid, mapping, context, target_language, default,
-        msgid_plural, default_plural, number)
+        msgid,
+        mapping,
+        context,
+        target_language,
+        default,
+        msgid_plural,
+        default_plural,
+        number,
+    )
 
 
 def interpolate(text, mapping=None):

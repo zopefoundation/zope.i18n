@@ -19,10 +19,8 @@ from zope.testing.loggingsupport import InstalledHandler
 from zope.i18n import compile
 
 
-@unittest.skipUnless(compile.HAS_PYTHON_GETTEXT,
-                     "Need python-gettext")
+@unittest.skipUnless(compile.HAS_PYTHON_GETTEXT, "Need python-gettext")
 class TestCompile(unittest.TestCase):
-
     def setUp(self):
         self.handler = InstalledHandler('zope.i18n')
         self.addCleanup(self.handler.uninstall)
@@ -43,8 +41,7 @@ class TestCompile(unittest.TestCase):
 
         compile.compile_mo_file('foo', td)
 
-        self.assertIn("Syntax error while compiling",
-                      str(self.handler))
+        self.assertIn("Syntax error while compiling", str(self.handler))
 
     def test_po_exists_cannot_write_mo(self):
         import tempfile
@@ -68,5 +65,4 @@ class TestCompile(unittest.TestCase):
 
         compile.compile_mo_file('foo', td)
 
-        self.assertIn("Error while compiling",
-                      str(self.handler))
+        self.assertIn("Error while compiling", str(self.handler))

@@ -39,6 +39,7 @@ def plural_formatting(func):
     Please note that the interpolation can be done, alternatively,
     using the mapping. This is only present as a conveniance.
     """
+
     @wraps(func)
     def pformat(catalog, singular, plural, n, *args, **kwargs):
         msg = func(catalog, singular, plural, n, *args, **kwargs)
@@ -47,6 +48,7 @@ def plural_formatting(func):
         except TypeError:
             # The message cannot be formatted : return it "raw".
             return msg
+
     return pformat
 
 
@@ -59,19 +61,23 @@ class GettextMessageCatalog(object):
     def __init__(self, language, domain, path_to_file):
         """Initialize the message catalog"""
         self.language = (
-            language.decode('utf-8') if isinstance(language, bytes)
-            else language)
+            language.decode('utf-8')
+            if isinstance(language, bytes)
+            else language
+        )
         self.domain = (
-            domain.decode("utf-8") if isinstance(domain, bytes)
-            else domain)
+            domain.decode("utf-8") if isinstance(domain, bytes) else domain
+        )
         self._path_to_file = path_to_file
         self.reload()
         catalog = self._catalog
         catalog.add_fallback(_KeyErrorRaisingFallback())
         self._gettext = (
-            catalog.gettext if str is not bytes else catalog.ugettext)
+            catalog.gettext if str is not bytes else catalog.ugettext
+        )
         self._ngettext = (
-            catalog.ngettext if str is not bytes else catalog.ungettext)
+            catalog.ngettext if str is not bytes else catalog.ungettext
+        )
 
     def reload(self):
         'See IMessageCatalog'

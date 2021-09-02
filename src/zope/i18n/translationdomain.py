@@ -37,10 +37,10 @@ text_type = str if bytes is not str else unicode
 
 @zope.interface.implementer(ITranslationDomain)
 class TranslationDomain(object):
-
     def __init__(self, domain, fallbacks=None):
         self.domain = (
-            domain.decode("utf-8") if isinstance(domain, bytes) else domain)
+            domain.decode("utf-8") if isinstance(domain, bytes) else domain
+        )
         # _catalogs maps (language, domain) to IMessageCatalog instances
         self._catalogs = {}
         # _data maps IMessageCatalog.getIdentifier() to IMessageCatalog
@@ -56,17 +56,24 @@ class TranslationDomain(object):
 
     def addCatalog(self, catalog):
         self._data[catalog.getIdentifier()] = catalog
-        self._registerMessageCatalog(catalog.language,
-                                     catalog.getIdentifier())
+        self._registerMessageCatalog(catalog.language, catalog.getIdentifier())
 
     def setLanguageFallbacks(self, fallbacks=None):
         if fallbacks is None:
             fallbacks = LANGUAGE_FALLBACKS
         self._fallbacks = fallbacks
 
-    def translate(self, msgid, mapping=None, context=None,
-                  target_language=None, default=None,
-                  msgid_plural=None, default_plural=None, number=None):
+    def translate(
+        self,
+        msgid,
+        mapping=None,
+        context=None,
+        target_language=None,
+        default=None,
+        msgid_plural=None,
+        default_plural=None,
+        number=None,
+    ):
         """See zope.i18n.interfaces.ITranslationDomain"""
         # if the msgid is empty, let's save a lot of calculations and return
         # an empty string.
@@ -81,19 +88,43 @@ class TranslationDomain(object):
             target_language = negotiator.getLanguage(langs, context)
 
         return self._recursive_translate(
-            msgid, mapping, target_language, default, context,
-            msgid_plural, default_plural, number)
+            msgid,
+            mapping,
+            target_language,
+            default,
+            context,
+            msgid_plural,
+            default_plural,
+            number,
+        )
 
-    def _recursive_translate(self, msgid, mapping, target_language, default,
-                             context,  msgid_plural, default_plural, number,
-                             seen=None):
+    def _recursive_translate(
+        self,
+        msgid,
+        mapping,
+        target_language,
+        default,
+        context,
+        msgid_plural,
+        default_plural,
+        number,
+        seen=None,
+    ):
         """Recursively translate msg."""
         # MessageID attributes override arguments
         if isinstance(msgid, Message):
             if msgid.domain != self.domain:
                 return translate(
-                    msgid, msgid.domain, mapping, context, target_language,
-                    default, msgid_plural, default_plural, number)
+                    msgid,
+                    msgid.domain,
+                    mapping,
+                    context,
+                    target_language,
+                    default,
+                    msgid_plural,
+                    default_plural,
+                    number,
+                )
             default = msgid.default
             mapping = msgid.mapping
             msgid_plural = msgid.msgid_plural
@@ -101,8 +132,9 @@ class TranslationDomain(object):
             number = msgid.number
 
         # Recursively translate mappings, if they are translatable
-        if (mapping is not None
-                and Message in (type(m) for m in mapping.values())):
+        if mapping is not None and Message in (
+            type(m) for m in mapping.values()
+        ):
             if seen is None:
                 seen = set()
             seen.add((msgid, msgid_plural))
@@ -113,11 +145,20 @@ class TranslationDomain(object):
                     # https://bugs.launchpad.net/zope3/+bug/220122
                     if (value, value.msgid_plural) in seen:
                         raise ValueError(
-                            "Circular reference in mappings detected: %s" %
-                            value)
+                            "Circular reference in mappings detected: %s"
+                            % value
+                        )
                     mapping[key] = self._recursive_translate(
-                        value, mapping, target_language, default, context,
-                        msgid_plural, default_plural, number, seen)
+                        value,
+                        mapping,
+                        target_language,
+                        default,
+                        context,
+                        msgid_plural,
+                        default_plural,
+                        number,
+                        seen,
+                    )
 
         if default is None:
             default = text_type(msgid)
@@ -142,18 +183,24 @@ class TranslationDomain(object):
                 if msgid_plural is not None:
                     # This is a plural
                     text = self._data[catalog_names[0]].queryPluralMessage(
-                        msgid, msgid_plural, number, default, default_plural)
+                        msgid, msgid_plural, number, default, default_plural
+                    )
                 else:
                     text = self._data[catalog_names[0]].queryMessage(
-                        msgid, default)
+                        msgid, default
+                    )
             else:
                 for name in catalog_names:
                     catalog = self._data[name]
                     if msgid_plural is not None:
                         # This is a plural
                         s = catalog.queryPluralMessage(
-                            msgid, msgid_plural, number,
-                            default, default_plural)
+                            msgid,
+                            msgid_plural,
+                            number,
+                            default,
+                            default_plural,
+                        )
                     else:
                         s = catalog.queryMessage(msgid)
                     if s is not None:

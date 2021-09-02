@@ -19,6 +19,7 @@ from unittest import TestCase, TestSuite
 from zope.i18n.locales.xmlfactory import LocaleFactory
 import zope.i18n
 
+
 class LocaleXMLFileTestCase(TestCase):
     """This test verifies that every locale XML file can be loaded."""
 
@@ -34,13 +35,13 @@ class LocaleXMLFileTestCase(TestCase):
         # necessary for the xml files to have all format definitions.
 
         ## Making sure all number format patterns parse
-        #for category in (u'decimal', u'scientific', u'percent', u'currency'):
+        # for category in (u'decimal', u'scientific', u'percent', u'currency'):
         #    for length in getattr(locale.numbers, category+'Formats').values():
         #        for format in length.formats.values():
         #            self.assert_(parseNumberPattern(format.pattern) is not None)
 
         ## Making sure all datetime patterns parse
-        #for calendar in locale.dates.calendars.values():
+        # for calendar in locale.dates.calendars.values():
         #    for category in ('date', 'time', 'dateTime'):
         #        for length in getattr(calendar, category+'Formats').values():
         #            for format in length.formats.values():
@@ -48,11 +49,11 @@ class LocaleXMLFileTestCase(TestCase):
         #                    parseDateTimePattern(format.pattern) is not None)
 
 
-
 def test_suite():
     suite = TestSuite()
-    locale_dir = os.path.join(os.path.dirname(zope.i18n.__file__),
-                              'locales', 'data')
+    locale_dir = os.path.join(
+        os.path.dirname(zope.i18n.__file__), 'locales', 'data'
+    )
     for path in os.listdir(locale_dir):
         if not path.endswith(".xml"):
             continue

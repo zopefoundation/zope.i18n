@@ -23,11 +23,16 @@ __docformat__ = 'restructuredtext'
 from zope.deprecation import deprecate
 
 from zope.interface import implementer
-from zope.i18n.interfaces.locales import \
-     ILocaleInheritance, IAttributeInheritance, IDictionaryInheritance
+from zope.i18n.interfaces.locales import (
+    ILocaleInheritance,
+    IAttributeInheritance,
+    IDictionaryInheritance,
+)
+
 
 class NoParentException(AttributeError):
     pass
+
 
 @implementer(ILocaleInheritance)
 class Inheritance(object):
@@ -36,7 +41,6 @@ class Inheritance(object):
     This object contains some shared code amongst the various
     'ILocaleInheritance' implementations.
     """
-
 
     # See zope.i18n.interfaces.locales.ILocaleInheritance
     __parent__ = None
@@ -100,17 +104,14 @@ class AttributeInheritance(Inheritance):
       True
     """
 
-
     def __setattr__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
         # If we have a value that can also inherit data from other locales, we
         # set its parent and name, so that we know how to get to it.
-        if (ILocaleInheritance.providedBy(value) and
-                not name.startswith('__')):
+        if ILocaleInheritance.providedBy(value) and not name.startswith('__'):
             value.__parent__ = self
             value.__name__ = name
         super(AttributeInheritance, self).__setattr__(name, value)
-
 
     def __getattr__(self, name):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
@@ -119,9 +120,10 @@ class AttributeInheritance(Inheritance):
         except NoParentException:
             # There was simply no parent anymore, so let's raise an error
             # for good
-            raise AttributeError("'%s' object (or any of its parents) has no "
-                                 "attribute '%s'" % (self.__class__.__name__,
-                                                     name))
+            raise AttributeError(
+                "'%s' object (or any of its parents) has no "
+                "attribute '%s'" % (self.__class__.__name__, name)
+            )
         else:
             value = getattr(selfUp, name)
             # Since a locale hierarchy never changes after startup, we can
@@ -132,7 +134,6 @@ class AttributeInheritance(Inheritance):
             # which we do not want to override.
             super(AttributeInheritance, self).__setattr__(name, value)
             return value
-
 
 
 @implementer(IDictionaryInheritance)
@@ -196,7 +197,6 @@ class InheritingDictionary(Inheritance, dict):
       >>> print(w[0].message)
       `value` is a deprecated synonym for `values`
     """
-
 
     def __setitem__(self, name, value):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""

@@ -16,8 +16,17 @@
 import datetime
 import re
 from zope.interface import Interface, Attribute
-from zope.schema import \
-     Field, Text, TextLine, Int, Bool, Tuple, List, Dict, Date
+from zope.schema import (
+    Field,
+    Text,
+    TextLine,
+    Int,
+    Bool,
+    Tuple,
+    List,
+    Dict,
+    Date,
+)
 from zope.schema import Choice
 
 
@@ -28,7 +37,7 @@ class ILocaleProvider(Interface):
 
     This service will be singelton global service, since it doe not make much
     sense to have many locale facilities, especially since this one will be so
-    complete, since we will the ICU XML Files as data.  """
+    complete, since we will the ICU XML Files as data."""
 
     def loadLocale(language=None, country=None, variant=None):
         """Load the locale with the specs that are given by the arguments of
@@ -70,32 +79,39 @@ class ILocaleIdentity(Interface):
         description=u"The language for which a locale is applicable.",
         constraint=re.compile(r'[a-z]{2}').match,
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
     script = TextLine(
         title=u"Script Type",
-        description=(u"""The script for which the language/locale is
-                       applicable."""),
-        constraint=re.compile(r'[a-z]*').match)
+        description=(
+            u"""The script for which the language/locale is
+                       applicable."""
+        ),
+        constraint=re.compile(r'[a-z]*').match,
+    )
 
     territory = TextLine(
         title=u"Territory Type",
         description=u"The territory for which a locale is applicable.",
         constraint=re.compile(r'[A-Z]{2}').match,
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
     variant = TextLine(
         title=u"Variant Type",
         description=u"The variant for which a locale is applicable.",
         constraint=re.compile(r'[a-zA-Z]*').match,
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
     version = Field(
         title=u"Locale Version",
         description=u"The value of this field is an ILocaleVersion object.",
-        readonly=True)
+        readonly=True,
+    )
 
     def __repr__(self):
         """Defines the representation of the id, which should be a compact
@@ -113,18 +129,21 @@ class ILocaleVersion(Interface):
         description=u"The version number of the locale.",
         constraint=re.compile(r'^([0-9].)*[0-9]$').match,
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
     generationDate = Date(
         title=u"Generation Date",
         description=u"Specifies the creation date of the locale.",
         constraint=lambda date: date < datetime.datetime.now(),
-        readonly=True)
+        readonly=True,
+    )
 
     notes = Text(
         title=u"Notes",
         description=u"Some release notes for the version of this locale.",
-        readonly=True)
+        readonly=True,
+    )
 
 
 class ILocaleDisplayNames(Interface):
@@ -138,32 +157,38 @@ class ILocaleDisplayNames(Interface):
     languages = Dict(
         title=u"Language type to translated name",
         key_type=TextLine(title=u"Language Type"),
-        value_type=TextLine(title=u"Language Name"))
+        value_type=TextLine(title=u"Language Name"),
+    )
 
     scripts = Dict(
         title=u"Script type to script name",
         key_type=TextLine(title=u"Script Type"),
-        value_type=TextLine(title=u"Script Name"))
+        value_type=TextLine(title=u"Script Name"),
+    )
 
     territories = Dict(
         title=u"Territory type to translated territory name",
         key_type=TextLine(title=u"Territory Type"),
-        value_type=TextLine(title=u"Territory Name"))
+        value_type=TextLine(title=u"Territory Name"),
+    )
 
     variants = Dict(
         title=u"Variant type to name",
         key_type=TextLine(title=u"Variant Type"),
-        value_type=TextLine(title=u"Variant Name"))
+        value_type=TextLine(title=u"Variant Name"),
+    )
 
     keys = Dict(
         title=u"Key type to name",
         key_type=TextLine(title=u"Key Type"),
-        value_type=TextLine(title=u"Key Name"))
+        value_type=TextLine(title=u"Key Name"),
+    )
 
     types = Dict(
         title=u"Type type and key to localized name",
         key_type=Tuple(title=u"Type Type and Key"),
-        value_type=TextLine(title=u"Type Name"))
+        value_type=TextLine(title=u"Type Name"),
+    )
 
 
 class ILocaleTimeZone(Interface):
@@ -179,26 +204,32 @@ class ILocaleTimeZone(Interface):
         title=u"Time Zone Type",
         description=u"Standard name of the timezone for unique referencing.",
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
     cities = List(
         title=u"Cities",
         description=u"Cities in Timezone",
         value_type=TextLine(title=u"City Name"),
         required=True,
-        readonly=True)
-
+        readonly=True,
+    )
 
     names = Dict(
         title=u"Time Zone Names",
         description=u"Various names of the timezone.",
         key_type=Choice(
             title=u"Time Zone Name Type",
-            values=(u"generic", u"standard", u"daylight")),
-        value_type=Tuple(title=u"Time Zone Name and Abbreviation",
-                         min_length=2, max_length=2),
+            values=(u"generic", u"standard", u"daylight"),
+        ),
+        value_type=Tuple(
+            title=u"Time Zone Name and Abbreviation",
+            min_length=2,
+            max_length=2,
+        ),
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
 
 class ILocaleFormat(Interface):
@@ -208,19 +239,22 @@ class ILocaleFormat(Interface):
         title=u"Format Type",
         description=u"The name of the format",
         required=False,
-        readonly=True)
+        readonly=True,
+    )
 
     displayName = TextLine(
         title=u"Display Name",
         description=u"Name of the calendar, for example 'gregorian'.",
         required=False,
-        readonly=True)
+        readonly=True,
+    )
 
     pattern = TextLine(
         title=u"Format Pattern",
         description=u"The pattern that is used to format the object.",
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
 
 class ILocaleFormatLength(Interface):
@@ -229,12 +263,13 @@ class ILocaleFormatLength(Interface):
     type = Choice(
         title=u"Format Length Type",
         description=u"Name of the format length",
-        values=(u"full", u"long", u"medium", u"short")
-        )
+        values=(u"full", u"long", u"medium", u"short"),
+    )
 
     default = TextLine(
         title=u"Default Format",
-        description=u"The name of the defaulkt format.")
+        description=u"The name of the defaulkt format.",
+    )
 
     formats = Dict(
         title=u"Formats",
@@ -242,9 +277,11 @@ class ILocaleFormatLength(Interface):
         key_type=TextLine(title=u"Format Type"),
         value_type=Field(
             title=u"Format Object",
-            description=u"Values are ILocaleFormat objects."),
+            description=u"Values are ILocaleFormat objects.",
+        ),
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
 
 class ILocaleMonthContext(Interface):
@@ -252,23 +289,25 @@ class ILocaleMonthContext(Interface):
 
     type = TextLine(
         title=u"Month context type",
-        description=u"Name of the month context, format or stand-alone.")
+        description=u"Name of the month context, format or stand-alone.",
+    )
 
-    defaultWidth = TextLine(
-        title=u"Default month name width",
-        default=u"wide")
+    defaultWidth = TextLine(title=u"Default month name width", default=u"wide")
 
     months = Dict(
         title=u"Month Names",
-        description=(u"A mapping of month name widths to a mapping of"
-                     u"corresponding month names."),
+        description=(
+            u"A mapping of month name widths to a mapping of"
+            u"corresponding month names."
+        ),
         key_type=Choice(
-            title=u"Width type",
-            values=(u"wide", u"abbreviated", u"narrow")),
+            title=u"Width type", values=(u"wide", u"abbreviated", u"narrow")
+        ),
         value_type=Dict(
             title=u"Month name",
             key_type=Int(title=u"Type", min=1, max=12),
-            value_type=TextLine(title=u"Month Name"))
+            value_type=TextLine(title=u"Month Name"),
+        ),
     )
 
 
@@ -277,26 +316,36 @@ class ILocaleDayContext(Interface):
 
     type = TextLine(
         title=u"Day context type",
-        description=u"Name of the day context, format or stand-alone.")
+        description=u"Name of the day context, format or stand-alone.",
+    )
 
-    defaultWidth = TextLine(
-        title=u"Default day name width",
-        default=u"wide")
+    defaultWidth = TextLine(title=u"Default day name width", default=u"wide")
 
     days = Dict(
         title=u"Day Names",
-        description=(u"A mapping of day name widths to a mapping of"
-                     u"corresponding day names."),
+        description=(
+            u"A mapping of day name widths to a mapping of"
+            u"corresponding day names."
+        ),
         key_type=Choice(
-            title=u"Width type",
-            values=(u"wide", u"abbreviated", u"narrow")),
+            title=u"Width type", values=(u"wide", u"abbreviated", u"narrow")
+        ),
         value_type=Dict(
             title=u"Day name",
             key_type=Choice(
                 title=u"Type",
-                values=(u"sun", u"mon", u"tue", u"wed",
-                        u"thu", u"fri", u"sat")),
-            value_type=TextLine(title=u"Day Name"))
+                values=(
+                    u"sun",
+                    u"mon",
+                    u"tue",
+                    u"wed",
+                    u"thu",
+                    u"fri",
+                    u"sat",
+                ),
+            ),
+            value_type=TextLine(title=u"Day Name"),
+        ),
     )
 
 
@@ -306,56 +355,66 @@ class ILocaleCalendar(Interface):
 
     type = TextLine(
         title=u"Calendar Type",
-        description=u"Name of the calendar, for example 'gregorian'.")
+        description=u"Name of the calendar, for example 'gregorian'.",
+    )
 
     defaultMonthContext = TextLine(
-        title=u"Default month context",
-        default=u"format")
+        title=u"Default month context", default=u"format"
+    )
 
     monthContexts = Dict(
         title=u"Month Contexts",
-        description=(u"A mapping of month context types to "
-                     u"ILocaleMonthContext objects"),
-        key_type=Choice(title=u"Type",
-                        values=(u"format", u"stand-alone")),
-        value_type=Field(title=u"ILocaleMonthContext object"))
+        description=(
+            u"A mapping of month context types to "
+            u"ILocaleMonthContext objects"
+        ),
+        key_type=Choice(title=u"Type", values=(u"format", u"stand-alone")),
+        value_type=Field(title=u"ILocaleMonthContext object"),
+    )
 
     # BBB: leftover from CLDR 1.0
     months = Dict(
         title=u"Month Names",
         description=u"A mapping of all month names and abbreviations",
         key_type=Int(title=u"Type", min=1, max=12),
-        value_type=Tuple(title=u"Month Name and Abbreviation",
-                         min_length=2, max_length=2))
+        value_type=Tuple(
+            title=u"Month Name and Abbreviation", min_length=2, max_length=2
+        ),
+    )
 
     defaultDayContext = TextLine(
-        title=u"Default day context",
-        default=u"format")
+        title=u"Default day context", default=u"format"
+    )
 
     dayContexts = Dict(
         title=u"Day Contexts",
-        description=(u"A mapping of day context types to "
-                     u"ILocaleDayContext objects"),
-        key_type=Choice(title=u"Type",
-                        values=(u"format", u"stand-alone")),
-        value_type=Field(title=u"ILocaleDayContext object"))
+        description=(
+            u"A mapping of day context types to " u"ILocaleDayContext objects"
+        ),
+        key_type=Choice(title=u"Type", values=(u"format", u"stand-alone")),
+        value_type=Field(title=u"ILocaleDayContext object"),
+    )
 
     # BBB: leftover from CLDR 1.0
     days = Dict(
         title=u"Weekdays Names",
         description=u"A mapping of all month names and abbreviations",
-        key_type=Choice(title=u"Type",
-                        values=(u"sun", u"mon", u"tue", u"wed",
-                                u"thu", u"fri", u"sat")),
-        value_type=Tuple(title=u"Weekdays Name and Abbreviation",
-                         min_length=2, max_length=2))
+        key_type=Choice(
+            title=u"Type",
+            values=(u"sun", u"mon", u"tue", u"wed", u"thu", u"fri", u"sat"),
+        ),
+        value_type=Tuple(
+            title=u"Weekdays Name and Abbreviation", min_length=2, max_length=2
+        ),
+    )
 
     week = Dict(
         title=u"Week Information",
         description=u"Contains various week information",
         key_type=Choice(
             title=u"Type",
-            description=(u"""
+            description=(
+                u"""
             Varies Week information:
 
               - 'minDays' is just an integer between 1 and 7.
@@ -364,9 +423,11 @@ class ILocaleCalendar(Interface):
 
               - The 'weekendStart' and 'weekendEnd' are tuples of the form
                 (weekDayNumber, datetime.time)
-            """),
-            values=(u"minDays", u"firstDay",
-                    u"weekendStart", u"weekendEnd")))
+            """
+            ),
+            values=(u"minDays", u"firstDay", u"weekendStart", u"weekendEnd"),
+        ),
+    )
 
     am = TextLine(title=u"AM String")
 
@@ -375,8 +436,10 @@ class ILocaleCalendar(Interface):
     eras = Dict(
         title=u"Era Names",
         key_type=Int(title=u"Type", min=0),
-        value_type=Tuple(title=u"Era Name and Abbreviation",
-                         min_length=2, max_length=2))
+        value_type=Tuple(
+            title=u"Era Name and Abbreviation", min_length=2, max_length=2
+        ),
+    )
 
     defaultDateFormat = TextLine(title=u"Default Date Format Type")
 
@@ -386,8 +449,10 @@ class ILocaleCalendar(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     defaultTimeFormat = TextLine(title=u"Default Time Format Type")
 
@@ -397,8 +462,10 @@ class ILocaleCalendar(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     defaultDateTimeFormat = TextLine(title=u"Default Date-Time Format Type")
 
@@ -408,8 +475,10 @@ class ILocaleCalendar(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     def getMonthNames():
         """Return a list of month names."""
@@ -447,27 +516,36 @@ class ILocaleDates(Interface):
 
     localizedPatternChars = TextLine(
         title=u"Localized Pattern Characters",
-        description=u"Localized pattern characters used in dates and times")
+        description=u"Localized pattern characters used in dates and times",
+    )
 
     calendars = Dict(
         title=u"Calendar type to ILocaleCalendar",
         key_type=Choice(
             title=u"Calendar Type",
-            values=(u"gregorian",
-                    u"arabic",
-                    u"chinese",
-                    u"civil-arabic",
-                    u"hebrew",
-                    u"japanese",
-                    u"thai-buddhist")),
-        value_type=Field(title=u"Calendar",
-                         description=u"This is a ILocaleCalendar object."))
+            values=(
+                u"gregorian",
+                u"arabic",
+                u"chinese",
+                u"civil-arabic",
+                u"hebrew",
+                u"japanese",
+                u"thai-buddhist",
+            ),
+        ),
+        value_type=Field(
+            title=u"Calendar", description=u"This is a ILocaleCalendar object."
+        ),
+    )
 
     timezones = Dict(
         title=u"Time zone type to ILocaleTimezone",
         key_type=TextLine(title=u"Time Zone type"),
-        value_type=Field(title=u"Time Zone",
-                         description=u"This is a ILocaleTimeZone object."))
+        value_type=Field(
+            title=u"Time Zone",
+            description=u"This is a ILocaleTimeZone object.",
+        ),
+    )
 
     def getFormatter(category, length=None, name=None, calendar=u"gregorian"):
         """Get a date/time formatter.
@@ -491,6 +569,7 @@ class ILocaleCurrency(Interface):
 
     symbolChoice = Bool(title=u"Symbol Choice")
 
+
 class ILocaleNumbers(Interface):
     """This object contains various data about numbers and currencies."""
 
@@ -498,11 +577,23 @@ class ILocaleNumbers(Interface):
         title=u"Number Symbols",
         key_type=Choice(
             title=u"Format Name",
-            values=(u"decimal", u"group", u"list", u"percentSign",
-                    u"nativeZeroDigit", u"patternDigit", u"plusSign",
-                    u"minusSign", u"exponential", u"perMille",
-                    u"infinity", u"nan")),
-        value_type=TextLine(title=u"Symbol"))
+            values=(
+                u"decimal",
+                u"group",
+                u"list",
+                u"percentSign",
+                u"nativeZeroDigit",
+                u"patternDigit",
+                u"plusSign",
+                u"minusSign",
+                u"exponential",
+                u"perMille",
+                u"infinity",
+                u"nan",
+            ),
+        ),
+        value_type=TextLine(title=u"Symbol"),
+    )
 
     defaultDecimalFormat = TextLine(title=u"Default Decimal Format Type")
 
@@ -512,8 +603,10 @@ class ILocaleNumbers(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     defaultScientificFormat = TextLine(title=u"Default Scientific Format Type")
 
@@ -523,8 +616,10 @@ class ILocaleNumbers(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     defaultPercentFormat = TextLine(title=u"Default Percent Format Type")
 
@@ -534,8 +629,10 @@ class ILocaleNumbers(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     defaultCurrencyFormat = TextLine(title=u"Default Currency Format Type")
 
@@ -545,17 +642,19 @@ class ILocaleNumbers(Interface):
         key_type=Choice(
             title=u"Type",
             description=u"Name of the format length",
-            values=(u"full", u"long", u"medium", u"short")),
-        value_type=Field(title=u"ILocaleFormatLength object"))
+            values=(u"full", u"long", u"medium", u"short"),
+        ),
+        value_type=Field(title=u"ILocaleFormatLength object"),
+    )
 
     currencies = Dict(
         title=u"Currencies",
         description=u"Contains various Currency data.",
         key_type=TextLine(
-            title=u"Type",
-            description=u"Name of the format length"),
-        value_type=Field(title=u"ILocaleCurrency object"))
-
+            title=u"Type", description=u"Name of the format length"
+        ),
+        value_type=Field(title=u"ILocaleCurrency object"),
+    )
 
     def getFormatter(category, length=None, name=u""):
         """Get the NumberFormat based on the category, length and name of the
@@ -577,22 +676,30 @@ class ILocaleNumbers(Interface):
     def getDefaultCurrency():
         """Get the default currency."""
 
-_orientations = [u"left-to-right", u"right-to-left",
-                 u"top-to-bottom", u"bottom-to-top"]
+
+_orientations = [
+    u"left-to-right",
+    u"right-to-left",
+    u"top-to-bottom",
+    u"bottom-to-top",
+]
+
+
 class ILocaleOrientation(Interface):
     """Information about the orientation of text."""
 
     characters = Choice(
         title=u"Orientation of characters",
         values=_orientations,
-        default=u"left-to-right"
-        )
+        default=u"left-to-right",
+    )
 
     lines = Choice(
         title=u"Orientation of characters",
         values=_orientations,
-        default=u"top-to-bottom"
-        )
+        default=u"top-to-bottom",
+    )
+
 
 class ILocale(Interface):
     """This class contains all important information about the locale.
@@ -610,24 +717,31 @@ class ILocale(Interface):
         title=u"Locale identity",
         description=u"ILocaleIdentity object identifying the locale.",
         required=True,
-        readonly=True)
+        readonly=True,
+    )
 
     displayNames = Field(
         title=u"Display Names",
-        description=(u"""ILocaleDisplayNames object that contains localized
-                        names."""))
+        description=(
+            u"""ILocaleDisplayNames object that contains localized
+                        names."""
+        ),
+    )
 
     dates = Field(
         title=u"Dates",
-        description=u"ILocaleDates object that contains date/time data.")
+        description=u"ILocaleDates object that contains date/time data.",
+    )
 
     numbers = Field(
         title=u"Numbers",
-        description=u"ILocaleNumbers object that contains number data.")
+        description=u"ILocaleNumbers object that contains number data.",
+    )
 
     orientation = Field(
         title=u"Orientation",
-        description=u"ILocaleOrientation with text orientation info.")
+        description=u"ILocaleOrientation with text orientation info.",
+    )
 
     delimiters = Dict(
         title=u"Delimiters",
@@ -635,11 +749,15 @@ class ILocale(Interface):
         key_type=Choice(
             title=u"Delimiter Type",
             description=u"Delimiter name.",
-            values=(u"quotationStart",
-                    u"quotationEnd",
-                    u"alternateQuotationStart",
-                    u"alternateQuotationEnd")),
-        value_type=Field(title=u"Delimiter symbol"))
+            values=(
+                u"quotationStart",
+                u"quotationEnd",
+                u"alternateQuotationStart",
+                u"alternateQuotationEnd",
+            ),
+        ),
+        value_type=Field(title=u"Delimiter symbol"),
+    )
 
     def getLocaleID():
         """Return a locale id as specified in the LDML specification"""
@@ -657,8 +775,11 @@ class ILocaleInheritance(Interface):
 
     __name__ = TextLine(
         title=u"The name within the parent",
-        description=(u"""The parent can be traversed with this name to get
-                       the object."""))
+        description=(
+            u"""The parent can be traversed with this name to get
+                       the object."""
+        ),
+    )
 
     def getInheritedSelf():
         """Return itself but in the next higher up Locale."""
@@ -699,6 +820,7 @@ class IDictionaryInheritance(ILocaleInheritance):
         object is consulted.
         """
 
+
 class ICollator(Interface):
     """Provide support for collating text strings
 
@@ -706,8 +828,7 @@ class ICollator(Interface):
     """
 
     def key(text):
-        """Return a collation key for the given text.
-        """
+        """Return a collation key for the given text."""
 
     def cmp(text1, text2):
         """Compare two text strings.

@@ -19,14 +19,13 @@ from zope.i18n.tests import test_imessagecatalog
 
 
 class GettextMessageCatalogTest(test_imessagecatalog.TestIMessageCatalog):
-
     def _getMessageCatalog(self):
         from zope.i18n import tests
+
         path = os.path.dirname(tests.__file__)
         self._path = os.path.join(path, 'en-default.mo')
         catalog = GettextMessageCatalog('en', 'default', self._path)
         return catalog
-
 
     def _getUniqueIndentifier(self):
         return self._path

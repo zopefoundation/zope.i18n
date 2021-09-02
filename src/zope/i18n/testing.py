@@ -34,12 +34,12 @@ def setUp(test=None):
     import zope.component
     from zope.publisher.browser import BrowserLanguages
     from zope.publisher.http import HTTPCharsets
+
     zope.component.provideAdapter(HTTPCharsets)
     zope.component.provideAdapter(BrowserLanguages)
 
 
 class PlacelessSetup(object):
-
     def setUp(self):
         """
         Install the language and charset negotiators.

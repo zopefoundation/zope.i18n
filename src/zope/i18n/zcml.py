@@ -1,4 +1,3 @@
-
 # ##############################################################################
 #
 # Copyright (c) 2001, 2002 Zope Foundation and Contributors.
@@ -44,15 +43,17 @@ class IRegisterTranslationsDirective(Interface):
     directory = Path(
         title=u"Directory",
         description=u"Directory containing the translations",
-        required=True
-        )
+        required=True,
+    )
 
     domain = TextLine(
         title=u"Domain",
-        description=(u"Translation domain to register.  If not specified, "
-                     u"all domains found in the directory are registered"),
-        required=False
-        )
+        description=(
+            u"Translation domain to register.  If not specified, "
+            u"all domains found in the directory are registered"
+        ),
+        required=False,
+    )
 
 
 def allow_language(lang):
@@ -90,13 +91,15 @@ def registerTranslations(_context, directory, domain='*'):
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files
             if config.COMPILE_MO_FILES:
-                for domain_path in glob(os.path.join(lc_messages_path,
-                                                     '%s.po' % domain)):
+                for domain_path in glob(
+                    os.path.join(lc_messages_path, '%s.po' % domain)
+                ):
                     domain_file = os.path.basename(domain_path)
                     name = domain_file[:-3]
                     compile_mo_file(name, lc_messages_path)
-            for domain_path in glob(os.path.join(lc_messages_path,
-                                                 '%s.mo' % domain)):
+            for domain_path in glob(
+                os.path.join(lc_messages_path, '%s.mo' % domain)
+            ):
                 loaded = True
                 domain_file = os.path.basename(domain_path)
                 name = domain_file[:-3]
@@ -115,13 +118,13 @@ def registerTranslations(_context, directory, domain='*'):
         # `zope.component.zcml.utility`) since we need the actual utilities
         # in place before the merging can be done...
         _context.action(
-            discriminator=None,
-            callable=handler,
-            args=(catalogs, name))
+            discriminator=None, callable=handler, args=(catalogs, name)
+        )
 
     # also register the interface for the translation utilities
     provides = ITranslationDomain
     _context.action(
         discriminator=None,
         callable=provideInterface,
-        args=(provides.__module__ + '.' + provides.getName(), provides))
+        args=(provides.__module__ + '.' + provides.getName(), provides),
+    )

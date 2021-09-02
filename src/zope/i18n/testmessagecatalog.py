@@ -18,6 +18,7 @@ from zope import interface
 import zope.i18n.interfaces
 from zope.i18n.translationdomain import TranslationDomain
 
+
 @interface.implementer(zope.i18n.interfaces.IGlobalMessageCatalog)
 class TestMessageCatalog(object):
 
@@ -43,13 +44,15 @@ class TestMessageCatalog(object):
     def reload(self):
         pass
 
+
 @interface.implementer(zope.i18n.interfaces.ITranslationDomain)
 def TestMessageFallbackDomain(domain_id=u""):
     domain = TranslationDomain(domain_id)
     domain.addCatalog(TestMessageCatalog(domain_id))
     return domain
 
+
 interface.directlyProvides(
     TestMessageFallbackDomain,
     zope.i18n.interfaces.IFallbackTranslationDomainFactory,
-    )
+)

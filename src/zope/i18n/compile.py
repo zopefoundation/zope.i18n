@@ -11,11 +11,13 @@ logger = logging.getLogger('zope.i18n')
 
 HAS_PYTHON_GETTEXT = True
 
+
 def _safe_mtime(path):
     try:
         return os.path.getmtime(path)
     except (IOError, OSError):
         return None
+
 
 def compile_mo_file(domain, lc_messages_path):
     """Creates or updates a mo file in the locales folder."""
@@ -28,8 +30,7 @@ def compile_mo_file(domain, lc_messages_path):
     mo_mtime = _safe_mtime(mofile) or 0
 
     if po_mtime is None:
-        logger.debug("Unable to access %s (%s)",
-                     pofile, po_mtime)
+        logger.debug("Unable to access %s (%s)", pofile, po_mtime)
         return
 
     if po_mtime > mo_mtime:
@@ -44,6 +45,8 @@ def compile_mo_file(domain, lc_messages_path):
                     with open(mofile, 'wb') as fd:
                         fd.write(mo.read())
         except PoSyntaxError as err:
-            logger.warning('Syntax error while compiling %s (%s).', pofile, err.msg)
+            logger.warning(
+                'Syntax error while compiling %s (%s).', pofile, err.msg
+            )
         except (IOError, OSError) as err:
             logger.warning('Error while compiling %s (%s).', pofile, err)

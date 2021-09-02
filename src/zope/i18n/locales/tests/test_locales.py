@@ -22,7 +22,9 @@ from zope.i18n.locales import locales
 from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
 
 import zope.i18n
+
 datadir = os.path.join(os.path.dirname(zope.i18n.__file__), 'locales', 'data')
+
 
 class AbstractTestILocaleProviderMixin(object):
     """Test the functionality of an implmentation of the ILocaleProvider
@@ -60,14 +62,14 @@ class AbstractTestILocaleProviderMixin(object):
 
 
 class TestLocaleProvider(AbstractTestILocaleProviderMixin, TestCase):
-
     def _makeNewProvider(self):
         return LocaleProvider(datadir)
 
     def test_loadLocale(self):
         self.locales.loadLocale(None, None, None)
-        self.assertEqual(list(self.locales._locales.keys()),
-                         [(None, None, None)])
+        self.assertEqual(
+            list(self.locales._locales.keys()), [(None, None, None)]
+        )
 
         self.locales.loadLocale('en', None, None)
         self.assertIn(('en', None, None), self.locales._locales.keys())
@@ -94,27 +96,34 @@ class TestLocaleAndProvider(TestCase):
     def test_getTimeFormatter(self):
         formatter = self.locale.dates.getFormatter('time', 'medium')
         self.assertEqual(formatter.getPattern(), 'h:mm:ss a')
-        self.assertEqual(formatter.format(datetime.time(12, 30, 10)),
-                         '12:30:10 PM')
-        self.assertEqual(formatter.parse('12:30:10 PM'),
-                         datetime.time(12, 30, 10))
+        self.assertEqual(
+            formatter.format(datetime.time(12, 30, 10)), '12:30:10 PM'
+        )
+        self.assertEqual(
+            formatter.parse('12:30:10 PM'), datetime.time(12, 30, 10)
+        )
 
     def test_getDateFormatter(self):
         formatter = self.locale.dates.getFormatter('date', 'medium')
         self.assertEqual(formatter.getPattern(), 'MMM d, yyyy')
-        self.assertEqual(formatter.format(datetime.date(2003, 1, 2)),
-                         'Jan 2, 2003')
-        self.assertEqual(formatter.parse('Jan 2, 2003'),
-                         datetime.date(2003, 1, 2))
+        self.assertEqual(
+            formatter.format(datetime.date(2003, 1, 2)), 'Jan 2, 2003'
+        )
+        self.assertEqual(
+            formatter.parse('Jan 2, 2003'), datetime.date(2003, 1, 2)
+        )
 
     def test_getDateTimeFormatter(self):
         formatter = self.locale.dates.getFormatter('dateTime', 'medium')
         self.assertEqual(formatter.getPattern(), 'MMM d, yyyy h:mm:ss a')
         self.assertEqual(
             formatter.format(datetime.datetime(2003, 1, 2, 12, 30)),
-            'Jan 2, 2003 12:30:00 PM')
-        self.assertEqual(formatter.parse('Jan 2, 2003 12:30:00 PM'),
-                         datetime.datetime(2003, 1, 2, 12, 30))
+            'Jan 2, 2003 12:30:00 PM',
+        )
+        self.assertEqual(
+            formatter.parse('Jan 2, 2003 12:30:00 PM'),
+            datetime.datetime(2003, 1, 2, 12, 30),
+        )
 
     def test_getNumberFormatter(self):
         formatter = self.locale.numbers.getFormatter('decimal')
@@ -126,7 +135,6 @@ class TestLocaleAndProvider(TestCase):
 
 
 class TestGlobalLocaleProvider(TestCase):
-
     def testLoading(self):
         locales.loadLocale(None, None, None)
         self.assertIn((None, None, None), locales._locales)
@@ -143,6 +151,7 @@ class TestGlobalLocaleProvider(TestCase):
         self.assertEqual(locale.id.territory, 'GB')
         self.assertEqual(locale.id.variant, None)
 
+
 class TestRootLocale(TestCase):
     """There were some complaints that the root locale does not work
     correctly, so make sure it does."""
@@ -153,10 +162,14 @@ class TestRootLocale(TestCase):
     def test_dateFormatter(self):
         formatter = self.locale.dates.getFormatter('date')
         self.assertEqual(
-            formatter.format(datetime.date(2004, 10, 31), 'E'), '1')
+            formatter.format(datetime.date(2004, 10, 31), 'E'), '1'
+        )
         self.assertEqual(
-            formatter.format(datetime.date(2004, 10, 31), 'EE'), '01')
+            formatter.format(datetime.date(2004, 10, 31), 'EE'), '01'
+        )
         self.assertEqual(
-            formatter.format(datetime.date(2004, 10, 31), 'EEE'), '1')
+            formatter.format(datetime.date(2004, 10, 31), 'EEE'), '1'
+        )
         self.assertEqual(
-            formatter.format(datetime.date(2004, 10, 31), 'EEEE'), '1')
+            formatter.format(datetime.date(2004, 10, 31), 'EEEE'), '1'
+        )

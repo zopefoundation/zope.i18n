@@ -28,13 +28,17 @@ from zope.i18n.interfaces.locales import ILocaleFormat, ILocaleFormatLength
 from zope.i18n.interfaces.locales import ILocaleOrientation
 from zope.i18n.interfaces.locales import ILocaleDayContext, ILocaleMonthContext
 from zope.i18n.format import NumberFormat, DateTimeFormat
-from zope.i18n.locales.inheritance import \
-     AttributeInheritance, InheritingDictionary, NoParentException
+from zope.i18n.locales.inheritance import (
+    AttributeInheritance,
+    InheritingDictionary,
+    NoParentException,
+)
 from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
 
 
 # Setup the locale directory
 from zope import i18n
+
 LOCALEDIR = os.path.join(os.path.dirname(i18n.__file__), "locales", "data")
 
 # Global LocaleProvider. We really just need this single one.
@@ -63,15 +67,25 @@ FRIDAY = 5
 SATURDAY = 6
 SUNDAY = 7
 
-dayMapping = {'mon': 1, 'tue': 2, 'wed': 3, 'thu': 4,
-              'fri': 5, 'sat': 6, 'sun': 7}
+dayMapping = {
+    'mon': 1,
+    'tue': 2,
+    'wed': 3,
+    'thu': 4,
+    'fri': 5,
+    'sat': 6,
+    'sun': 7,
+}
 
 BC = 1
 AD = 2
 
-calendarAliases = {'islamic': ('arabic',),
-                   'islamic-civil': ('civil-arabic',),
-                   'buddhist': ('thai-buddhist', )}
+calendarAliases = {
+    'islamic': ('arabic',),
+    'islamic-civil': ('civil-arabic',),
+    'buddhist': ('thai-buddhist',),
+}
+
 
 @implementer(ILocaleIdentity)
 class LocaleIdentity(object):
@@ -102,7 +116,9 @@ class LocaleIdentity(object):
       <LocaleIdentity (en, None, US, POSIX)>
     """
 
-    def __init__(self, language=None, script=None, territory=None, variant=None):
+    def __init__(
+        self, language=None, script=None, territory=None, variant=None
+    ):
         """Initialize object."""
         self.language = language
         self.script = script
@@ -110,10 +126,13 @@ class LocaleIdentity(object):
         self.variant = variant
 
     def __repr__(self):
-        """See zope.i18n.interfaces.ILocaleIdentity
-        """
-        return "<LocaleIdentity (%s, %s, %s, %s)>" %(
-            self.language, self.script, self.territory, self.variant)
+        """See zope.i18n.interfaces.ILocaleIdentity"""
+        return "<LocaleIdentity (%s, %s, %s, %s)>" % (
+            self.language,
+            self.script,
+            self.territory,
+            self.variant,
+        )
 
 
 @implementer(ILocaleVersion)
@@ -151,12 +170,17 @@ class LocaleVersion(object):
         self.notes = notes
 
     def __lt__(self, other):
-        return ((self.generationDate, self.number) <
-                (other.generationDate, other.number))
+        return (self.generationDate, self.number) < (
+            other.generationDate,
+            other.number,
+        )
 
     def __eq__(self, other):
-        return ((self.generationDate, self.number) ==
-                (other.generationDate, other.number))
+        return (self.generationDate, self.number) == (
+            other.generationDate,
+            other.number,
+        )
+
 
 @implementer(ILocaleDisplayNames)
 class LocaleDisplayNames(AttributeInheritance):
@@ -233,7 +257,6 @@ class LocaleFormatLength(AttributeInheritance):
     """Specifies one of the format lengths of a specific quantity, like
     numbers, dates, times and datetimes."""
 
-
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
@@ -242,7 +265,6 @@ class LocaleFormatLength(AttributeInheritance):
 
 @implementer(ILocaleMonthContext)
 class LocaleMonthContext(AttributeInheritance):
-
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
@@ -251,7 +273,6 @@ class LocaleMonthContext(AttributeInheritance):
 
 @implementer(ILocaleDayContext)
 class LocaleDayContext(AttributeInheritance):
-
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
@@ -343,7 +364,9 @@ class LocaleCalendar(AttributeInheritance):
 
     def getMonthNames(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
-        return [self.months.get(type, (None, None))[0] for type in range(1, 13)]
+        return [
+            self.months.get(type, (None, None))[0] for type in range(1, 13)
+        ]
 
     def getMonthTypeFromName(self, name):
         """See zope.i18n.interfaces.ILocaleCalendar"""
@@ -353,7 +376,9 @@ class LocaleCalendar(AttributeInheritance):
 
     def getMonthAbbreviations(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
-        return [self.months.get(type, (None, None))[1] for type in range(1, 13)]
+        return [
+            self.months.get(type, (None, None))[1] for type in range(1, 13)
+        ]
 
     def getMonthTypeFromAbbreviation(self, abbr):
         """See zope.i18n.interfaces.ILocaleCalendar"""
@@ -491,26 +516,34 @@ class LocaleDates(AttributeInheritance):
 
     """
 
-    def getFormatter(self, category, length=None, name=None,
-                     calendar=u"gregorian"):
+    def getFormatter(
+        self, category, length=None, name=None, calendar=u"gregorian"
+    ):
         """See zope.i18n.interfaces.locales.ILocaleDates"""
         if category not in (u"date", u"time", u"dateTime"):
             raise ValueError('Invalid category: %s' % category)
-        if calendar not in (u"gregorian", u"arabic", u"chinese",
-                            u"civil-arabic", u"hebrew", u"japanese",
-                            u"thai-buddhist"):
+        if calendar not in (
+            u"gregorian",
+            u"arabic",
+            u"chinese",
+            u"civil-arabic",
+            u"hebrew",
+            u"japanese",
+            u"thai-buddhist",
+        ):
             raise ValueError('Invalid calendar: %s' % calendar)
         if length not in (u"short", u"medium", u"long", u"full", None):
             raise ValueError('Invalid format length: %s' % length)
 
         cal = self.calendars[calendar]
 
-        formats = getattr(cal, category+'Formats')
+        formats = getattr(cal, category + 'Formats')
         if length is None:
             length = getattr(
                 cal,
-                'default'+category[0].upper()+category[1:]+'Format',
-                list(formats.keys())[0])
+                'default' + category[0].upper() + category[1:] + 'Format',
+                list(formats.keys())[0],
+            )
 
         # 'datetime' is always a bit special; we often do not have a length
         # specification, but we need it for looking up the date and time
@@ -528,9 +561,11 @@ class LocaleDates(AttributeInheritance):
 
         if category == 'dateTime':
             date_pat = self.getFormatter(
-                'date', length, name, calendar).getPattern()
+                'date', length, name, calendar
+            ).getPattern()
             time_pat = self.getFormatter(
-                'time', length, name, calendar).getPattern()
+                'time', length, name, calendar
+            ).getPattern()
             pattern = pattern.replace('{1}', date_pat)
             pattern = pattern.replace('{0}', time_pat)
 
@@ -636,7 +671,8 @@ class LocaleNumbers(AttributeInheritance):
             length = getattr(
                 self,
                 'default' + category[0].upper() + category[1:] + 'Format',
-                list(formats.keys())[0])
+                list(formats.keys())[0],
+            )
         formatLength = formats[length]
 
         if name is None:
@@ -649,8 +685,8 @@ class LocaleNumbers(AttributeInheritance):
 
 @implementer(ILocaleOrientation)
 class LocaleOrientation(AttributeInheritance):
-    """Implementation of ILocaleOrientation
-    """
+    """Implementation of ILocaleOrientation"""
+
 
 @implementer(ILocale)
 class Locale(AttributeInheritance):
@@ -682,15 +718,15 @@ class Locale(AttributeInheritance):
 
         """
         id = self.id
-        pieces = [x for x in
-                  (id.language, id.script, id.territory, id.variant)
-                  if x]
+        pieces = [
+            x for x in (id.language, id.script, id.territory, id.variant) if x
+        ]
         id_string = '_'.join(pieces)
         # TODO: What about keys??? Where do I get this info from?
         # Notice that 'pieces' is always empty.
         pieces = [key + '=' + type for (key, type) in ()]
         assert not pieces
-        if pieces: # pragma: no cover
+        if pieces:  # pragma: no cover
             id_string += '@' + ','.join(pieces)
         return id_string
 

@@ -20,6 +20,7 @@ import os
 from zope.interface import implementer
 from zope.i18n.interfaces.locales import ILocaleProvider
 
+
 class LoadLocaleError(Exception):
     """This error is raised if a locale cannot be loaded."""
 
@@ -27,7 +28,6 @@ class LoadLocaleError(Exception):
 @implementer(ILocaleProvider)
 class LocaleProvider(object):
     """A locale provider that gets its data from the XML data."""
-
 
     def __init__(self, locale_dir):
         self._locales = {}
@@ -55,7 +55,8 @@ class LocaleProvider(object):
         path = os.path.join(self._locale_dir, filename)
         if not os.path.exists(path):
             raise LoadLocaleError(
-                'The desired locale is not available.\nPath: %s' % path)
+                'The desired locale is not available.\nPath: %s' % path
+            )
 
         # Import here to avoid circular imports
         from zope.i18n.locales.xmlfactory import LocaleFactory
