@@ -22,11 +22,10 @@ from zope.component.testing import PlacelessSetup
 
 from zope.schema import getValidationErrors
 
+from zope.i18n._compat import text_type
 from zope.i18n.negotiator import negotiator
 from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
 from zope.i18n.interfaces import ITranslationDomain
-
-text_type = str if bytes is not str else unicode
 
 
 @implementer(IUserPreferredLanguages)

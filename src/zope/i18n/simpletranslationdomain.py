@@ -15,11 +15,9 @@
 """
 from zope.interface import implementer
 from zope.component import getUtility
+from zope.i18n._compat import text_type
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 from zope.i18n import interpolate
-
-
-text_type = str if bytes is not str else unicode
 
 
 @implementer(ITranslationDomain)
