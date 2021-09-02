@@ -5,7 +5,8 @@
 4.7.1 (unreleased)
 ==================
 
-- Nothing changed yet.
+- Support and test Python 3.8 and 3.9.
+  Full supported list is now: 2.7, 3.5, 3.6, 3.7, 3.8, 3.9, PyPy, PyPy3.
 
 
 4.7.0 (2019-07-10)
