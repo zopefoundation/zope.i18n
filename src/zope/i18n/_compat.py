@@ -1,8 +1,8 @@
 # This gives a linting error because unicode is not defined on Python 3:
 # text_type = str if bytes is not str else unicode
 try:
-    # Python 3
+    # Python 2
     text_type = unicode
 except NameError:
-    # Python 2
+    # Python 3
     text_type = str
