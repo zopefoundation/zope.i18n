@@ -759,7 +759,8 @@ class LocaleFactory(object):
             if length_node.getElementsByTagName(formatNodeName):
                 length.formats = InheritingDictionary()
 
-            for format_node in length_node.getElementsByTagName(formatNodeName):
+            for format_node in length_node.getElementsByTagName(
+                    formatNodeName):
                 format = LocaleFormat()
                 format.type = format_node.getAttribute('type') or None
                 pattern_node = format_node.getElementsByTagName('pattern')[0]
@@ -909,7 +910,7 @@ class LocaleFactory(object):
                     default, formats = self._extractFormats(
                         formats_nodes[0], lengthName, formatName)
                     setattr(calendar,
-                            'default'+formatName[0].upper()+formatName[1:],
+                            'default' + formatName[0].upper() + formatName[1:],
                             default)
                     setattr(calendar, formatsName, formats)
 
@@ -1153,10 +1154,10 @@ class LocaleFactory(object):
         """
 
         for category in ('decimal', 'scientific', 'percent', 'currency'):
-            formatsName = category+'Formats'
-            lengthName = category+'FormatLength'
-            formatName = category+'Format'
-            defaultName = 'default'+formatName[0].upper()+formatName[1:]
+            formatsName = category + 'Formats'
+            lengthName = category + 'FormatLength'
+            formatName = category + 'Format'
+            defaultName = 'default' + formatName[0].upper() + formatName[1:]
 
             formats_nodes = numbers_node.getElementsByTagName(formatsName)
             if formats_nodes:

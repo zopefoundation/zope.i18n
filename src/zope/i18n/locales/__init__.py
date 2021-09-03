@@ -103,7 +103,8 @@ class LocaleIdentity(object):
       <LocaleIdentity (en, None, US, POSIX)>
     """
 
-    def __init__(self, language=None, script=None, territory=None, variant=None):
+    def __init__(self, language=None, script=None,
+                 territory=None, variant=None):
         """Initialize object."""
         self.language = language
         self.script = script
@@ -344,7 +345,8 @@ class LocaleCalendar(AttributeInheritance):
 
     def getMonthNames(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
-        return [self.months.get(type, (None, None))[0] for type in range(1, 13)]
+        return [self.months.get(type, (None, None))[0]
+                for type in range(1, 13)]
 
     def getMonthTypeFromName(self, name):
         """See zope.i18n.interfaces.ILocaleCalendar"""
@@ -354,7 +356,8 @@ class LocaleCalendar(AttributeInheritance):
 
     def getMonthAbbreviations(self):
         """See zope.i18n.interfaces.ILocaleCalendar"""
-        return [self.months.get(type, (None, None))[1] for type in range(1, 13)]
+        return [self.months.get(type, (None, None))[1]
+                for type in range(1, 13)]
 
     def getMonthTypeFromAbbreviation(self, abbr):
         """See zope.i18n.interfaces.ILocaleCalendar"""
@@ -506,11 +509,11 @@ class LocaleDates(AttributeInheritance):
 
         cal = self.calendars[calendar]
 
-        formats = getattr(cal, category+'Formats')
+        formats = getattr(cal, category + 'Formats')
         if length is None:
             length = getattr(
                 cal,
-                'default'+category[0].upper()+category[1:]+'Format',
+                'default' + category[0].upper() + category[1:] + 'Format',
                 list(formats.keys())[0])
 
         # 'datetime' is always a bit special; we often do not have a length

@@ -143,7 +143,7 @@ class DateTimeFormat(object):
                 ampm_entry[0])]
             if hour == 12:
                 ampm = not ampm
-            ordered[3] = (hour + 12*ampm) % 24
+            ordered[3] = (hour + 12 * ampm) % 24
 
         # Shortcut for the simple int functions
         dt_fields_map = {'d': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
@@ -236,7 +236,7 @@ class NumberFormat(object):
         self.symbols = {
             u"decimal": u".",
             u"group": u",",
-            u"list":  u";",
+            u"list": u";",
             u"percentSign": u"%",
             u"nativeZeroDigit": u"0",
             u"patternDigit": u"#",
@@ -282,12 +282,12 @@ class NumberFormat(object):
             min_size = bin_pattern[sign][INTEGER].count('0')
             if bin_pattern[sign][GROUPING]:
                 regex += self.symbols['group']
-                min_size += min_size/3
+                min_size += min_size / 3
             regex += ']{%i,100}' % (min_size)
             if bin_pattern[sign][FRACTION]:
                 max_precision = len(bin_pattern[sign][FRACTION])
                 min_precision = bin_pattern[sign][FRACTION].count('0')
-                regex += '['+self.symbols['decimal']+']?'
+                regex += '[' + self.symbols['decimal'] + ']?'
                 regex += '[0-9]{%i,%i}' % (min_precision, max_precision)
             if bin_pattern[sign][EXPONENTIAL] != '':
                 regex += self.symbols['exponential']
@@ -327,13 +327,14 @@ class NumberFormat(object):
             num_str = num_str.replace(self.symbols['exponential'], 'E')
         if self.type:
             type = self.type
-        return sign*type(num_str)
+        return sign * type(num_str)
 
     def _format_integer(self, integer, pattern):
         size = len(integer)
         min_size = pattern.count('0')
         if size < min_size:
-            integer = self.symbols['nativeZeroDigit']*(min_size-size) + integer
+            integer = self.symbols['nativeZeroDigit'] * \
+                (min_size - size) + integer
         return integer
 
     def _format_fraction(self, fraction, pattern, rounding=True):
@@ -362,8 +363,8 @@ class NumberFormat(object):
                     roundInt = True
 
         if precision < min_precision:
-            fraction += self.symbols['nativeZeroDigit']*(min_precision -
-                                                         precision)
+            fraction += self.symbols['nativeZeroDigit'] * (min_precision -
+                                                           precision)
         if fraction != '':
             fraction = self.symbols['decimal'] + fraction
         return fraction, roundInt
@@ -440,16 +441,16 @@ class NumberFormat(object):
                 # abs() of number smaller 1
                 if len(obj_int_frac) > 1:
                     res = re.match('(0*)[0-9]*', obj_int_frac[1]).groups()[0]
-                    exponent = self._format_integer(str(len(res)+1),
+                    exponent = self._format_integer(str(len(res) + 1),
                                                     exp_bin_pattern)
-                    exponent = self.symbols['minusSign']+exponent
+                    exponent = self.symbols['minusSign'] + exponent
                     number = obj_int_frac[1][len(res):]
                 else:
                     # We have exactly 0
                     exponent = self._format_integer('0', exp_bin_pattern)
                     number = self.symbols['nativeZeroDigit']
             else:
-                exponent = self._format_integer(str(len(obj_int_frac[0])-1),
+                exponent = self._format_integer(str(len(obj_int_frac[0]) - 1),
                                                 exp_bin_pattern)
                 number = ''.join(obj_int_frac)
 
@@ -484,13 +485,13 @@ class NumberFormat(object):
             if bin_pattern[GROUPING]:
                 integer = self._group(integer, bin_pattern[GROUPING])
             pre_padding = len(bin_pattern[INTEGER]) - len(integer)
-            post_padding = len(bin_pattern[FRACTION]) - len(fraction)+1
+            post_padding = len(bin_pattern[FRACTION]) - len(fraction) + 1
             number = integer + fraction
 
         # Put it all together
         text = ''
         if bin_pattern[PADDING1] is not None and pre_padding > 0:
-            text += bin_pattern[PADDING1]*pre_padding
+            text += bin_pattern[PADDING1] * pre_padding
         text += bin_pattern[PREFIX]
         if bin_pattern[PADDING2] is not None and pre_padding > 0:
             if bin_pattern[PADDING1] is not None:
@@ -502,10 +503,10 @@ class NumberFormat(object):
             if bin_pattern[PADDING4] is not None:
                 text += bin_pattern[PADDING3]
             else:
-                text += bin_pattern[PADDING3]*post_padding
+                text += bin_pattern[PADDING3] * post_padding
         text += bin_pattern[SUFFIX]
         if bin_pattern[PADDING4] is not None and post_padding > 0:
-            text += bin_pattern[PADDING4]*post_padding
+            text += bin_pattern[PADDING4] * post_padding
 
         # TODO: Need to make sure unicode is everywhere
         return text_type(text)
@@ -644,9 +645,10 @@ def buildDateTimeParseInfo(calendar, pattern):
         elif entry[1] == 2:
             info[entry] = r'([0-9]{2})'
         elif entry[1] == 3:
-            info[entry] = r'('+'|'.join(calendar.getMonthAbbreviations())+')'
+            info[entry] = r'(' + \
+                '|'.join(calendar.getMonthAbbreviations()) + ')'
         else:
-            info[entry] = r'('+'|'.join(calendar.getMonthNames())+')'
+            info[entry] = r'(' + '|'.join(calendar.getMonthNames()) + ')'
 
     # day in week (Text and Number)
     for entry in _findFormattingCharacterInPattern('E', pattern):
@@ -655,9 +657,9 @@ def buildDateTimeParseInfo(calendar, pattern):
         elif entry[1] == 2:
             info[entry] = r'([0-9]{2})'
         elif entry[1] == 3:
-            info[entry] = r'('+'|'.join(calendar.getDayAbbreviations())+')'
+            info[entry] = r'(' + '|'.join(calendar.getDayAbbreviations()) + ')'
         else:
-            info[entry] = r'('+'|'.join(calendar.getDayNames())+')'
+            info[entry] = r'(' + '|'.join(calendar.getDayNames()) + ')'
 
     return info
 
@@ -965,7 +967,7 @@ def parseNumberPattern(pattern):
         last_index = -1
         for index, char in enumerate(reversed(integer)):
             if char == ",":
-                grouping += (index-last_index-1,)
+                grouping += (index - last_index - 1,)
                 last_index = index
         # use last group ad infinitum
         grouping += (0,)

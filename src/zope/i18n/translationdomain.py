@@ -85,7 +85,7 @@ class TranslationDomain(object):
             msgid_plural, default_plural, number)
 
     def _recursive_translate(self, msgid, mapping, target_language, default,
-                             context,  msgid_plural, default_plural, number,
+                             context, msgid_plural, default_plural, number,
                              seen=None):
         """Recursively translate msg."""
         # MessageID attributes override arguments
