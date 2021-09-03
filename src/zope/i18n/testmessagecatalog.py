@@ -29,7 +29,7 @@ class TestMessageCatalog(object):
 
     def queryMessage(self, msgid, default=None):
         default = getattr(msgid, 'default', default)
-        if default != None and default != msgid:
+        if default is not None and default != msgid:
             msg = u"%s (%s)" % (msgid, default)
         else:
             msg = msgid
