@@ -203,7 +203,6 @@ class IMessageImportFilter(Interface):
        Classes implementing this interface should usually be Adaptors, as
        they adapt the IEditableTranslationService interface."""
 
-
     def importMessages(domains, languages, file):
         """Import all messages that are defined in the specified domains and
            languages.
@@ -253,7 +252,6 @@ class IMessageExportFilter(Interface):
 
        Classes implementing this interface should usually be Adaptors, as
        they adapt the IEditableTranslationService interface."""
-
 
     def exportMessages(domains, languages):
         """Export all messages that are defined in the specified domains and
@@ -324,7 +322,6 @@ class IFormat(Interface):
 
     def format(obj, pattern=None):
         """Format an object to a string using the pattern as a rule."""
-
 
 
 class INumberFormat(IFormat):

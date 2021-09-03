@@ -20,6 +20,7 @@ from zope.i18n.locales.inheritance import NoParentException
 
 from zope.i18n.testing import unicode_checker
 
+
 class LocaleInheritanceStub(AttributeInheritance):
 
     def __init__(self, nextLocale=None):
@@ -36,7 +37,8 @@ def test_suite():
         DocTestSuite('zope.i18n.locales', checker=unicode_checker),
         DocTestSuite('zope.i18n.locales.inheritance', checker=unicode_checker),
         DocTestSuite('zope.i18n.locales.xmlfactory', checker=unicode_checker),
-        ))
+    ))
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -34,6 +34,7 @@ from zope.i18n.format import NumberPatternParseError
 class LocaleStub(object):
     pass
 
+
 class LocaleCalendarStub(object):
 
     type = u"gregorian"
@@ -102,12 +103,12 @@ class LocaleCalendarStub(object):
 class _TestCase(TestCase):
     # Avoid deprecation warnings in Python 3 by making the preferred
     # method name available for Python 2.
-    assertRaisesRegex = getattr(TestCase, 'assertRaisesRegex', TestCase.assertRaisesRegexp)
+    assertRaisesRegex = getattr(
+        TestCase, 'assertRaisesRegex', TestCase.assertRaisesRegexp)
 
 
 class TestDateTimePatternParser(_TestCase):
     """Extensive tests for the ICU-based-syntax datetime pattern parser."""
-
 
     def testParseSimpleTimePattern(self):
         self.assertEqual(parseDateTimePattern('HH'),
@@ -217,7 +218,8 @@ class TestBuildDateTimeParseInfo(_TestCase):
         for char in 'dDFkKhHmsSwW':
             for length in range(1, 6):
                 self.assertEqual(self.info((char, length)),
-                                 '([0-9]{%i,1000})' %length)
+                                 '([0-9]{%i,1000})' % length)
+
     def testYear(self):
         self.assertEqual(self.info(('y', 2)), '([0-9]{2})')
         self.assertEqual(self.info(('y', 4)), '([0-9]{4})')
@@ -673,7 +675,6 @@ class TestDateTimeFormat(_TestCase):
             self.format.format(datetime.date(2003, 1, 10),
                                "F. EEEE 'im' MMMM, yyyy"),
             u"2. Freitag im Januar, 2003")
-
 
     def testFormatGregorianEra(self):
         self.assertEqual(
@@ -1329,7 +1330,7 @@ class TestNumberFormat(_TestCase):
 
     def testFormatBadThousandSeparator(self):
         self.assertRaises(ValueError,
-            self.format.format, 23341, '0,')
+                          self.format.format, 23341, '0,')
 
     def testFormatDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '###0.0#'),
@@ -1347,7 +1348,6 @@ class TestNumberFormat(_TestCase):
         self.assertEqual(self.format.format(149, '0E0'), '1E2')
         self.assertEqual(self.format.format(1.9999, '0.000'), '2.000')
         self.assertEqual(self.format.format(1.9999, '0.0000'), '1.9999')
-
 
     def testFormatScientificDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '0.00####E00'),

@@ -54,6 +54,7 @@ class I18nAwareContentObject(object):
     #
     ############################################################
 
+
 class AbstractTestII18nAwareMixin(object):
 
     def setUp(self):
@@ -73,7 +74,8 @@ class AbstractTestII18nAwareMixin(object):
         self.assertEqual(self.object.getDefaultLanguage(), 'lt')
 
     def testGetAvailableLanguages(self):
-        self.assertEqual(sorted(self.object.getAvailableLanguages()), ['en', 'fr', 'lt'])
+        self.assertEqual(sorted(self.object.getAvailableLanguages()), [
+                         'en', 'fr', 'lt'])
 
 
 class TestI18nAwareObject(AbstractTestII18nAwareMixin, unittest.TestCase):

@@ -29,7 +29,7 @@ from zope.i18n.interfaces.locales import ILocaleOrientation
 from zope.i18n.interfaces.locales import ILocaleDayContext, ILocaleMonthContext
 from zope.i18n.format import NumberFormat, DateTimeFormat
 from zope.i18n.locales.inheritance import \
-     AttributeInheritance, InheritingDictionary, NoParentException
+    AttributeInheritance, InheritingDictionary, NoParentException
 from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
 
 
@@ -73,6 +73,7 @@ calendarAliases = {'islamic': ('arabic',),
                    'islamic-civil': ('civil-arabic',),
                    'buddhist': ('thai-buddhist', )}
 
+
 @implementer(ILocaleIdentity)
 class LocaleIdentity(object):
     """Represents a unique identification of the locale
@@ -112,7 +113,7 @@ class LocaleIdentity(object):
     def __repr__(self):
         """See zope.i18n.interfaces.ILocaleIdentity
         """
-        return "<LocaleIdentity (%s, %s, %s, %s)>" %(
+        return "<LocaleIdentity (%s, %s, %s, %s)>" % (
             self.language, self.script, self.territory, self.variant)
 
 
@@ -157,6 +158,7 @@ class LocaleVersion(object):
     def __eq__(self, other):
         return ((self.generationDate, self.number) ==
                 (other.generationDate, other.number))
+
 
 @implementer(ILocaleDisplayNames)
 class LocaleDisplayNames(AttributeInheritance):
@@ -232,7 +234,6 @@ class LocaleFormat(object):
 class LocaleFormatLength(AttributeInheritance):
     """Specifies one of the format lengths of a specific quantity, like
     numbers, dates, times and datetimes."""
-
 
     def __init__(self, type=None):
         """Initialize the object."""
@@ -652,6 +653,7 @@ class LocaleOrientation(AttributeInheritance):
     """Implementation of ILocaleOrientation
     """
 
+
 @implementer(ILocale)
 class Locale(AttributeInheritance):
     """Implementation of the ILocale interface."""
@@ -690,7 +692,7 @@ class Locale(AttributeInheritance):
         # Notice that 'pieces' is always empty.
         pieces = [key + '=' + type for (key, type) in ()]
         assert not pieces
-        if pieces: # pragma: no cover
+        if pieces:  # pragma: no cover
             id_string += '@' + ','.join(pieces)
         return id_string
 

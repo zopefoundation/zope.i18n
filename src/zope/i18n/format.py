@@ -31,7 +31,7 @@ NATIVE_NUMBER_TYPES = (int, float)
 try:
     NATIVE_NUMBER_TYPES += (long,)
 except NameError:
-    pass # Py3
+    pass  # Py3
 
 
 def roundHalfUp(n):
@@ -139,10 +139,11 @@ class DateTimeFormat(object):
             if not ampm_entry:
                 raise DateTimeParseError(
                     'Cannot handle 12-hour format without am/pm marker.')
-            ampm = self.calendar.pm == results[bin_pattern.index(ampm_entry[0])]
+            ampm = self.calendar.pm == results[bin_pattern.index(
+                ampm_entry[0])]
             if hour == 12:
                 ampm = not ampm
-            ordered[3] = (hour + 12*ampm)%24
+            ordered[3] = (hour + 12*ampm) % 24
 
         # Shortcut for the simple int functions
         dt_fields_map = {'d': 2, 'H': 3, 'm': 4, 's': 5, 'S': 6}
@@ -155,7 +156,7 @@ class DateTimeFormat(object):
 
         # Handle timezones
         tzinfo = None
-        pytz_tzinfo = False # If True, we should use pytz specific syntax
+        pytz_tzinfo = False  # If True, we should use pytz specific syntax
         tz_entry = _findFormattingCharacterInPattern('z', bin_pattern)
         if ordered[3:] != [None, None, None, None] and tz_entry:
             length = tz_entry[0][1]
@@ -189,7 +190,7 @@ class DateTimeFormat(object):
                         datetime.date.today(),
                         datetime.time(*[e or 0 for e in ordered[3:]]))).timetz()
             return datetime.time(
-                *[e or 0 for e in ordered[3:]], **{'tzinfo' :tzinfo}
+                *[e or 0 for e in ordered[3:]], **{'tzinfo': tzinfo}
             )
 
         if pytz_tzinfo:
@@ -198,7 +199,7 @@ class DateTimeFormat(object):
             ))
 
         return datetime.datetime(
-            *[e or 0 for e in ordered], **{'tzinfo' :tzinfo}
+            *[e or 0 for e in ordered], **{'tzinfo': tzinfo}
         )
 
     def format(self, obj, pattern=None):
@@ -282,19 +283,19 @@ class NumberFormat(object):
             if bin_pattern[sign][GROUPING]:
                 regex += self.symbols['group']
                 min_size += min_size/3
-            regex += ']{%i,100}' %(min_size)
+            regex += ']{%i,100}' % (min_size)
             if bin_pattern[sign][FRACTION]:
                 max_precision = len(bin_pattern[sign][FRACTION])
                 min_precision = bin_pattern[sign][FRACTION].count('0')
                 regex += '['+self.symbols['decimal']+']?'
-                regex += '[0-9]{%i,%i}' %(min_precision, max_precision)
+                regex += '[0-9]{%i,%i}' % (min_precision, max_precision)
             if bin_pattern[sign][EXPONENTIAL] != '':
                 regex += self.symbols['exponential']
                 min_exp_size = bin_pattern[sign][EXPONENTIAL].count('0')
                 pre_symbols = self.symbols['minusSign']
                 if bin_pattern[sign][EXPONENTIAL][0] == '+':
                     pre_symbols += self.symbols['plusSign']
-                regex += '[%s]?[0-9]{%i,100}' %(pre_symbols, min_exp_size)
+                regex += '[%s]?[0-9]{%i,100}' % (pre_symbols, min_exp_size)
             regex += ')'
             if bin_pattern[sign][PADDING3] is not None:
                 regex += '[' + bin_pattern[sign][PADDING3] + ']+'
@@ -353,7 +354,7 @@ class NumberFormat(object):
                     fractionLen = len(fraction)
                     rounded = int(fraction) + 1
                     fraction = ('%0' + str(fractionLen) + 'i') % rounded
-                    if len(fraction) > fractionLen:	# rounded fraction >= 1
+                    if len(fraction) > fractionLen:  # rounded fraction >= 1
                         roundInt = True
                         fraction = fraction[1:]
                 else:
@@ -494,7 +495,7 @@ class NumberFormat(object):
         if bin_pattern[PADDING2] is not None and pre_padding > 0:
             if bin_pattern[PADDING1] is not None:
                 text += bin_pattern[PADDING2]
-            else: # pragma: no cover
+            else:  # pragma: no cover
                 text += bin_pattern[PADDING2] * pre_padding
         text += number
         if bin_pattern[PADDING3] is not None and post_padding > 0:
@@ -578,7 +579,7 @@ def parseDateTimePattern(pattern, DATETIMECHARS="aGyMdEDFwWhHmsSkKz"):
 
     # Some cleaning up
     if state == IN_QUOTE:
-        if quote_start == -1: # pragma: no cover
+        if quote_start == -1:  # pragma: no cover
             # It should not be possible to get into this state.
             # The only time we set quote_start to -1 we also set the state
             # to DEFAULT.
@@ -605,7 +606,7 @@ def buildDateTimeParseInfo(calendar, pattern):
         for entry in _findFormattingCharacterInPattern(field, pattern):
             # The maximum amount of digits should be infinity, but 1000 is
             # close enough here.
-            info[entry] = r'([0-9]{%i,1000})' %entry[1]
+            info[entry] = r'([0-9]{%i,1000})' % entry[1]
 
     # year (Number)
     for entry in _findFormattingCharacterInPattern('y', pattern):
@@ -618,12 +619,12 @@ def buildDateTimeParseInfo(calendar, pattern):
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
-        info[entry] = r'(%s|%s)' %(calendar.am, calendar.pm)
+        info[entry] = r'(%s|%s)' % (calendar.am, calendar.pm)
 
     # era designator (Text)
     # TODO: works for gregorian only right now
     for entry in _findFormattingCharacterInPattern('G', pattern):
-        info[entry] = r'(%s|%s)' %(calendar.eras[1][1], calendar.eras[2][1])
+        info[entry] = r'(%s|%s)' % (calendar.eras[1][1], calendar.eras[2][1])
 
     # time zone (Text)
     for entry in _findFormattingCharacterInPattern('z', pattern):
@@ -676,7 +677,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
     else:
         ampm = calendar.am
 
-    h = dt.hour%12
+    h = dt.hour % 12
     if h == 0:
         h = 12
 
@@ -693,7 +694,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
     tz_mins = int(math.fabs(tz_secs % 3600 / 60))
     tz_hours = int(math.fabs(tz_secs / 3600))
     tz_sign = '-' if tz_secs < 0 else '+'
-    tz_defaultname = "%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
+    tz_defaultname = "%s%i%.2i" % (tz_sign, tz_hours, tz_mins)
     tz_name = tzinfo.tzname(dt) or tz_defaultname
     tz_fullname = getattr(tzinfo, 'zone', None) or tz_name
 
@@ -705,12 +706,12 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # Generic Numbers
     for field, value in (('d', dt.day), ('D', int(dt.strftime('%j'))),
                          ('F', day_of_week_in_month), ('k', dt.hour or 24),
-                         ('K', dt.hour%12), ('h', h), ('H', dt.hour),
+                         ('K', dt.hour % 12), ('h', h), ('H', dt.hour),
                          ('m', dt.minute), ('s', dt.second),
                          ('S', dt.microsecond), ('w', int(dt.strftime('%W'))),
                          ('W', week_in_month)):
         for entry in _findFormattingCharacterInPattern(field, pattern):
-            info[entry] = (u"%%.%ii" %entry[1]) %value
+            info[entry] = (u"%%.%ii" % entry[1]) % value
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
@@ -724,9 +725,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # time zone (Text)
     for entry in _findFormattingCharacterInPattern('z', pattern):
         if entry[1] == 1:
-            info[entry] = u"%s%i%.2i" %(tz_sign, tz_hours, tz_mins)
+            info[entry] = u"%s%i%.2i" % (tz_sign, tz_hours, tz_mins)
         elif entry[1] == 2:
-            info[entry] = u"%s%.2i:%.2i" %(tz_sign, tz_hours, tz_mins)
+            info[entry] = u"%s%.2i:%.2i" % (tz_sign, tz_hours, tz_mins)
         elif entry[1] == 3:
             info[entry] = tz_name
         else:

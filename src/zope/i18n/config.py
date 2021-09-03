@@ -45,4 +45,5 @@ def _parse_languages(value):
 #: A set of languages that `zope.i18n.negotiate` will pass to the
 #: `zope.i18n.interfaces.INegotiator` utility. If this is None,
 #: no utility will be used.
-ALLOWED_LANGUAGES = _parse_languages(os.environ.get(ALLOWED_LANGUAGES_KEY, None))
+ALLOWED_LANGUAGES = _parse_languages(
+    os.environ.get(ALLOWED_LANGUAGES_KEY, None))

@@ -22,6 +22,7 @@ from zope.i18n.testing import unicode_checker
 
 def test_suite():
     options = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
+
     def suite(name):
         return doctest.DocTestSuite(
             name,

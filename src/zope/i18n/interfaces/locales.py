@@ -17,7 +17,7 @@ import datetime
 import re
 from zope.interface import Interface, Attribute
 from zope.schema import \
-     Field, Text, TextLine, Int, Bool, Tuple, List, Dict, Date
+    Field, Text, TextLine, Int, Bool, Tuple, List, Dict, Date
 from zope.schema import Choice
 
 
@@ -188,7 +188,6 @@ class ILocaleTimeZone(Interface):
         required=True,
         readonly=True)
 
-
     names = Dict(
         title=u"Time Zone Names",
         description=u"Various names of the timezone.",
@@ -230,7 +229,7 @@ class ILocaleFormatLength(Interface):
         title=u"Format Length Type",
         description=u"Name of the format length",
         values=(u"full", u"long", u"medium", u"short")
-        )
+    )
 
     default = TextLine(
         title=u"Default Format",
@@ -491,6 +490,7 @@ class ILocaleCurrency(Interface):
 
     symbolChoice = Bool(title=u"Symbol Choice")
 
+
 class ILocaleNumbers(Interface):
     """This object contains various data about numbers and currencies."""
 
@@ -556,7 +556,6 @@ class ILocaleNumbers(Interface):
             description=u"Name of the format length"),
         value_type=Field(title=u"ILocaleCurrency object"))
 
-
     def getFormatter(category, length=None, name=u""):
         """Get the NumberFormat based on the category, length and name of the
         format.
@@ -577,8 +576,11 @@ class ILocaleNumbers(Interface):
     def getDefaultCurrency():
         """Get the default currency."""
 
+
 _orientations = [u"left-to-right", u"right-to-left",
                  u"top-to-bottom", u"bottom-to-top"]
+
+
 class ILocaleOrientation(Interface):
     """Information about the orientation of text."""
 
@@ -586,13 +588,14 @@ class ILocaleOrientation(Interface):
         title=u"Orientation of characters",
         values=_orientations,
         default=u"left-to-right"
-        )
+    )
 
     lines = Choice(
         title=u"Orientation of characters",
         values=_orientations,
         default=u"top-to-bottom"
-        )
+    )
+
 
 class ILocale(Interface):
     """This class contains all important information about the locale.
@@ -698,6 +701,7 @@ class IDictionaryInheritance(ILocaleInheritance):
         If an key is not found or is None, the next higher up Locale
         object is consulted.
         """
+
 
 class ICollator(Interface):
     """Provide support for collating text strings

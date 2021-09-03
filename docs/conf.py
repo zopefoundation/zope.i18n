@@ -18,7 +18,7 @@ import pkg_resources
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.append(os.path.abspath('.'))
+# sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('../src'))
 rqmt = pkg_resources.require('zope.i18n')[0]
 
@@ -183,8 +183,8 @@ htmlhelp_basename = 'zopei18ndoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'zopei18n.tex', u'zope.i18n Documentation',
-   u'Zope Foundation and Contributors', 'manual'),
+    ('index', 'zopei18n.tex', u'zope.i18n Documentation',
+     u'Zope Foundation and Contributors', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of

@@ -18,7 +18,7 @@ import os
 from zope.i18n.translationdomain import TranslationDomain
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests.test_itranslationdomain import \
-     TestITranslationDomain, Environment
+    TestITranslationDomain, Environment
 from zope.i18nmessageid import MessageFactory
 from zope.i18n.interfaces import ITranslationDomain
 

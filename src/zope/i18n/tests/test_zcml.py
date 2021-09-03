@@ -37,6 +37,7 @@ template = """\
   %s
 </configure>"""
 
+
 class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     # This test suite needs the [zcml] and [compile] extra dependencies

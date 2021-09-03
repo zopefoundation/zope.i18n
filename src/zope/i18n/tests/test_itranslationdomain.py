@@ -28,15 +28,16 @@ from zope.i18n.interfaces import ITranslationDomain
 
 text_type = str if bytes is not str else unicode
 
+
 @implementer(IUserPreferredLanguages)
 class Environment(object):
-
 
     def __init__(self, langs=()):
         self.langs = langs
 
     def getPreferredLanguages(self):
         return self.langs
+
 
 class TestITranslationDomain(PlacelessSetup):
 
@@ -108,4 +109,4 @@ class TestITranslationDomain(PlacelessSetup):
 
 
 def test_suite():
-    return unittest.TestSuite() # Deliberately empty
+    return unittest.TestSuite()  # Deliberately empty
