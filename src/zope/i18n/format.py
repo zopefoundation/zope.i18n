@@ -189,7 +189,8 @@ class DateTimeFormat(object):
                 return tzinfo.localize(
                     datetime.datetime.combine(
                         datetime.date.today(),
-                        datetime.time(*[e or 0 for e in ordered[3:]]))).timetz()
+                        datetime.time(*[e or 0 for e in ordered[3:]]))
+                    ).timetz()
             return datetime.time(
                 *[e or 0 for e in ordered[3:]], **{'tzinfo': tzinfo}
             )

@@ -787,7 +787,8 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('#,##,##0.###;-#,##,##0.###'),
             ((None, '', None, '#####0', '###', '', None, '', None, (3, 2, 0)),
-             (None, '-', None, '#####0', '###', '', None, '', None, (3, 2, 0))))
+             (None, '-', None, '#####0', '###', '', None, '', None,
+              (3, 2, 0))))
 
         self.assertEqual(
             parseNumberPattern('#,##0.##;-#,##0.##'),
@@ -812,7 +813,8 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('##,##,##0.###;-##,##,##0.###'),
             ((None, '', None, '######0', '###', '', None, '', None, (3, 2, 0)),
-             (None, '-', None, '######0', '###', '', None, '', None, (3, 2, 0))))
+             (None, '-', None, '######0', '###', '', None, '', None,
+              (3, 2, 0))))
 
         self.assertEqual(
             parseNumberPattern('##,##0.##;-##,##0.##'),
@@ -862,7 +864,8 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('##,##,##0.00;-##,##,##0.00'),
             ((None, '', None, '######0', '00', '', None, '', None, (3, 2, 0)),
-             (None, '-', None, '######0', '00', '', None, '', None, (3, 2, 0))))
+             (None, '-', None, '######0', '00', '', None, '', None,
+              (3, 2, 0))))
 
         self.assertEqual(
             parseNumberPattern('###0.00;-###0.00'),

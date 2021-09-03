@@ -36,9 +36,11 @@ class LocaleXMLFileTestCase(TestCase):
 
         # Making sure all number format patterns parse
         # for category in (u'decimal', u'scientific', u'percent', u'currency'):
-        #    for length in getattr(locale.numbers, category+'Formats').values():
+        #    for length in getattr(
+        #        locale.numbers, category + 'Formats'
+        #     ).values():
         #        for format in length.formats.values():
-        #            self.assert_(parseNumberPattern(format.pattern) is not None)
+        #            self.assertIsNotNone(parseNumberPattern(format.pattern)
 
         # Making sure all datetime patterns parse
         # for calendar in locale.dates.calendars.values():
@@ -47,8 +49,8 @@ class LocaleXMLFileTestCase(TestCase):
         #             calendar, category + 'Formats'
         #         ).values():
         #             for format in length.formats.values():
-        #                 self.assert_(
-        #                     parseDateTimePattern(format.pattern) is not None
+        #                 self.assertIsNotNone(
+        #                     parseDateTimePattern(format.pattern)
         #                 )
 
 

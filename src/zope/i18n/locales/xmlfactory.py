@@ -381,8 +381,8 @@ class LocaleFactory(object):
 
         defaultMonthContext_node = months_node.getElementsByTagName('default')
         if defaultMonthContext_node:
-            calendar.defaultMonthContext = defaultMonthContext_node[0].getAttribute(
-                'type')
+            calendar.defaultMonthContext = defaultMonthContext_node[
+                0].getAttribute('type')
 
         monthContext_nodes = months_node.getElementsByTagName('monthContext')
         if not monthContext_nodes:
@@ -525,8 +525,8 @@ class LocaleFactory(object):
 
         defaultDayContext_node = days_node.getElementsByTagName('default')
         if defaultDayContext_node:
-            calendar.defaultDayContext = defaultDayContext_node[0].getAttribute(
-                'type')
+            calendar.defaultDayContext = defaultDayContext_node[
+                0].getAttribute('type')
 
         dayContext_nodes = days_node.getElementsByTagName('dayContext')
         if not dayContext_nodes:
@@ -904,7 +904,8 @@ class LocaleFactory(object):
             for formatsName, lengthName, formatName in (
                     ('dateFormats', 'dateFormatLength', 'dateFormat'),
                     ('timeFormats', 'timeFormatLength', 'timeFormat'),
-                    ('dateTimeFormats', 'dateTimeFormatLength', 'dateTimeFormat')):
+                    ('dateTimeFormats', 'dateTimeFormatLength',
+                     'dateTimeFormat')):
 
                 formats_nodes = cal_node.getElementsByTagName(formatsName)
                 if formats_nodes:
