@@ -27,6 +27,5 @@ class GettextMessageCatalogTest(test_imessagecatalog.TestIMessageCatalog):
         catalog = GettextMessageCatalog('en', 'default', self._path)
         return catalog
 
-
     def _getUniqueIndentifier(self):
         return self._path

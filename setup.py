@@ -21,9 +21,11 @@
 import os
 from setuptools import setup, find_packages
 
+
 def read(*rnames):
     with open(os.path.join(os.path.dirname(__file__), *rnames)) as f:
         return f.read()
+
 
 def alltests():
     import sys
@@ -38,6 +40,7 @@ def alltests():
     options = zope.testrunner.options.get_options(args, defaults)
     suites = list(zope.testrunner.find.find_suites(options))
     return unittest.TestSuite(suites)
+
 
 COMPILE_REQUIRES = [
     # python-gettext used to be here, but it's now
@@ -83,6 +86,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: Implementation :: PyPy',
         'Natural Language :: English',
@@ -93,7 +98,7 @@ setup(
     url='https://github.com/zopefoundation/zope.i18n',
     packages=find_packages('src'),
     package_dir={'': 'src'},
-    namespace_packages=['zope',],
+    namespace_packages=['zope', ],
     install_requires=[
         'setuptools',
         'python-gettext',
@@ -116,4 +121,4 @@ setup(
     test_suite='__main__.alltests',
     include_package_data=True,
     zip_safe=False,
-    )
+)

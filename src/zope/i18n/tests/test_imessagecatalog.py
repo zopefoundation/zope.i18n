@@ -21,14 +21,12 @@ from zope.schema import getValidationErrors
 
 class TestIMessageCatalog(unittest.TestCase):
 
-
     # This should be overridden by every class that inherits this test
     def _getMessageCatalog(self):
         raise NotImplementedError()
 
     def _getUniqueIndentifier(self):
         raise NotImplementedError()
-
 
     def setUp(self):
         self._catalog = self._getMessageCatalog()
@@ -63,4 +61,4 @@ class TestIMessageCatalog(unittest.TestCase):
 
 
 def test_suite():
-    return unittest.TestSuite() # Deliberately empty
+    return unittest.TestSuite()  # Deliberately empty

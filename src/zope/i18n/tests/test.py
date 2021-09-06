@@ -22,6 +22,7 @@ from zope.i18n.testing import unicode_checker
 
 def test_suite():
     options = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
+
     def suite(name):
         return doctest.DocTestSuite(
             name,
@@ -34,7 +35,3 @@ def test_suite():
         suite("zope.i18n.config"),
         suite("zope.i18n.testing"),
     ])
-
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')

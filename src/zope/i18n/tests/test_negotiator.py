@@ -20,6 +20,7 @@ from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component.testing import PlacelessSetup
 from zope.interface import implementer
 
+
 @implementer(IUserPreferredLanguages)
 class Env(object):
 
@@ -39,12 +40,12 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
     def test_findLanguages(self):
 
         _cases = (
-            (('en','de'), ('en','de','fr'),  'en'),
-            (('en'),      ('it','de','fr'),  None),
-            (('pt-br','de'), ('pt_BR','de','fr'),  'pt_BR'),
-            (('pt-br','en'), ('pt', 'en', 'fr'),  'pt'),
-            (('pt-br','en-us', 'de'), ('de', 'en', 'fr'),  'en'),
-            )
+            (('en', 'de'), ('en', 'de', 'fr'), 'en'),
+            (('en'), ('it', 'de', 'fr'), None),
+            (('pt-br', 'de'), ('pt_BR', 'de', 'fr'), 'pt_BR'),
+            (('pt-br', 'en'), ('pt', 'en', 'fr'), 'pt'),
+            (('pt-br', 'en-us', 'de'), ('de', 'en', 'fr'), 'en'),
+        )
 
         for user_pref_langs, obj_langs, expected in _cases:
             env = Env(user_pref_langs)
@@ -55,7 +56,4 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
 def test_suite():
     return unittest.TestSuite((
         unittest.makeSuite(NegotiatorTest),
-                           ))
-
-if __name__ == '__main__':
-    unittest.main(defaultTest='test_suite')
+    ))

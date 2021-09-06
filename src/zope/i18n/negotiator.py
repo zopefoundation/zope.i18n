@@ -29,8 +29,8 @@ def normalize_langs(langs):
     # Make a mapping from normalized->original so we keep can match
     # the normalized lang and return the original string.
     n_langs = {}
-    for l in langs:
-        n_langs[normalize_lang(l)] = l
+    for lang in langs:
+        n_langs[normalize_lang(lang)] = lang
     return n_langs
 
 

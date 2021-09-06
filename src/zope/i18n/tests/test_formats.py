@@ -34,6 +34,7 @@ from zope.i18n.format import NumberPatternParseError
 class LocaleStub(object):
     pass
 
+
 class LocaleCalendarStub(object):
 
     type = u"gregorian"
@@ -71,7 +72,8 @@ class LocaleCalendarStub(object):
     week = {'firstDay': 1, 'minDays': 1}
 
     def getMonthNames(self):
-        return [self.months.get(type, (None, None))[0] for type in range(1, 13)]
+        return [self.months.get(type, (None, None))[0]
+                for type in range(1, 13)]
 
     def getMonthTypeFromName(self, name):
         for item in self.months.items():
@@ -79,7 +81,8 @@ class LocaleCalendarStub(object):
                 return item[0]
 
     def getMonthAbbreviations(self):
-        return [self.months.get(type, (None, None))[1] for type in range(1, 13)]
+        return [self.months.get(type, (None, None))[1]
+                for type in range(1, 13)]
 
     def getMonthTypeFromAbbreviation(self, abbr):
         for item in self.months.items():
@@ -102,12 +105,12 @@ class LocaleCalendarStub(object):
 class _TestCase(TestCase):
     # Avoid deprecation warnings in Python 3 by making the preferred
     # method name available for Python 2.
-    assertRaisesRegex = getattr(TestCase, 'assertRaisesRegex', TestCase.assertRaisesRegexp)
+    assertRaisesRegex = getattr(
+        TestCase, 'assertRaisesRegex', TestCase.assertRaisesRegexp)
 
 
 class TestDateTimePatternParser(_TestCase):
     """Extensive tests for the ICU-based-syntax datetime pattern parser."""
-
 
     def testParseSimpleTimePattern(self):
         self.assertEqual(parseDateTimePattern('HH'),
@@ -217,7 +220,8 @@ class TestBuildDateTimeParseInfo(_TestCase):
         for char in 'dDFkKhHmsSwW':
             for length in range(1, 6):
                 self.assertEqual(self.info((char, length)),
-                                 '([0-9]{%i,1000})' %length)
+                                 '([0-9]{%i,1000})' % length)
+
     def testYear(self):
         self.assertEqual(self.info(('y', 2)), '([0-9]{2})')
         self.assertEqual(self.info(('y', 4)), '([0-9]{4})')
@@ -228,7 +232,8 @@ class TestBuildDateTimeParseInfo(_TestCase):
     def testAMPMMarker(self):
         names = ['vorm.', 'nachm.']
         for length in range(1, 6):
-            self.assertEqual(self.info(('a', length)), '('+'|'.join(names)+')')
+            self.assertEqual(self.info(('a', length)),
+                             '(' + '|'.join(names) + ')')
 
     def testEra(self):
         self.assertEqual(self.info(('G', 1)), '(v. Chr.|n. Chr.)')
@@ -248,12 +253,12 @@ class TestBuildDateTimeParseInfo(_TestCase):
         names = [u"Januar", u"Februar", u"Maerz", u"April",
                  u"Mai", u"Juni", u"Juli", u"August", u"September", u"Oktober",
                  u"November", u"Dezember"]
-        self.assertEqual(self.info(('M', 4)), '('+'|'.join(names)+')')
+        self.assertEqual(self.info(('M', 4)), '(' + '|'.join(names) + ')')
 
     def testMonthAbbr(self):
         names = ['Jan', 'Feb', 'Mrz', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug',
                  'Sep', 'Okt', 'Nov', 'Dez']
-        self.assertEqual(self.info(('M', 3)), '('+'|'.join(names)+')')
+        self.assertEqual(self.info(('M', 3)), '(' + '|'.join(names) + ')')
 
     def testWeekdayNumber(self):
         self.assertEqual(self.info(('E', 1)), '([0-9])')
@@ -262,13 +267,13 @@ class TestBuildDateTimeParseInfo(_TestCase):
     def testWeekdayNames(self):
         names = ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag',
                  'Freitag', 'Samstag', 'Sonntag']
-        self.assertEqual(self.info(('E', 4)), '('+'|'.join(names)+')')
-        self.assertEqual(self.info(('E', 5)), '('+'|'.join(names)+')')
-        self.assertEqual(self.info(('E', 10)), '('+'|'.join(names)+')')
+        self.assertEqual(self.info(('E', 4)), '(' + '|'.join(names) + ')')
+        self.assertEqual(self.info(('E', 5)), '(' + '|'.join(names) + ')')
+        self.assertEqual(self.info(('E', 10)), '(' + '|'.join(names) + ')')
 
     def testWeekdayAbbr(self):
         names = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
-        self.assertEqual(self.info(('E', 3)), '('+'|'.join(names)+')')
+        self.assertEqual(self.info(('E', 3)), '(' + '|'.join(names) + ')')
 
 
 class TestDateTimeFormat(_TestCase):
@@ -466,10 +471,10 @@ class TestDateTimeFormat(_TestCase):
         for day in range(1, 8):
             self.assertEqual(
                 self.format.format(
-                    datetime.datetime(2003, 1, day+5, 21, 48),
+                    datetime.datetime(2003, 1, day + 5, 21, 48),
                     "EEEE, d. MMMM yyyy H:mm' Uhr 'z"),
                 '%s, %i. Januar 2003 21:48 Uhr +000' % (
-                    self.format.calendar.days[day][0], day+5))
+                    self.format.calendar.days[day][0], day + 5))
 
     def testFormatTimeZone(self):
         self.assertEqual(
@@ -674,7 +679,6 @@ class TestDateTimeFormat(_TestCase):
                                "F. EEEE 'im' MMMM, yyyy"),
             u"2. Freitag im Januar, 2003")
 
-
     def testFormatGregorianEra(self):
         self.assertEqual(
             self.format.format(datetime.date(2017, 12, 17), 'G'),
@@ -711,7 +715,7 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('###0;#0'),
             ((None, '', None, '###0', '', '', None, '', None, ()),
-             (None, '', None,   '#0', '', '', None, '', None, ())))
+             (None, '', None, '#0', '', '', None, '', None, ())))
 
     def testParsePrefixedIntegerPattern(self):
         self.assertEqual(
@@ -753,7 +757,7 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('###0.00#;#0.0#'),
             ((None, '', None, '###0', '00#', '', None, '', None, ()),
-             (None, '', None,   '#0',  '0#', '', None, '', None, ())))
+             (None, '', None, '#0', '0#', '', None, '', None, ())))
 
     def testParsePosNegFractionPattern(self):
         self.assertEqual(
@@ -783,7 +787,8 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('#,##,##0.###;-#,##,##0.###'),
             ((None, '', None, '#####0', '###', '', None, '', None, (3, 2, 0)),
-             (None, '-', None, '#####0', '###', '', None, '', None, (3, 2, 0))))
+             (None, '-', None, '#####0', '###', '', None, '', None,
+              (3, 2, 0))))
 
         self.assertEqual(
             parseNumberPattern('#,##0.##;-#,##0.##'),
@@ -808,7 +813,8 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('##,##,##0.###;-##,##,##0.###'),
             ((None, '', None, '######0', '###', '', None, '', None, (3, 2, 0)),
-             (None, '-', None, '######0', '###', '', None, '', None, (3, 2, 0))))
+             (None, '-', None, '######0', '###', '', None, '', None,
+              (3, 2, 0))))
 
         self.assertEqual(
             parseNumberPattern('##,##0.##;-##,##0.##'),
@@ -858,7 +864,8 @@ class TestNumberPatternParser(_TestCase):
         self.assertEqual(
             parseNumberPattern('##,##,##0.00;-##,##,##0.00'),
             ((None, '', None, '######0', '00', '', None, '', None, (3, 2, 0)),
-             (None, '-', None, '######0', '00', '', None, '', None, (3, 2, 0))))
+             (None, '-', None, '######0', '00', '', None, '', None,
+              (3, 2, 0))))
 
         self.assertEqual(
             parseNumberPattern('###0.00;-###0.00'),
@@ -1329,7 +1336,7 @@ class TestNumberFormat(_TestCase):
 
     def testFormatBadThousandSeparator(self):
         self.assertRaises(ValueError,
-            self.format.format, 23341, '0,')
+                          self.format.format, 23341, '0,')
 
     def testFormatDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '###0.0#'),
@@ -1347,7 +1354,6 @@ class TestNumberFormat(_TestCase):
         self.assertEqual(self.format.format(149, '0E0'), '1E2')
         self.assertEqual(self.format.format(1.9999, '0.000'), '2.000')
         self.assertEqual(self.format.format(1.9999, '0.0000'), '1.9999')
-
 
     def testFormatScientificDecimal(self):
         self.assertEqual(self.format.format(23341.02357, '0.00####E00'),
@@ -1426,27 +1432,27 @@ class TestNumberFormat(_TestCase):
     def testFormatHighPrecisionNumbers(self):
         self.assertEqual(
             self.format.format(
-                1+1e-7, '(#0.00#####);(-#0.00#####)'),
+                1 + 1e-7, '(#0.00#####);(-#0.00#####)'),
             '(1.0000001)')
         self.assertEqual(
             self.format.format(
-                1+1e-7, '(#0.00###)'),
+                1 + 1e-7, '(#0.00###)'),
             '(1.00000)')
         self.assertEqual(
             self.format.format(
-                1+1e-9, '(#0.00#######);(-#0.00#######)'),
+                1 + 1e-9, '(#0.00#######);(-#0.00#######)'),
             '(1.000000001)')
         self.assertEqual(
             self.format.format(
-                1+1e-9, '(#0.00###)'),
+                1 + 1e-9, '(#0.00###)'),
             '(1.00000)')
         self.assertEqual(
             self.format.format(
-                1+1e-12, '(#0.00##########);(-#0.00##########)'),
+                1 + 1e-12, '(#0.00##########);(-#0.00##########)'),
             '(1.000000000001)')
         self.assertEqual(
             self.format.format(
-                1+1e-12, '(#0.00###)'),
+                1 + 1e-12, '(#0.00###)'),
             '(1.00000)')
 
     def testNoRounding(self):

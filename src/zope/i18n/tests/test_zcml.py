@@ -25,10 +25,10 @@ from zope.component.testing import PlacelessSetup
 from zope.configuration import xmlconfig
 
 import zope.i18n.tests
+from zope.i18n._compat import text_type
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n import config
 
-text_type = str if bytes is not str else unicode
 
 template = """\
 <configure
@@ -36,6 +36,7 @@ template = """\
     xmlns:i18n='http://namespaces.zope.org/i18n'>
   %s
 </configure>"""
+
 
 class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
@@ -156,7 +157,8 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
-            <i18n:registerTranslations directory="locale3" domain="zope-i18n" />
+            <i18n:registerTranslations directory="locale3"
+                domain="zope-i18n" />
             </configure>
             ''', self.context)
         path = os.path.join(os.path.dirname(zope.i18n.tests.__file__),

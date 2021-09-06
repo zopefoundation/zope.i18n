@@ -42,7 +42,3 @@ def test_suite():
     suite = unittest.TestSuite()
     suite.addTest(unittest.makeSuite(TestSimpleTranslationDomain))
     return suite
-
-
-if __name__ == '__main__':
-    unittest.TextTestRunner().run(test_suite())

@@ -19,6 +19,7 @@ import zope.interface
 
 from zope.i18nmessageid import Message
 from zope.i18n import translate, interpolate
+from zope.i18n._compat import text_type
 from zope.i18n.interfaces import ITranslationDomain, INegotiator
 
 
@@ -31,8 +32,6 @@ from zope.i18n.interfaces import ITranslationDomain, INegotiator
 # Note that these fallbacks are used only to find a catalog.  If a particular
 # message in a catalog is not translated, tough luck, you get the msgid.
 LANGUAGE_FALLBACKS = ['en']
-
-text_type = str if bytes is not str else unicode
 
 
 @zope.interface.implementer(ITranslationDomain)
@@ -85,7 +84,7 @@ class TranslationDomain(object):
             msgid_plural, default_plural, number)
 
     def _recursive_translate(self, msgid, mapping, target_language, default,
-                             context,  msgid_plural, default_plural, number,
+                             context, msgid_plural, default_plural, number,
                              seen=None):
         """Recursively translate msg."""
         # MessageID attributes override arguments

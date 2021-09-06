@@ -160,18 +160,18 @@ class TestPlurals(unittest.TestCase):
         self.assertEqual(catalog.getPluralMessage(
             'The item is rated 1/5 star.',
             'The item is rated %s/5 stars.', 3.5),
-                         'The item is rated 3.5/5 stars.')
+            'The item is rated 3.5/5 stars.')
 
         # It's cast either to an int or a float because of the %s in
         # the translation string.
         self.assertEqual(catalog.getPluralMessage(
             'There is %d chance.',
             'There are %f chances.', 1.5),
-                         'There are 1.500000 chances.')
+            'There are 1.500000 chances.')
         self.assertEqual(catalog.getPluralMessage(
             'There is %d chance.',
             'There are %f chances.', 3.5),
-                         'There are 3.500000 chances.')
+            'There are 3.500000 chances.')
 
     def test_translate_without_defaults(self):
         domain = self._getTranslationDomain('en')

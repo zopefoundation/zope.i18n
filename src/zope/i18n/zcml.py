@@ -45,14 +45,14 @@ class IRegisterTranslationsDirective(Interface):
         title=u"Directory",
         description=u"Directory containing the translations",
         required=True
-        )
+    )
 
     domain = TextLine(
         title=u"Domain",
         description=(u"Translation domain to register.  If not specified, "
                      u"all domains found in the directory are registered"),
         required=False
-        )
+    )
 
 
 def allow_language(lang):

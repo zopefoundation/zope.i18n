@@ -24,6 +24,7 @@ from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
 import zope.i18n
 datadir = os.path.join(os.path.dirname(zope.i18n.__file__), 'locales', 'data')
 
+
 class AbstractTestILocaleProviderMixin(object):
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
@@ -142,6 +143,7 @@ class TestGlobalLocaleProvider(TestCase):
         self.assertEqual(locale.id.language, 'en')
         self.assertEqual(locale.id.territory, 'GB')
         self.assertEqual(locale.id.variant, None)
+
 
 class TestRootLocale(TestCase):
     """There were some complaints that the root locale does not work

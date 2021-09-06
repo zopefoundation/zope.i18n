@@ -41,7 +41,6 @@ class LocaleFactory(object):
                 rc = rc + node.data
         return rc
 
-
     def _extractVersion(self, identity_node):
         """Extract the Locale's version info based on data from the DOM
         tree.
@@ -81,7 +80,6 @@ class LocaleFactory(object):
 
         return LocaleVersion(number, generationDate, notes)
 
-
     def _extractIdentity(self):
         """Extract the Locale's identity object based on info from the DOM
         tree.
@@ -119,7 +117,7 @@ class LocaleFactory(object):
         # Retrieve the language of the locale
         nodes = identity.getElementsByTagName('language')
         if nodes != []:
-            id.language = nodes[0].getAttribute('type')  or None
+            id.language = nodes[0].getAttribute('type') or None
         # Retrieve the territory of the locale
         nodes = identity.getElementsByTagName('territory')
         if nodes != []:
@@ -131,7 +129,6 @@ class LocaleFactory(object):
 
         id.version = self._extractVersion(identity)
         return id
-
 
     def _extractTypes(self, names_node):
         """Extract all types from the names_node.
@@ -178,7 +175,6 @@ class LocaleFactory(object):
             key = type_node.getAttribute('key')
             types[(type, key)] = self._getText(type_node.childNodes)
         return types
-
 
     def _extractDisplayNames(self):
         """Extract all display names from the DOM tree.
@@ -285,7 +281,6 @@ class LocaleFactory(object):
             displayNames.types = types
         return displayNames
 
-
     def _extractMonths(self, months_node, calendar):
         """Extract all month entries from cal_node and store them in calendar.
 
@@ -350,7 +345,8 @@ class LocaleFactory(object):
           >>> names[7:]
           [u'August', u'September', u'Oktober', u'November', u'Dezember']
 
-          >>> abbrs = [ctx.months[u"abbreviated"][type] for type in range(1,13)]
+          >>> abbrs = [ctx.months[u"abbreviated"][type]
+          ...     for type in range(1,13)]
           >>> abbrs[:6]
           [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
           >>> abbrs[6:]
@@ -385,14 +381,15 @@ class LocaleFactory(object):
 
         defaultMonthContext_node = months_node.getElementsByTagName('default')
         if defaultMonthContext_node:
-            calendar.defaultMonthContext = defaultMonthContext_node[0].getAttribute('type')
+            calendar.defaultMonthContext = defaultMonthContext_node[
+                0].getAttribute('type')
 
         monthContext_nodes = months_node.getElementsByTagName('monthContext')
         if not monthContext_nodes:
             return
 
         calendar.monthContexts = InheritingDictionary()
-        names_node = abbrs_node = None # BBB
+        names_node = abbrs_node = None  # BBB
 
         for node in monthContext_nodes:
             context_type = node.getAttribute('type')
@@ -440,7 +437,6 @@ class LocaleFactory(object):
         for type in range(1, 13):
             calendar.months[type] = (names.get(type, None),
                                      abbrs.get(type, None))
-
 
     def _extractDays(self, days_node, calendar):
         """Extract all day entries from cal_node and store them in
@@ -529,14 +525,15 @@ class LocaleFactory(object):
 
         defaultDayContext_node = days_node.getElementsByTagName('default')
         if defaultDayContext_node:
-            calendar.defaultDayContext = defaultDayContext_node[0].getAttribute('type')
+            calendar.defaultDayContext = defaultDayContext_node[
+                0].getAttribute('type')
 
         dayContext_nodes = days_node.getElementsByTagName('dayContext')
         if not dayContext_nodes:
             return
 
         calendar.dayContexts = InheritingDictionary()
-        names_node = abbrs_node = None # BBB
+        names_node = abbrs_node = None  # BBB
 
         for node in dayContext_nodes:
             context_type = node.getAttribute('type')
@@ -583,7 +580,6 @@ class LocaleFactory(object):
         for type in range(1, 13):
             calendar.days[type] = (names.get(type, None),
                                    abbrs.get(type, None))
-
 
     def _extractWeek(self, cal_node, calendar):
         """Extract all week entries from cal_node and store them in
@@ -644,7 +640,6 @@ class LocaleFactory(object):
             time_args = map(int, node.getAttribute('time').split(':'))
             calendar.week['weekendEnd'] = (day, time(*time_args))
 
-
     def _extractEras(self, cal_node, calendar):
         """Extract all era entries from cal_node and store them in
         calendar.
@@ -703,8 +698,8 @@ class LocaleFactory(object):
 
         calendar.eras = InheritingDictionary()
         for type in abbrs.keys():
-            calendar.eras[type] = (names.get(type, None), abbrs.get(type, None))
-
+            calendar.eras[type] = (names.get(type, None),
+                                   abbrs.get(type, None))
 
     def _extractFormats(self, formats_node, lengthNodeName, formatNodeName):
         """Extract all format entries from formats_node and return a
@@ -765,14 +760,16 @@ class LocaleFactory(object):
             if length_node.getElementsByTagName(formatNodeName):
                 length.formats = InheritingDictionary()
 
-            for format_node in length_node.getElementsByTagName(formatNodeName):
+            for format_node in length_node.getElementsByTagName(
+                    formatNodeName):
                 format = LocaleFormat()
                 format.type = format_node.getAttribute('type') or None
                 pattern_node = format_node.getElementsByTagName('pattern')[0]
                 format.pattern = self._getText(pattern_node.childNodes)
                 name_nodes = format_node.getElementsByTagName('displayName')
                 if name_nodes:
-                    format.displayName = self._getText(name_nodes[0].childNodes)
+                    format.displayName = self._getText(
+                        name_nodes[0].childNodes)
                 length.formats[format.type] = format
 
             lengths[length.type] = length
@@ -907,14 +904,15 @@ class LocaleFactory(object):
             for formatsName, lengthName, formatName in (
                     ('dateFormats', 'dateFormatLength', 'dateFormat'),
                     ('timeFormats', 'timeFormatLength', 'timeFormat'),
-                    ('dateTimeFormats', 'dateTimeFormatLength', 'dateTimeFormat')):
+                    ('dateTimeFormats', 'dateTimeFormatLength',
+                     'dateTimeFormat')):
 
                 formats_nodes = cal_node.getElementsByTagName(formatsName)
                 if formats_nodes:
                     default, formats = self._extractFormats(
                         formats_nodes[0], lengthName, formatName)
                     setattr(calendar,
-                            'default'+formatName[0].upper()+formatName[1:],
+                            'default' + formatName[0].upper() + formatName[1:],
                             default)
                     setattr(calendar, formatsName, formats)
 
@@ -924,7 +922,6 @@ class LocaleFactory(object):
                     calendars[alias] = calendar
 
         return calendars
-
 
     def _extractTimeZones(self, dates_node):
         """Extract all timezone information for the locale from the DOM
@@ -1009,7 +1006,6 @@ class LocaleFactory(object):
 
         return zones
 
-
     def _extractDates(self):
         """Extract all date information from the DOM tree"""
         dates_nodes = self._data.getElementsByTagName('dates')
@@ -1024,7 +1020,6 @@ class LocaleFactory(object):
         if timezones is not None:
             dates.timezones = timezones
         return dates
-
 
     def _extractSymbols(self, numbers_node):
         """Extract all week entries from cal_node and store them in
@@ -1080,7 +1075,6 @@ class LocaleFactory(object):
                 symbols[name] = self._getText(nodes[0].childNodes)
 
         return symbols
-
 
     def _extractNumberFormats(self, numbers_node, numbers):
         """Extract all number formats from the numbers_node and save the data
@@ -1162,10 +1156,10 @@ class LocaleFactory(object):
         """
 
         for category in ('decimal', 'scientific', 'percent', 'currency'):
-            formatsName = category+'Formats'
-            lengthName = category+'FormatLength'
-            formatName = category+'Format'
-            defaultName = 'default'+formatName[0].upper()+formatName[1:]
+            formatsName = category + 'Formats'
+            lengthName = category + 'FormatLength'
+            formatName = category + 'Format'
+            defaultName = 'default' + formatName[0].upper() + formatName[1:]
 
             formats_nodes = numbers_node.getElementsByTagName(formatsName)
             if formats_nodes:
@@ -1173,7 +1167,6 @@ class LocaleFactory(object):
                     formats_nodes[0], lengthName, formatName)
                 setattr(numbers, defaultName, default)
                 setattr(numbers, formatsName, formats)
-
 
     def _extractCurrencies(self, numbers_node):
         """Extract all currency definitions and their information from the
@@ -1232,7 +1225,7 @@ class LocaleFactory(object):
             if nodes:
                 currency.symbol = self._getText(nodes[0].childNodes)
                 currency.symbolChoice = \
-                                      nodes[0].getAttribute('choice') == u"true"
+                    nodes[0].getAttribute('choice') == u"true"
 
             nodes = curr_node.getElementsByTagName('displayName')
             if nodes:
@@ -1241,7 +1234,6 @@ class LocaleFactory(object):
             currencies[type] = currency
 
         return currencies
-
 
     def _extractNumbers(self):
         """Extract all number information from the DOM tree"""
@@ -1258,7 +1250,6 @@ class LocaleFactory(object):
         if currencies is not None:
             numbers.currencies = currencies
         return numbers
-
 
     def _extractDelimiters(self):
         """Extract all delimiter entries from the DOM tree.
@@ -1315,7 +1306,6 @@ class LocaleFactory(object):
 
         return delimiters
 
-
     def _extractOrientation(self):
         """Extract orientation information.
 
@@ -1324,7 +1314,8 @@ class LocaleFactory(object):
           >>> xml = u'''
           ... <ldml>
           ...   <layout>
-          ...     <orientation lines="bottom-to-top" characters="right-to-left" />
+          ...     <orientation lines="bottom-to-top"
+          ...                  characters="right-to-left" />
           ...   </layout>
           ... </ldml>'''
           >>> dom = parseString(xml)
@@ -1344,7 +1335,6 @@ class LocaleFactory(object):
             if value:
                 setattr(orientation, name, value)
         return orientation
-
 
     def __call__(self):
         """Create the Locale."""

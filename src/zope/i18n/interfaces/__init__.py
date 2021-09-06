@@ -203,7 +203,6 @@ class IMessageImportFilter(Interface):
        Classes implementing this interface should usually be Adaptors, as
        they adapt the IEditableTranslationService interface."""
 
-
     def importMessages(domains, languages, file):
         """Import all messages that are defined in the specified domains and
            languages.
@@ -253,7 +252,6 @@ class IMessageExportFilter(Interface):
 
        Classes implementing this interface should usually be Adaptors, as
        they adapt the IEditableTranslationService interface."""
-
 
     def exportMessages(domains, languages):
         """Export all messages that are defined in the specified domains and
@@ -326,7 +324,6 @@ class IFormat(Interface):
         """Format an object to a string using the pattern as a rule."""
 
 
-
 class INumberFormat(IFormat):
     r"""Specific number formatting interface. Here are the formatting
     rules (I modified the rules from ICU a bit, since I think they did not
@@ -373,9 +370,9 @@ class INumberFormat(IFormat):
       \u00A4    This is the currency sign. it will be replaced by a currency
            symbol. If it is present in a pattern, the monetary decimal
            separator is used instead of the decimal separator.
-      \u00A4\u00A4   This is the international currency sign. It will be replaced
-           by an international currency symbol.  If it is present in a
-           pattern, the monetary decimal separator is used instead of
+      \u00A4\u00A4   This is the international currency sign. It will be
+           replaced by an international currency symbol.  If it is present
+           in a pattern, the monetary decimal separator is used instead of
            the decimal separator.
       X    Any other characters can be used in the prefix or suffix
       '    Used to quote special characters in a prefix or suffix
