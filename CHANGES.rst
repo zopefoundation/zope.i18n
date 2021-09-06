@@ -2,8 +2,14 @@
  CHANGES
 =========
 
-4.7.1 (unreleased)
+4.8.0 (unreleased)
 ==================
+
+- Support character sets.
+  Example: ``sr@Latn`` and ``sr@Cyrl`` will be added to language ``sr`` (Serbian).
+  See https://github.com/collective/plone.app.locales/issues/326
+  You can choose which one to use by setting either ``sr@Latn`` or ``sr@Cyrl``
+  in environment variable ``zope_i18n_allowed_languages``.
 
 - Support and test Python 3.8 and 3.9.
   Full supported list is now: 2.7, 3.5, 3.6, 3.7, 3.8, 3.9, PyPy, PyPy3.
