@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.8.0 (unreleased)
+4.8.0 (2021-09-07)
 ==================
 
 - Support character sets.
