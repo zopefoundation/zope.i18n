@@ -6,7 +6,13 @@ import os
 COMPILE_MO_FILES_KEY = 'zope_i18n_compile_mo_files'
 #: Whether or not the ZCML directives will attempt to compile
 #: translation files. Defaults to False.
-COMPILE_MO_FILES = os.environ.get(COMPILE_MO_FILES_KEY, False)
+
+
+def _getter_compile_mo_files():
+    return os.environ.get(COMPILE_MO_FILES_KEY, False)
+
+
+COMPILE_MO_FILES = property(_getter_compile_mo_files)
 
 #: The environment variable that is consulted when this module
 #: is imported to determine the value of `ALLOWED_LANGUAGES`.
