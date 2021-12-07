@@ -89,7 +89,14 @@ def registerTranslations(_context, directory, domain='*'):
         lc_messages_path = os.path.join(path, language, 'LC_MESSAGES')
         if os.path.isdir(lc_messages_path):
             # Preprocess files and update or compile the mo files
-            if config.COMPILE_MO_FILES:
+            setting_unset = (
+                config.COMPILE_MO_FILES == config.COMPILE_MO_FILES_UNSET
+            )
+            if (
+                (setting_unset
+                 and os.environ.get(config.COMPILE_MO_FILES_KEY, False))
+                or (not setting_unset and config.COMPILE_MO_FILES)
+            ):
                 for domain_path in glob(os.path.join(lc_messages_path,
                                                      '%s.po' % domain)):
                     domain_file = os.path.basename(domain_path)

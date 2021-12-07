@@ -4,9 +4,10 @@ import os
 #: is imported to determine the value of `COMPILE_MO_FILES`.
 #: Simply set this to a non-empty string to make it True.
 COMPILE_MO_FILES_KEY = 'zope_i18n_compile_mo_files'
+COMPILE_MO_FILES_UNSET = "__unset__"
 #: Whether or not the ZCML directives will attempt to compile
 #: translation files. Defaults to False.
-COMPILE_MO_FILES = os.environ.get(COMPILE_MO_FILES_KEY, False)
+COMPILE_MO_FILES = COMPILE_MO_FILES_UNSET
 
 #: The environment variable that is consulted when this module
 #: is imported to determine the value of `ALLOWED_LANGUAGES`.
