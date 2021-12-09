@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.8.1 (unreleased)
+4.9.0 (unreleased)
 ==================
 
 - Fix date/time format for zh, sv, and es_US.
@@ -11,6 +11,8 @@
 - Fix problems with ``zope_i18n_compile_mo_files`` early assignment to
   module variable in ``config.py`` in a non-breaking way.
   See also `Zope issue #994 <https://github.com/zopefoundation/Zope/issues/994>`_
+
+- Add support for Python 3.10.
 
 
 4.8.0 (2021-09-07)
