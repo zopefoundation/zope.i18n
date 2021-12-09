@@ -35,12 +35,12 @@
 					</dateFormatLength >
 					<dateFormatLength type="medium">
 						<dateFormat >
-							<pattern>MMM d, yyyy</pattern>
+							<pattern>dd-MMM-yy</pattern>
 						</dateFormat>
 					</dateFormatLength >
 					<dateFormatLength type="short">
 						<dateFormat >
-							<pattern>M/d/yy</pattern>
+							<pattern>d/MM/yy</pattern>
 						</dateFormat>
 					</dateFormatLength >
 				</dateFormats>
@@ -48,22 +48,22 @@
 					<default type="medium"/>
 					<timeFormatLength type="full">
 						<timeFormat >
-							<pattern>h:mm:ss a z</pattern>
+							<pattern>HH'H'mm''ss" z</pattern>
 						</timeFormat>
 					</timeFormatLength >
 					<timeFormatLength type="long">
 						<timeFormat >
-							<pattern>h:mm:ss a z</pattern>
+							<pattern>HH:mm:ss z</pattern>
 						</timeFormat>
 					</timeFormatLength >
 					<timeFormatLength type="medium">
 						<timeFormat >
-							<pattern>h:mm:ss a</pattern>
+							<pattern>HH:mm:ss</pattern>
 						</timeFormat>
 					</timeFormatLength >
 					<timeFormatLength type="short">
 						<timeFormat >
-							<pattern>h:mm a</pattern>
+							<pattern>HH:mm</pattern>
 						</timeFormat>
 					</timeFormatLength >
 				</timeFormats>
