@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-4.9.0 (unreleased)
+4.9.0 (2021-12-09)
 ==================
 
 - Fix date/time format for zh, sv, and es_US.
