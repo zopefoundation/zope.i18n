@@ -16,11 +16,13 @@
 
 import zope.component
 import zope.interface
-
 from zope.i18nmessageid import Message
-from zope.i18n import translate, interpolate
+
+from zope.i18n import interpolate
+from zope.i18n import translate
 from zope.i18n._compat import text_type
-from zope.i18n.interfaces import ITranslationDomain, INegotiator
+from zope.i18n.interfaces import INegotiator
+from zope.i18n.interfaces import ITranslationDomain
 
 
 # The configuration should specify a list of fallback languages for the

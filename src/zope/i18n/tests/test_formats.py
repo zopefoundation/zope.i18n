@@ -13,22 +13,24 @@
 ##############################################################################
 """This module tests the Formats and everything that goes with it.
 """
-import decimal
 import datetime
+import decimal
 import pickle
 from unittest import TestCase
 
 import pytz
 
-from zope.i18n.interfaces import IDateTimeFormat
 from zope.i18n.format import DateTimeFormat
-from zope.i18n.format import parseDateTimePattern, buildDateTimeParseInfo
-from zope.i18n.format import DateTimePatternParseError, DateTimeParseError
-
-from zope.i18n.interfaces import INumberFormat
-from zope.i18n.format import NumberFormat, NumberParseError
-from zope.i18n.format import parseNumberPattern
+from zope.i18n.format import DateTimeParseError
+from zope.i18n.format import DateTimePatternParseError
+from zope.i18n.format import NumberFormat
+from zope.i18n.format import NumberParseError
 from zope.i18n.format import NumberPatternParseError
+from zope.i18n.format import buildDateTimeParseInfo
+from zope.i18n.format import parseDateTimePattern
+from zope.i18n.format import parseNumberPattern
+from zope.i18n.interfaces import IDateTimeFormat
+from zope.i18n.interfaces import INumberFormat
 
 
 class LocaleStub(object):

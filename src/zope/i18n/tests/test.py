@@ -13,10 +13,12 @@
 ##############################################################################
 """Misc tests
 """
+import doctest
 import unittest
 
-import doctest
-from zope.component.testing import setUp, tearDown
+from zope.component.testing import setUp
+from zope.component.testing import tearDown
+
 from zope.i18n.testing import unicode_checker
 
 

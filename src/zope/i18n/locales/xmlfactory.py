@@ -13,14 +13,26 @@
 ##############################################################################
 """XML Locale-related objects and functions
 """
-from datetime import date, time
+from datetime import date
+from datetime import time
 from xml.dom.minidom import parse as parseXML
-from zope.i18n.locales import Locale, LocaleDisplayNames, LocaleDates
-from zope.i18n.locales import LocaleVersion, LocaleIdentity, LocaleTimeZone
-from zope.i18n.locales import LocaleCalendar, LocaleCurrency, LocaleNumbers
-from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
-from zope.i18n.locales import LocaleOrientation, LocaleDayContext
-from zope.i18n.locales import LocaleMonthContext, calendarAliases
+
+from zope.i18n.locales import Locale
+from zope.i18n.locales import LocaleCalendar
+from zope.i18n.locales import LocaleCurrency
+from zope.i18n.locales import LocaleDates
+from zope.i18n.locales import LocaleDayContext
+from zope.i18n.locales import LocaleDisplayNames
+from zope.i18n.locales import LocaleFormat
+from zope.i18n.locales import LocaleFormatLength
+from zope.i18n.locales import LocaleIdentity
+from zope.i18n.locales import LocaleMonthContext
+from zope.i18n.locales import LocaleNumbers
+from zope.i18n.locales import LocaleOrientation
+from zope.i18n.locales import LocaleTimeZone
+from zope.i18n.locales import LocaleVersion
+from zope.i18n.locales import calendarAliases
+from zope.i18n.locales import dayMapping
 from zope.i18n.locales.inheritance import InheritingDictionary
 
 

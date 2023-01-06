@@ -14,9 +14,11 @@
 """This is an 'abstract' test for the IMessageCatalog interface.
 """
 import unittest
+
 from zope.interface.verify import verifyObject
-from zope.i18n.interfaces import IMessageCatalog
 from zope.schema import getValidationErrors
+
+from zope.i18n.interfaces import IMessageCatalog
 
 
 class TestIMessageCatalog(unittest.TestCase):

@@ -21,10 +21,11 @@ locale inheritance is not inheritance in the programming sense.
 __docformat__ = 'restructuredtext'
 
 from zope.deprecation import deprecate
-
 from zope.interface import implementer
-from zope.i18n.interfaces.locales import \
-    ILocaleInheritance, IAttributeInheritance, IDictionaryInheritance
+
+from zope.i18n.interfaces.locales import IAttributeInheritance
+from zope.i18n.interfaces.locales import IDictionaryInheritance
+from zope.i18n.interfaces.locales import ILocaleInheritance
 
 
 class NoParentException(AttributeError):

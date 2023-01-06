@@ -21,6 +21,7 @@ import re
 
 from zope.testing import renormalizing
 
+
 rules = []
 if bytes is not str:
     rules = [

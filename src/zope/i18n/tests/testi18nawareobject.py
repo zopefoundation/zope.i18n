@@ -15,8 +15,9 @@
 """
 import unittest
 
-from zope.i18n.interfaces import II18nAware
 from zope.interface import implementer
+
+from zope.i18n.interfaces import II18nAware
 
 
 @implementer(II18nAware)

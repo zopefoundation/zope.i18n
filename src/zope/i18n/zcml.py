@@ -16,8 +16,8 @@
 """
 __docformat__ = 'restructuredtext'
 
-import os
 import logging
+import os
 from glob import glob
 
 from zope.component import getSiteManager
@@ -30,9 +30,9 @@ from zope.schema import TextLine
 from zope.i18n import config
 from zope.i18n.compile import compile_mo_file
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
+from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.testmessagecatalog import TestMessageCatalog
 from zope.i18n.translationdomain import TranslationDomain
-from zope.i18n.interfaces import ITranslationDomain
 
 
 logger = logging.getLogger("zope.i18n")

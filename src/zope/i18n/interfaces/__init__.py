@@ -13,8 +13,12 @@
 ##############################################################################
 """Internationalization of content objects.
 """
-from zope.interface import Interface, Attribute
-from zope.schema import TextLine, Dict, Choice, Field
+from zope.interface import Attribute
+from zope.interface import Interface
+from zope.schema import Choice
+from zope.schema import Dict
+from zope.schema import Field
+from zope.schema import TextLine
 
 
 class II18nAware(Interface):

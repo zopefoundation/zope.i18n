@@ -19,24 +19,33 @@ import os
 from datetime import date
 
 from zope.interface import implementer
+
+# Setup the locale directory
+from zope import i18n
+from zope.i18n.format import DateTimeFormat
+from zope.i18n.format import NumberFormat
 from zope.i18n.interfaces.locales import ILocale
-from zope.i18n.interfaces.locales import ILocaleDisplayNames, ILocaleDates
-from zope.i18n.interfaces.locales import ILocaleVersion, ILocaleIdentity
-from zope.i18n.interfaces.locales import ILocaleTimeZone, ILocaleCalendar
-from zope.i18n.interfaces.locales import ILocaleCurrency, ILocaleNumbers
-from zope.i18n.interfaces.locales import ILocaleFormat, ILocaleFormatLength
+from zope.i18n.interfaces.locales import ILocaleCalendar
+from zope.i18n.interfaces.locales import ILocaleCurrency
+from zope.i18n.interfaces.locales import ILocaleDates
+from zope.i18n.interfaces.locales import ILocaleDayContext
+from zope.i18n.interfaces.locales import ILocaleDisplayNames
+from zope.i18n.interfaces.locales import ILocaleFormat
+from zope.i18n.interfaces.locales import ILocaleFormatLength
+from zope.i18n.interfaces.locales import ILocaleIdentity
+from zope.i18n.interfaces.locales import ILocaleMonthContext
+from zope.i18n.interfaces.locales import ILocaleNumbers
 from zope.i18n.interfaces.locales import ILocaleOrientation
-from zope.i18n.interfaces.locales import ILocaleDayContext, ILocaleMonthContext
-from zope.i18n.format import NumberFormat, DateTimeFormat
-from zope.i18n.locales.inheritance import \
-    AttributeInheritance, InheritingDictionary, NoParentException
+from zope.i18n.interfaces.locales import ILocaleTimeZone
+from zope.i18n.interfaces.locales import ILocaleVersion
+from zope.i18n.locales.inheritance import AttributeInheritance
+from zope.i18n.locales.inheritance import InheritingDictionary
+from zope.i18n.locales.inheritance import NoParentException
 # LoadLocaleError is not used, but might be imported from here by others.
 from zope.i18n.locales.provider import LoadLocaleError  # noqa
 from zope.i18n.locales.provider import LocaleProvider
 
 
-# Setup the locale directory
-from zope import i18n
 LOCALEDIR = os.path.join(os.path.dirname(i18n.__file__), "locales", "data")
 
 # Global LocaleProvider. We really just need this single one.

@@ -15,10 +15,19 @@
 """
 import datetime
 import re
-from zope.interface import Interface, Attribute
-from zope.schema import \
-    Field, Text, TextLine, Int, Bool, Tuple, List, Dict, Date
+
+from zope.interface import Attribute
+from zope.interface import Interface
+from zope.schema import Bool
 from zope.schema import Choice
+from zope.schema import Date
+from zope.schema import Dict
+from zope.schema import Field
+from zope.schema import Int
+from zope.schema import List
+from zope.schema import Text
+from zope.schema import TextLine
+from zope.schema import Tuple
 
 
 class ILocaleProvider(Interface):

@@ -31,9 +31,9 @@ class TestCompile(unittest.TestCase):
         self.assertIsNone(compile.compile_mo_file('no_such_domain', ''))
 
     def test_po_exists_but_invalid(self):
-        import tempfile
-        import shutil
         import os.path
+        import shutil
+        import tempfile
 
         td = tempfile.mkdtemp(suffix=".zopei18n_test_compile")
         self.addCleanup(shutil.rmtree, td)
@@ -47,10 +47,10 @@ class TestCompile(unittest.TestCase):
                       str(self.handler))
 
     def test_po_exists_cannot_write_mo(self):
-        import tempfile
-        import shutil
         import os
         import os.path
+        import shutil
+        import tempfile
 
         td = tempfile.mkdtemp(suffix=".zopei18n_test_compile")
         self.addCleanup(shutil.rmtree, td)

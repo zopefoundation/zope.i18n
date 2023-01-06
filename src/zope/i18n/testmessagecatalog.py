@@ -14,8 +14,8 @@
 """Test message catalog
 """
 
-from zope import interface
 import zope.i18n.interfaces
+from zope import interface
 from zope.i18n.translationdomain import TranslationDomain
 
 

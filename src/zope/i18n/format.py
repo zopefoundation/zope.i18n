@@ -16,16 +16,18 @@
 This module implements basic object formatting functionality, such as
 date/time, number and money formatting.
 """
-import sys
-import re
-import math
 import datetime
+import math
+import re
+import sys
+
 import pytz
 import pytz.reference
+from zope.interface import implementer
 
 from zope.i18n._compat import text_type
-from zope.i18n.interfaces import IDateTimeFormat, INumberFormat
-from zope.interface import implementer
+from zope.i18n.interfaces import IDateTimeFormat
+from zope.i18n.interfaces import INumberFormat
 
 
 NATIVE_NUMBER_TYPES = (int, float)

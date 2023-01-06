@@ -17,7 +17,9 @@ The Locale Provider looks up locales and loads them from the XML data, if
 necessary.
 """
 import os
+
 from zope.interface import implementer
+
 from zope.i18n.interfaces.locales import ILocaleProvider
 
 

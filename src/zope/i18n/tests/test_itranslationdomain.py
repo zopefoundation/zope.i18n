@@ -14,18 +14,18 @@
 """This is an 'abstract' test for the ITranslationDomain interface.
 """
 import unittest
-from zope.interface.verify import verifyObject
-from zope.interface import implementer
 
 import zope.component
 from zope.component.testing import PlacelessSetup
-
+from zope.interface import implementer
+from zope.interface.verify import verifyObject
 from zope.schema import getValidationErrors
 
 from zope.i18n._compat import text_type
-from zope.i18n.negotiator import negotiator
-from zope.i18n.interfaces import INegotiator, IUserPreferredLanguages
+from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.interfaces import IUserPreferredLanguages
+from zope.i18n.negotiator import negotiator
 
 
 @implementer(IUserPreferredLanguages)

@@ -14,16 +14,18 @@
 ##############################################################################
 """This module tests the regular persistent Translation Domain.
 """
-import unittest
 import os
-from zope.i18n.translationdomain import TranslationDomain
-from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
-from zope.i18n.tests.test_itranslationdomain import \
-    TestITranslationDomain, Environment
-from zope.i18nmessageid import MessageFactory
-from zope.i18n.interfaces import ITranslationDomain
+import unittest
 
 import zope.component
+from zope.i18nmessageid import MessageFactory
+
+from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
+from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.tests.test_itranslationdomain import Environment
+from zope.i18n.tests.test_itranslationdomain import TestITranslationDomain
+from zope.i18n.translationdomain import TranslationDomain
+
 
 testdir = os.path.dirname(__file__)
 

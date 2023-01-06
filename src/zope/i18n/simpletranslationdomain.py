@@ -13,11 +13,13 @@
 ##############################################################################
 """This is a simple implementation of the ITranslationDomain interface.
 """
-from zope.interface import implementer
 from zope.component import getUtility
-from zope.i18n._compat import text_type
-from zope.i18n.interfaces import ITranslationDomain, INegotiator
+from zope.interface import implementer
+
 from zope.i18n import interpolate
+from zope.i18n._compat import text_type
+from zope.i18n.interfaces import INegotiator
+from zope.i18n.interfaces import ITranslationDomain
 
 
 @implementer(ITranslationDomain)

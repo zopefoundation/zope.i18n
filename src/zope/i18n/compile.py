@@ -1,10 +1,11 @@
-from contextlib import closing
-import os.path
-from os.path import join
 import logging
+import os.path
+from contextlib import closing
+from os.path import join
 
 from pythongettext.msgfmt import Msgfmt
 from pythongettext.msgfmt import PoSyntaxError
+
 
 logger = logging.getLogger('zope.i18n')
 

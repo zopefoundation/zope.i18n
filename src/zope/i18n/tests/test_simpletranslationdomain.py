@@ -14,6 +14,7 @@
 """This module tests the regular persistent Translation Domain.
 """
 import unittest
+
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.tests.test_itranslationdomain import TestITranslationDomain
 

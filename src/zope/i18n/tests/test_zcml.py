@@ -25,9 +25,9 @@ from zope.component.testing import PlacelessSetup
 from zope.configuration import xmlconfig
 
 import zope.i18n.tests
+from zope.i18n import config
 from zope.i18n._compat import text_type
 from zope.i18n.interfaces import ITranslationDomain
-from zope.i18n import config
 
 
 template = """\

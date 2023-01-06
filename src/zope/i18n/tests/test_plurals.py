@@ -18,11 +18,13 @@ import os
 import unittest
 
 import zope.component
-from zope.i18n import tests, translate
-from zope.i18n.translationdomain import TranslationDomain
-from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18nmessageid import MessageFactory
+
+from zope.i18n import tests
+from zope.i18n import translate
+from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.translationdomain import TranslationDomain
 
 
 class TestPlurals(unittest.TestCase):
