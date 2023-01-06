@@ -36,7 +36,7 @@ def normalize_langs(langs):
 
 
 @implementer(INegotiator)
-class Negotiator(object):
+class Negotiator:
 
     def getLanguage(self, langs, env):
         envadapter = IUserPreferredLanguages(env)

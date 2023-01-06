@@ -17,6 +17,6 @@ import unittest
 
 
 def test_suite():
-    return unittest.TestSuite((
+    return unittest.TestSuite(
         doctest.DocFileSuite('../testmessagecatalog.rst')
-    ))
+    )

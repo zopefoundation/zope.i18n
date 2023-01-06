@@ -17,13 +17,12 @@ from zope.component import getUtility
 from zope.interface import implementer
 
 from zope.i18n import interpolate
-from zope.i18n._compat import text_type
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
 
 
 @implementer(ITranslationDomain)
-class SimpleTranslationDomain(object):
+class SimpleTranslationDomain:
     """This is the simplest implementation of the ITranslationDomain I
        could come up with.
 
@@ -60,7 +59,7 @@ class SimpleTranslationDomain(object):
         # Find a translation; if nothing is found, use the default
         # value
         if default is None:
-            default = text_type(msgid)
+            default = str(msgid)
         text = self.messages.get((target_language, msgid))
         if text is None:
             text = default

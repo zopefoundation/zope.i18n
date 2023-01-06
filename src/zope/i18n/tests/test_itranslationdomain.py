@@ -21,7 +21,6 @@ from zope.interface import implementer
 from zope.interface.verify import verifyObject
 from zope.schema import getValidationErrors
 
-from zope.i18n._compat import text_type
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import ITranslationDomain
 from zope.i18n.interfaces import IUserPreferredLanguages
@@ -29,7 +28,7 @@ from zope.i18n.negotiator import negotiator
 
 
 @implementer(IUserPreferredLanguages)
-class Environment(object):
+class Environment:
 
     def __init__(self, langs=()):
         self.langs = langs
@@ -45,7 +44,7 @@ class TestITranslationDomain(PlacelessSetup):
         raise NotImplementedError()
 
     def setUp(self):
-        super(TestITranslationDomain, self).setUp()
+        super().setUp()
         self._domain = self._getTranslationDomain()
 
         # Setup the negotiator utility
@@ -94,7 +93,7 @@ class TestITranslationDomain(PlacelessSetup):
         translate = self._domain.translate
         translated = translate('no way', target_language='en')
         self.assertEqual(translated, "no way")
-        self.assertIsInstance(translated, text_type)
+        self.assertIsInstance(translated, str)
 
     def testNoTargetLanguage(self):
         translate = self._domain.translate

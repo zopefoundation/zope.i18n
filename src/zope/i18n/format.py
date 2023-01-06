@@ -25,16 +25,8 @@ import pytz
 import pytz.reference
 from zope.interface import implementer
 
-from zope.i18n._compat import text_type
 from zope.i18n.interfaces import IDateTimeFormat
 from zope.i18n.interfaces import INumberFormat
-
-
-NATIVE_NUMBER_TYPES = (int, float)
-try:
-    NATIVE_NUMBER_TYPES += (long,)
-except NameError:
-    pass  # Py3
 
 
 def roundHalfUp(n):
@@ -57,7 +49,7 @@ class DateTimeParseError(Exception):
 
 
 @implementer(IDateTimeFormat)
-class DateTimeFormat(object):
+class DateTimeFormat:
     __doc__ = IDateTimeFormat.__doc__
 
     _DATETIMECHARS = "aGyMdEDFwWhHmsSkKz"
@@ -214,7 +206,7 @@ class DateTimeFormat(object):
         else:
             bin_pattern = self._bin_pattern
 
-        text = u""
+        text = ""
         info = buildDateTimeInfo(obj, self.calendar, bin_pattern)
         for elem in bin_pattern:
             text += info.get(elem, elem)
@@ -228,7 +220,7 @@ class NumberParseError(Exception):
 
 
 @implementer(INumberFormat)
-class NumberFormat(object):
+class NumberFormat:
     __doc__ = INumberFormat.__doc__
 
     type = None
@@ -238,18 +230,18 @@ class NumberFormat(object):
     def __init__(self, pattern=None, symbols=()):
         # setup default symbols
         self.symbols = {
-            u"decimal": u".",
-            u"group": u",",
-            u"list": u";",
-            u"percentSign": u"%",
-            u"nativeZeroDigit": u"0",
-            u"patternDigit": u"#",
-            u"plusSign": u"+",
-            u"minusSign": u"-",
-            u"exponential": u"E",
-            u"perMille": u"\xe2\x88\x9e",
-            u"infinity": u"\xef\xbf\xbd",
-            u"nan": u''
+            "decimal": ".",
+            "group": ",",
+            "list": ";",
+            "percentSign": "%",
+            "nativeZeroDigit": "0",
+            "patternDigit": "#",
+            "plusSign": "+",
+            "minusSign": "-",
+            "exponential": "E",
+            "perMille": "\xe2\x88\x9e",
+            "infinity": "\xef\xbf\xbd",
+            "nan": ''
         }
         self.symbols.update(symbols)
         if pattern is not None:
@@ -413,12 +405,7 @@ class NumberFormat(object):
         else:
             bin_pattern = bin_pattern[1]
 
-        if isinstance(obj, NATIVE_NUMBER_TYPES):
-            # repr() handles high-precision numbers correctly in
-            # Python 2 and 3. str() is only correct in Python 3.
-            strobj = repr(obj)
-        else:
-            strobj = str(obj)
+        strobj = str(obj)
         if 'e' in strobj:
             # Str(obj) # returned scientific representation of a number (e.g.
             # 1e-7). We can't rely on str() to format fraction.
@@ -434,7 +421,7 @@ class NumberFormat(object):
             # The exponential might have a mandatory sign; remove it from the
             # bin_pattern and remember the setting
             exp_bin_pattern = bin_pattern[EXPONENTIAL]
-            plus_sign = u""
+            plus_sign = ""
             if exp_bin_pattern.startswith('+'):
                 plus_sign = self.symbols['plusSign']
                 exp_bin_pattern = exp_bin_pattern[1:]
@@ -512,8 +499,8 @@ class NumberFormat(object):
         if bin_pattern[PADDING4] is not None and post_padding > 0:
             text += bin_pattern[PADDING4] * post_padding
 
-        # TODO: Need to make sure unicode is everywhere
-        return text_type(text)
+        # TODO: Need to make sure str is everywhere
+        return str(text)
 
 
 DEFAULT = 0
@@ -624,12 +611,13 @@ def buildDateTimeParseInfo(calendar, pattern):
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
-        info[entry] = r'(%s|%s)' % (calendar.am, calendar.pm)
+        info[entry] = r'({}|{})'.format(calendar.am, calendar.pm)
 
     # era designator (Text)
     # TODO: works for gregorian only right now
     for entry in _findFormattingCharacterInPattern('G', pattern):
-        info[entry] = r'(%s|%s)' % (calendar.eras[1][1], calendar.eras[2][1])
+        info[entry] = r'({}|{})'.format(
+            calendar.eras[1][1], calendar.eras[2][1])
 
     # time zone (Text)
     for entry in _findFormattingCharacterInPattern('z', pattern):
@@ -705,8 +693,8 @@ def buildDateTimeInfo(dt, calendar, pattern):
     tz_fullname = getattr(tzinfo, 'zone', None) or tz_name
 
     info = {
-        ('y', 2): text_type(dt.year)[2:],
-        ('y', 4): text_type(dt.year),
+        ('y', 2): str(dt.year)[2:],
+        ('y', 4): str(dt.year),
     }
 
     # Generic Numbers
@@ -717,7 +705,7 @@ def buildDateTimeInfo(dt, calendar, pattern):
                          ('S', dt.microsecond), ('w', int(dt.strftime('%W'))),
                          ('W', week_in_month)):
         for entry in _findFormattingCharacterInPattern(field, pattern):
-            info[entry] = (u"%%.%ii" % entry[1]) % value
+            info[entry] = ("%%.%ii" % entry[1]) % value
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
@@ -731,9 +719,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # time zone (Text)
     for entry in _findFormattingCharacterInPattern('z', pattern):
         if entry[1] == 1:
-            info[entry] = u"%s%i%.2i" % (tz_sign, tz_hours, tz_mins)
+            info[entry] = "%s%i%.2i" % (tz_sign, tz_hours, tz_mins)
         elif entry[1] == 2:
-            info[entry] = u"%s%.2i:%.2i" % (tz_sign, tz_hours, tz_mins)
+            info[entry] = "%s%.2i:%.2i" % (tz_sign, tz_hours, tz_mins)
         elif entry[1] == 3:
             info[entry] = tz_name
         else:
@@ -742,9 +730,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # month in year (Text and Number)
     for entry in _findFormattingCharacterInPattern('M', pattern):
         if entry[1] == 1:
-            info[entry] = u"%i" % dt.month
+            info[entry] = "%i" % dt.month
         elif entry[1] == 2:
-            info[entry] = u"%.2i" % dt.month
+            info[entry] = "%.2i" % dt.month
         elif entry[1] == 3:
             info[entry] = calendar.months[dt.month][1]
         else:
@@ -753,9 +741,9 @@ def buildDateTimeInfo(dt, calendar, pattern):
     # day in week (Text and Number)
     for entry in _findFormattingCharacterInPattern('E', pattern):
         if entry[1] == 1:
-            info[entry] = u"%i" % weekday
+            info[entry] = "%i" % weekday
         elif entry[1] == 2:
-            info[entry] = u"%.2i" % weekday
+            info[entry] = "%.2i" % weekday
         elif entry[1] == 3:
             info[entry] = calendar.days[dt.weekday() + 1][1]
         else:

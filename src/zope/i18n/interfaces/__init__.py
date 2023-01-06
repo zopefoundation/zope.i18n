@@ -89,13 +89,13 @@ class IMessageCatalog(Interface):
         """
 
     language = TextLine(
-        title=u"Language",
-        description=u"The language the catalog translates to.",
+        title="Language",
+        description="The language the catalog translates to.",
         required=True)
 
     domain = TextLine(
-        title=u"Domain",
-        description=u"The domain the catalog is registered for.",
+        title="Domain",
+        description="The domain the catalog is registered for.",
         required=True)
 
     def getIdentifier():
@@ -153,8 +153,8 @@ class ITranslationDomain(Interface):
     """
 
     domain = TextLine(
-        title=u"Domain Name",
-        description=u"The name of the domain this object represents.",
+        title="Domain Name",
+        description="The name of the domain this object represents.",
         required=True)
 
     def translate(msgid, mapping=None, context=None, target_language=None,
@@ -181,7 +181,7 @@ class IFallbackTranslationDomainFactory(Interface):
     debugging i18n.
     """
 
-    def __call__(domain_id=u""):
+    def __call__(domain_id=""):
         """Return a fallback translation domain for the given domain id.
         """
 
@@ -383,22 +383,22 @@ class INumberFormat(IFormat):
     """
 
     type = Field(
-        title=u"Type",
-        description=((u"The type into which a string is parsed. If ``None``, "
-                      u"then ``int`` will be used for whole numbers and "
-                      u"``float`` for decimals.")),
+        title="Type",
+        description=("The type into which a string is parsed. If ``None``, "
+                     "then ``int`` will be used for whole numbers and "
+                     "``float`` for decimals."),
         default=None,
         required=False)
 
     symbols = Dict(
-        title=u"Number Symbols",
+        title="Number Symbols",
         key_type=Choice(
-            title=u"Dictionary Class",
-            values=(u"decimal", u"group", u"list", u"percentSign",
-                    u"nativeZeroDigit", u"patternDigit", u"plusSign",
-                    u"minusSign", u"exponential", u"perMille",
-                    u"infinity", u"nan")),
-        value_type=TextLine(title=u"Symbol"))
+            title="Dictionary Class",
+            values=("decimal", "group", "list", "percentSign",
+                    "nativeZeroDigit", "patternDigit", "plusSign",
+                    "minusSign", "exponential", "perMille",
+                    "infinity", "nan")),
+        value_type=TextLine(title="Symbol"))
 
 
 class IDateTimeFormat(IFormat):

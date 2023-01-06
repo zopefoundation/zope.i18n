@@ -23,7 +23,8 @@ data = {
     ('en', 'short_greeting'): 'Hello!',
     ('de', 'short_greeting'): 'Hallo!',
     ('en', 'greeting'): 'Hello $name, how are you?',
-    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?'}
+    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?',
+}
 
 
 class TestSimpleTranslationDomain(unittest.TestCase, TestITranslationDomain):
@@ -37,9 +38,3 @@ class TestSimpleTranslationDomain(unittest.TestCase, TestITranslationDomain):
     def _getTranslationDomain(self):
         domain = SimpleTranslationDomain('default', data)
         return domain
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSimpleTranslationDomain))
-    return suite

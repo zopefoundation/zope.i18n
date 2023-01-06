@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001, 2002 Zope Foundation and Contributors.
@@ -31,13 +30,13 @@ class TestPlurals(unittest.TestCase):
 
     def _getMessageCatalog(self, locale, variant="default"):
         path = os.path.dirname(tests.__file__)
-        self._path = os.path.join(path, '%s-%s.mo' % (locale, variant))
+        self._path = os.path.join(path, '{}-{}.mo'.format(locale, variant))
         catalog = GettextMessageCatalog(locale, variant, self._path)
         return catalog
 
     def _getTranslationDomain(self, locale, variant="default"):
         path = os.path.dirname(tests.__file__)
-        self._path = os.path.join(path, '%s-%s.mo' % (locale, variant))
+        self._path = os.path.join(path, '{}-{}.mo'.format(locale, variant))
         catalog = GettextMessageCatalog(locale, variant, self._path)
         domain = TranslationDomain('default')
         domain.addCatalog(catalog)
@@ -126,22 +125,22 @@ class TestPlurals(unittest.TestCase):
 
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 0),
-                         u"Istnieją 0 plików.")
+                         "Istnieją 0 plików.")
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 1),
-                         u"Istnieje 1 plik.")
+                         "Istnieje 1 plik.")
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 3),
-                         u"Istnieją 3 pliki.")
+                         "Istnieją 3 pliki.")
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 17),
-                         u"Istnieją 17 plików.")
+                         "Istnieją 17 plików.")
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 23),
-                         u"Istnieją 23 pliki.")
+                         "Istnieją 23 pliki.")
         self.assertEqual(catalog.getPluralMessage(
                          'There is one file.', 'There are %d files.', 28),
-                         u"Istnieją 28 plików.")
+                         "Istnieją 28 plików.")
 
     def test_floater(self):
         """Test with the number being a float.

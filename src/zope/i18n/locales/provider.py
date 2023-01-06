@@ -28,7 +28,7 @@ class LoadLocaleError(Exception):
 
 
 @implementer(ILocaleProvider)
-class LocaleProvider(object):
+class LocaleProvider:
     """A locale provider that gets its data from the XML data."""
 
     def __init__(self, locale_dir):

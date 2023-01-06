@@ -21,7 +21,7 @@ from zope.i18n.interfaces import II18nAware
 
 
 @implementer(II18nAware)
-class I18nAwareContentObject(object):
+class I18nAwareContentObject:
 
     def __init__(self):
         self.content = {}
@@ -56,7 +56,7 @@ class I18nAwareContentObject(object):
     ############################################################
 
 
-class AbstractTestII18nAwareMixin(object):
+class AbstractTestII18nAwareMixin:
 
     def setUp(self):
         self.object = self._createObject()

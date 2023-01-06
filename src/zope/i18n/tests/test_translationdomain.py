@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ##############################################################################
 #
 # Copyright (c) 2001-2008 Zope Foundation and Contributors.
@@ -70,19 +69,19 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
 
     def testEmptyStringTranslate(self):
         translate = self._domain.translate
-        self.assertEqual(translate(u"", target_language='en'), u"")
-        self.assertEqual(translate(u"", target_language='foo'), u"")
+        self.assertEqual(translate("", target_language='en'), "")
+        self.assertEqual(translate("", target_language='foo'), "")
 
     def testStringTranslate(self):
         self.assertEqual(
-            self._domain.translate(u"short_greeting", target_language='en'),
-            u"Hello!")
+            self._domain.translate("short_greeting", target_language='en'),
+            "Hello!")
 
     def testMessageIDTranslate(self):
         factory = MessageFactory('default')
         translate = self._domain.translate
-        msgid = factory(u"short_greeting", 'default')
-        self.assertEqual(translate(msgid, target_language='en'), u"Hello!")
+        msgid = factory("short_greeting", 'default')
+        self.assertEqual(translate(msgid, target_language='en'), "Hello!")
         # MessageID attributes override arguments
         msgid = factory('43-not-there', 'this ${that} the other',
                         mapping={'that': 'THAT'})
@@ -93,13 +92,13 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
     def testMessageIDRecursiveTranslate(self):
         factory = MessageFactory('default')
         translate = self._domain.translate
-        msgid_sub1 = factory(u"44-not-there", '${blue}',
+        msgid_sub1 = factory("44-not-there", '${blue}',
                              mapping={'blue': 'BLUE'})
-        msgid_sub2 = factory(u"45-not-there", '${yellow}',
+        msgid_sub2 = factory("45-not-there", '${yellow}',
                              mapping={'yellow': 'YELLOW'})
         mapping = {'color1': msgid_sub1,
                    'color2': msgid_sub2}
-        msgid = factory(u"46-not-there", 'Color: ${color1}/${color2}',
+        msgid = factory("46-not-there", 'Color: ${color1}/${color2}',
                         mapping=mapping)
         self.assertEqual(
             translate(msgid, target_language='en', default="default"),
@@ -108,9 +107,9 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         self.assertEqual(msgid.mapping, {'color1': msgid_sub1,
                                          'color2': msgid_sub2})
         # A circular reference should not lead to crashes
-        msgid1 = factory(u"47-not-there", 'Message 1 and $msg2',
+        msgid1 = factory("47-not-there", 'Message 1 and $msg2',
                          mapping={})
-        msgid2 = factory(u"48-not-there", 'Message 2 and $msg1',
+        msgid2 = factory("48-not-there", 'Message 2 and $msg1',
                          mapping={})
         msgid1.mapping['msg2'] = msgid2
         msgid2.mapping['msg1'] = msgid1
@@ -120,7 +119,7 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # message id but a Unicode with a directly passed mapping
         self.assertEqual(
             "Color: BLUE/YELLOW",
-            translate(u"Color: ${color1}/${color2}", mapping=mapping,
+            translate("Color: ${color1}/${color2}", mapping=mapping,
                       target_language='en'))
 
         # If we have mapping with a message id from a different
@@ -128,9 +127,9 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # message domain is not registered yet, we should return a
         # default translation.
         alt_factory = MessageFactory('alt')
-        msgid_sub = alt_factory(u"special", default=u"oohhh")
+        msgid_sub = alt_factory("special", default="oohhh")
         mapping = {'message': msgid_sub}
-        msgid = factory(u"46-not-there", 'Message: ${message}',
+        msgid = factory("46-not-there", 'Message: ${message}',
                         mapping=mapping)
         # test we get a default with no domain registered
         self.assertEqual(
@@ -158,9 +157,9 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         zope.component.provideUtility(domain, ITranslationDomain, 'alt')
 
         factory = MessageFactory('alt')
-        msgid = factory(u"special", 'default')
+        msgid = factory("special", 'default')
         self.assertEqual(
-            self._domain.translate(msgid, target_language='en'), u"Wow")
+            self._domain.translate(msgid, target_language='en'), "Wow")
 
     def testSimpleFallbackTranslation(self):
         translate = self._domain.translate
@@ -168,11 +167,11 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # Test that a translation in an unsupported language returns a
         # translation in the fallback language (by default, English)
         eq(translate('short_greeting', target_language='es'),
-           u"Hello!")
+           "Hello!")
         # Same test, but use the context argument instead of target_language
         context = Environment()
         eq(translate('short_greeting', context=context),
-           u"Hello!")
+           "Hello!")
 
     def testInterpolationWithoutTranslation(self):
         translate = self._domain.translate
@@ -235,7 +234,7 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         domain.addCatalog(standard_catalog)
         self.assertEqual(
             domain.translate('short_greeting', target_language='sr'),
-            u"Hello in Serbian Standard!",
+            "Hello in Serbian Standard!",
         )
 
         # Test the Latin file.
@@ -243,12 +242,12 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         domain.addCatalog(latin_catalog)
         self.assertEqual(
             domain.translate('short_greeting', target_language='sr'),
-            u"Hello in Serbian Latin!",
+            "Hello in Serbian Latin!",
         )
         # Note that sr@Latn is not recognizes as language id.
         self.assertEqual(
             domain.translate('short_greeting', target_language='sr@Latn'),
-            u"short_greeting",
+            "short_greeting",
         )
 
         # Test the Cyrillic file.
@@ -256,7 +255,7 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         domain.addCatalog(cyrillic_catalog)
         self.assertEqual(
             domain.translate('short_greeting', target_language='sr'),
-            u"Hello in српски!",
+            "Hello in српски!",
         )
 
         # When I have all three locales, this is the order that
@@ -268,5 +267,5 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # The Latin one is first, so it wins.
         self.assertEqual(
             domain.translate('short_greeting', target_language='sr'),
-            u"Hello in Serbian Latin!",
+            "Hello in Serbian Latin!",
         )

@@ -33,7 +33,7 @@ class NoParentException(AttributeError):
 
 
 @implementer(ILocaleInheritance)
-class Inheritance(object):
+class Inheritance:
     """A simple base version of locale inheritance.
 
     This object contains some shared code amongst the various
@@ -110,7 +110,7 @@ class AttributeInheritance(Inheritance):
                 not name.startswith('__')):
             value.__parent__ = self
             value.__name__ = name
-        super(AttributeInheritance, self).__setattr__(name, value)
+        super().__setattr__(name, value)
 
     def __getattr__(self, name):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
@@ -130,7 +130,7 @@ class AttributeInheritance(Inheritance):
             # Note that we cannot use the normal setattr function, since
             # __setattr__ of this class tries to assign a parent and name,
             # which we do not want to override.
-            super(AttributeInheritance, self).__setattr__(name, value)
+            super().__setattr__(name, value)
             return value
 
 
@@ -201,7 +201,7 @@ class InheritingDictionary(Inheritance, dict):
         if ILocaleInheritance.providedBy(value):
             value.__parent__ = self
             value.__name__ = name
-        super(InheritingDictionary, self).__setitem__(name, value)
+        super().__setitem__(name, value)
 
     def __getitem__(self, name):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""
@@ -212,7 +212,7 @@ class InheritingDictionary(Inheritance, dict):
                 pass
             else:
                 return selfUp.__getitem__(name)
-        return super(InheritingDictionary, self).__getitem__(name)
+        return super().__getitem__(name)
 
     def get(self, name, default=None):
         """See zope.i18n.interfaces.locales.ILocaleInheritance"""

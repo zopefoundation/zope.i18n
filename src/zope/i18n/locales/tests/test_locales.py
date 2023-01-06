@@ -27,7 +27,7 @@ from zope.i18n.locales.provider import LocaleProvider
 datadir = os.path.join(os.path.dirname(zope.i18n.__file__), 'locales', 'data')
 
 
-class AbstractTestILocaleProviderMixin(object):
+class AbstractTestILocaleProviderMixin:
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
 

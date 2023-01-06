@@ -21,7 +21,6 @@ from zope.component import queryUtility
 from zope.i18nmessageid import Message
 from zope.i18nmessageid import MessageFactory  # noqa
 
-from zope.i18n._compat import text_type
 from zope.i18n.config import ALLOWED_LANGUAGES
 from zope.i18n.interfaces import IFallbackTranslationDomainFactory
 from zope.i18n.interfaces import INegotiator
@@ -37,7 +36,7 @@ _interp_regex = re.compile(r'(?<!\$)(\$(?:(%(n)s)|{(%(n)s)}))'
                            % ({'n': NAME_RE}))
 
 
-class _FallbackNegotiator(object):
+class _FallbackNegotiator:
 
     def getLanguage(self, _allowed, _context):
         return None
@@ -171,9 +170,9 @@ def translate(msgid, domain=None, mapping=None, context=None,
         number = msgid.number
 
     if default is None:
-        default = text_type(msgid)
+        default = str(msgid)
     if msgid_plural is not None and default_plural is None:
-        default_plural = text_type(msgid_plural)
+        default_plural = str(msgid_plural)
 
     if domain:
         util = queryUtility(ITranslationDomain, domain)
@@ -239,7 +238,7 @@ def interpolate(text, mapping=None):
         value = mapping.get(param1 or param2, whole)
         if isinstance(value, Message):
             value = interpolate(value, value.mapping)
-        return text_type(value)
+        return str(value)
 
     if not text or not mapping:
         return text

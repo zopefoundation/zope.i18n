@@ -33,13 +33,13 @@ from zope.i18n.interfaces import IDateTimeFormat
 from zope.i18n.interfaces import INumberFormat
 
 
-class LocaleStub(object):
+class LocaleStub:
     pass
 
 
-class LocaleCalendarStub(object):
+class LocaleCalendarStub:
 
-    type = u"gregorian"
+    type = "gregorian"
 
     months = {
         1: ('Januar', 'Jan'),
@@ -104,14 +104,7 @@ class LocaleCalendarStub(object):
         raise NotImplementedError()
 
 
-class _TestCase(TestCase):
-    # Avoid deprecation warnings in Python 3 by making the preferred
-    # method name available for Python 2.
-    assertRaisesRegex = getattr(
-        TestCase, 'assertRaisesRegex', TestCase.assertRaisesRegexp)
-
-
-class TestDateTimePatternParser(_TestCase):
+class TestDateTimePatternParser(TestCase):
     """Extensive tests for the ICU-based-syntax datetime pattern parser."""
 
     def testParseSimpleTimePattern(self):
@@ -209,7 +202,7 @@ class TestDateTimePatternParser(_TestCase):
         )
 
 
-class TestBuildDateTimeParseInfo(_TestCase):
+class TestBuildDateTimeParseInfo(TestCase):
     """This class tests the functionality of the buildDateTimeParseInfo()
     method with the German locale.
     """
@@ -252,9 +245,9 @@ class TestBuildDateTimeParseInfo(_TestCase):
         self.assertEqual(self.info(('M', 2)), '([0-9]{2})')
 
     def testMonthNames(self):
-        names = [u"Januar", u"Februar", u"Maerz", u"April",
-                 u"Mai", u"Juni", u"Juli", u"August", u"September", u"Oktober",
-                 u"November", u"Dezember"]
+        names = ["Januar", "Februar", "Maerz", "April",
+                 "Mai", "Juni", "Juli", "August", "September", "Oktober",
+                 "November", "Dezember"]
         self.assertEqual(self.info(('M', 4)), '(' + '|'.join(names) + ')')
 
     def testMonthAbbr(self):
@@ -278,7 +271,7 @@ class TestBuildDateTimeParseInfo(_TestCase):
         self.assertEqual(self.info(('E', 3)), '(' + '|'.join(names) + ')')
 
 
-class TestDateTimeFormat(_TestCase):
+class TestDateTimeFormat(TestCase):
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
 
@@ -632,69 +625,69 @@ class TestDateTimeFormat(_TestCase):
     def testFormatDayInYear(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'D'),
-            u"3")
+            "3")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DD'),
-            u"03")
+            "03")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DDD'),
-            u"003")
+            "003")
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'D'),
-            u"365")
+            "365")
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'DD'),
-            u"365")
+            "365")
         self.assertEqual(
             self.format.format(datetime.date(2003, 12, 31), 'DDD'),
-            u"365")
+            "365")
         self.assertEqual(
             self.format.format(datetime.date(2004, 12, 31), 'DDD'),
-            u"366")
+            "366")
 
     def testFormatDayOfWeekInMOnth(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'F'),
-            u"1")
+            "1")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10), 'F'),
-            u"2")
+            "2")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 17), 'F'),
-            u"3")
+            "3")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 24), 'F'),
-            u"4")
+            "4")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 31), 'F'),
-            u"5")
+            "5")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 6), 'F'),
-            u"1")
+            "1")
 
     def testFormatUnusualFormats(self):
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 3), 'DDD-yyyy'),
-            u"003-2003")
+            "003-2003")
         self.assertEqual(
             self.format.format(datetime.date(2003, 1, 10),
                                "F. EEEE 'im' MMMM, yyyy"),
-            u"2. Freitag im Januar, 2003")
+            "2. Freitag im Januar, 2003")
 
     def testFormatGregorianEra(self):
         self.assertEqual(
             self.format.format(datetime.date(2017, 12, 17), 'G'),
-            u'n. Chr.'
+            'n. Chr.'
         )
 
     def testFormateMonthLengthOne(self):
         self.assertEqual(
             self.format.format(datetime.date(2017, 12, 17), 'M'),
-            u'12'
+            '12'
         )
 
 
-class TestNumberPatternParser(_TestCase):
+class TestNumberPatternParser(TestCase):
     """Extensive tests for the ICU-based-syntax number pattern parser."""
 
     def testParseSimpleIntegerPattern(self):
@@ -1049,7 +1042,7 @@ class TestNumberPatternParser(_TestCase):
             neg_pattern)
 
 
-class TestNumberFormat(_TestCase):
+class TestNumberFormat(TestCase):
     """Test the functionality of an implmentation of the NumberFormat."""
 
     format = NumberFormat(symbols={

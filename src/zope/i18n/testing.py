@@ -39,7 +39,7 @@ def setUp(test=None):
     zope.component.provideAdapter(BrowserLanguages)
 
 
-class PlacelessSetup(object):
+class PlacelessSetup:
 
     def setUp(self):
         """

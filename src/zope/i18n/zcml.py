@@ -1,4 +1,3 @@
-
 # ##############################################################################
 #
 # Copyright (c) 2001, 2002 Zope Foundation and Contributors.
@@ -42,15 +41,15 @@ class IRegisterTranslationsDirective(Interface):
     """Register translations with the global site manager."""
 
     directory = Path(
-        title=u"Directory",
-        description=u"Directory containing the translations",
+        title="Directory",
+        description="Directory containing the translations",
         required=True
     )
 
     domain = TextLine(
-        title=u"Domain",
-        description=(u"Translation domain to register.  If not specified, "
-                     u"all domains found in the directory are registered"),
+        title="Domain",
+        description=("Translation domain to register.  If not specified, "
+                     "all domains found in the directory are registered"),
         required=False
     )
 

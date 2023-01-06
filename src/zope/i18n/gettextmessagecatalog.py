@@ -22,7 +22,7 @@ from zope.interface import implementer
 from zope.i18n.interfaces import IGlobalMessageCatalog
 
 
-class _KeyErrorRaisingFallback(object):
+class _KeyErrorRaisingFallback:
     def ugettext(self, message):
         raise KeyError(message)
 
@@ -53,7 +53,7 @@ def plural_formatting(func):
 
 
 @implementer(IGlobalMessageCatalog)
-class GettextMessageCatalog(object):
+class GettextMessageCatalog:
     """A message catalog based on GNU gettext and Python's gettext module."""
 
     _catalog = None
