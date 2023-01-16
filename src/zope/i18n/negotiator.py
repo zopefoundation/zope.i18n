@@ -14,6 +14,7 @@
 """Language Negotiator
 """
 from zope.interface import implementer
+
 from zope.i18n.interfaces import INegotiator
 from zope.i18n.interfaces import IUserPreferredLanguages
 
@@ -35,7 +36,7 @@ def normalize_langs(langs):
 
 
 @implementer(INegotiator)
-class Negotiator(object):
+class Negotiator:
 
     def getLanguage(self, langs, env):
         envadapter = IUserPreferredLanguages(env)

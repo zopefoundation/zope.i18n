@@ -16,11 +16,12 @@
 
 import zope.component
 import zope.interface
-
 from zope.i18nmessageid import Message
-from zope.i18n import translate, interpolate
-from zope.i18n._compat import text_type
-from zope.i18n.interfaces import ITranslationDomain, INegotiator
+
+from zope.i18n import interpolate
+from zope.i18n import translate
+from zope.i18n.interfaces import INegotiator
+from zope.i18n.interfaces import ITranslationDomain
 
 
 # The configuration should specify a list of fallback languages for the
@@ -35,7 +36,7 @@ LANGUAGE_FALLBACKS = ['en']
 
 
 @zope.interface.implementer(ITranslationDomain)
-class TranslationDomain(object):
+class TranslationDomain:
 
     def __init__(self, domain, fallbacks=None):
         self.domain = (
@@ -74,8 +75,8 @@ class TranslationDomain(object):
         """See zope.i18n.interfaces.ITranslationDomain"""
         # if the msgid is empty, let's save a lot of calculations and return
         # an empty string.
-        if msgid == u'':
-            return u''
+        if msgid == '':
+            return ''
 
         if target_language is None and context is not None:
             langs = self._catalogs.keys()
@@ -124,9 +125,9 @@ class TranslationDomain(object):
                         msgid_plural, default_plural, number, seen)
 
         if default is None:
-            default = text_type(msgid)
+            default = str(msgid)
         if msgid_plural is not None and default_plural is None:
-            default_plural = text_type(msgid_plural)
+            default_plural = str(msgid_plural)
 
         # Get the translation. Use the specified fallbacks if this fails
         catalog_names = self._catalogs.get(target_language)

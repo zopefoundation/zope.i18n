@@ -1,5 +1,6 @@
 import os
 
+
 #: The environment variable that is consulted when this module
 #: is imported to determine the value of `COMPILE_MO_FILES`.
 #: Simply set this to a non-empty string to make it True.

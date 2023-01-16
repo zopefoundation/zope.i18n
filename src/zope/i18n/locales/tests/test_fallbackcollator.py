@@ -12,8 +12,8 @@
 #
 ##############################################################################
 
-import unittest
 import doctest
+import unittest
 
 from zope.i18n.testing import unicode_checker
 

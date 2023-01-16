@@ -19,24 +19,33 @@ import os
 from datetime import date
 
 from zope.interface import implementer
+
+# Setup the locale directory
+from zope import i18n
+from zope.i18n.format import DateTimeFormat
+from zope.i18n.format import NumberFormat
 from zope.i18n.interfaces.locales import ILocale
-from zope.i18n.interfaces.locales import ILocaleDisplayNames, ILocaleDates
-from zope.i18n.interfaces.locales import ILocaleVersion, ILocaleIdentity
-from zope.i18n.interfaces.locales import ILocaleTimeZone, ILocaleCalendar
-from zope.i18n.interfaces.locales import ILocaleCurrency, ILocaleNumbers
-from zope.i18n.interfaces.locales import ILocaleFormat, ILocaleFormatLength
+from zope.i18n.interfaces.locales import ILocaleCalendar
+from zope.i18n.interfaces.locales import ILocaleCurrency
+from zope.i18n.interfaces.locales import ILocaleDates
+from zope.i18n.interfaces.locales import ILocaleDayContext
+from zope.i18n.interfaces.locales import ILocaleDisplayNames
+from zope.i18n.interfaces.locales import ILocaleFormat
+from zope.i18n.interfaces.locales import ILocaleFormatLength
+from zope.i18n.interfaces.locales import ILocaleIdentity
+from zope.i18n.interfaces.locales import ILocaleMonthContext
+from zope.i18n.interfaces.locales import ILocaleNumbers
 from zope.i18n.interfaces.locales import ILocaleOrientation
-from zope.i18n.interfaces.locales import ILocaleDayContext, ILocaleMonthContext
-from zope.i18n.format import NumberFormat, DateTimeFormat
-from zope.i18n.locales.inheritance import \
-    AttributeInheritance, InheritingDictionary, NoParentException
+from zope.i18n.interfaces.locales import ILocaleTimeZone
+from zope.i18n.interfaces.locales import ILocaleVersion
+from zope.i18n.locales.inheritance import AttributeInheritance
+from zope.i18n.locales.inheritance import InheritingDictionary
+from zope.i18n.locales.inheritance import NoParentException
 # LoadLocaleError is not used, but might be imported from here by others.
 from zope.i18n.locales.provider import LoadLocaleError  # noqa
 from zope.i18n.locales.provider import LocaleProvider
 
 
-# Setup the locale directory
-from zope import i18n
 LOCALEDIR = os.path.join(os.path.dirname(i18n.__file__), "locales", "data")
 
 # Global LocaleProvider. We really just need this single one.
@@ -77,7 +86,7 @@ calendarAliases = {'islamic': ('arabic',),
 
 
 @implementer(ILocaleIdentity)
-class LocaleIdentity(object):
+class LocaleIdentity:
     """Represents a unique identification of the locale
 
     This class does not have to deal with inheritance.
@@ -116,12 +125,12 @@ class LocaleIdentity(object):
     def __repr__(self):
         """See zope.i18n.interfaces.ILocaleIdentity
         """
-        return "<LocaleIdentity (%s, %s, %s, %s)>" % (
+        return "<LocaleIdentity ({}, {}, {}, {})>".format(
             self.language, self.script, self.territory, self.variant)
 
 
 @implementer(ILocaleVersion)
-class LocaleVersion(object):
+class LocaleVersion:
     """Represents a particular version of a locale
 
     This class does not have to deal with inheritance.
@@ -190,7 +199,7 @@ class LocaleDisplayNames(AttributeInheritance):
 
 
 @implementer(ILocaleTimeZone)
-class LocaleTimeZone(object):
+class LocaleTimeZone:
     """Specifies one of the timezones of a specific locale.
 
     The attributes of this class are not inherited, since all timezone
@@ -217,7 +226,7 @@ class LocaleTimeZone(object):
 
 
 @implementer(ILocaleFormat)
-class LocaleFormat(object):
+class LocaleFormat:
     """Specifies one of the format of a specific format length.
 
     The attributes of this class are not inherited, since all format
@@ -229,8 +238,8 @@ class LocaleFormat(object):
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
-        self.displayName = u""
-        self.pattern = u""
+        self.displayName = ""
+        self.pattern = ""
 
 
 @implementer(ILocaleFormatLength)
@@ -250,7 +259,7 @@ class LocaleMonthContext(AttributeInheritance):
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
-        self.default = u"wide"
+        self.default = "wide"
 
 
 @implementer(ILocaleDayContext)
@@ -259,7 +268,7 @@ class LocaleDayContext(AttributeInheritance):
     def __init__(self, type=None):
         """Initialize the object."""
         self.type = type
-        self.default = u"wide"
+        self.default = "wide"
 
 
 @implementer(ILocaleCalendar)
@@ -498,15 +507,15 @@ class LocaleDates(AttributeInheritance):
     """
 
     def getFormatter(self, category, length=None, name=None,
-                     calendar=u"gregorian"):
+                     calendar="gregorian"):
         """See zope.i18n.interfaces.locales.ILocaleDates"""
-        if category not in (u"date", u"time", u"dateTime"):
+        if category not in ("date", "time", "dateTime"):
             raise ValueError('Invalid category: %s' % category)
-        if calendar not in (u"gregorian", u"arabic", u"chinese",
-                            u"civil-arabic", u"hebrew", u"japanese",
-                            u"thai-buddhist"):
+        if calendar not in ("gregorian", "arabic", "chinese",
+                            "civil-arabic", "hebrew", "japanese",
+                            "thai-buddhist"):
             raise ValueError('Invalid calendar: %s' % calendar)
-        if length not in (u"short", u"medium", u"long", u"full", None):
+        if length not in ("short", "medium", "long", "full", None):
             raise ValueError('Invalid format length: %s' % length)
 
         cal = self.calendars[calendar]
@@ -544,7 +553,7 @@ class LocaleDates(AttributeInheritance):
 
 
 @implementer(ILocaleCurrency)
-class LocaleCurrency(object):
+class LocaleCurrency:
     """Simple implementation of ILocaleCurrency without inheritance support,
     since it is not needed for a single currency."""
 
@@ -634,8 +643,8 @@ class LocaleNumbers(AttributeInheritance):
 
     def getFormatter(self, category, length=None, name=None):
         """See zope.i18n.interfaces.locales.ILocaleNumbers"""
-        assert category in (u"decimal", u"percent", u"scientific", u"currency")
-        assert length in (u"short", u"medium", u"long", u"full", None)
+        assert category in ("decimal", "percent", "scientific", "currency")
+        assert length in ("short", "medium", "long", "full", None)
 
         formats = getattr(self, category + 'Formats')
         if length is None:

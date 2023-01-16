@@ -15,14 +15,15 @@
 """
 import unittest
 
-from zope.i18n.negotiator import Negotiator
-from zope.i18n.interfaces import IUserPreferredLanguages
 from zope.component.testing import PlacelessSetup
 from zope.interface import implementer
 
+from zope.i18n.interfaces import IUserPreferredLanguages
+from zope.i18n.negotiator import Negotiator
+
 
 @implementer(IUserPreferredLanguages)
-class Env(object):
+class Env:
 
     def __init__(self, langs=()):
         self.langs = langs
@@ -34,7 +35,7 @@ class Env(object):
 class NegotiatorTest(PlacelessSetup, unittest.TestCase):
 
     def setUp(self):
-        super(NegotiatorTest, self).setUp()
+        super().setUp()
         self.negotiator = Negotiator()
 
     def test_findLanguages(self):
@@ -55,5 +56,5 @@ class NegotiatorTest(PlacelessSetup, unittest.TestCase):
 
 def test_suite():
     return unittest.TestSuite((
-        unittest.makeSuite(NegotiatorTest),
+        unittest.defaultTestLoader.loadTestsFromTestCase(NegotiatorTest),
     ))

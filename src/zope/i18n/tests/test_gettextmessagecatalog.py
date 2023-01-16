@@ -14,6 +14,7 @@
 """Test a gettext implementation of a Message Catalog.
 """
 import os
+
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.tests import test_imessagecatalog
 

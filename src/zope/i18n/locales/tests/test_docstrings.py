@@ -15,9 +15,9 @@
 """
 import unittest
 from doctest import DocTestSuite
+
 from zope.i18n.locales.inheritance import AttributeInheritance
 from zope.i18n.locales.inheritance import NoParentException
-
 from zope.i18n.testing import unicode_checker
 
 

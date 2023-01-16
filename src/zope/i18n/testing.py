@@ -21,6 +21,7 @@ import re
 
 from zope.testing import renormalizing
 
+
 rules = []
 if bytes is not str:
     rules = [
@@ -38,7 +39,7 @@ def setUp(test=None):
     zope.component.provideAdapter(BrowserLanguages)
 
 
-class PlacelessSetup(object):
+class PlacelessSetup:
 
     def setUp(self):
         """

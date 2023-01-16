@@ -1,10 +1,11 @@
-from contextlib import closing
-import os.path
-from os.path import join
 import logging
+import os.path
+from contextlib import closing
+from os.path import join
 
 from pythongettext.msgfmt import Msgfmt
 from pythongettext.msgfmt import PoSyntaxError
+
 
 logger = logging.getLogger('zope.i18n')
 
@@ -15,7 +16,7 @@ HAS_PYTHON_GETTEXT = True
 def _safe_mtime(path):
     try:
         return os.path.getmtime(path)
-    except (IOError, OSError):
+    except OSError:
         return None
 
 
@@ -36,10 +37,7 @@ def compile_mo_file(domain, lc_messages_path):
 
     if po_mtime > mo_mtime:
         try:
-            # Msgfmt.getAsFile returns io.BytesIO on Python 3,
-            # and cStringIO.StringIO on Python 2;
-            # sadly StringIO isn't a proper context manager, so we have to
-            # wrap it with `closing`. Also, Msgfmt doesn't properly close a
+            # Msgfmt doesn't properly close a
             # file it opens for reading if you pass the path,
             # but it does if you pass the file.
             with open(pofile, 'rb') as pofd:
@@ -49,5 +47,5 @@ def compile_mo_file(domain, lc_messages_path):
         except PoSyntaxError as err:
             logger.warning(
                 'Syntax error while compiling %s (%s).', pofile, err.msg)
-        except (IOError, OSError) as err:
+        except OSError as err:
             logger.warning('Error while compiling %s (%s).', pofile, err)

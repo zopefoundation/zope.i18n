@@ -13,19 +13,21 @@
 ##############################################################################
 """This module tests the LocaleProvider and everything that goes with it.
 """
-import os
 import datetime
+import os
 from unittest import TestCase
 
+import zope.i18n
 from zope.i18n.interfaces.locales import ILocaleProvider
 from zope.i18n.locales import locales
-from zope.i18n.locales.provider import LocaleProvider, LoadLocaleError
+from zope.i18n.locales.provider import LoadLocaleError
+from zope.i18n.locales.provider import LocaleProvider
 
-import zope.i18n
+
 datadir = os.path.join(os.path.dirname(zope.i18n.__file__), 'locales', 'data')
 
 
-class AbstractTestILocaleProviderMixin(object):
+class AbstractTestILocaleProviderMixin:
     """Test the functionality of an implmentation of the ILocaleProvider
     interface."""
 

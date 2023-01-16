@@ -14,6 +14,7 @@
 """This module tests the regular persistent Translation Domain.
 """
 import unittest
+
 from zope.i18n.simpletranslationdomain import SimpleTranslationDomain
 from zope.i18n.tests.test_itranslationdomain import TestITranslationDomain
 
@@ -22,7 +23,8 @@ data = {
     ('en', 'short_greeting'): 'Hello!',
     ('de', 'short_greeting'): 'Hallo!',
     ('en', 'greeting'): 'Hello $name, how are you?',
-    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?'}
+    ('de', 'greeting'): 'Hallo $name, wie geht es Dir?',
+}
 
 
 class TestSimpleTranslationDomain(unittest.TestCase, TestITranslationDomain):
@@ -36,9 +38,3 @@ class TestSimpleTranslationDomain(unittest.TestCase, TestITranslationDomain):
     def _getTranslationDomain(self):
         domain = SimpleTranslationDomain('default', data)
         return domain
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestSimpleTranslationDomain))
-    return suite

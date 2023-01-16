@@ -13,18 +13,30 @@
 ##############################################################################
 """XML Locale-related objects and functions
 """
-from datetime import date, time
+from datetime import date
+from datetime import time
 from xml.dom.minidom import parse as parseXML
-from zope.i18n.locales import Locale, LocaleDisplayNames, LocaleDates
-from zope.i18n.locales import LocaleVersion, LocaleIdentity, LocaleTimeZone
-from zope.i18n.locales import LocaleCalendar, LocaleCurrency, LocaleNumbers
-from zope.i18n.locales import LocaleFormat, LocaleFormatLength, dayMapping
-from zope.i18n.locales import LocaleOrientation, LocaleDayContext
-from zope.i18n.locales import LocaleMonthContext, calendarAliases
+
+from zope.i18n.locales import Locale
+from zope.i18n.locales import LocaleCalendar
+from zope.i18n.locales import LocaleCurrency
+from zope.i18n.locales import LocaleDates
+from zope.i18n.locales import LocaleDayContext
+from zope.i18n.locales import LocaleDisplayNames
+from zope.i18n.locales import LocaleFormat
+from zope.i18n.locales import LocaleFormatLength
+from zope.i18n.locales import LocaleIdentity
+from zope.i18n.locales import LocaleMonthContext
+from zope.i18n.locales import LocaleNumbers
+from zope.i18n.locales import LocaleOrientation
+from zope.i18n.locales import LocaleTimeZone
+from zope.i18n.locales import LocaleVersion
+from zope.i18n.locales import calendarAliases
+from zope.i18n.locales import dayMapping
 from zope.i18n.locales.inheritance import InheritingDictionary
 
 
-class LocaleFactory(object):
+class LocaleFactory:
     """This class creates a Locale object from an ICU XML file."""
 
     def __init__(self, path):
@@ -35,7 +47,7 @@ class LocaleFactory(object):
             self._data = parseXML(path).documentElement
 
     def _getText(self, nodelist):
-        rc = u''
+        rc = ''
         for node in nodelist:
             if node.nodeType == node.TEXT_NODE:
                 rc = rc + node.data
@@ -983,7 +995,7 @@ class LocaleFactory(object):
             # get the short and long name node
             long = node.getElementsByTagName('long')
             short = node.getElementsByTagName('short')
-            for type in (u"generic", u"standard", u"daylight"):
+            for type in ("generic", "standard", "daylight"):
                 # get long name
                 long_desc = None
                 if long:
@@ -1066,10 +1078,10 @@ class LocaleFactory(object):
             return
 
         symbols = InheritingDictionary()
-        for name in (u"decimal", u"group", u"list", u"percentSign",
-                     u"nativeZeroDigit", u"patternDigit", u"plusSign",
-                     u"minusSign", u"exponential", u"perMille",
-                     u"infinity", u"nan"):
+        for name in ("decimal", "group", "list", "percentSign",
+                     "nativeZeroDigit", "patternDigit", "plusSign",
+                     "minusSign", "exponential", "perMille",
+                     "infinity", "nan"):
             nodes = symbols_nodes[0].getElementsByTagName(name)
             if nodes:
                 symbols[name] = self._getText(nodes[0].childNodes)
@@ -1225,7 +1237,7 @@ class LocaleFactory(object):
             if nodes:
                 currency.symbol = self._getText(nodes[0].childNodes)
                 currency.symbolChoice = \
-                    nodes[0].getAttribute('choice') == u"true"
+                    nodes[0].getAttribute('choice') == "true"
 
             nodes = curr_node.getElementsByTagName('displayName')
             if nodes:
@@ -1298,8 +1310,8 @@ class LocaleFactory(object):
             return
 
         delimiters = InheritingDictionary()
-        for name in (u'quotationStart', u"quotationEnd",
-                     u"alternateQuotationStart", u"alternateQuotationEnd"):
+        for name in ('quotationStart', "quotationEnd",
+                     "alternateQuotationStart", "alternateQuotationEnd"):
             nodes = delimiters_nodes[0].getElementsByTagName(name)
             if nodes:
                 delimiters[name] = self._getText(nodes[0].childNodes)
@@ -1330,7 +1342,7 @@ class LocaleFactory(object):
         if not orientation_nodes:
             return
         orientation = LocaleOrientation()
-        for name in (u"characters", u"lines"):
+        for name in ("characters", "lines"):
             value = orientation_nodes[0].getAttribute(name)
             if value:
                 setattr(orientation, name, value)
