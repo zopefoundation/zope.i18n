@@ -5,7 +5,7 @@
 5.1 (2023-08-28)
 ================
 
-- Include ``*.mo`` files in release.
+- Include ``*.mo`` files in release but remove them from repository.
 
 
 5.0 (2023-03-27)
