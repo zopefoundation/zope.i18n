@@ -2,7 +2,7 @@
 # https://github.com/zopefoundation/meta/tree/master/config/pure-python
 [meta]
 template = "pure-python"
-commit-id = "d03ad585"
+commit-id = "7419369a"
 
 [python]
 with-windows = false
@@ -45,4 +45,14 @@ ignore-bad-ideas = [
     "src/zope/i18n/tests/sr-default.mo",
     "src/zope/i18n/tests/sr@Cyrl-default.mo",
     "src/zope/i18n/tests/sr@Latn-default.mo",
+    ]
+
+[zest-releaser]
+options = [
+    "prereleaser.before = zest.pocompile.available",
+    ]
+
+[git]
+ignore = [
+    "*.mo",
     ]
