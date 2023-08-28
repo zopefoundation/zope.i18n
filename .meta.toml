@@ -44,3 +44,13 @@ options = [
 ignore = [
     "*.mo",
     ]
+
+[zest-releaser]
+options = [
+    "prereleaser.before = zest.pocompile.available",
+    ]
+
+[git]
+ignore = [
+    "*.mo",
+    ]
