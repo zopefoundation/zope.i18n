@@ -30,8 +30,8 @@ from zope.i18n.translationdomain import TranslationDomain
 testdir = os.path.dirname(__file__)
 default_dir = os.path.join(testdir, 'locale-default')
 
-en_file = os.path.join(default_dir, 'en', 'default.mo')
-de_file = os.path.join(default_dir, 'de', 'default.mo')
+en_file = os.path.join(default_dir, 'en', 'LC_MESSAGES', 'default.mo')
+de_file = os.path.join(default_dir, 'de', 'LC_MESSAGES', 'default.mo')
 
 
 class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
@@ -140,7 +140,8 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # provide the domain
         domain = TranslationDomain('alt')
         path = testdir
-        en_alt_path = os.path.join(path, 'locale-alt', 'en', 'alt.mo')
+        en_alt_path = os.path.join(
+            path, 'locale-alt', 'en', 'LC_MESSAGES', 'alt.mo')
         compile_po(en_alt_path)
         en_catalog = GettextMessageCatalog('en', 'alt', en_alt_path)
         domain.addCatalog(en_catalog)
@@ -153,7 +154,8 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
     def testMessageIDTranslateForDifferentDomain(self):
         domain = TranslationDomain('alt')
         path = testdir
-        en_alt_path = os.path.join(path, 'locale-alt', 'en', 'alt.mo')
+        en_alt_path = os.path.join(
+            path, 'locale-alt', 'en', 'LC_MESSAGES', 'alt.mo')
         compile_po(en_alt_path)
         en_catalog = GettextMessageCatalog('en', 'alt', en_alt_path)
         domain.addCatalog(en_catalog)
@@ -224,9 +226,12 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
 
         See https://github.com/collective/plone.app.locales/issues/326
         """
-        standard_file = os.path.join(default_dir, 'sr', 'default.mo')
-        latin_file = os.path.join(default_dir, 'sr@Latn', 'default.mo')
-        cyrillic_file = os.path.join(default_dir, 'sr@Cyrl', 'default.mo')
+        standard_file = os.path.join(
+            default_dir, 'sr', 'LC_MESSAGES', 'default.mo')
+        latin_file = os.path.join(
+            default_dir, 'sr@Latn', 'LC_MESSAGES', 'default.mo')
+        cyrillic_file = os.path.join(
+            default_dir, 'sr@Cyrl', 'LC_MESSAGES', 'default.mo')
         compile_po(standard_file)
         standard_catalog = GettextMessageCatalog('sr', 'char', standard_file)
         compile_po(latin_file)
