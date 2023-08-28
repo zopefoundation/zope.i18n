@@ -2,7 +2,7 @@
  CHANGES
 =========
 
-5.1 (unreleased)
+5.1 (2023-08-28)
 ================
 
 - Include ``*.mo`` files in release.
