@@ -12,6 +12,7 @@ recursive-include docs *.txt
 recursive-include docs Makefile
 
 recursive-include src *.py
+include *.yml
 recursive-include docs *.bat
 recursive-include src *.dtd
 recursive-include src *.html
