@@ -17,6 +17,7 @@ recursive-include docs *.bat
 recursive-include src *.dtd
 recursive-include src *.html
 recursive-include src *.in
+recursive-include src *.mo
 recursive-include src *.po
 recursive-include src *.rst
 recursive-include src *.txt

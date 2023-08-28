@@ -28,21 +28,12 @@ additional-rules = [
     "recursive-include src *.dtd",
     "recursive-include src *.html",
     "recursive-include src *.in",
+    "recursive-include src *.mo",
     "recursive-include src *.po",
     "recursive-include src *.rst",
     "recursive-include src *.txt",
     "recursive-include src *.xml",
     "recursive-include src *.zcml",
-    ]
-
-[zest-releaser]
-options = [
-    "prereleaser.before = zest.pocompile.available",
-    ]
-
-[git]
-ignore = [
-    "*.mo",
     ]
 
 [zest-releaser]
