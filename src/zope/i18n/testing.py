@@ -16,19 +16,9 @@ Unit test logic for setting up and tearing down basic infrastructure.
 
 This relies on :mod:`zope.publisher` being available.
 """
+import os.path
 
-import re
-
-from zope.testing import renormalizing
-
-
-rules = []
-if bytes is not str:
-    rules = [
-        (re.compile("u('.*?')"), r"\1"),
-        (re.compile('u(".*?")'), r"\1"),
-    ]
-unicode_checker = renormalizing.RENormalizing(rules)
+from pythongettext.msgfmt import Msgfmt
 
 
 def setUp(test=None):
@@ -57,3 +47,12 @@ class PlacelessSetup:
 
         """
         setUp()
+
+
+def compile_po(mo_path):
+    """If `mo_path` does not exist, compile its po file."""
+    if not os.path.exists(mo_path):  # pragma: no cover
+        po_path = mo_path.replace('.mo', '.po')
+        mo_content = Msgfmt(po_path, name=po_path).get()
+        with open(mo_path, "wb") as mo:
+            mo.write(mo_content)

@@ -23,6 +23,7 @@ from zope.i18n import tests
 from zope.i18n import translate
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.testing import compile_po
 from zope.i18n.translationdomain import TranslationDomain
 
 
@@ -31,6 +32,7 @@ class TestPlurals(unittest.TestCase):
     def _getMessageCatalog(self, locale, variant="default"):
         path = os.path.dirname(tests.__file__)
         self._path = os.path.join(path, '{}-{}.mo'.format(locale, variant))
+        compile_po(self._path)
         catalog = GettextMessageCatalog(locale, variant, self._path)
         return catalog
 
