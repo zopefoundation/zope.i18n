@@ -187,14 +187,14 @@ class LocaleDisplayNames(AttributeInheritance):
 
       >>> locale = LocaleInheritanceStub(nextLocale=root)
       >>> locale.displayNames = LocaleDisplayNames()
-      >>> locale.displayNames.keys = ['fu', 'bahr']
+      >>> locale.displayNames.keys = ['f', 'bahr']
 
     Here you can see the inheritance in action::
 
       >>> locale.displayNames.languages
       ['en', 'de']
       >>> locale.displayNames.keys
-      ['fu', 'bahr']
+      ['f', 'bahr']
     """
 
 
@@ -297,13 +297,13 @@ class LocaleCalendar(AttributeInheritance):
       >>> locale.calendar.months = InheritingDictionary(
       ...     {2: (u"Februar", u"Feb"), 3: (u"Maerz", u"Mrz")})
       >>> locale.calendar.getMonthNames()[:4]
-      [u'January', u'Februar', u'Maerz', None]
+      ['January', 'Februar', 'Maerz', None]
       >>> locale.calendar.getMonthTypeFromName(u"January")
       1
       >>> locale.calendar.getMonthTypeFromName(u"Februar")
       2
       >>> locale.calendar.getMonthAbbreviations()[:4]
-      [u'Jan', u'Feb', u'Mrz', None]
+      ['Jan', 'Feb', 'Mrz', None]
       >>> locale.calendar.getMonthTypeFromAbbreviation(u"Jan")
       1
       >>> locale.calendar.getMonthTypeFromAbbreviation(u"Mrz")
@@ -314,13 +314,13 @@ class LocaleCalendar(AttributeInheritance):
       >>> locale.calendar.days = InheritingDictionary(
       ...     {2: (u"Dienstag", u"Die"), 3: (u"Mittwoch", u"Mit")})
       >>> locale.calendar.getDayNames()[:4]
-      [u'Monday', u'Dienstag', u'Mittwoch', None]
+      ['Monday', 'Dienstag', 'Mittwoch', None]
       >>> locale.calendar.getDayTypeFromName(u"Monday")
       1
       >>> locale.calendar.getDayTypeFromName(u"Dienstag")
       2
       >>> locale.calendar.getDayAbbreviations()[:4]
-      [u'Mon', u'Die', u'Mit', None]
+      ['Mon', 'Die', 'Mit', None]
       >>> locale.calendar.getDayTypeFromAbbreviation(u"Mon")
       1
       >>> locale.calendar.getDayTypeFromAbbreviation(u"Die")
@@ -328,7 +328,7 @@ class LocaleCalendar(AttributeInheritance):
 
       >>> root.calendar.week = {'firstDay': 1}
       >>> locale.calendar.getFirstWeekDayName()
-      u'Monday'
+      'Monday'
 
     Let's test the direct attribute access as well.
 
@@ -336,9 +336,9 @@ class LocaleCalendar(AttributeInheritance):
       >>> root.pm = u"PM"
       >>> locale.pm = u"nachm."
       >>> locale.pm
-      u'nachm.'
+      'nachm.'
       >>> locale.am
-      u'AM'
+      'AM'
 
     Note that ``isWeekend`` is not implemented:
 
@@ -444,11 +444,11 @@ class LocaleDates(AttributeInheritance):
 
       >>> formatter = dates.getFormatter('date')
       >>> formatter.format(date(2004, 2, 4))
-      u'04.02.2004'
+      '04.02.2004'
 
       >>> formatter = dates.getFormatter('date', length='full')
       >>> formatter.format(date(2004, 2, 4))
-      u'Mittwoch, 4. Februar 2004'
+      'Mittwoch, 4. Februar 2004'
 
     Let's also test the time formatter::
 
@@ -467,11 +467,11 @@ class LocaleDates(AttributeInheritance):
 
       >>> formatter = dates.getFormatter('time')
       >>> formatter.format(time(12, 15, 00))
-      u'12:15:00'
+      '12:15:00'
 
       >>> formatter = dates.getFormatter('time', length='full')
       >>> formatter.format(time(12, 15, 00))
-      u'12:15 Uhr +000'
+      '12:15 Uhr +000'
 
     The datetime formatter is a bit special, since it is constructed from
     the other two::
@@ -484,11 +484,11 @@ class LocaleDates(AttributeInheritance):
 
       >>> formatter = dates.getFormatter('dateTime')
       >>> formatter.format(datetime(2004, 2, 4, 12, 15, 00))
-      u'04.02.2004 12:15:00'
+      '04.02.2004 12:15:00'
 
       >>> formatter = dates.getFormatter('dateTime', length='full')
       >>> formatter.format(datetime(2004, 2, 4, 12, 15, 00))
-      u'Mittwoch, 4. Februar 2004 12:15 Uhr +000'
+      'Mittwoch, 4. Februar 2004 12:15 Uhr +000'
 
     Finally, we'll test some invalid input::
 
@@ -588,11 +588,11 @@ class LocaleNumbers(AttributeInheritance):
       >>> numbers.decimalFormats = {None: length}
       >>> formatter = numbers.getFormatter('decimal')
       >>> formatter.format(3.4)
-      u'3,4'
+      '3,4'
       >>> formatter.format(-3.4567)
-      u'-3,457'
+      '-3,457'
       >>> formatter.format(3210.4)
-      u'3.210,4'
+      '3.210,4'
 
     Setting up and accessing scientific formats with named format lengths::
 
@@ -609,10 +609,10 @@ class LocaleNumbers(AttributeInheritance):
       >>> numbers.defaultScientificFormat = 'long'
       >>> formatter = numbers.getFormatter('scientific')
       >>> formatter.format(1234.5678)
-      u'1,234568E+03'
+      '1,234568E+03'
       >>> formatter = numbers.getFormatter('scientific', 'medium')
       >>> formatter.format(1234.5678)
-      u'1,2346E+03'
+      '1,2346E+03'
 
     Setting up and accessing percent formats with named format lengths
     and format names::
@@ -627,17 +627,17 @@ class LocaleNumbers(AttributeInheritance):
       >>> numbers.defaultPercentFormat = 'long'
       >>> formatter = numbers.getFormatter('percent')
       >>> formatter.format(123.45678)
-      u'123,457%'
+      '123,457%'
       >>> formatter = numbers.getFormatter('percent', name='bar')
       >>> formatter.format(123.45678)
-      u'123%'
+      '123%'
 
     ...using a default name::
 
       >>> numbers.percentFormats['long'].default = 'bar'
       >>> formatter = numbers.getFormatter('percent')
       >>> formatter.format(123.45678)
-      u'123%'
+      '123%'
 
     """
 

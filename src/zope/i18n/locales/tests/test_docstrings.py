@@ -18,7 +18,6 @@ from doctest import DocTestSuite
 
 from zope.i18n.locales.inheritance import AttributeInheritance
 from zope.i18n.locales.inheritance import NoParentException
-from zope.i18n.testing import unicode_checker
 
 
 class LocaleInheritanceStub(AttributeInheritance):
@@ -34,7 +33,7 @@ class LocaleInheritanceStub(AttributeInheritance):
 
 def test_suite():
     return unittest.TestSuite((
-        DocTestSuite('zope.i18n.locales', checker=unicode_checker),
-        DocTestSuite('zope.i18n.locales.inheritance', checker=unicode_checker),
-        DocTestSuite('zope.i18n.locales.xmlfactory', checker=unicode_checker),
+        DocTestSuite('zope.i18n.locales'),
+        DocTestSuite('zope.i18n.locales.inheritance'),
+        DocTestSuite('zope.i18n.locales.xmlfactory'),
     ))

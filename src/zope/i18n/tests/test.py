@@ -19,8 +19,6 @@ import unittest
 from zope.component.testing import setUp
 from zope.component.testing import tearDown
 
-from zope.i18n.testing import unicode_checker
-
 
 def test_suite():
     options = doctest.NORMALIZE_WHITESPACE | doctest.ELLIPSIS
@@ -29,8 +27,7 @@ def test_suite():
         return doctest.DocTestSuite(
             name,
             setUp=setUp, tearDown=tearDown,
-            optionflags=options,
-            checker=unicode_checker)
+            optionflags=options)
 
     return unittest.TestSuite([
         suite('zope.i18n'),

@@ -61,7 +61,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <identity>
           ...   <version number="1.0">Some notes</version>
           ...   <generation date="2003-12-19" />
@@ -72,11 +72,11 @@ class LocaleFactory:
 
           >>> version = factory._extractVersion(dom.documentElement)
           >>> version.number
-          u'1.0'
+          '1.0'
           >>> version.generationDate
           datetime.date(2003, 12, 19)
           >>> version.notes
-          u'Some notes'
+          'Some notes'
         """
         number = generationDate = notes = None
         # Retrieve the version number and notes of the locale
@@ -99,7 +99,7 @@ class LocaleFactory:
         Example::
 
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <ldml>
           ...   <identity>
           ...     <version number="1.0"/>
@@ -114,15 +114,15 @@ class LocaleFactory:
 
           >>> id = factory._extractIdentity()
           >>> id.language
-          u'en'
+          'en'
           >>> id.script is None
           True
           >>> id.territory
-          u'US'
+          'US'
           >>> id.variant
-          u'POSIX'
+          'POSIX'
           >>> id.version.number
-          u'1.0'
+          '1.0'
         """
         id = LocaleIdentity()
         identity = self._data.getElementsByTagName('identity')[0]
@@ -149,7 +149,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <displayNames>
           ...   <types>
           ...     <type type="Fallback" key="calendar"></type>
@@ -166,15 +166,15 @@ class LocaleFactory:
           >>> keys = types.keys()
           >>> keys.sort()
           >>> keys[:2]
-          [(u'Fallback', u'calendar'), (u'buddhist', u'calendar')]
+          [('Fallback', 'calendar'), ('buddhist', 'calendar')]
           >>> keys[2:4]
-          [(u'chinese', u'calendar'), (u'gregorian', u'calendar')]
+          [('chinese', 'calendar'), ('gregorian', 'calendar')]
           >>> keys[4:]
-          [(u'stroke', u'collation'), (u'traditional', u'collation')]
-          >>> types[(u'chinese', u'calendar')]
-          u'CHINESE'
-          >>> types[(u'stroke', u'collation')]
-          u'STROKE'
+          [('stroke', 'collation'), ('traditional', 'collation')]
+          >>> types[('chinese', 'calendar')]
+          'CHINESE'
+          >>> types[('stroke', 'collation')]
+          'STROKE'
         """
         # 'types' node has not to exist
         types_nodes = names_node.getElementsByTagName('types')
@@ -194,7 +194,7 @@ class LocaleFactory:
         Example::
 
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <ldml>
           ...   <localeDisplayNames>
           ...     <languages>
@@ -232,40 +232,40 @@ class LocaleFactory:
           >>> keys = names.languages.keys()
           >>> keys.sort()
           >>> keys
-          [u'Fallback', u'aa', u'ab']
-          >>> names.languages[u"aa"]
-          u'aa'
+          ['Fallback', 'aa', 'ab']
+          >>> names.languages["aa"]
+          'aa'
 
           >>> keys = names.scripts.keys()
           >>> keys.sort()
           >>> keys
-          [u'Arab', u'Armn']
-          >>> names.scripts[u"Arab"]
-          u'Arab'
+          ['Arab', 'Armn']
+          >>> names.scripts["Arab"]
+          'Arab'
 
           >>> keys = names.territories.keys()
           >>> keys.sort()
           >>> keys
-          [u'AD', u'AE']
-          >>> names.territories[u"AD"]
-          u'AD'
+          ['AD', 'AE']
+          >>> names.territories["AD"]
+          'AD'
 
           >>> keys = names.variants.keys()
           >>> keys.sort()
           >>> keys
-          [u'Fallback', u'POSIX']
-          >>> names.variants[u"Fallback"]
-          u''
+          ['Fallback', 'POSIX']
+          >>> names.variants["Fallback"]
+          ''
 
           >>> keys = names.keys.keys()
           >>> keys.sort()
           >>> keys
-          [u'calendar', u'collation']
-          >>> names.keys[u"calendar"]
-          u'CALENDAR'
+          ['calendar', 'collation']
+          >>> names.keys["calendar"]
+          'CALENDAR'
 
-          >>> names.types[(u"stroke", u"collation")]
-          u'STROKE'
+          >>> names.types[("stroke", "collation")]
+          'STROKE'
         """
         displayNames = LocaleDisplayNames()
         # Neither the 'localeDisplayNames' or 'scripts' node has to exist
@@ -303,7 +303,7 @@ class LocaleFactory:
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <months>
           ...   <default type="format" />
           ...   <monthContext type="format">
@@ -345,46 +345,46 @@ class LocaleFactory:
         of getting month names is like this::
 
           >>> calendar.defaultMonthContext
-          u'format'
+          'format'
 
-          >>> ctx = calendar.monthContexts[u"format"]
+          >>> ctx = calendar.monthContexts["format"]
           >>> ctx.defaultWidth
-          u'wide'
+          'wide'
 
-          >>> names = [ctx.months[u"wide"][type] for type in range(1,13)]
+          >>> names = [ctx.months["wide"][type] for type in range(1,13)]
           >>> names[:7]
-          [u'Januar', u'Februar', u'Maerz', u'April', u'Mai', u'Juni', u'Juli']
+          ['Januar', 'Februar', 'Maerz', 'April', 'Mai', 'Juni', 'Juli']
           >>> names[7:]
-          [u'August', u'September', u'Oktober', u'November', u'Dezember']
+          ['August', 'September', 'Oktober', 'November', 'Dezember']
 
-          >>> abbrs = [ctx.months[u"abbreviated"][type]
+          >>> abbrs = [ctx.months["abbreviated"][type]
           ...     for type in range(1,13)]
           >>> abbrs[:6]
-          [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
+          ['Jan', 'Feb', 'Mrz', 'Apr', 'Mai', 'Jun']
           >>> abbrs[6:]
-          [u'Jul', u'Aug', u'Sep', u'Okt', u'Nov', u'Dez']
+          ['Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
 
         The old, CLDR 1.0 way of getting month names and abbreviations::
 
           >>> names = [calendar.months.get(type, (None, None))[0]
           ...          for type in range(1, 13)]
           >>> names[:7]
-          [u'Januar', u'Februar', u'Maerz', u'April', u'Mai', u'Juni', u'Juli']
+          ['Januar', 'Februar', 'Maerz', 'April', 'Mai', 'Juni', 'Juli']
           >>> names[7:]
-          [u'August', u'September', u'Oktober', u'November', u'Dezember']
+          ['August', 'September', 'Oktober', 'November', 'Dezember']
 
           >>> abbrs = [calendar.months.get(type, (None, None))[1]
           ...          for type in range(1, 13)]
           >>> abbrs[:6]
-          [u'Jan', u'Feb', u'Mrz', u'Apr', u'Mai', u'Jun']
+          ['Jan', 'Feb', 'Mrz', 'Apr', 'Mai', 'Jun']
           >>> abbrs[6:]
-          [u'Jul', u'Aug', u'Sep', u'Okt', u'Nov', u'Dez']
+          ['Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez']
 
         If there are no months, nothing happens:
 
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
-          >>> xml = u'''<months><default type="format" /></months>'''
+          >>> xml = '''<months><default type="format" /></months>'''
           >>> dom = parseString(xml)
           >>> factory._extractMonths(dom.documentElement, calendar)
           >>> calendar.months
@@ -461,7 +461,7 @@ class LocaleFactory:
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <days>
           ...   <default type="format" />
           ...   <dayContext type="format">
@@ -493,21 +493,21 @@ class LocaleFactory:
         how to use them::
 
           >>> calendar.defaultDayContext
-          u'format'
+          'format'
 
-          >>> ctx = calendar.dayContexts[u"format"]
+          >>> ctx = calendar.dayContexts["format"]
           >>> ctx.defaultWidth
-          u'wide'
+          'wide'
 
-          >>> names = [ctx.days[u"wide"][type] for type in range(1,8)]
+          >>> names = [ctx.days["wide"][type] for type in range(1,8)]
           >>> names[:4]
-          [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
+          ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag']
           >>> names[4:]
-          [u'Freitag', u'Samstag', u'Sonntag']
+          ['Freitag', 'Samstag', 'Sonntag']
 
-          >>> abbrs = [ctx.days[u"abbreviated"][type] for type in range(1,8)]
+          >>> abbrs = [ctx.days["abbreviated"][type] for type in range(1,8)]
           >>> abbrs
-          [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
+          ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
 
         And here's the old CLDR 1.0 way of getting day names and
         abbreviations::
@@ -515,20 +515,20 @@ class LocaleFactory:
           >>> names = [calendar.days.get(type, (None, None))[0]
           ...          for type in range(1, 8)]
           >>> names[:4]
-          [u'Montag', u'Dienstag', u'Mittwoch', u'Donnerstag']
+          ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag']
           >>> names[4:]
-          [u'Freitag', u'Samstag', u'Sonntag']
+          ['Freitag', 'Samstag', 'Sonntag']
 
           >>> abbrs = [calendar.days.get(type, (None, None))[1]
           ...          for type in range(1, 8)]
           >>> abbrs
-          [u'Mo', u'Di', u'Mi', u'Do', u'Fr', u'Sa', u'So']
+          ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So']
 
         If there are no days, nothing happens:
 
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
-          >>> xml = u'''<days><default type="format" /></days>'''
+          >>> xml = '''<days><default type="format" /></days>'''
           >>> dom = parseString(xml)
           >>> factory._extractDays(dom.documentElement, calendar)
           >>> calendar.days
@@ -604,7 +604,7 @@ class LocaleFactory:
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <calendar type="gregorian">
           ...   <week>
           ...     <minDays count="1"/>
@@ -663,7 +663,7 @@ class LocaleFactory:
           >>> calendar = CalendarStub()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <calendar type="gregorian">
           ...   <eras>
           ...      <eraAbbr>
@@ -681,12 +681,12 @@ class LocaleFactory:
           >>> names = [calendar.eras.get(type, (None, None))[0]
           ...          for type in range(2)]
           >>> names
-          [u'Before Christ', None]
+          ['Before Christ', None]
 
           >>> abbrs = [calendar.eras.get(type, (None, None))[1]
           ...          for type in range(2)]
           >>> abbrs
-          [u'BC', u'AD']
+          ['BC', 'AD']
         """
         # See whether we have era names and abbreviations
         eras_nodes = cal_node.getElementsByTagName('eras')
@@ -721,7 +721,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <dateFormats>
           ...   <default type="medium"/>
           ...   <dateFormatLength type="full">
@@ -745,15 +745,15 @@ class LocaleFactory:
           >>> default, lengths = factory._extractFormats(
           ...     dom.documentElement, 'dateFormatLength', 'dateFormat')
           >>> default
-          u'medium'
-          >>> lengths[u"full"].formats[None].pattern
-          u'EEEE, MMMM d, yyyy'
-          >>> lengths[u"medium"].default
-          u'DateFormatsKey2'
-          >>> lengths[u"medium"].formats['DateFormatsKey3'].pattern
-          u'MMM dd, yyyy'
-          >>> lengths[u"medium"].formats['DateFormatsKey2'].displayName
-          u'Standard Date'
+          'medium'
+          >>> lengths["full"].formats[None].pattern
+          'EEEE, MMMM d, yyyy'
+          >>> lengths["medium"].default
+          'DateFormatsKey2'
+          >>> lengths["medium"].formats['DateFormatsKey3'].pattern
+          'MMM dd, yyyy'
+          >>> lengths["medium"].formats['DateFormatsKey2'].displayName
+          'Standard Date'
         """
         formats_default = None
         default_nodes = formats_node.getElementsByTagName('default')
@@ -796,7 +796,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <dates>
           ...   <calendars>
           ...     <calendar type="gregorian">
@@ -864,7 +864,7 @@ class LocaleFactory:
           >>> keys = calendars.keys()
           >>> keys.sort()
           >>> keys
-          [u'buddhist', u'gregorian', 'thai-buddhist']
+          ['buddhist', 'gregorian', 'thai-buddhist']
 
         Note that "thai-buddhist" are added as an alias to "buddhist".
 
@@ -873,7 +873,7 @@ class LocaleFactory:
 
         If there are no calendars, nothing happens:
 
-           >>> xml = u'''<dates />'''
+           >>> xml = '''<dates />'''
            >>> dom = parseString(xml)
            >>> factory._extractCalendars(dom.documentElement)
 
@@ -943,7 +943,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <dates>
           ...   <timeZoneNames>
           ...     <zone type="America/Los_Angeles" >
@@ -975,13 +975,13 @@ class LocaleFactory:
           >>> keys = zones.keys()
           >>> keys.sort()
           >>> keys
-          [u'America/Los_Angeles', u'Europe/London']
-          >>> zones[u"Europe/London"].names[u"generic"]
-          (u'British Time', None)
-          >>> zones[u"Europe/London"].cities
-          [u'York']
-          >>> zones[u"America/Los_Angeles"].names[u"generic"]
-          (u'Pacific Time', u'PT')
+          ['America/Los_Angeles', 'Europe/London']
+          >>> zones["Europe/London"].names["generic"]
+          ('British Time', None)
+          >>> zones["Europe/London"].cities
+          ['York']
+          >>> zones["America/Los_Angeles"].names["generic"]
+          ('Pacific Time', 'PT')
         """
         tz_names = dates_node.getElementsByTagName('timeZoneNames')
         if not tz_names:
@@ -1041,7 +1041,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <numbers>
           ...   <symbols>
           ...     <decimal>.</decimal>
@@ -1062,15 +1062,15 @@ class LocaleFactory:
           >>> symbols = factory._extractSymbols(dom.documentElement)
 
           >>> symbols['list']
-          u';'
+          ';'
           >>> keys = symbols.keys()
           >>> keys.sort()
           >>> keys[:5]
-          [u'decimal', u'exponential', u'group', u'infinity', u'list']
+          ['decimal', 'exponential', 'group', 'infinity', 'list']
           >>> keys[5:9]
-          [u'minusSign', u'nan', u'nativeZeroDigit', u'patternDigit']
+          ['minusSign', 'nan', 'nativeZeroDigit', 'patternDigit']
           >>> keys[9:]
-          [u'perMille', u'percentSign', u'plusSign']
+          ['perMille', 'percentSign', 'plusSign']
         """
         # See whether we have symbols entries
         symbols_nodes = numbers_node.getElementsByTagName('symbols')
@@ -1106,7 +1106,7 @@ class LocaleFactory:
           >>> numbers = Numbers()
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <numbers>
           ...   <decimalFormats>
           ...     <decimalFormatLength type="long">
@@ -1146,24 +1146,24 @@ class LocaleFactory:
           >>> dom = parseString(xml)
           >>> factory._extractNumberFormats(dom.documentElement, numbers)
 
-          >>> numbers.decimalFormats[u"long"].formats[None].pattern
-          u'#,##0.###'
+          >>> numbers.decimalFormats["long"].formats[None].pattern
+          '#,##0.###'
 
           >>> numbers.defaultScientificFormat
-          u'long'
-          >>> numbers.scientificFormats[u"long"].formats[None].pattern
-          u'0.000###E+00'
-          >>> numbers.scientificFormats[u"medium"].formats[None].pattern
-          u'0.00##E+00'
+          'long'
+          >>> numbers.scientificFormats["long"].formats[None].pattern
+          '0.000###E+00'
+          >>> numbers.scientificFormats["medium"].formats[None].pattern
+          '0.00##E+00'
 
-          >>> numbers.percentFormats[u"long"].formats[None].pattern
-          u'#,##0%'
-          >>> numbers.percentFormats.get(u"medium", None) is None
+          >>> numbers.percentFormats["long"].formats[None].pattern
+          '#,##0%'
+          >>> numbers.percentFormats.get("medium", None) is None
           True
 
-          >>> numbers.currencyFormats[u"long"].formats[None].pattern
-          u'$ #,##0.00;($ #,##0.00)'
-          >>> numbers.currencyFormats.get(u"medium", None) is None
+          >>> numbers.currencyFormats["long"].formats[None].pattern
+          '$ #,##0.00;($ #,##0.00)'
+          >>> numbers.currencyFormats.get("medium", None) is None
           True
         """
 
@@ -1188,7 +1188,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <numbers>
           ...   <currencies>
           ...     <currency type="USD">
@@ -1215,12 +1215,12 @@ class LocaleFactory:
           >>> keys = currencies.keys()
           >>> keys.sort()
           >>> keys
-          [u'INR', u'JPY', u'PTE', u'USD']
+          ['INR', 'JPY', 'PTE', 'USD']
 
           >>> currencies['USD'].symbol
-          u'$'
+          '$'
           >>> currencies['USD'].displayName
-          u'Dollar'
+          'Dollar'
           >>> currencies['USD'].symbolChoice
           False
         """
@@ -1270,7 +1270,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <ldml>
           ...   <delimiters>
           ...     <quotationStart>``</quotationStart>
@@ -1290,14 +1290,14 @@ class LocaleFactory:
           >>> factory._data = parseString(xml).documentElement
           >>> delimiters = factory._extractDelimiters()
 
-          >>> delimiters[u"quotationStart"]
-          u'``'
-          >>> delimiters[u"quotationEnd"]
-          u"''"
-          >>> delimiters[u"alternateQuotationStart"]
-          u'`'
-          >>> delimiters[u"alternateQuotationEnd"]
-          u"'"
+          >>> delimiters["quotationStart"]
+          '``'
+          >>> delimiters["quotationEnd"]
+          "''"
+          >>> delimiters["alternateQuotationStart"]
+          '`'
+          >>> delimiters["alternateQuotationEnd"]
+          "'"
 
           Escape: "'"
 
@@ -1323,7 +1323,7 @@ class LocaleFactory:
 
           >>> factory = LocaleFactory(None)
           >>> from xml.dom.minidom import parseString
-          >>> xml = u'''
+          >>> xml = '''
           ... <ldml>
           ...   <layout>
           ...     <orientation lines="bottom-to-top"
@@ -1334,9 +1334,9 @@ class LocaleFactory:
           >>> factory._data = parseString(xml).documentElement
           >>> orientation = factory._extractOrientation()
           >>> orientation.lines
-          u'bottom-to-top'
+          'bottom-to-top'
           >>> orientation.characters
-          u'right-to-left'
+          'right-to-left'
         """
         orientation_nodes = self._data.getElementsByTagName('orientation')
         if not orientation_nodes:
