@@ -5,7 +5,7 @@
 5.1 (unreleased)
 ================
 
-- Nothing changed yet.
+- Include ``*.mo`` files in release.
 
 
 5.0 (2023-03-27)
