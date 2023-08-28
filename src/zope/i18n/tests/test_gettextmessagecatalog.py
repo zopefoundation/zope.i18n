@@ -16,8 +16,8 @@
 import os
 
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
-from zope.i18n.tests import test_imessagecatalog
 from zope.i18n.testing import compile_po
+from zope.i18n.tests import test_imessagecatalog
 
 
 class GettextMessageCatalogTest(test_imessagecatalog.TestIMessageCatalog):
