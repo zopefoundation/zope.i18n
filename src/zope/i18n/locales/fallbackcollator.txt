@@ -33,7 +33,7 @@ strings in a slightly friendly way:
 
     >>> sorted([u"Sam", u"sally", u"Abe", u"alice", u"Terry", u"tim"],
     ...        key=collator.key)
-    [u'Abe', u'alice', u'sally', u'Sam', u'Terry', u'tim']
+    ['Abe', 'alice', 'sally', 'Sam', 'Terry', 'tim']
 
 
 The collator has a very simple algorithm.  It normalizes strings and
@@ -42,10 +42,10 @@ string and the normalized string.  We can see this by calling the key
 method, which converts unicode strings to collation keys:
 
     >>> collator.key(u"Sam")
-    (u'sam', u'Sam')
+    ('sam', 'Sam')
 
     >>> collator.key(u"\xc6\xf8a\u030a")
-    (u'\xe6\xf8\xe5', u'\xc6\xf8\xe5')
+    ('æøå', 'Æøå')
 
 There is also a cmp function for comparing strings:
 

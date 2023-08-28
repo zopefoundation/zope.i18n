@@ -16,6 +16,7 @@
 import os
 
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
+from zope.i18n.testing import compile_po
 from zope.i18n.tests import test_imessagecatalog
 
 
@@ -25,6 +26,7 @@ class GettextMessageCatalogTest(test_imessagecatalog.TestIMessageCatalog):
         from zope.i18n import tests
         path = os.path.dirname(tests.__file__)
         self._path = os.path.join(path, 'en-default.mo')
+        compile_po(self._path)
         catalog = GettextMessageCatalog('en', 'default', self._path)
         return catalog
 

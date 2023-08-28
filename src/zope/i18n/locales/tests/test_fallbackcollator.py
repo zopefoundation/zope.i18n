@@ -13,13 +13,7 @@
 ##############################################################################
 
 import doctest
-import unittest
-
-from zope.i18n.testing import unicode_checker
 
 
 def test_suite():
-    return unittest.TestSuite((
-        doctest.DocFileSuite('../fallbackcollator.txt',
-                             checker=unicode_checker),
-    ))
+    return doctest.DocFileSuite('../fallbackcollator.txt')

@@ -21,6 +21,7 @@ from zope.i18nmessageid import MessageFactory
 
 from zope.i18n.gettextmessagecatalog import GettextMessageCatalog
 from zope.i18n.interfaces import ITranslationDomain
+from zope.i18n.testing import compile_po
 from zope.i18n.tests.test_itranslationdomain import Environment
 from zope.i18n.tests.test_itranslationdomain import TestITranslationDomain
 from zope.i18n.translationdomain import TranslationDomain
@@ -36,10 +37,10 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
 
     def _getTranslationDomain(self):
         domain = TranslationDomain('default')
-        en_catalog = GettextMessageCatalog('en', 'default',
-                                           en_file)
-        de_catalog = GettextMessageCatalog('de', 'default',
-                                           de_file)
+        compile_po(en_file)
+        en_catalog = GettextMessageCatalog('en', 'default', en_file)
+        compile_po(de_file)
+        de_catalog = GettextMessageCatalog('de', 'default', de_file)
         domain.addCatalog(en_catalog)
         domain.addCatalog(de_catalog)
         return domain
@@ -138,8 +139,9 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # provide the domain
         domain = TranslationDomain('alt')
         path = testdir
-        en_catalog = GettextMessageCatalog('en', 'alt',
-                                           os.path.join(path, 'en-alt.mo'))
+        en_alt_path = os.path.join(path, 'en-alt.mo')
+        compile_po(en_alt_path)
+        en_catalog = GettextMessageCatalog('en', 'alt', en_alt_path)
         domain.addCatalog(en_catalog)
         # test that we get the right translation
         zope.component.provideUtility(domain, ITranslationDomain, 'alt')
@@ -150,8 +152,9 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
     def testMessageIDTranslateForDifferentDomain(self):
         domain = TranslationDomain('alt')
         path = testdir
-        en_catalog = GettextMessageCatalog('en', 'alt',
-                                           os.path.join(path, 'en-alt.mo'))
+        en_alt_path = os.path.join(path, 'en-alt.mo')
+        compile_po(en_alt_path)
+        en_catalog = GettextMessageCatalog('en', 'alt', en_alt_path)
         domain.addCatalog(en_catalog)
 
         zope.component.provideUtility(domain, ITranslationDomain, 'alt')
@@ -223,11 +226,13 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         standard_file = os.path.join(testdir, 'sr-default.mo')
         latin_file = os.path.join(testdir, 'sr@Latn-default.mo')
         cyrillic_file = os.path.join(testdir, 'sr@Cyrl-default.mo')
+        compile_po(standard_file)
         standard_catalog = GettextMessageCatalog('sr', 'char', standard_file)
+        compile_po(latin_file)
         latin_catalog = GettextMessageCatalog('sr@Latn', 'char', latin_file)
+        compile_po(cyrillic_file)
         cyrillic_catalog = GettextMessageCatalog(
-            'sr@Cyrl', 'char', cyrillic_file
-        )
+            'sr@Cyrl', 'char', cyrillic_file)
 
         # Test the standard file.
         domain = TranslationDomain('char')
