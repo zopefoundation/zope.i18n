@@ -25,7 +25,7 @@ class GettextMessageCatalogTest(test_imessagecatalog.TestIMessageCatalog):
     def _getMessageCatalog(self):
         from zope.i18n import tests
         path = os.path.dirname(tests.__file__)
-        self._path = os.path.join(path, 'en-default.mo')
+        self._path = os.path.join(path, 'locale-default', 'en', 'default.mo')
         compile_po(self._path)
         catalog = GettextMessageCatalog('en', 'default', self._path)
         return catalog

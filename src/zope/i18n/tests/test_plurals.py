@@ -31,14 +31,17 @@ class TestPlurals(unittest.TestCase):
 
     def _getMessageCatalog(self, locale, variant="default"):
         path = os.path.dirname(tests.__file__)
-        self._path = os.path.join(path, '{}-{}.mo'.format(locale, variant))
+        self._path = os.path.join(
+            path, f'locale-{variant}', locale, f'{variant}.mo')
         compile_po(self._path)
         catalog = GettextMessageCatalog(locale, variant, self._path)
         return catalog
 
     def _getTranslationDomain(self, locale, variant="default"):
         path = os.path.dirname(tests.__file__)
-        self._path = os.path.join(path, '{}-{}.mo'.format(locale, variant))
+        self._path = os.path.join(
+            path, f'locale-{variant}', locale, f'{variant}.mo')
+        compile_po(self._path)
         catalog = GettextMessageCatalog(locale, variant, self._path)
         domain = TranslationDomain('default')
         domain.addCatalog(catalog)
