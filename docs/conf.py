@@ -48,8 +48,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'zope.i18n'
-copyright = u'2010-2017, Zope Foundation and Contributors'
+project = 'zope.i18n'
+copyright = '2010-2024, Zope Foundation and Contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -97,7 +97,6 @@ pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
 #modindex_common_prefix = []
-
 
 # -- Options for HTML output ---------------------------------------------
 
@@ -172,7 +171,6 @@ html_static_path = ['_static']
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'zopei18ndoc'
 
-
 # -- Options for LaTeX output --------------------------------------------
 
 # The paper size ('letter' or 'a4').
@@ -184,8 +182,8 @@ htmlhelp_basename = 'zopei18ndoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'zopei18n.tex', u'zope.i18n Documentation',
-     u'Zope Foundation and Contributors', 'manual'),
+    ('index', 'zopei18n.tex', 'zope.i18n Documentation',
+     'Zope Foundation and Contributors', 'manual'),
 ]
 
 # The name of an image file (relative to this directory) to place at the top of
@@ -205,9 +203,8 @@ latex_documents = [
 # If false, no module index is generated.
 #latex_use_modindex = True
 
-
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 
 autodoc_default_flags = ['members', 'show-inheritance']
 autoclass_content = 'both'

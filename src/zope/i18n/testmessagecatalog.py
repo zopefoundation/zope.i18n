@@ -30,11 +30,11 @@ class TestMessageCatalog:
     def queryMessage(self, msgid, default=None):
         default = getattr(msgid, 'default', default)
         if default is not None and default != msgid:
-            msg = "{} ({})".format(msgid, default)
+            msg = f"{msgid} ({default})"
         else:
             msg = msgid
 
-        return "[[{}][{}]]".format(self.domain, msg)
+        return f"[[{self.domain}][{msg}]]"
 
     getMessage = queryMessage
 

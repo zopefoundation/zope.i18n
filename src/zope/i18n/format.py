@@ -612,7 +612,7 @@ def buildDateTimeParseInfo(calendar, pattern):
 
     # am/pm marker (Text)
     for entry in _findFormattingCharacterInPattern('a', pattern):
-        info[entry] = r'({}|{})'.format(calendar.am, calendar.pm)
+        info[entry] = fr'({calendar.am}|{calendar.pm})'
 
     # era designator (Text)
     # TODO: works for gregorian only right now
