@@ -15,6 +15,7 @@
 """
 import os
 import unittest
+import importlib.metadata
 
 import zope.component
 from zope.i18nmessageid import MessageFactory
@@ -108,15 +109,20 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
         # The recursive translation must not change the mappings
         self.assertEqual(msgid.mapping, {'color1': msgid_sub1,
                                          'color2': msgid_sub2})
-        # A circular reference should not lead to crashes
-        msgid1 = factory("47-not-there", 'Message 1 and $msg2',
-                         mapping={})
-        msgid2 = factory("48-not-there", 'Message 2 and $msg1',
-                         mapping={})
-        msgid1.mapping['msg2'] = msgid2
-        msgid2.mapping['msg1'] = msgid1
-        self.assertRaises(ValueError,
-                          translate, msgid1, None, None, 'en', "default")
+        if importlib.metadata.version('zope.i18nmessageid') >= '7':
+            # Since version 7 it is no longer possible to create circular
+            # references.
+            pass
+        else:
+            # A circular reference should not lead to crashes
+            msgid1 = factory("47-not-there", 'Message 1 and $msg2',
+                             mapping={})
+            msgid2 = factory("48-not-there", 'Message 2 and $msg1',
+                             mapping={})
+            msgid1.mapping['msg2'] = msgid2
+            msgid2.mapping['msg1'] = msgid1
+            self.assertRaises(ValueError,
+                              translate, msgid1, None, None, 'en', "default")
         # Recursive translations also work if the original message id wasn't a
         # message id but a Unicode with a directly passed mapping
         self.assertEqual(
