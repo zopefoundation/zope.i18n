@@ -13,9 +13,9 @@
 ##############################################################################
 """This module tests the regular persistent Translation Domain.
 """
+import importlib.metadata
 import os
 import unittest
-import importlib.metadata
 
 import zope.component
 from zope.i18nmessageid import MessageFactory
