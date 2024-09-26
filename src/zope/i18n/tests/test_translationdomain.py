@@ -113,10 +113,17 @@ class TestGlobalTranslationDomain(TestITranslationDomain, unittest.TestCase):
                          mapping={})
         msgid2 = factory("48-not-there", 'Message 2 and $msg1',
                          mapping={})
-        msgid1.mapping['msg2'] = msgid2
-        msgid2.mapping['msg1'] = msgid1
-        self.assertRaises(ValueError,
-                          translate, msgid1, None, None, 'en', "default")
+        try:
+            msgid1.mapping['msg2'] = msgid2
+            msgid2.mapping['msg1'] = msgid1
+        except TypeError:
+            # this is a `zope.i118nmessageid >= 7` message id enforcing
+            # immutability; circular references therefore
+            # cannot be created in this way
+            pass
+        else:
+            self.assertRaises(ValueError,
+                              translate, msgid1, None, None, 'en', "default")
         # Recursive translations also work if the original message id wasn't a
         # message id but a Unicode with a directly passed mapping
         self.assertEqual(

@@ -9,6 +9,9 @@
 
 - Drop support for Python 3.7.
 
+- Fix test incompatibility for ``zope.i18nmessageid >= 7.0``
+  (`#62 <https://github.com/zopefoundation/zope.i18n/issues/62>`_).
+
 
 5.1 (2023-08-28)
 ================
