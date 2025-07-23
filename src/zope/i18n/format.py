@@ -185,7 +185,7 @@ class DateTimeFormat:
                     datetime.datetime.combine(
                         datetime.date.today(),
                         datetime.time(*[e or 0 for e in ordered[3:]]))
-                    ).timetz()
+                ).timetz()
             return datetime.time(
                 *[e or 0 for e in ordered[3:]], **{'tzinfo': tzinfo}
             )
