@@ -52,7 +52,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         config.ALLOWED_LANGUAGES = self.allowed
 
     def testRegisterTranslations(self):
-        self.assertTrue(queryUtility(ITranslationDomain) is None)
+        self.assertIsNone(queryUtility(ITranslationDomain))
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -66,7 +66,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         self.assertEqual(util._catalogs.get('en'), [str(path)])
 
     def testAllowedTranslations(self):
-        self.assertTrue(queryUtility(ITranslationDomain) is None)
+        self.assertIsNone(queryUtility(ITranslationDomain))
         config.ALLOWED_LANGUAGES = ('de', 'fr')
         xmlconfig.string(
             template % '''
@@ -81,7 +81,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
                          {'test': ['test'], 'de': [str(path)]})
 
     def testRegisterDistributedTranslations(self):
-        self.assertTrue(queryUtility(ITranslationDomain, 'zope-i18n') is None)
+        self.assertIsNone(queryUtility(ITranslationDomain, 'zope-i18n'))
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -114,7 +114,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
 
     def testRegisterAndCompileTranslations(self):
         config.COMPILE_MO_FILES = True
-        self.assertTrue(queryUtility(ITranslationDomain) is None)
+        self.assertIsNone(queryUtility(ITranslationDomain))
 
         # Copy an old and outdated file over, so we can test if the
         # newer file check works
@@ -151,8 +151,8 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         os.utime(path, (path_atime, path_mtime))
 
     def testRegisterTranslationsForDomain(self):
-        self.assertTrue(queryUtility(ITranslationDomain, 'zope-i18n') is None)
-        self.assertTrue(queryUtility(ITranslationDomain, 'zope-i18n2') is None)
+        self.assertIsNone(queryUtility(ITranslationDomain, 'zope-i18n'))
+        self.assertIsNone(queryUtility(ITranslationDomain, 'zope-i18n2'))
         xmlconfig.string(
             template % '''
             <configure package="zope.i18n.tests">
@@ -166,7 +166,7 @@ class DirectivesTest(PlacelessSetup, unittest.TestCase):
         self.assertEqual(util._catalogs,
                          {'test': ['test'], 'en': [str(path)]})
 
-        self.assertTrue(queryUtility(ITranslationDomain, 'zope-i18n2') is None)
+        self.assertIsNone(queryUtility(ITranslationDomain, 'zope-i18n2'))
 
 
 def test_suite():
