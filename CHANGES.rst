@@ -5,6 +5,8 @@
 5.3 (unreleased)
 ================
 
+- Add support for Python 3.13.
+
 - Drop support for Python 3.8.
 
 
