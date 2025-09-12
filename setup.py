@@ -48,7 +48,7 @@ TESTS_REQUIRE = COMPILE_REQUIRES + ZCML_REQUIRES + [
 
 setup(
     name='zope.i18n',
-    version='6.0',
+    version='6.1.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.dev',
     description='Zope Internationalization Support',
