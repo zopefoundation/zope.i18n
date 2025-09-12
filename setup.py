@@ -20,7 +20,6 @@
 """
 import os
 
-from setuptools import find_packages
 from setuptools import setup
 
 
@@ -44,12 +43,12 @@ ZCML_REQUIRES = [
 TESTS_REQUIRE = COMPILE_REQUIRES + ZCML_REQUIRES + [
     'zope.publisher',
     'zope.testing',
-    'zope.testrunner',
+    'zope.testrunner >= 6.4',
 ]
 
 setup(
     name='zope.i18n',
-    version='5.4.dev0',
+    version='6.0.dev0',
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.dev',
     description='Zope Internationalization Support',
@@ -81,9 +80,6 @@ setup(
         'Framework :: Zope :: 3',
     ],
     url='https://github.com/zopefoundation/zope.i18n',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
-    namespace_packages=['zope', ],
     python_requires='>=3.9',
     install_requires=[
         'setuptools',
