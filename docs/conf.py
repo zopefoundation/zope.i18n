@@ -11,10 +11,10 @@
 # All configuration values have a default; values that are commented out serve
 # to show the default.
 
+import importlib.metadata
 import os
 import sys
-
-import pkg_resources
+from datetime import datetime
 
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -22,7 +22,7 @@ import pkg_resources
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 # sys.path.append(os.path.abspath('.'))
 sys.path.append(os.path.abspath('../src'))
-rqmt = pkg_resources.require('zope.i18n')[0]
+rqmt = importlib.metadata.distribution('zope.i18n')
 
 # -- General configuration -----------------------------------------------
 
@@ -51,7 +51,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'zope.i18n'
-copyright = '2010-2024, Zope Foundation and Contributors'
+copyright = f'2010-{datetime.now().year}, Zope Foundation and Contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
