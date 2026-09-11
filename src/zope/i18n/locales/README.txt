@@ -4,7 +4,7 @@ Locales XML Files
 
 The XML locale files were produced as part of the Unicode Common Locale
 Data Repository (CLDR). They are provided here under the Unicode Terms of
-Use (see http://unicode.org/copyright.html). 
+Use (see http://unicode.org/copyright.html).
 
 
 CLDR Web site
@@ -16,7 +16,7 @@ CLDR Web site
 Locale Data Markup Language
 ---------------------------
 
-The XML files follow the now public and completed LDML format. 
+The XML files follow the now public and completed LDML format.
 
 The DTD can be found at
 
