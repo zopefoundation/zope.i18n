@@ -12,6 +12,7 @@
 .installed.cfg
 .mr.developer.cfg
 .tox/
+.venv
 .vscode/
 __pycache__/
 bin/
@@ -30,5 +31,6 @@ parts/
 pyvenv.cfg
 share/
 testing.log
+uv.lock
 var/
 *.mo
